@@ -1,10 +1,11 @@
-import 'dart:html';
 import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:trip_planner/assets.dart';
+import 'package:provider/provider.dart';
+import 'package:trip_planner/src/resources/api_provider.dart';
+import 'package:trip_planner/src/screens/baggageItem.dart';
 
 import '../../palette.dart';
 
@@ -17,31 +18,40 @@ class _BaggageState extends State<Baggage> {
   bool _checkbox = false;
   // List selectedItems = [];
 
-  List placesData = [];
+  // List placesData = [];
 
-  final List<String> items =
-      List<String>.generate(20, (index) => "สถานที่ $index");
+  // final List<String> items =
+  //     List<String>.generate(20, (index) => "สถานที่ $index");
   // List items = getBaggageList();
-  @override
-  void initState() {
-    super.initState();
-    this._fetchData();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   this._fetchData();
+  // }
 
-  Future<void> _fetchData() async {
-    const API_URL =
-        'https://run.mocky.io/v3/24c98bfb-d4e0-4eb9-9a3a-81931d94f824';
+  // Future<void> _fetchData() async {
+  //   const API_URL =
+  //       'https://run.mocky.io/v3/24c98bfb-d4e0-4eb9-9a3a-81931d94f824';
 
-    final response = await http.get(Uri.parse(API_URL));
-    final data = json.decode(response.body);
+  //   final response = await http.get(Uri.parse(API_URL));
+  //   final data = json.decode(response.body);
 
-    setState(() {
-      placesData = data;
-    });
-  }
+  //   setState(() {
+  //     placesData = data;
+  //   });
+  // }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   final postMdl = Provider.of<ApiProvider>(context, listen: false);
+  //   postMdl.getBaggageList();
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<ApiProvider>(context);
+    final baggageList = provider.places;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -79,91 +89,15 @@ class _BaggageState extends State<Baggage> {
           Expanded(
             child: Stack(
               children: [
-                ListView.builder(
+                ListView(
                   padding: EdgeInsets.only(bottom: 60),
-                  // itemCount: items.length,
-                  itemCount: placesData == null ? 0 : placesData.length,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        print('${items[index]}');
-                      },
-                      child: Container(
-                        height: 110,
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(left: 15),
-                              child: Container(
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image(
-                                    width: 100,
-                                    height: 100,
-                                    fit: BoxFit.cover,
-                                    alignment: Alignment.topLeft,
-                                    image: NetworkImage(
-                                        placesData[index]['imageUrl']),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(10, 10, 15, 5),
-                                child: Container(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "${placesData[index]["name"]}",
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${placesData[index]["description"]}",
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                      Spacer(
-                                        flex: 2,
-                                      ),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.shade300,
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(10),
-                                          ),
-                                        ),
-                                        padding:
-                                            EdgeInsets.fromLTRB(8, 3, 8, 3),
-                                        child: Text(
-                                          "ที่เที่ยว",
-                                          style: TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 10,
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                  children: baggageList.map((item) {
+                    return BaggageItem(
+                      place: item,
+                      isSelected: false,
+                      onSelectedItem: (item) {},
                     );
-                  },
+                  }).toList(),
                 ),
                 Positioned(
                   height: 48,
