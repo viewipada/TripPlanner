@@ -21,11 +21,11 @@ class Baggage extends StatefulWidget {
 
 class _BaggageState extends State<Baggage> {
   bool _checkbox = false;
-  // List<Place> selectedItemsList = [];
 
   @override
   void initState() {
-    BaggageNotifire baggageNotifire = Provider.of<BaggageNotifire>(context);
+    BaggageNotifire baggageNotifire =
+        Provider.of<BaggageNotifire>(context, listen: false);
     ApiService.getBaggageList(baggageNotifire);
     super.initState();
   }
@@ -34,6 +34,8 @@ class _BaggageState extends State<Baggage> {
   Widget build(BuildContext context) {
     final provider = Provider.of<BaggageNotifire>(context);
     final baggageList = provider.getBaggageList();
+    final itemSelectedList = provider.getItemSelectionList();
+    
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -74,11 +76,9 @@ class _BaggageState extends State<Baggage> {
                 ListView(
                   padding: EdgeInsets.only(bottom: 60),
                   children: baggageList.map((item) {
-                    // final isSelected = baggageList.contains(item);
                     return BaggageItem(
                       place: item,
-                      isSelected: false,
-                      // onSelectedItem: selectItem(place),
+                      isSelected: itemSelectedList.contains(item),
                     );
                   }).toList(),
                 ),

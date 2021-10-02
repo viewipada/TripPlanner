@@ -4,7 +4,7 @@ import 'package:trip_planner/src/view_models/baggage_item.vm.dart';
 
 class BaggageNotifire with ChangeNotifier {
   List<Place> _baggageList = [];
-  // bool isSelected = false;
+  List<Place> _itemSelectedList = [];
 
   setBaggageList(List<Place> baggageList) {
     // _baggageList = [];
@@ -18,6 +18,15 @@ class BaggageNotifire with ChangeNotifier {
 
   toggleSelection(BaggageItemVM baggageItemVM) {
     baggageItemVM.setSelected(baggageItemVM.isSelected);
+    if (baggageItemVM.isSelected == true) {
+      _itemSelectedList.add(baggageItemVM.place);
+    } else {
+      _itemSelectedList.remove(baggageItemVM.place);
+    }
     notifyListeners();
+  }
+
+  List<Place> getItemSelectionList() {
+    return _itemSelectedList;
   }
 }
