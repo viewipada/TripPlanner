@@ -1,57 +1,39 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:trip_planner/src/resources/api_provider.dart';
-import 'package:trip_planner/src/screens/baggageItem.dart';
+import 'package:trip_planner/palette.dart';
+import 'package:trip_planner/src/models/place.dart';
+import 'package:trip_planner/src/notifiers/baggage_notifier.dart';
 
-import '../../palette.dart';
+import 'package:trip_planner/src/services/api_service.dart';
+import 'package:trip_planner/src/view/widgets/baggage_item.dart';
 
 class Baggage extends StatefulWidget {
+  // final bool isMultiSelection;
+
+  // Baggage({
+  //   Key? key,
+  //   this.isMultiSelection = false,
+  // }) : super(key: key);
+
   @override
   _BaggageState createState() => _BaggageState();
 }
 
 class _BaggageState extends State<Baggage> {
   bool _checkbox = false;
-  // List selectedItems = [];
+  // List<Place> selectedItemsList = [];
 
-  // List placesData = [];
-
-  // final List<String> items =
-  //     List<String>.generate(20, (index) => "สถานที่ $index");
-  // List items = getBaggageList();
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   this._fetchData();
-  // }
-
-  // Future<void> _fetchData() async {
-  //   const API_URL =
-  //       'https://run.mocky.io/v3/24c98bfb-d4e0-4eb9-9a3a-81931d94f824';
-
-  //   final response = await http.get(Uri.parse(API_URL));
-  //   final data = json.decode(response.body);
-
-  //   setState(() {
-  //     placesData = data;
-  //   });
-  // }
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   final postMdl = Provider.of<ApiProvider>(context, listen: false);
-  //   postMdl.getBaggageList();
-  // }
+  @override
+  void initState() {
+    BaggageNotifire baggageNotifire = Provider.of<BaggageNotifire>(context);
+    ApiService.getBaggageList(baggageNotifire);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<ApiProvider>(context);
-    final baggageList = provider.places;
-
+    final provider = Provider.of<BaggageNotifire>(context);
+    final baggageList = provider.getBaggageList();
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -92,10 +74,11 @@ class _BaggageState extends State<Baggage> {
                 ListView(
                   padding: EdgeInsets.only(bottom: 60),
                   children: baggageList.map((item) {
+                    // final isSelected = baggageList.contains(item);
                     return BaggageItem(
                       place: item,
                       isSelected: false,
-                      onSelectedItem: (item) {},
+                      // onSelectedItem: selectItem(place),
                     );
                   }).toList(),
                 ),

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:trip_planner/src/resources/api_provider.dart';
-import 'package:trip_planner/src/screens/baggage.dart';
-import 'package:trip_planner/src/screens/home.dart';
+import 'package:trip_planner/src/notifiers/baggage_notifier.dart';
+import 'package:trip_planner/src/view/screens/baggage.dart';
+
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider<ApiProvider>(create: (_) => ApiProvider()),
+        ChangeNotifierProvider(create: (_) => BaggageNotifire()),
       ],
       child: MyApp(),
     ),
