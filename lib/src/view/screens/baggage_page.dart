@@ -76,7 +76,6 @@ class _BaggagePageState extends State<BaggagePage> {
                           baggageViewModel.selectedList.contains(item),
                           item,
                         ),
-                        print(baggageViewModel.selectedList.contains(item))
                       },
                       child: Container(
                         height: 110,
@@ -121,7 +120,10 @@ class _BaggagePageState extends State<BaggagePage> {
                                           ),
                                           child: Center(
                                             child: Text(
-                                              item.id.toString(),
+                                              (baggageViewModel.selectedList
+                                                          .indexOf(item) +
+                                                      1)
+                                                  .toString(),
                                               style: TextStyle(
                                                 color: Colors.white,
                                               ),

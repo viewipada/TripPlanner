@@ -34,5 +34,5 @@ class BaggageViewModel with ChangeNotifier {
   List<Place> get baggageList => _baggageList;
   List<Place> get selectedList => _selectedList;
   bool get checkboxValue => _checkboxValue;
-  // bool get isSelected => _isSelected;
+  bool get isSelected => _isSelected;
 }
