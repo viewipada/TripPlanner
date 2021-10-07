@@ -44,7 +44,7 @@ class _BaggagePageState extends State<BaggagePage> {
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(10, 5, 20, 0),
+            padding: EdgeInsets.fromLTRB(0, 5, 20, 0),
             child: Row(
               children: [
                 Checkbox(
@@ -61,7 +61,10 @@ class _BaggagePageState extends State<BaggagePage> {
                 ),
                 Text(
                   'เลือกทั้งหมดไปสร้างทริป',
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Palette.DarkGrey,
+                  ),
                 ),
               ],
             ),
@@ -162,7 +165,7 @@ class _BaggagePageState extends State<BaggagePage> {
                               ),
                               Expanded(
                                 child: Padding(
-                                  padding: EdgeInsets.fromLTRB(10, 10, 15, 5),
+                                  padding: EdgeInsets.fromLTRB(10, 5, 15, 5),
                                   child: Container(
                                     child: Column(
                                       crossAxisAlignment:
@@ -170,12 +173,18 @@ class _BaggagePageState extends State<BaggagePage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
-                                          item.name,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            bottom: 5,
+                                          ),
+                                          child: Text(
+                                            item.name,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                            ),
                                           ),
                                         ),
                                         Text(
@@ -184,6 +193,7 @@ class _BaggagePageState extends State<BaggagePage> {
                                           maxLines: 2,
                                           style: TextStyle(
                                             fontSize: 12,
+                                            color: Palette.DarkGrey,
                                           ),
                                         ),
                                         Spacer(
@@ -191,7 +201,7 @@ class _BaggagePageState extends State<BaggagePage> {
                                         ),
                                         Container(
                                           decoration: BoxDecoration(
-                                            color: Colors.grey.shade300,
+                                            color: Palette.TagGrey,
                                             borderRadius: BorderRadius.all(
                                               Radius.circular(10),
                                             ),
@@ -201,7 +211,7 @@ class _BaggagePageState extends State<BaggagePage> {
                                           child: Text(
                                             "ที่เที่ยว",
                                             style: TextStyle(
-                                              color: Colors.grey,
+                                              color: Colors.white,
                                               fontSize: 10,
                                             ),
                                           ),

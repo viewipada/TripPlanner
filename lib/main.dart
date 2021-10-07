@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
             color: Palette.Outline,
             space: 0,
           ),
+          unselectedWidgetColor: Palette.Outline,
         ),
         home: HomePage(),
       ),
