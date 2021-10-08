@@ -14,7 +14,7 @@ on:
       - "lib/**"
 jobs:
   client-side-unit-testing:
-    runs-on: [macos-latest, ubuntu-latest, windows-latest]
+    runs-on: [macos-10.15, ubuntu-20.04, windows-2019]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v1
