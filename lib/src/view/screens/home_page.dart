@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/src/view/screens/baggage_page.dart';
+import 'package:trip_planner/src/view/widgets/location_card.dart';
+import 'package:trip_planner/src/view/widgets/trip_card.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -83,166 +85,16 @@ class _HomePageState extends State<HomePage> {
                     fit: BoxFit.fitWidth,
                   ),
                 ),
-                //สถานที่ยอดฮิต
-                Container(
-                  padding: EdgeInsets.all(15),
-                  child: Column(
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Expanded(
-                            child: Container(
-                              child: Text(
-                                " สถานที่ยอดฮิต",
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              child: Text(
-                                "ดูเพิ่มเติม >> ",
-                                textAlign: TextAlign.end,
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(top: 10),
-                        alignment: Alignment.centerLeft,
-                        height: 140,
-                        child: ListView(
-                          physics: ClampingScrollPhysics(),
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          children: <Widget>[
-                            Column(
-                              children: [
-                                Card(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0))),
-                                  child: Image.network(
-                                    'https://cf.bstatic.com/xdata/images/hotel/max1024x768/223087771.jpg?k=ef100bbbc40124f71134caaad8504c038caf28f281cf01b419ac191630ce1e01&o=&hp=1',
-                                    fit: BoxFit.cover,
-                                    height: 100,
-                                    width: 100,
-                                  ),
-                                  clipBehavior: Clip.antiAlias,
-                                ),
-                                Container(
-                                  width: 100,
-                                  child: Text(
-                                    'ทะเลอ่างทองทองทองอทอง',
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Palette.DarkGrey,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                LocationCard(
+                  header: " สถานที่ยอดฮิต",
+                  locationName: 'ทะเลอ่างทองทองทองอทอง',
                 ),
                 Divider(),
-                //สถานที่แนะนำ
-                Container(
-                  // color: Colors.pink,
-                  padding: EdgeInsets.all(15),
-                  child: Column(
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Expanded(
-                            child: Container(
-                              child: Text(
-                                " แนะนำสำหรับคุณ",
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              child: Text(
-                                "ดูเพิ่มเติม >> ",
-                                textAlign: TextAlign.end,
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(top: 10),
-                        alignment: Alignment.centerLeft,
-                        height: 140,
-                        child: ListView(
-                          physics: ClampingScrollPhysics(),
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          children: <Widget>[
-                            Column(
-                              children: [
-                                Card(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0))),
-                                  child: Image.network(
-                                    'https://cf.bstatic.com/xdata/images/hotel/max1024x768/223087771.jpg?k=ef100bbbc40124f71134caaad8504c038caf28f281cf01b419ac191630ce1e01&o=&hp=1',
-                                    fit: BoxFit.cover,
-                                    height: 100,
-                                    width: 100,
-                                  ),
-                                  clipBehavior: Clip.antiAlias,
-                                ),
-                                Container(
-                                  width: 100,
-                                  child: Text(
-                                    'ทะเลอ่างทองทองทองอทอง',
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Palette.DarkGrey,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                LocationCard(
+                  header: " แนะนำสำหรับคุณ",
+                  locationName: 'ทะเลอ่างทองทองทองอทอง',
                 ),
                 Divider(),
-                //ทริปที่คุณอาจถูกใจ
                 Container(
                   padding: EdgeInsets.all(15),
                   child: Column(
@@ -276,89 +128,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ],
                       ),
-                      Container(
-                        margin: EdgeInsets.only(top: 10),
-                        height: 110,
-                        child: Row(
-                          children: [
-                            Card(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0))),
-                              child: Image.network(
-                                'https://cf.bstatic.com/xdata/images/hotel/max1024x768/223087771.jpg?k=ef100bbbc40124f71134caaad8504c038caf28f281cf01b419ac191630ce1e01&o=&hp=1',
-                                fit: BoxFit.cover,
-                                height: 100,
-                                width: 100,
-                              ),
-                              clipBehavior: Clip.antiAlias,
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(10, 5, 0, 5),
-                                child: Container(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.only(bottom: 5),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'อ่างทองไม่เหงา มีเรา 3 4 5 คน',
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14,
-                                                color: Palette.DarkGrey,
-                                              ),
-                                            ),
-                                            Icon(
-                                              Icons.note_alt_outlined,
-                                              color: Palette.DarkGrey,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Text(
-                                        'จาก ไหน ไปยัง ไหน',
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      Text(
-                                        '15 ที่เที่ยว',
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      Text(
-                                        '3 วัน 2 คืน',
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      TripCard(),
                     ],
                   ),
                 ),
