@@ -15,43 +15,47 @@ class LocationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(15),
+      padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
       child: Column(
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Expanded(
-                child: Container(
-                  child: Text(
-                    this.header,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+          Container(
+            padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: Container(
+                    child: Text(
+                      this.header,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: Container(
-                  child: Text(
-                    "ดูเพิ่มเติม >> ",
-                    textAlign: TextAlign.end,
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 12,
+                Expanded(
+                  child: Container(
+                    child: Text(
+                      "ดูเพิ่มเติม >> ",
+                      textAlign: TextAlign.end,
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           Container(
             padding: EdgeInsets.only(top: 10),
             alignment: Alignment.centerLeft,
             height: 140,
             child: ListView(
+              padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
               physics: ClampingScrollPhysics(),
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
