@@ -11,7 +11,7 @@ class LocationCardResponse {
 
   factory LocationCardResponse.fromJson(Map<String, dynamic> json) {
     return LocationCardResponse(
-        locationId: json['locationId'],
+        locationId: json['locationId'] ?? 0,
         locationName: json['locationName'],
         imageUrl: json['imageUrl']);
   }

@@ -6,15 +6,32 @@ class HomeService {
   Future<List<LocationCardResponse>> getHotLocationList() async {
     List<LocationCardResponse> hotLocationList = [];
     final response = await http.get(Uri.parse(
-        "https://run.mocky.io/v3/a6a6d525-ad60-45dd-b3e6-8415b90515f0"));
+        "https://run.mocky.io/v3/af05f43f-50e3-4d95-a026-ec5388c5da51"));
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body) as List<dynamic>;
+      data
+          .map((location) =>
+              hotLocationList.add(LocationCardResponse.fromJson(location)))
+          .toList();
+      return hotLocationList;
+    } else {
+      throw Exception("can not fetch data");
+    }
+  }
+
+  Future<List<LocationCardResponse>> getLocationRecommendedList() async {
+    List<LocationCardResponse> locationRecommendedList = [];
+    final response = await http.get(Uri.parse(
+        "https://run.mocky.io/v3/af05f43f-50e3-4d95-a026-ec5388c5da51"));
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body) as List<dynamic>;
       data
           .map((item) =>
-              hotLocationList.add(LocationCardResponse.fromJson(item)))
+              locationRecommendedList.add(LocationCardResponse.fromJson(item)))
           .toList();
-      return hotLocationList;
+      return locationRecommendedList;
     } else {
       throw Exception("can not fetch data");
     }

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:trip_planner/palette.dart';
+import 'package:trip_planner/src/models/response/location_card_response.dart';
 
 class LocationCard extends StatelessWidget {
   LocationCard({
     required this.header,
-    required this.locationName,
+    required this.locationList,
     // @required this.onTapped,
   });
 
   final String header;
-  final String locationName;
+  final List<LocationCardResponse> locationList;
 
   @override
   Widget build(BuildContext context) {
@@ -54,15 +55,15 @@ class LocationCard extends StatelessWidget {
               physics: ClampingScrollPhysics(),
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
-              children: <Widget>[
-                Column(
+              children: locationList.map((location) {
+                return Column(
                   children: [
                     Card(
                       shape: RoundedRectangleBorder(
                           borderRadius:
                               BorderRadius.all(Radius.circular(10.0))),
                       child: Image.network(
-                        'https://cf.bstatic.com/xdata/images/hotel/max1024x768/223087771.jpg?k=ef100bbbc40124f71134caaad8504c038caf28f281cf01b419ac191630ce1e01&o=&hp=1',
+                        location.imageUrl,
                         fit: BoxFit.cover,
                         height: 100,
                         width: 100,
@@ -72,7 +73,7 @@ class LocationCard extends StatelessWidget {
                     Container(
                       width: 100,
                       child: Text(
-                        this.locationName,
+                        location.locationName,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                         style: TextStyle(
@@ -83,8 +84,8 @@ class LocationCard extends StatelessWidget {
                       ),
                     ),
                   ],
-                ),
-              ],
+                );
+              }).toList(),
             ),
           ),
         ],

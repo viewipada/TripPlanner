@@ -4,6 +4,7 @@ import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/src/view/screens/baggage_page.dart';
 import 'package:trip_planner/src/view/screens/home_page.dart';
 import 'package:trip_planner/src/view_models/baggage_view_model.dart';
+import 'package:trip_planner/src/view_models/home_view_model.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,6 +17,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => BaggageViewModel()),
+        ChangeNotifierProvider(create: (_) => HomeViewModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

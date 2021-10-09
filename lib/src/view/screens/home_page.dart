@@ -1,10 +1,12 @@
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/src/view/screens/baggage_page.dart';
 import 'package:trip_planner/src/view/widgets/location_card.dart';
 import 'package:trip_planner/src/view/widgets/trip_card.dart';
+import 'package:trip_planner/src/view_models/home_view_model.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -27,7 +29,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void initState() {
+    Provider.of<HomeViewModel>(context, listen: false).getHotLocationList();
+    Provider.of<HomeViewModel>(context, listen: false)
+        .getLocationRecommendedList();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final homeViewModel = Provider.of<HomeViewModel>(context);
+
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
@@ -87,12 +99,12 @@ class _HomePageState extends State<HomePage> {
                 ),
                 LocationCard(
                   header: " สถานที่ยอดฮิต",
-                  locationName: 'ทะเลอ่างทองทองทองอทอง',
+                  locationList: homeViewModel.hotLocationList,
                 ),
                 Divider(),
                 LocationCard(
                   header: " แนะนำสำหรับคุณ",
-                  locationName: 'ทะเลอ่างทองทองทองอทอง',
+                  locationList: homeViewModel.locationRecommendedList,
                 ),
                 Divider(),
                 Container(
