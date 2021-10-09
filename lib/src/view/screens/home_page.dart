@@ -33,6 +33,7 @@ class _HomePageState extends State<HomePage> {
     Provider.of<HomeViewModel>(context, listen: false).getHotLocationList();
     Provider.of<HomeViewModel>(context, listen: false)
         .getLocationRecommendedList();
+    Provider.of<HomeViewModel>(context, listen: false).getTripRecommendedList();
     super.initState();
   }
 
@@ -107,43 +108,9 @@ class _HomePageState extends State<HomePage> {
                   locationList: homeViewModel.locationRecommendedList,
                 ),
                 Divider(),
-                Container(
-                  padding: EdgeInsets.all(15),
-                  child: Column(
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Expanded(
-                            child: Container(
-                              child: Text(
-                                " ทริปที่คุณอาจถูกใจ",
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              child: Text(
-                                "ดูเพิ่มเติม >> ",
-                                textAlign: TextAlign.end,
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      TripCard(),
-                    ],
-                  ),
-                ),
+                TripCard(
+                    header: " ทริปที่คุณอาจถูกใจ",
+                    tripList: homeViewModel.tripRecommendedList),
               ],
             ),
           ),
