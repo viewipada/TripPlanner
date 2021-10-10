@@ -96,9 +96,10 @@ class TripCard extends StatelessWidget {
                                           color: Palette.DarkGrey,
                                         ),
                                       ),
-                                      Icon(
-                                        Icons.note_alt_outlined,
+                                      IconButton(
+                                        icon: Icon(Icons.note_alt_outlined),
                                         color: Palette.DarkGrey,
+                                        onPressed: () {},
                                       ),
                                     ],
                                   ),
