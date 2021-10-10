@@ -1,0 +1,69 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:trip_planner/palette.dart';
+import 'package:trip_planner/src/view/screens/home_page.dart';
+import 'package:trip_planner/src/view_models/navigation_bar_view_model.dart';
+
+class NavigationBar extends StatefulWidget {
+  @override
+  _NavigationBarState createState() => _NavigationBarState();
+}
+
+class _NavigationBarState extends State<NavigationBar> {
+  @override
+  Widget build(BuildContext context) {
+    final navigationBarViewModel = Provider.of<NavigationBarViewModel>(context);
+
+    return Scaffold(
+      body: PageView(
+        controller: navigationBarViewModel.pageController,
+        onPageChanged: (index) {
+          navigationBarViewModel.onSlidePageView(index);
+        },
+        children: [
+          HomePage(),
+          Container(
+            color: Colors.amber,
+          ),
+          Container(
+            color: Colors.green,
+          ),
+          Container(
+            color: Colors.red,
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: navigationBarViewModel.selectedIndex == 0
+                ? Icon(Icons.home_rounded)
+                : Icon(Icons.home_outlined),
+            label: 'หน้าแรก',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'สำรวจ',
+          ),
+          BottomNavigationBarItem(
+            icon: navigationBarViewModel.selectedIndex == 2
+                ? Icon(Icons.backpack_rounded)
+                : Icon(Icons.backpack_outlined),
+            label: 'จัดทริปเที่ยว',
+          ),
+          BottomNavigationBarItem(
+            icon: navigationBarViewModel.selectedIndex == 3
+                ? Icon(Icons.person_rounded)
+                : Icon(Icons.person_outline_rounded),
+            label: 'ข้อมูลผู้ใช้',
+          ),
+        ],
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Palette.SecondaryColor,
+        unselectedItemColor: Colors.grey,
+        currentIndex: navigationBarViewModel.selectedIndex,
+        onTap: navigationBarViewModel.onIconTapped,
+      ),
+    );
+  }
+}
