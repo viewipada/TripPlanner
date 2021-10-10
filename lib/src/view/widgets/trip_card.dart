@@ -8,7 +8,6 @@ class TripCard extends StatelessWidget {
   TripCard({
     required this.header,
     required this.tripList,
-    // @required this.onTapped,
   });
 
   final String header;
@@ -43,7 +42,7 @@ class TripCard extends StatelessWidget {
                     "ดูเพิ่มเติม >> ",
                     textAlign: TextAlign.end,
                     style: TextStyle(
-                      color: Colors.grey,
+                      color: Palette.AdditionText,
                       fontSize: 12,
                     ),
                   ),
@@ -118,7 +117,7 @@ class TripCard extends StatelessWidget {
                                   maxLines: 1,
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: Colors.grey,
+                                    color: Palette.AdditionText,
                                   ),
                                 ),
                                 Text(
@@ -127,7 +126,7 @@ class TripCard extends StatelessWidget {
                                   maxLines: 1,
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: Colors.grey,
+                                    color: Palette.AdditionText,
                                   ),
                                 ),
                                 Text(
@@ -137,7 +136,7 @@ class TripCard extends StatelessWidget {
                                   maxLines: 1,
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: Colors.grey,
+                                    color: Palette.AdditionText,
                                   ),
                                 ),
                               ],

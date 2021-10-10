@@ -1,4 +1,3 @@
-import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
@@ -67,30 +66,32 @@ class _HomePageState extends State<HomePage> {
         ],
         backgroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              child: Image.asset(
-                ImageAssets.homeBanner,
-                fit: BoxFit.fitWidth,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                child: Image.asset(
+                  ImageAssets.homeBanner,
+                  fit: BoxFit.fitWidth,
+                ),
               ),
-            ),
-            LocationCard(
-              header: " สถานที่ยอดฮิต",
-              locationList: homeViewModel.hotLocationList,
-            ),
-            Divider(),
-            LocationCard(
-              header: " แนะนำสำหรับคุณ",
-              locationList: homeViewModel.locationRecommendedList,
-            ),
-            Divider(),
-            TripCard(
-              header: " ทริปที่คุณอาจถูกใจ",
-              tripList: homeViewModel.tripRecommendedList,
-            ),
-          ],
+              LocationCard(
+                header: " สถานที่ยอดฮิต",
+                locationList: homeViewModel.hotLocationList,
+              ),
+              Divider(),
+              LocationCard(
+                header: " แนะนำสำหรับคุณ",
+                locationList: homeViewModel.locationRecommendedList,
+              ),
+              Divider(),
+              TripCard(
+                header: " ทริปที่คุณอาจถูกใจ",
+                tripList: homeViewModel.tripRecommendedList,
+              ),
+            ],
+          ),
         ),
       ),
     );

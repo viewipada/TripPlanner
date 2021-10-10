@@ -10,7 +10,7 @@ class NavigationBarViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-   void onIconTapped(int index) {
+  void onIconTapped(int index) {
     _selectedIndex = index;
     _pageController.animateToPage(
       index,

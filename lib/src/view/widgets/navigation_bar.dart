@@ -15,54 +15,68 @@ class _NavigationBarState extends State<NavigationBar> {
     final navigationBarViewModel = Provider.of<NavigationBarViewModel>(context);
 
     return Scaffold(
-      body: PageView(
-        controller: navigationBarViewModel.pageController,
-        onPageChanged: (index) {
-          navigationBarViewModel.onSlidePageView(index);
-        },
-        children: [
-          HomePage(),
-          Container(
-            color: Colors.amber,
-          ),
-          Container(
-            color: Colors.green,
-          ),
-          Container(
-            color: Colors.red,
-          ),
-        ],
+      body: SafeArea(
+        child: PageView(
+          controller: navigationBarViewModel.pageController,
+          onPageChanged: (index) {
+            navigationBarViewModel.onSlidePageView(index);
+          },
+          children: [
+            HomePage(),
+            Container(
+              color: Colors.amber,
+            ),
+            Container(
+              color: Colors.green,
+            ),
+            Container(
+              color: Colors.red,
+            ),
+          ],
+        ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: navigationBarViewModel.selectedIndex == 0
-                ? Icon(Icons.home_rounded)
-                : Icon(Icons.home_outlined),
-            label: 'หน้าแรก',
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: Colors.black54,
+                  blurRadius: 10,
+                  offset: Offset(0.0, 0.75))
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'สำรวจ',
+          child: BottomNavigationBar(
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: navigationBarViewModel.selectedIndex == 0
+                    ? Icon(Icons.home_rounded)
+                    : Icon(Icons.home_outlined),
+                label: 'หน้าแรก',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.search),
+                label: 'สำรวจ',
+              ),
+              BottomNavigationBarItem(
+                icon: navigationBarViewModel.selectedIndex == 2
+                    ? Icon(Icons.backpack_rounded)
+                    : Icon(Icons.backpack_outlined),
+                label: 'จัดทริปเที่ยว',
+              ),
+              BottomNavigationBarItem(
+                icon: navigationBarViewModel.selectedIndex == 3
+                    ? Icon(Icons.person_rounded)
+                    : Icon(Icons.person_outline_rounded),
+                label: 'ข้อมูลผู้ใช้',
+              ),
+            ],
+            type: BottomNavigationBarType.fixed,
+            selectedItemColor: Palette.SecondaryColor,
+            unselectedItemColor: Colors.grey,
+            currentIndex: navigationBarViewModel.selectedIndex,
+            onTap: navigationBarViewModel.onIconTapped,
           ),
-          BottomNavigationBarItem(
-            icon: navigationBarViewModel.selectedIndex == 2
-                ? Icon(Icons.backpack_rounded)
-                : Icon(Icons.backpack_outlined),
-            label: 'จัดทริปเที่ยว',
-          ),
-          BottomNavigationBarItem(
-            icon: navigationBarViewModel.selectedIndex == 3
-                ? Icon(Icons.person_rounded)
-                : Icon(Icons.person_outline_rounded),
-            label: 'ข้อมูลผู้ใช้',
-          ),
-        ],
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Palette.SecondaryColor,
-        unselectedItemColor: Colors.grey,
-        currentIndex: navigationBarViewModel.selectedIndex,
-        onTap: navigationBarViewModel.onIconTapped,
+        ),
       ),
     );
   }

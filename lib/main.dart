@@ -25,10 +25,12 @@ class MyApp extends StatelessWidget {
         title: 'EZtrip',
         theme: ThemeData(
           primarySwatch: Colors.blue,
+          scaffoldBackgroundColor: Palette.BackgroundColor,
           fontFamily: 'Sukhumvit',
           dividerTheme: DividerThemeData(
             color: Palette.Outline,
             space: 0,
+            thickness: 1,
           ),
           unselectedWidgetColor: Palette.Outline,
         ),

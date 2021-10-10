@@ -24,8 +24,6 @@ class BaggageViewModel with ChangeNotifier {
     _isSelected = await BaggageService().toggleValue(isSelected);
     _selectedList = await BaggageService()
         .setSelectedList(_isSelected, _selectedList, item, _baggageList);
-
-   
     _checkboxValue =
         await BaggageService().setCheckboxValue(_selectedList, _baggageList);
     notifyListeners();

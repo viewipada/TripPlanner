@@ -41,7 +41,7 @@ class LocationCard extends StatelessWidget {
                       "ดูเพิ่มเติม >> ",
                       textAlign: TextAlign.end,
                       style: TextStyle(
-                        color: Colors.grey,
+                        color: Palette.AdditionText,
                         fontSize: 12,
                       ),
                     ),
