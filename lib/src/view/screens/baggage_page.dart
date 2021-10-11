@@ -161,7 +161,7 @@ class _BaggagePageState extends State<BaggagePage> {
                                         bottom: 5,
                                       ),
                                       child: Text(
-                                        item.name,
+                                        item.locationName,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
@@ -191,7 +191,7 @@ class _BaggagePageState extends State<BaggagePage> {
                                       ),
                                       padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
                                       child: Text(
-                                        "ที่เที่ยว",
+                                        item.category,
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 10,
@@ -218,7 +218,7 @@ class _BaggagePageState extends State<BaggagePage> {
               child: ElevatedButton(
                 onPressed: () {
                   baggageViewModel.selectedList
-                      .forEach((element) => print(element.name));
+                      .forEach((element) => print(element.locationName));
                   print("-------------------- " +
                       baggageViewModel.selectedList.length.toString() +
                       " --------------------");

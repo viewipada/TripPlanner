@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
-import 'package:trip_planner/src/models/place.dart';
+import 'package:trip_planner/src/models/response/baggage_response.dart';
 import 'package:trip_planner/src/services/baggage_service.dart';
 
 class BaggageViewModel with ChangeNotifier {
-  List<Place> _baggageList = [];
-  List<Place> _selectedList = [];
+  List<BaggageResponse> _baggageList = [];
+  List<BaggageResponse> _selectedList = [];
   bool _checkboxValue = false;
   bool _isSelected = false;
 
@@ -20,7 +20,7 @@ class BaggageViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleSelection(bool isSelected, Place item) async {
+  Future<void> toggleSelection(bool isSelected, BaggageResponse item) async {
     _isSelected = await BaggageService().toggleValue(isSelected);
     _selectedList = await BaggageService()
         .setSelectedList(_isSelected, _selectedList, item, _baggageList);
@@ -29,8 +29,8 @@ class BaggageViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  List<Place> get baggageList => _baggageList;
-  List<Place> get selectedList => _selectedList;
+  List<BaggageResponse> get baggageList => _baggageList;
+  List<BaggageResponse> get selectedList => _selectedList;
   bool get checkboxValue => _checkboxValue;
   bool get isSelected => _isSelected;
 }
