@@ -109,12 +109,11 @@ class TripCard extends StatelessWidget {
                                         ),
                                       ),
                                       Container(
-                                        height:
-                                            getProportionateScreenHeight(24),
-                                        width: getProportionateScreenWidth(24),
+                                        height: 24,
+                                        width: 24,
                                         child: IconButton(
                                           padding: EdgeInsets.zero,
-                                          icon: Icon(Icons.note_alt_outlined),
+                                          icon: Icon(Icons.post_add_rounded),
                                           color: Palette.DarkGrey,
                                           onPressed: () {},
                                         ),

@@ -9,4 +9,5 @@ class Palette {
   static const TagGrey = Color(0xffBCBCBC);
   static const AdditionText = Color(0xff6E798C);
   static const BodyText = Color(0xff374A59);
+  static const BackIconColor = Color(0xff212121);
 }

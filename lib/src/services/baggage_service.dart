@@ -17,12 +17,12 @@ class BaggageService {
     }
   }
 
-  Future<bool> toggleValue(bool value) async {
+  bool toggleValue(bool value) {
     return !value;
   }
 
-  Future<List<BaggageResponse>> setAllSelected(
-      bool value, List<BaggageResponse> baggageList) async {
+  List<BaggageResponse> setAllSelected(
+      bool value, List<BaggageResponse> baggageList) {
     List<BaggageResponse> all = [];
     if (value) {
       baggageList.map((e) => all.add(e)).toList();
@@ -30,8 +30,11 @@ class BaggageService {
     return all;
   }
 
-  Future<List<BaggageResponse>> setSelectedList(bool isSelected, List<BaggageResponse> selectedList,
-      BaggageResponse item, List<BaggageResponse> baggageList) async {
+  List<BaggageResponse> setSelectedList(
+      bool isSelected,
+      List<BaggageResponse> selectedList,
+      BaggageResponse item,
+      List<BaggageResponse> baggageList) {
     if (isSelected) {
       selectedList.add(item);
     } else {
@@ -40,11 +43,8 @@ class BaggageService {
     return selectedList;
   }
 
-  Future<bool> setCheckboxValue(
-      List<BaggageResponse> selectedList, List<BaggageResponse> baggageList) async {
-    if (selectedList.length == baggageList.length) {
-      return true;
-    }
-    return false;
+  bool setCheckboxValue(
+      List<BaggageResponse> selectedList, List<BaggageResponse> baggageList) {
+    return selectedList.length == baggageList.length;
   }
 }

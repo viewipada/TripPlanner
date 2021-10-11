@@ -140,9 +140,8 @@ class _BaggagePageState extends State<BaggagePage> {
                                         color: Color.fromRGBO(0, 0, 0, 0.4),
                                       ),
                                       child: Container(
-                                        width: getProportionateScreenWidth(24),
-                                        height:
-                                            getProportionateScreenHeight(24),
+                                        width: 24,
+                                        height: 24,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: Palette.PrimaryColor,
