@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
+import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/view_models/baggage_view_model.dart';
 
 class BaggagePage extends StatefulWidget {
@@ -17,6 +18,7 @@ class _BaggagePageState extends State<BaggagePage> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     final baggageViewModel = Provider.of<BaggageViewModel>(context);
 
     return Scaffold(
@@ -36,7 +38,7 @@ class _BaggagePageState extends State<BaggagePage> {
               },
             ),
             Text(
-              'เลือกทั้งหมด',
+              'ทั้งหมด',
               style: TextStyle(
                 fontSize: 12,
                 color: Palette.AdditionText,
@@ -44,7 +46,7 @@ class _BaggagePageState extends State<BaggagePage> {
             ),
           ],
         ),
-        leadingWidth: 150,
+        leadingWidth: getProportionateScreenWidth(150),
         title: Text(
           "กระเป๋าเดินทาง",
           style: TextStyle(
@@ -54,12 +56,23 @@ class _BaggagePageState extends State<BaggagePage> {
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
+        actions: [
+          TextButton(
+            onPressed: () {},
+            child: Text("ยกเลิก"),
+          ),
+        ],
       ),
       body: SafeArea(
         child: Stack(
           children: [
             ListView(
-              padding: EdgeInsets.fromLTRB(0, 10, 0, 60),
+              padding: EdgeInsets.fromLTRB(
+                0,
+                getProportionateScreenHeight(10),
+                0,
+                getProportionateScreenHeight(60),
+              ),
               children: baggageViewModel.baggageList.map((item) {
                 return Dismissible(
                   key: UniqueKey(),
@@ -75,7 +88,9 @@ class _BaggagePageState extends State<BaggagePage> {
                     color: Colors.red,
                     alignment: Alignment.centerRight,
                     child: Padding(
-                      padding: EdgeInsets.only(right: 15),
+                      padding: EdgeInsets.only(
+                        right: getProportionateScreenWidth(15),
+                      ),
                       child: Icon(
                         Icons.delete,
                         color: Colors.white,
@@ -90,11 +105,13 @@ class _BaggagePageState extends State<BaggagePage> {
                       ),
                     },
                     child: Container(
-                      height: 110,
+                      height: getProportionateScreenHeight(110),
                       child: Row(
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(left: 15),
+                            padding: EdgeInsets.only(
+                              left: getProportionateScreenWidth(15),
+                            ),
                             child: Stack(
                               children: [
                                 Center(
@@ -123,8 +140,9 @@ class _BaggagePageState extends State<BaggagePage> {
                                         color: Color.fromRGBO(0, 0, 0, 0.4),
                                       ),
                                       child: Container(
-                                        width: 24,
-                                        height: 24,
+                                        width: getProportionateScreenWidth(24),
+                                        height:
+                                            getProportionateScreenHeight(24),
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: Palette.PrimaryColor,
@@ -149,7 +167,12 @@ class _BaggagePageState extends State<BaggagePage> {
                           ),
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsets.fromLTRB(10, 5, 15, 5),
+                              padding: EdgeInsets.fromLTRB(
+                                getProportionateScreenWidth(10),
+                                getProportionateScreenHeight(5),
+                                getProportionateScreenWidth(15),
+                                getProportionateScreenHeight(5),
+                              ),
                               child: Container(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,7 +181,7 @@ class _BaggagePageState extends State<BaggagePage> {
                                   children: [
                                     Padding(
                                       padding: EdgeInsets.only(
-                                        bottom: 5,
+                                        bottom: getProportionateScreenHeight(5),
                                       ),
                                       child: Text(
                                         item.locationName,
@@ -186,10 +209,15 @@ class _BaggagePageState extends State<BaggagePage> {
                                       decoration: BoxDecoration(
                                         color: Palette.TagGrey,
                                         borderRadius: BorderRadius.all(
-                                          Radius.circular(10),
+                                          Radius.circular(20),
                                         ),
                                       ),
-                                      padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
+                                      padding: EdgeInsets.fromLTRB(
+                                        getProportionateScreenWidth(8),
+                                        getProportionateScreenHeight(3),
+                                        getProportionateScreenWidth(8),
+                                        getProportionateScreenHeight(3),
+                                      ),
                                       child: Text(
                                         item.category,
                                         style: TextStyle(
@@ -211,10 +239,10 @@ class _BaggagePageState extends State<BaggagePage> {
               }).toList(),
             ),
             Positioned(
-              height: 48,
-              bottom: 5,
-              left: 15,
-              right: 15,
+              height: getProportionateScreenHeight(48),
+              bottom: getProportionateScreenHeight(5),
+              left: getProportionateScreenWidth(15),
+              right: getProportionateScreenWidth(15),
               child: ElevatedButton(
                 onPressed: () {
                   baggageViewModel.selectedList

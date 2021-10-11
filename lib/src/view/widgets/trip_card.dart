@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
+import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/trip_card_response.dart';
 import 'package:trip_planner/src/view_models/home_view_model.dart';
 
@@ -15,10 +16,16 @@ class TripCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     final homeViewModel = Provider.of<HomeViewModel>(context);
 
     return Container(
-      padding: EdgeInsets.all(15),
+      padding: EdgeInsets.fromLTRB(
+        getProportionateScreenWidth(15),
+        getProportionateScreenHeight(15),
+        getProportionateScreenWidth(15),
+        getProportionateScreenHeight(15),
+      ),
       child: Column(
         children: [
           Row(
@@ -51,13 +58,13 @@ class TripCard extends StatelessWidget {
             ],
           ),
           Container(
+            margin: EdgeInsets.only(top: getProportionateScreenHeight(10)),
             child: ListView(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               children: tripList.map((trip) {
                 return Container(
-                  margin: EdgeInsets.only(top: 10),
-                  height: 110,
+                  height: getProportionateScreenHeight(110),
                   child: Row(
                     children: [
                       Card(
@@ -74,13 +81,19 @@ class TripCard extends StatelessWidget {
                       ),
                       Expanded(
                         child: Padding(
-                          padding: EdgeInsets.fromLTRB(10, 5, 0, 5),
+                          padding: EdgeInsets.fromLTRB(
+                            getProportionateScreenWidth(10),
+                            getProportionateScreenHeight(5),
+                            0,
+                            getProportionateScreenHeight(5),
+                          ),
                           child: Container(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  padding: EdgeInsets.only(bottom: 5),
+                                  padding: EdgeInsets.only(
+                                      bottom: getProportionateScreenHeight(5)),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -96,8 +109,9 @@ class TripCard extends StatelessWidget {
                                         ),
                                       ),
                                       Container(
-                                        height: 24,
-                                        width: 24,
+                                        height:
+                                            getProportionateScreenHeight(24),
+                                        width: getProportionateScreenWidth(24),
                                         child: IconButton(
                                           padding: EdgeInsets.zero,
                                           icon: Icon(Icons.note_alt_outlined),
