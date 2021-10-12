@@ -16,8 +16,6 @@ class LocationDetailPage extends StatefulWidget {
 }
 
 class _LocationDetailPageState extends State<LocationDetailPage> {
-  bool _readMore = false;
-
   @override
   void initState() {
     // Provider.of<HomeViewModel>(context, listen: false).getHotLocationList();
@@ -139,7 +137,9 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                     onPressed: () {
                       locationDetailViewModel.toggleReadmoreButton();
                     },
-                    child: Text(_readMore ? 'ดูน้อยลง' : 'ดูเพิ่มเติม'),
+                    child: Text(locationDetailViewModel.readMore
+                        ? 'ดูน้อยลง'
+                        : 'ดูเพิ่มเติม'),
                     style: TextButton.styleFrom(
                       alignment: Alignment.center,
                       padding: EdgeInsets.zero,
