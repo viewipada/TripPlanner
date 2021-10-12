@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
+import 'package:trip_planner/src/view/screens/location_detail_page.dart';
 import 'package:trip_planner/src/view/widgets/navigation_bar.dart';
 import 'package:trip_planner/src/view_models/baggage_view_model.dart';
 import 'package:trip_planner/src/view_models/home_view_model.dart';
+import 'package:trip_planner/src/view_models/location_detail_view_model.dart';
 import 'package:trip_planner/src/view_models/navigation_bar_view_model.dart';
 
 void main() {
@@ -19,6 +21,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => BaggageViewModel()),
         ChangeNotifierProvider(create: (_) => HomeViewModel()),
         ChangeNotifierProvider(create: (_) => NavigationBarViewModel()),
+        ChangeNotifierProvider(create: (_) => LocationDetailViewModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -34,7 +37,7 @@ class MyApp extends StatelessWidget {
           ),
           unselectedWidgetColor: Palette.Outline,
         ),
-        home: NavigationBar(),
+        home: LocationDetailPage(),
       ),
     );
   }
