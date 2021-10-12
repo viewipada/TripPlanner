@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/view/screens/baggage_page.dart';
+import 'package:trip_planner/src/view/widgets/review_card.dart';
 import 'package:trip_planner/src/view/widgets/tag_category.dart';
+import 'package:trip_planner/src/view_models/location_detail_view_model.dart';
 
 class LocationDetailPage extends StatefulWidget {
   @override
@@ -13,6 +16,8 @@ class LocationDetailPage extends StatefulWidget {
 }
 
 class _LocationDetailPageState extends State<LocationDetailPage> {
+  bool _readMore = false;
+
   @override
   void initState() {
     // Provider.of<HomeViewModel>(context, listen: false).getHotLocationList();
@@ -22,9 +27,10 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    final locationDetailViewModel =
+        Provider.of<LocationDetailViewModel>(context);
 
     return Scaffold(
-      extendBodyBehindAppBar: true,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -111,7 +117,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                     getProportionateScreenWidth(15),
                     getProportionateScreenHeight(10),
                     getProportionateScreenWidth(15),
-                    getProportionateScreenHeight(10),
+                    getProportionateScreenHeight(5),
                   ),
                   child: Text(
                     'getProportionateScreenHeight(10)getProportionateScreenHeight(10)getProportionateScreenHeight(10)getProportionateScreenHeight(10)getProportionateScreenHeight(10)getProportionateScreenHeight(10)getProportionateScreenHeight(10)getProportionateScreenHeight(10)getProportionateScreenHeight(10)getProportionateScreenHeight(10)getProportionateScreenHeight(10)getProportionateScreenHeight(10)getProportionateScreenHeight(10)',
@@ -119,19 +125,21 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                       fontSize: 12,
                       color: Palette.BodyText,
                     ),
-                    maxLines: 3,
+                    maxLines: locationDetailViewModel.readMore ? 100 : 3,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 Container(
                   margin: EdgeInsets.only(
-                    bottom: getProportionateScreenHeight(10),
+                    bottom: getProportionateScreenHeight(5),
                   ),
                   width: double.infinity,
                   height: 20,
                   child: TextButton(
-                    onPressed: () {},
-                    child: Text('ดูเพิ่มเติม'),
+                    onPressed: () {
+                      locationDetailViewModel.toggleReadmoreButton();
+                    },
+                    child: Text(_readMore ? 'ดูน้อยลง' : 'ดูเพิ่มเติม'),
                     style: TextButton.styleFrom(
                       alignment: Alignment.center,
                       padding: EdgeInsets.zero,
@@ -214,16 +222,17 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                 Container(
                   color: Colors.amber,
                   width: double.infinity,
-                  height: getProportionateScreenHeight(180),
+                  height: getProportionateScreenHeight(170),
                 ),
                 Container(
                   margin: EdgeInsets.fromLTRB(
-                    getProportionateScreenWidth(15),
+                    getProportionateScreenWidth(10),
                     getProportionateScreenHeight(10),
                     getProportionateScreenWidth(15),
                     getProportionateScreenHeight(10),
                   ),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Icon(
                         Icons.hourglass_empty_rounded,
@@ -240,7 +249,123 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                     ],
                   ),
                 ),
-                Divider()
+                Divider(),
+                Container(
+                  padding: EdgeInsets.fromLTRB(
+                    getProportionateScreenWidth(15),
+                    getProportionateScreenHeight(10),
+                    getProportionateScreenWidth(15),
+                    getProportionateScreenHeight(5),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          child: Text(
+                            'รีวิว (95)',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          child: Text(
+                            "ดูเพิ่มเติม >> ",
+                            textAlign: TextAlign.end,
+                            style: TextStyle(
+                              color: Palette.AdditionText,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(
+                    getProportionateScreenWidth(15),
+                    0,
+                    getProportionateScreenWidth(15),
+                    getProportionateScreenHeight(5),
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        '4.0 ',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Palette.AdditionText,
+                        ),
+                      ),
+                      Icon(
+                        Icons.star_rounded,
+                        color: Palette.CautionColor,
+                        size: 18,
+                      ),
+                      Icon(
+                        Icons.star_rounded,
+                        color: Palette.CautionColor,
+                        size: 18,
+                      ),
+                      Icon(
+                        Icons.star_rounded,
+                        color: Palette.CautionColor,
+                        size: 18,
+                      ),
+                      Icon(
+                        Icons.star_rounded,
+                        color: Palette.CautionColor,
+                        size: 18,
+                      ),
+                      Icon(
+                        Icons.star_rounded,
+                        color: Palette.Outline,
+                        size: 18,
+                      ),
+                    ],
+                  ),
+                ),
+                ReviewCard(),
+                ReviewCard(),
+                ReviewCard(),
+                ReviewCard(),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    getProportionateScreenWidth(15),
+                    getProportionateScreenHeight(5),
+                    getProportionateScreenWidth(15),
+                    getProportionateScreenHeight(5),
+                  ),
+                  child: OutlinedButton(
+                    onPressed: () {},
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.send_rounded,
+                        ),
+                        Text(
+                          ' เพิ่มรีวิวของคุณ',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      primary: Palette.SecondaryColor,
+                      alignment: Alignment.center,
+                      side: BorderSide(color: Palette.SecondaryColor),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
