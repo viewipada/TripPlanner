@@ -27,35 +27,15 @@ class TripCard extends StatelessWidget {
         getProportionateScreenHeight(15),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Expanded(
-                child: Container(
-                  child: Text(
-                    this.header,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  child: Text(
-                    "ดูเพิ่มเติม >> ",
-                    textAlign: TextAlign.end,
-                    style: TextStyle(
-                      color: Palette.AdditionText,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+          Text(
+            this.header,
+            textAlign: TextAlign.start,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           Container(
             margin: EdgeInsets.only(top: getProportionateScreenHeight(10)),
@@ -108,15 +88,12 @@ class TripCard extends StatelessWidget {
                                           color: Palette.DarkGrey,
                                         ),
                                       ),
-                                      Container(
-                                        height: 24,
-                                        width: 24,
-                                        child: IconButton(
-                                          padding: EdgeInsets.zero,
-                                          icon: Icon(Icons.post_add_rounded),
-                                          color: Palette.DarkGrey,
-                                          onPressed: () {},
-                                        ),
+                                      IconButton(
+                                        constraints: BoxConstraints(),
+                                        padding: EdgeInsets.zero,
+                                        icon: Icon(Icons.post_add_rounded),
+                                        color: Palette.DarkGrey,
+                                        onPressed: () {},
                                       ),
                                     ],
                                   ),
