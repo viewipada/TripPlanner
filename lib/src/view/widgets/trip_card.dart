@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/trip_card_response.dart';
@@ -91,7 +92,9 @@ class TripCard extends StatelessWidget {
                                       IconButton(
                                         constraints: BoxConstraints(),
                                         padding: EdgeInsets.zero,
-                                        icon: Icon(Icons.post_add_rounded),
+                                        icon: ImageIcon(
+                                          AssetImage(IconAssets.copyToEdit),
+                                        ),
                                         color: Palette.DarkGrey,
                                         onPressed: () {},
                                       ),

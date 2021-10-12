@@ -64,7 +64,9 @@ class _HomePageState extends State<HomePage> {
               radius: 20,
               child: IconButton(
                 padding: EdgeInsets.zero,
-                icon: Icon(Icons.shopping_bag_outlined),
+                icon: ImageIcon(
+                  AssetImage(IconAssets.baggage),
+                ),
                 color: Colors.white,
                 onPressed: () {
                   Navigator.push(

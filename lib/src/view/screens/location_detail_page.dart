@@ -57,7 +57,9 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                   radius: 20,
                   child: IconButton(
                     padding: EdgeInsets.zero,
-                    icon: Icon(Icons.shopping_bag_outlined),
+                    icon: ImageIcon(
+                      AssetImage(IconAssets.baggage),
+                    ),
                     color: Colors.white,
                     onPressed: () {
                       Navigator.push(
@@ -94,12 +96,32 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      IconButton(
-                        constraints: BoxConstraints(),
-                        onPressed: () {},
-                        icon: Icon(Icons.directions_outlined),
-                        padding: EdgeInsets.zero,
-                      )
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            constraints: BoxConstraints(),
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.directions_outlined,
+                              size: 23,
+                            ),
+                            padding: EdgeInsets.zero,
+                          ),
+                          SizedBox(
+                            width: getProportionateScreenWidth(24),
+                          ),
+                          IconButton(
+                            constraints: BoxConstraints(),
+                            onPressed: () {},
+                            icon: ImageIcon(
+                              AssetImage(IconAssets.baggageAdd),
+                              color: Colors.black,
+                            ),
+                            padding: EdgeInsets.zero,
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
