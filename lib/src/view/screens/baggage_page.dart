@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
+import 'package:trip_planner/src/view/widgets/tag_category.dart';
 import 'package:trip_planner/src/view_models/baggage_view_model.dart';
 
 class BaggagePage extends StatefulWidget {
@@ -204,26 +205,8 @@ class _BaggagePageState extends State<BaggagePage> {
                                     Spacer(
                                       flex: 2,
                                     ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Palette.TagGrey,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(20),
-                                        ),
-                                      ),
-                                      padding: EdgeInsets.fromLTRB(
-                                        getProportionateScreenWidth(8),
-                                        getProportionateScreenHeight(3),
-                                        getProportionateScreenWidth(8),
-                                        getProportionateScreenHeight(3),
-                                      ),
-                                      child: Text(
-                                        item.category,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 10,
-                                        ),
-                                      ),
+                                    TagCategory(
+                                      category: item.category,
                                     )
                                   ],
                                 ),
