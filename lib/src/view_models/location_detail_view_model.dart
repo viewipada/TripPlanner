@@ -9,5 +9,9 @@ class LocationDetailViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  void goBack(BuildContext context) {
+    Navigator.pop(context);
+  }
+
   bool get readMore => _readMore;
 }

@@ -24,28 +24,31 @@ class _BaggagePageState extends State<BaggagePage> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: Row(
-          children: [
-            Checkbox(
-              activeColor: Palette.PrimaryColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+        leading: Visibility(
+          visible: baggageViewModel.selectMode,
+          child: Row(
+            children: [
+              Checkbox(
+                activeColor: Palette.PrimaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                value: baggageViewModel.checkboxValue,
+                onChanged: (value) {
+                  baggageViewModel.setCheckboxValue(
+                    baggageViewModel.checkboxValue,
+                  );
+                },
               ),
-              value: baggageViewModel.checkboxValue,
-              onChanged: (value) {
-                baggageViewModel.setCheckboxValue(
-                  baggageViewModel.checkboxValue,
-                );
-              },
-            ),
-            Text(
-              'ทั้งหมด',
-              style: TextStyle(
-                fontSize: 12,
-                color: Palette.AdditionText,
+              Text(
+                'ทั้งหมด',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Palette.AdditionText,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         leadingWidth: getProportionateScreenWidth(150),
         title: Text(
@@ -59,8 +62,14 @@ class _BaggagePageState extends State<BaggagePage> {
         backgroundColor: Colors.white,
         actions: [
           TextButton(
-            onPressed: () {},
-            child: Text("ยกเลิก"),
+            onPressed: () {
+              baggageViewModel.selectMode
+                  ? baggageViewModel.changeMode(baggageViewModel.selectMode)
+                  : baggageViewModel.clearWidget(context);
+            },
+            child: baggageViewModel.selectMode
+                ? Text("เสร็จสิ้น")
+                : Text("ยกเลิก"),
           ),
         ],
       ),
@@ -81,9 +90,7 @@ class _BaggagePageState extends State<BaggagePage> {
                       ? DismissDirection.none
                       : DismissDirection.endToStart,
                   onDismissed: (_) {
-                    setState(() {
-                      baggageViewModel.baggageList.remove(item);
-                    });
+                    baggageViewModel.deleteItem(item);
                   },
                   background: Container(
                     color: Colors.red,
@@ -99,11 +106,25 @@ class _BaggagePageState extends State<BaggagePage> {
                     ),
                   ),
                   child: InkWell(
+                    onLongPress: () => {
+                      if (!baggageViewModel.selectMode)
+                        {
+                          baggageViewModel.toggleSelection(
+                            baggageViewModel.selectedList.contains(item),
+                            item,
+                          ),
+                          baggageViewModel
+                              .changeMode(baggageViewModel.selectMode)
+                        }
+                    },
                     onTap: () => {
-                      baggageViewModel.toggleSelection(
-                        baggageViewModel.selectedList.contains(item),
-                        item,
-                      ),
+                      baggageViewModel.selectMode
+                          ? baggageViewModel.toggleSelection(
+                              baggageViewModel.selectedList.contains(item),
+                              item,
+                            )
+                          : baggageViewModel.goToLocationDetail(
+                              context, item.locationId)
                     },
                     child: Container(
                       height: getProportionateScreenHeight(110),
@@ -232,6 +253,7 @@ class _BaggagePageState extends State<BaggagePage> {
                   print("-------------------- " +
                       baggageViewModel.selectedList.length.toString() +
                       " --------------------");
+                  // baggageViewModel.createTripWithSelectedList(baggageViewModel.selectedList);
                 },
                 child: Text(
                   'เริ่มสร้างทริป',

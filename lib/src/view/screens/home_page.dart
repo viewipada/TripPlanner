@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
-import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
-import 'package:trip_planner/src/view/screens/baggage_page.dart';
+import 'package:trip_planner/src/view/widgets/baggage_cart.dart';
 import 'package:trip_planner/src/view/widgets/location_card.dart';
 import 'package:trip_planner/src/view/widgets/trip_card.dart';
 import 'package:trip_planner/src/view_models/home_view_model.dart';
@@ -52,31 +51,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         actions: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(
-              0,
-              getProportionateScreenHeight(5),
-              getProportionateScreenWidth(15),
-              getProportionateScreenHeight(5),
-            ),
-            child: CircleAvatar(
-              backgroundColor: Palette.SecondaryColor,
-              radius: 20,
-              child: IconButton(
-                padding: EdgeInsets.zero,
-                icon: ImageIcon(
-                  AssetImage(IconAssets.baggage),
-                ),
-                color: Colors.white,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => BaggagePage()),
-                  );
-                },
-              ),
-            ),
-          ),
+          BaggageCart(),
         ],
         backgroundColor: Colors.white,
       ),

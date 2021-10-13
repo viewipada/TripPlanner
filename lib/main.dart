@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
-import 'package:trip_planner/src/view/screens/location_detail_page.dart';
 import 'package:trip_planner/src/view/widgets/navigation_bar.dart';
 import 'package:trip_planner/src/view_models/baggage_view_model.dart';
 import 'package:trip_planner/src/view_models/home_view_model.dart';
@@ -37,7 +36,7 @@ class MyApp extends StatelessWidget {
           ),
           unselectedWidgetColor: Palette.Outline,
         ),
-        home: LocationDetailPage(),
+        home: NavigationBar(),
       ),
     );
   }

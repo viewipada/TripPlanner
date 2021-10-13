@@ -1,15 +1,24 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
 import 'package:trip_planner/src/services/baggage_service.dart';
+import 'package:trip_planner/src/view/screens/location_detail_page.dart';
 
 class BaggageViewModel with ChangeNotifier {
   List<BaggageResponse> _baggageList = [];
   List<BaggageResponse> _selectedList = [];
   bool _checkboxValue = false;
   bool _isSelected = false;
+  bool _selectMode = false;
 
   Future<void> getBaggageList() async {
     _baggageList = await BaggageService().getBaggageList();
+    notifyListeners();
+  }
+
+  Future<void> deleteItem(BaggageResponse item) async {
+    baggageList.remove(item);
+    // await BaggageService().deleteItem()
     notifyListeners();
   }
 
@@ -29,8 +38,31 @@ class BaggageViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  void changeMode(bool selectMode) {
+    _selectMode = !selectMode;
+    notifyListeners();
+  }
+
+  void clearWidget(BuildContext context) {
+    Navigator.pop(context);
+    _baggageList = [];
+    _selectedList = [];
+    _checkboxValue = false;
+    _isSelected = false;
+    _selectMode = false;
+    notifyListeners();
+  }
+
+  void goToLocationDetail(BuildContext context, int locationId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LocationDetailPage()),
+    );
+  }
+
   List<BaggageResponse> get baggageList => _baggageList;
   List<BaggageResponse> get selectedList => _selectedList;
   bool get checkboxValue => _checkboxValue;
   bool get isSelected => _isSelected;
+  bool get selectMode => _selectMode;
 }

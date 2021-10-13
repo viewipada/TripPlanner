@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:trip_planner/src/models/response/location_card_response.dart';
 import 'package:trip_planner/src/models/response/trip_card_response.dart';
 import 'package:trip_planner/src/services/home_service.dart';
+import 'package:trip_planner/src/view/screens/location_detail_page.dart';
 
 class HomeViewModel with ChangeNotifier {
   List<LocationCardResponse> _hotLocationList = [];
@@ -31,6 +33,13 @@ class HomeViewModel with ChangeNotifier {
         ' วัน ' +
         (travelingDay - 1).toString() +
         ' คืน';
+  }
+
+  void goToLocationDetail(BuildContext context, int locationId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LocationDetailPage()),
+    );
   }
 
   List<LocationCardResponse> get hotLocationList => _hotLocationList;

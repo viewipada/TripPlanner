@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/location_card_response.dart';
+import 'package:trip_planner/src/view_models/home_view_model.dart';
 
 class LocationCard extends StatelessWidget {
   LocationCard({
@@ -16,6 +18,8 @@ class LocationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    final homeViewModel = Provider.of<HomeViewModel>(context);
+
     return Container(
       padding: EdgeInsets.fromLTRB(
         0,
@@ -48,13 +52,18 @@ class LocationCard extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  child: Container(
-                    child: Text(
-                      "ดูเพิ่มเติม >> ",
-                      textAlign: TextAlign.end,
-                      style: TextStyle(
-                        color: Palette.AdditionText,
-                        fontSize: 12,
+                  child: GestureDetector(
+                    onTap: () {
+                      print('see more ... ');
+                    },
+                    child: Container(
+                      child: Text(
+                        "ดูเพิ่มเติม >> ",
+                        textAlign: TextAlign.end,
+                        style: TextStyle(
+                          color: Palette.AdditionText,
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                   ),
@@ -77,37 +86,43 @@ class LocationCard extends StatelessWidget {
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
               children: locationList.map((location) {
-                return Container(
-                  margin:
-                      EdgeInsets.only(right: getProportionateScreenWidth(5)),
-                  child: Column(
-                    children: [
-                      Card(
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0))),
-                        child: Image.network(
-                          location.imageUrl,
-                          fit: BoxFit.cover,
-                          height: 100,
-                          width: 100,
+                return InkWell(
+                  onTap: () => {
+                    homeViewModel.goToLocationDetail(
+                        context, location.locationId)
+                  },
+                  child: Container(
+                    margin:
+                        EdgeInsets.only(right: getProportionateScreenWidth(5)),
+                    child: Column(
+                      children: [
+                        Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0))),
+                          child: Image.network(
+                            location.imageUrl,
+                            fit: BoxFit.cover,
+                            height: 100,
+                            width: 100,
+                          ),
+                          clipBehavior: Clip.antiAlias,
                         ),
-                        clipBehavior: Clip.antiAlias,
-                      ),
-                      Container(
-                        width: 100,
-                        child: Text(
-                          location.locationName,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Palette.DarkGrey,
+                        Container(
+                          width: 100,
+                          child: Text(
+                            location.locationName,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Palette.DarkGrey,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               }).toList(),
