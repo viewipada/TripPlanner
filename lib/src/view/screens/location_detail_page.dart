@@ -80,7 +80,9 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                         children: [
                           IconButton(
                             constraints: BoxConstraints(),
-                            onPressed: () {},
+                            onPressed: () {
+                              print('นำทางบน google map');
+                            },
                             icon: Icon(
                               Icons.directions_outlined,
                               size: 23,
@@ -92,7 +94,9 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                           ),
                           IconButton(
                             constraints: BoxConstraints(),
-                            onPressed: () {},
+                            onPressed: () {
+                              print('เพิ่มลง cart');
+                            },
                             icon: ImageIcon(
                               AssetImage(IconAssets.baggageAdd),
                               color: Colors.black,
@@ -274,13 +278,18 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                         ),
                       ),
                       Expanded(
-                        child: Container(
-                          child: Text(
-                            "ดูเพิ่มเติม >> ",
-                            textAlign: TextAlign.end,
-                            style: TextStyle(
-                              color: Palette.AdditionText,
-                              fontSize: 12,
+                        child: GestureDetector(
+                          onTap: () {
+                            print('ดู review เพิ่มเติม');
+                          },
+                          child: Container(
+                            child: Text(
+                              "ดูเพิ่มเติม >> ",
+                              textAlign: TextAlign.end,
+                              style: TextStyle(
+                                color: Palette.AdditionText,
+                                fontSize: 12,
+                              ),
                             ),
                           ),
                         ),
@@ -344,7 +353,9 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                     getProportionateScreenHeight(5),
                   ),
                   child: OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      print('เพิ่มรีวิวของคุณ');
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
