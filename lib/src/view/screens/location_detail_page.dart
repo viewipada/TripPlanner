@@ -12,14 +12,26 @@ import 'package:trip_planner/src/view/widgets/tag_category.dart';
 import 'package:trip_planner/src/view_models/location_detail_view_model.dart';
 
 class LocationDetailPage extends StatefulWidget {
+  LocationDetailPage({
+    required this.locationId,
+  });
+
+  final int locationId;
+
   @override
-  _LocationDetailPageState createState() => _LocationDetailPageState();
+  _LocationDetailPageState createState() =>
+      _LocationDetailPageState(this.locationId);
 }
 
 class _LocationDetailPageState extends State<LocationDetailPage> {
+  final int _locationId;
+  _LocationDetailPageState(this._locationId);
+
   @override
   void initState() {
-    // Provider.of<HomeViewModel>(context, listen: false).getHotLocationList();
+    Provider.of<LocationDetailViewModel>(context, listen: false)
+        .getLocationDetailById(this._locationId);
+    print(this._locationId);
     super.initState();
   }
 
@@ -36,7 +48,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
             expandedHeight: getProportionateScreenHeight(200),
             flexibleSpace: FlexibleSpaceBar(
               background: Image.network(
-                'https://s.isanook.com/tr/0/ui/283/1415945/4818d35d2f9cc6f942b4195377b4bb87_1560943626.jpg',
+                locationDetailViewModel.locationDetail.imageUrl,
                 fit: BoxFit.cover,
               ),
             ),
@@ -69,7 +81,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'บ้านหุ่นเหล็ก',
+                        locationDetailViewModel.locationDetail.locationName,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -112,7 +124,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                   padding:
                       EdgeInsets.only(left: getProportionateScreenWidth(15)),
                   child: TagCategory(
-                    category: 'ที่เที่ยว',
+                    category: locationDetailViewModel.locationDetail.category,
                   ),
                 ),
                 Container(
@@ -123,7 +135,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                     getProportionateScreenHeight(5),
                   ),
                   child: Text(
-                    'getProportionateScreenHeight(10)getProportionateScreenHeight(10)getProportionateScreenHeight(10)getProportionateScreenHeight(10)getProportionateScreenHeight(10)getProportionateScreenHeight(10)getProportionateScreenHeight(10)getProportionateScreenHeight(10)getProportionateScreenHeight(10)getProportionateScreenHeight(10)getProportionateScreenHeight(10)getProportionateScreenHeight(10)getProportionateScreenHeight(10)',
+                    locationDetailViewModel.locationDetail.description,
                     style: TextStyle(
                       fontSize: 12,
                       color: Palette.BodyText,
@@ -168,10 +180,12 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                     ),
                   ),
                 ),
+                detailLocation('วันเวลาเปิด-ปิด',
+                    locationDetailViewModel.locationDetail.openingHour),
+                detailLocation('เบอร์ติดต่อ',
+                    locationDetailViewModel.locationDetail.contactNumber),
                 detailLocation(
-                    'วันเวลาเปิด-ปิด', 'เปิดทุกวัน เวลา 8.00 - 19.00 น.'),
-                detailLocation('เบอร์ติดต่อ', '081 234 5678'),
-                detailLocation('เว็บไซต์', 'http://www.BanHunLek.com/'),
+                    'เว็บไซต์', locationDetailViewModel.locationDetail.website),
                 Container(
                   margin: EdgeInsets.fromLTRB(
                     getProportionateScreenWidth(15),
@@ -211,7 +225,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                               size: 18,
                             ),
                             Text(
-                              ' เช็คอินแล้ว 45 คน',
+                              ' เช็คอินแล้ว ${locationDetailViewModel.locationDetail.totalCheckin} คน',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
@@ -245,7 +259,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                         size: 18,
                       ),
                       Text(
-                        ' เวลาที่ใช้ 1hr',
+                        ' เวลาที่ใช้ ${locationDetailViewModel.locationDetail.duration}hr',
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -268,7 +282,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                       Expanded(
                         child: Container(
                           child: Text(
-                            'รีวิว (95)',
+                            'รีวิว (${locationDetailViewModel.locationDetail.totalReview})',
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               fontSize: 14,
@@ -307,7 +321,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                   child: Row(
                     children: [
                       Text(
-                        '4.0 ',
+                        '${locationDetailViewModel.locationDetail.averageRating} ',
                         style: TextStyle(
                           fontSize: 12,
                           color: Palette.AdditionText,
@@ -341,10 +355,9 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                     ],
                   ),
                 ),
-                ReviewCard(),
-                ReviewCard(),
-                ReviewCard(),
-                ReviewCard(),
+                ReviewCard(
+                  reviews: locationDetailViewModel.locationDetail.reviews,
+                ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(
                     getProportionateScreenWidth(15),
