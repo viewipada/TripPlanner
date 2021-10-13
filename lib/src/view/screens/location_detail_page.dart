@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
@@ -327,30 +328,15 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                           color: Palette.AdditionText,
                         ),
                       ),
-                      Icon(
-                        Icons.star_rounded,
-                        color: Palette.CautionColor,
-                        size: 18,
-                      ),
-                      Icon(
-                        Icons.star_rounded,
-                        color: Palette.CautionColor,
-                        size: 18,
-                      ),
-                      Icon(
-                        Icons.star_rounded,
-                        color: Palette.CautionColor,
-                        size: 18,
-                      ),
-                      Icon(
-                        Icons.star_rounded,
-                        color: Palette.CautionColor,
-                        size: 18,
-                      ),
-                      Icon(
-                        Icons.star_rounded,
-                        color: Palette.Outline,
-                        size: 18,
+                      RatingBarIndicator(
+                        rating: locationDetailViewModel
+                            .locationDetail.averageRating,
+                        itemBuilder: (context, index) => Icon(
+                          Icons.star_rounded,
+                          color: Palette.CautionColor,
+                        ),
+                        itemCount: 5,
+                        itemSize: 18,
                       ),
                     ],
                   ),
