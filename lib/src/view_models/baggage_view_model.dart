@@ -56,7 +56,9 @@ class BaggageViewModel with ChangeNotifier {
   void goToLocationDetail(BuildContext context, int locationId) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => LocationDetailPage()),
+      MaterialPageRoute(
+        builder: (context) => LocationDetailPage(locationId: locationId),
+      ),
     );
   }
 
