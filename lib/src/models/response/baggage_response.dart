@@ -1,9 +1,9 @@
 class BaggageResponse {
-  int locationId;
-  String locationName;
-  String imageUrl;
-  String category;
-  String description;
+  final int locationId;
+  final String locationName;
+  final String imageUrl;
+  final String category;
+  final String description;
 
   BaggageResponse({
     required this.locationId,
