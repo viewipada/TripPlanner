@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
-import 'package:trip_planner/src/view/widgets/loading.dart';
 import 'package:trip_planner/src/view/widgets/tag_category.dart';
 import 'package:trip_planner/src/view_models/baggage_view_model.dart';
 
@@ -12,6 +11,12 @@ class BaggagePage extends StatefulWidget {
 }
 
 class _BaggagePageState extends State<BaggagePage> {
+  @override
+  void initState() {
+    Provider.of<BaggageViewModel>(context, listen: false).getBaggageList();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -69,228 +74,204 @@ class _BaggagePageState extends State<BaggagePage> {
         ],
       ),
       body: SafeArea(
-        child: FutureBuilder(
-            future: Provider.of<BaggageViewModel>(context, listen: false)
-                .getBaggageList(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
-                return Stack(
-                  children: [
-                    ListView(
-                      padding: EdgeInsets.fromLTRB(
-                        0,
-                        getProportionateScreenHeight(10),
-                        0,
-                        getProportionateScreenHeight(60),
+        child: Stack(
+          children: [
+            ListView(
+              padding: EdgeInsets.fromLTRB(
+                0,
+                getProportionateScreenHeight(10),
+                0,
+                getProportionateScreenHeight(60),
+              ),
+              children: baggageViewModel.baggageList.map((item) {
+                return Dismissible(
+                  key: UniqueKey(),
+                  direction: baggageViewModel.selectedList.contains(item)
+                      ? DismissDirection.none
+                      : DismissDirection.endToStart,
+                  onDismissed: (_) {
+                    baggageViewModel.deleteItem(item);
+                  },
+                  background: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        right: getProportionateScreenWidth(15),
                       ),
-                      children: baggageViewModel.baggageList.map((item) {
-                        return Dismissible(
-                          key: UniqueKey(),
-                          direction:
-                              baggageViewModel.selectedList.contains(item)
-                                  ? DismissDirection.none
-                                  : DismissDirection.endToStart,
-                          onDismissed: (_) {
-                            baggageViewModel.deleteItem(item);
-                          },
-                          background: Container(
-                            color: Colors.red,
-                            alignment: Alignment.centerRight,
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                right: getProportionateScreenWidth(15),
-                              ),
-                              child: Icon(
-                                Icons.delete,
-                                color: Colors.white,
-                              ),
-                            ),
+                      child: Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  child: InkWell(
+                    onLongPress: () => {
+                      if (!baggageViewModel.selectMode)
+                        {
+                          baggageViewModel.toggleSelection(
+                            baggageViewModel.selectedList.contains(item),
+                            item,
                           ),
-                          child: InkWell(
-                            onLongPress: () => {
-                              if (!baggageViewModel.selectMode)
-                                {
-                                  baggageViewModel.toggleSelection(
-                                    baggageViewModel.selectedList
-                                        .contains(item),
-                                    item,
-                                  ),
-                                  baggageViewModel
-                                      .changeMode(baggageViewModel.selectMode)
-                                }
-                            },
-                            onTap: () => {
-                              baggageViewModel.selectMode
-                                  ? baggageViewModel.toggleSelection(
-                                      baggageViewModel.selectedList
-                                          .contains(item),
-                                      item,
-                                    )
-                                  : baggageViewModel.goToLocationDetail(
-                                      context, item.locationId)
-                            },
-                            child: Container(
-                              height: getProportionateScreenHeight(110),
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      left: getProportionateScreenWidth(15),
-                                    ),
-                                    child: Stack(
-                                      children: [
-                                        Center(
-                                          child: Container(
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: Image(
-                                                width: 100,
-                                                height: 100,
-                                                fit: BoxFit.cover,
-                                                image:
-                                                    NetworkImage(item.imageUrl),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Visibility(
-                                          visible: baggageViewModel.selectedList
-                                              .contains(item),
-                                          child: Center(
-                                            child: Container(
-                                              width: 100,
-                                              height: 100,
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                color: Color.fromRGBO(
-                                                    0, 0, 0, 0.4),
-                                              ),
-                                              child: Container(
-                                                width: 24,
-                                                height: 24,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: Palette.PrimaryColor,
-                                                ),
-                                                child: Center(
-                                                  child: Text(
-                                                    (baggageViewModel
-                                                                .selectedList
-                                                                .indexOf(item) +
-                                                            1)
-                                                        .toString(),
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                          baggageViewModel
+                              .changeMode(baggageViewModel.selectMode)
+                        }
+                    },
+                    onTap: () => {
+                      baggageViewModel.selectMode
+                          ? baggageViewModel.toggleSelection(
+                              baggageViewModel.selectedList.contains(item),
+                              item,
+                            )
+                          : baggageViewModel.goToLocationDetail(
+                              context, item.locationId)
+                    },
+                    child: Container(
+                      height: getProportionateScreenHeight(110),
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(
+                              left: getProportionateScreenWidth(15),
+                            ),
+                            child: Stack(
+                              children: [
+                                Center(
+                                  child: Container(
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Image(
+                                        width: 100,
+                                        height: 100,
+                                        fit: BoxFit.cover,
+                                        image: NetworkImage(item.imageUrl),
+                                      ),
                                     ),
                                   ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: EdgeInsets.fromLTRB(
-                                        getProportionateScreenWidth(10),
-                                        getProportionateScreenHeight(5),
-                                        getProportionateScreenWidth(15),
-                                        getProportionateScreenHeight(5),
+                                ),
+                                Visibility(
+                                  visible: baggageViewModel.selectedList
+                                      .contains(item),
+                                  child: Center(
+                                    child: Container(
+                                      width: 100,
+                                      height: 100,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Color.fromRGBO(0, 0, 0, 0.4),
                                       ),
                                       child: Container(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                bottom:
-                                                    getProportionateScreenHeight(
-                                                        5),
-                                              ),
-                                              child: Text(
-                                                item.locationName,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
+                                        width: 24,
+                                        height: 24,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Palette.PrimaryColor,
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            (baggageViewModel.selectedList
+                                                        .indexOf(item) +
+                                                    1)
+                                                .toString(),
+                                            style: TextStyle(
+                                              color: Colors.white,
                                             ),
-                                            Text(
-                                              item.description,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 2,
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Palette.BodyText,
-                                              ),
-                                            ),
-                                            Spacer(
-                                              flex: 2,
-                                            ),
-                                            TagCategory(
-                                              category: item.category,
-                                            )
-                                          ],
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                getProportionateScreenWidth(10),
+                                getProportionateScreenHeight(5),
+                                getProportionateScreenWidth(15),
+                                getProportionateScreenHeight(5),
+                              ),
+                              child: Container(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        bottom: getProportionateScreenHeight(5),
+                                      ),
+                                      child: Text(
+                                        item.locationName,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      item.description,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Palette.BodyText,
+                                      ),
+                                    ),
+                                    Spacer(
+                                      flex: 2,
+                                    ),
+                                    TagCategory(
+                                      category: item.category,
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        );
-                      }).toList(),
-                    ),
-                    Positioned(
-                      height: getProportionateScreenHeight(48),
-                      bottom: getProportionateScreenHeight(5),
-                      left: getProportionateScreenWidth(15),
-                      right: getProportionateScreenWidth(15),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          baggageViewModel.selectedList.forEach(
-                              (element) => print(element.locationName));
-                          print("-------------------- " +
-                              baggageViewModel.selectedList.length.toString() +
-                              " --------------------");
-                          // baggageViewModel.createTripWithSelectedList(baggageViewModel.selectedList);
-                        },
-                        child: Text(
-                          'เริ่มสร้างทริป',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          primary: Palette.PrimaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
+                        ],
                       ),
-                    )
-                  ],
+                    ),
+                  ),
                 );
-              } else if (snapshot.hasError) {
-                return Container(
-                  color: Colors.red,
-                );
-              } else {
-                return Loading();
-              }
-            }),
+              }).toList(),
+            ),
+            Positioned(
+              height: getProportionateScreenHeight(48),
+              bottom: getProportionateScreenHeight(5),
+              left: getProportionateScreenWidth(15),
+              right: getProportionateScreenWidth(15),
+              child: ElevatedButton(
+                onPressed: () {
+                  baggageViewModel.selectedList
+                      .forEach((element) => print(element.locationName));
+                  print("-------------------- " +
+                      baggageViewModel.selectedList.length.toString() +
+                      " --------------------");
+                  // baggageViewModel.createTripWithSelectedList(baggageViewModel.selectedList);
+                },
+                child: Text(
+                  'เริ่มสร้างทริป',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: Palette.PrimaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
