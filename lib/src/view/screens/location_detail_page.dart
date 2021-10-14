@@ -39,7 +39,6 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
       future: Provider.of<LocationDetailViewModel>(context, listen: false)
           .getLocationDetailById(this._locationId),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        print(snapshot);
         if (snapshot.hasData) {
           return CustomScrollView(
             slivers: [

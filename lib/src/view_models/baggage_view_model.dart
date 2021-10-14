@@ -5,15 +5,15 @@ import 'package:trip_planner/src/services/baggage_service.dart';
 import 'package:trip_planner/src/view/screens/location_detail_page.dart';
 
 class BaggageViewModel with ChangeNotifier {
-  List<BaggageResponse> _baggageList = [];
+  late List<BaggageResponse> _baggageList;
   List<BaggageResponse> _selectedList = [];
   bool _checkboxValue = false;
   bool _isSelected = false;
   bool _selectMode = false;
 
-  Future<void> getBaggageList() async {
+  Future<List<BaggageResponse>> getBaggageList() async {
     _baggageList = await BaggageService().getBaggageList();
-    notifyListeners();
+    return _baggageList;
   }
 
   Future<void> deleteItem(BaggageResponse item) async {
