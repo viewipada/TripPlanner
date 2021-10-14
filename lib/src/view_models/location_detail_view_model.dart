@@ -16,9 +16,8 @@ class LocationDetailViewModel with ChangeNotifier {
     Navigator.pop(context);
   }
 
-  Future<void> getLocationDetailById(int locationId) async {
-    _locationDetail = await LocationService().getLocationDetailById(locationId);
-    notifyListeners();
+  Future<LocationDetailResponse> getLocationDetailById(int locationId) async {
+    return _locationDetail = await LocationService().getLocationDetailById(locationId);
   }
 
   bool get readMore => _readMore;
