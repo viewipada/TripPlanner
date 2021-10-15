@@ -22,21 +22,15 @@ class TripCard extends StatelessWidget {
 
     return Container(
       // color: Colors.amber,
-      padding: EdgeInsets.fromLTRB(
-        0,
-        getProportionateScreenHeight(15),
-        0,
-        getProportionateScreenHeight(15),
+      padding: EdgeInsets.symmetric(
+        vertical: getProportionateScreenHeight(15),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.fromLTRB(
-              getProportionateScreenWidth(15),
-              0,
-              getProportionateScreenWidth(15),
-              0,
+            padding: EdgeInsets.symmetric(
+              horizontal: getProportionateScreenWidth(15),
             ),
             child: Text(
               this.header,
@@ -58,11 +52,8 @@ class TripCard extends StatelessWidget {
                     print('click on trip ${trip.tripId}');
                   },
                   child: Container(
-                    padding: EdgeInsets.fromLTRB(
-                      getProportionateScreenWidth(15),
-                      0,
-                      getProportionateScreenWidth(15),
-                      0,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: getProportionateScreenWidth(15),
                     ),
                     height: getProportionateScreenHeight(110),
                     child: Row(
@@ -122,10 +113,7 @@ class TripCard extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    'จาก ' +
-                                        trip.startedPoint +
-                                        ' ไปยัง ' +
-                                        trip.endedPoint,
+                                    'จาก ${trip.startedPoint} ไปยัง ${trip.endedPoint}',
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                     style: TextStyle(

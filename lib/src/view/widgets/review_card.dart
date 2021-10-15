@@ -33,11 +33,9 @@ class ReviewCard extends StatelessWidget {
               ),
               Expanded(
                 child: Container(
-                  margin: EdgeInsets.fromLTRB(
-                    getProportionateScreenWidth(10),
-                    getProportionateScreenHeight(5),
-                    getProportionateScreenWidth(10),
-                    getProportionateScreenHeight(5),
+                  margin: EdgeInsets.symmetric(
+                    horizontal: getProportionateScreenWidth(10),
+                    vertical: getProportionateScreenHeight(5),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,

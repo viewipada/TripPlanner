@@ -21,20 +21,14 @@ class LocationCard extends StatelessWidget {
     final homeViewModel = Provider.of<HomeViewModel>(context);
 
     return Container(
-      padding: EdgeInsets.fromLTRB(
-        0,
-        getProportionateScreenHeight(15),
-        0,
-        getProportionateScreenHeight(15),
+      padding: EdgeInsets.symmetric(
+        vertical: getProportionateScreenHeight(15),
       ),
       child: Column(
         children: [
           Container(
-            padding: EdgeInsets.fromLTRB(
-              getProportionateScreenWidth(15),
-              0,
-              getProportionateScreenWidth(15),
-              0,
+            padding: EdgeInsets.symmetric(
+              horizontal: getProportionateScreenWidth(15),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,

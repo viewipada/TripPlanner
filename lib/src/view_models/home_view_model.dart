@@ -27,18 +27,16 @@ class HomeViewModel with ChangeNotifier {
 
   String showTravelingDay(int travelingDay) {
     if (travelingDay == 1) {
-      return travelingDay.toString() + ' วัน';
+      return '$travelingDay วัน';
     }
-    return travelingDay.toString() +
-        ' วัน ' +
-        (travelingDay - 1).toString() +
-        ' คืน';
+    return '$travelingDay วัน ${travelingDay - 1} คืน';
   }
 
   void goToLocationDetail(BuildContext context, int locationId) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => LocationDetailPage(locationId: locationId)),
+      MaterialPageRoute(
+          builder: (context) => LocationDetailPage(locationId: locationId)),
     );
   }
 

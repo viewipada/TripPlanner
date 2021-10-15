@@ -19,11 +19,9 @@ class TagCategory extends StatelessWidget {
           Radius.circular(20),
         ),
       ),
-      padding: EdgeInsets.fromLTRB(
-        getProportionateScreenWidth(8),
-        getProportionateScreenHeight(3),
-        getProportionateScreenWidth(8),
-        getProportionateScreenHeight(3),
+      padding: EdgeInsets.symmetric(
+        horizontal: getProportionateScreenWidth(8),
+        vertical: getProportionateScreenHeight(3),
       ),
       child: Text(
         this.category,
