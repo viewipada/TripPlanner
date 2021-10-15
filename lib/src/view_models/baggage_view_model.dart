@@ -11,8 +11,11 @@ class BaggageViewModel with ChangeNotifier {
   bool _isSelected = false;
   bool _selectMode = false;
 
+  final _baggageService = BaggageService();
+
   Future<void> getBaggageList() async {
-    _baggageList = await BaggageService().getBaggageList();
+    _selectedList = [];
+    _baggageList = await _baggageService.getBaggageList();
     notifyListeners();
   }
 
@@ -22,19 +25,24 @@ class BaggageViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void setCheckboxValue(bool value) {
-    _checkboxValue = BaggageService().toggleValue(value);
+  void setCheckboxValue(bool checkboxValue) {
+    _checkboxValue = !checkboxValue;
     _selectedList =
-        BaggageService().setAllSelected(_checkboxValue, _baggageList);
+        _baggageService.setAllSelected(_checkboxValue, _baggageList);
     notifyListeners();
   }
 
   void toggleSelection(bool isSelected, BaggageResponse item) {
-    _isSelected = BaggageService().toggleValue(isSelected);
-    _selectedList = BaggageService()
-        .setSelectedList(_isSelected, _selectedList, item, _baggageList);
+    _isSelected = !isSelected;
+
+    if (_isSelected) {
+      _selectedList.add(item);
+    } else {
+      _selectedList.remove(item);
+    }
+
     _checkboxValue =
-        BaggageService().setCheckboxValue(_selectedList, _baggageList);
+        _baggageService.setCheckboxValue(_selectedList, _baggageList);
     notifyListeners();
   }
 

@@ -10,37 +10,18 @@ class BaggageService {
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body) as List<dynamic>;
-      data.map((item) => baggageList.add(BaggageResponse.fromJson(item))).toList();
+      data
+          .map((item) => baggageList.add(BaggageResponse.fromJson(item)))
+          .toList();
       return baggageList;
     } else {
       throw Exception("can not fetch data");
     }
   }
 
-  bool toggleValue(bool value) {
-    return !value;
-  }
-
   List<BaggageResponse> setAllSelected(
-      bool value, List<BaggageResponse> baggageList) {
-    List<BaggageResponse> all = [];
-    if (value) {
-      baggageList.map((e) => all.add(e)).toList();
-    }
-    return all;
-  }
-
-  List<BaggageResponse> setSelectedList(
-      bool isSelected,
-      List<BaggageResponse> selectedList,
-      BaggageResponse item,
-      List<BaggageResponse> baggageList) {
-    if (isSelected) {
-      selectedList.add(item);
-    } else {
-      selectedList.remove(item);
-    }
-    return selectedList;
+      bool checkboxValue, List<BaggageResponse> baggageList) {
+    return checkboxValue ? baggageList.toList() : [];
   }
 
   bool setCheckboxValue(
