@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
@@ -11,6 +12,8 @@ class BaggagePage extends StatefulWidget {
 }
 
 class _BaggagePageState extends State<BaggagePage> {
+  final SlidableController slidableController = SlidableController();
+
   @override
   void initState() {
     Provider.of<BaggageViewModel>(context, listen: false).getBaggageList();
@@ -85,26 +88,38 @@ class _BaggagePageState extends State<BaggagePage> {
                     getProportionateScreenHeight(60),
                   ),
                   children: baggageViewModel.baggageList.map((item) {
-                    return Dismissible(
-                      key: UniqueKey(),
-                      direction: baggageViewModel.selectedList.contains(item)
-                          ? DismissDirection.none
-                          : DismissDirection.endToStart,
-                      onDismissed: (_) {
-                        baggageViewModel.deleteItem(item);
-                      },
-                      background: Container(
-                        color: Colors.red,
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            right: getProportionateScreenWidth(15),
-                          ),
-                          child: Icon(
-                            Icons.delete,
-                            color: Colors.white,
-                          ),
-                        ),
+                    return Slidable.builder(
+                      key: Key(item.locationName),
+                      controller: slidableController,
+                      actionPane: SlidableDrawerActionPane(),
+                      actionExtentRatio: 0.25,
+                      enabled: baggageViewModel.selectedList.contains(item) || baggageViewModel.selectMode
+                          ? false
+                          : true,
+                      movementDuration: Duration(milliseconds: 500),
+                      dismissal: SlidableDismissal(
+                        child: SlidableDrawerDismissal(),
+                        closeOnCanceled: true,
+                        onDismissed: (_) {
+                          baggageViewModel.deleteItem(item);
+                        },
+                      ),
+                      secondaryActionDelegate: SlideActionBuilderDelegate(
+                        actionCount: 1,
+                        builder: (context, index, animation, renderingMode) {
+                          return IconSlideAction(
+                            caption: 'ลบรายการ',
+                            color: Colors.red,
+                            icon: Icons.delete,
+                            onTap: () => {
+                              if (slidableController.activeState != null)
+                                Slidable.of(context)?.dismiss(
+                                    actionType: SlideActionType.secondary)
+                              else
+                                Slidable.of(context)?.close()
+                            },
+                          );
+                        },
                       ),
                       child: InkWell(
                         onLongPress: () => {
