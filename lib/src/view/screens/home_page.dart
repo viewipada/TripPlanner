@@ -1,9 +1,8 @@
-import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
-import 'package:trip_planner/palette.dart';
-import 'package:trip_planner/src/view/screens/baggage_page.dart';
+import 'package:trip_planner/size_config.dart';
+import 'package:trip_planner/src/view/widgets/baggage_cart.dart';
 import 'package:trip_planner/src/view/widgets/location_card.dart';
 import 'package:trip_planner/src/view/widgets/trip_card.dart';
 import 'package:trip_planner/src/view_models/home_view_model.dart';
@@ -25,12 +24,18 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     final homeViewModel = Provider.of<HomeViewModel>(context);
 
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
-          padding: EdgeInsets.fromLTRB(15, 5, 0, 5),
+          padding: EdgeInsets.fromLTRB(
+            getProportionateScreenWidth(15),
+            getProportionateScreenHeight(5),
+            0,
+            getProportionateScreenHeight(5),
+          ),
           child: Image.asset(
             ImageAssets.logo,
             fit: BoxFit.cover,
@@ -46,51 +51,36 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         actions: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 5, 15, 5),
-            child: CircleAvatar(
-              backgroundColor: Palette.SecondaryColor,
-              radius: 20,
-              child: IconButton(
-                padding: EdgeInsets.zero,
-                icon: Icon(Icons.shopping_bag_outlined),
-                color: Colors.white,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => BaggagePage()),
-                  );
-                },
-              ),
-            ),
-          ),
+          BaggageCart(),
         ],
         backgroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              child: Image.asset(
-                ImageAssets.homeBanner,
-                fit: BoxFit.fitWidth,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                child: Image.asset(
+                  ImageAssets.homeBanner,
+                  fit: BoxFit.fitWidth,
+                ),
               ),
-            ),
-            LocationCard(
-              header: " สถานที่ยอดฮิต",
-              locationList: homeViewModel.hotLocationList,
-            ),
-            Divider(),
-            LocationCard(
-              header: " แนะนำสำหรับคุณ",
-              locationList: homeViewModel.locationRecommendedList,
-            ),
-            Divider(),
-            TripCard(
-              header: " ทริปที่คุณอาจถูกใจ",
-              tripList: homeViewModel.tripRecommendedList,
-            ),
-          ],
+              LocationCard(
+                header: " สถานที่ยอดฮิต",
+                locationList: homeViewModel.hotLocationList,
+              ),
+              Divider(),
+              LocationCard(
+                header: " แนะนำสำหรับคุณ",
+                locationList: homeViewModel.locationRecommendedList,
+              ),
+              Divider(),
+              TripCard(
+                header: " ทริปที่คุณอาจถูกใจ",
+                tripList: homeViewModel.tripRecommendedList,
+              ),
+            ],
+          ),
         ),
       ),
     );

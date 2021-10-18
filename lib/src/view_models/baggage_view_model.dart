@@ -1,38 +1,78 @@
 import 'package:flutter/foundation.dart';
-import 'package:trip_planner/src/models/place.dart';
+import 'package:flutter/material.dart';
+import 'package:trip_planner/src/models/response/baggage_response.dart';
 import 'package:trip_planner/src/services/baggage_service.dart';
+import 'package:trip_planner/src/view/screens/location_detail_page.dart';
 
 class BaggageViewModel with ChangeNotifier {
-  List<Place> _baggageList = [];
-  List<Place> _selectedList = [];
+  List<BaggageResponse> _baggageList = [];
+  List<BaggageResponse> _selectedList = [];
   bool _checkboxValue = false;
   bool _isSelected = false;
+  bool _selectMode = false;
+
+  final _baggageService = BaggageService();
 
   Future<void> getBaggageList() async {
-    _baggageList = await BaggageService().getBaggageList();
+    _selectedList = [];
+    _baggageList = await _baggageService.getBaggageList();
     notifyListeners();
   }
 
-  Future<void> setCheckboxValue(bool value) async {
-    _checkboxValue = await BaggageService().toggleValue(value);
+  Future<void> deleteItem(BaggageResponse item) async {
+    baggageList.remove(item);
+    // await BaggageService().deleteItem()
+    notifyListeners();
+  }
+
+  void setCheckboxValue(bool checkboxValue) {
+    _checkboxValue = !checkboxValue;
     _selectedList =
-        await BaggageService().setAllSelected(_checkboxValue, _baggageList);
+        _baggageService.setAllSelected(_checkboxValue, _baggageList);
     notifyListeners();
   }
 
-  Future<void> toggleSelection(bool isSelected, Place item) async {
-    _isSelected = await BaggageService().toggleValue(isSelected);
-    _selectedList = await BaggageService()
-        .setSelectedList(_isSelected, _selectedList, item, _baggageList);
+  void toggleSelection(bool isSelected, BaggageResponse item) {
+    _isSelected = !isSelected;
 
-   
+    if (_isSelected) {
+      _selectedList.add(item);
+    } else {
+      _selectedList.remove(item);
+    }
+
     _checkboxValue =
-        await BaggageService().setCheckboxValue(_selectedList, _baggageList);
+        _baggageService.setCheckboxValue(_selectedList, _baggageList);
     notifyListeners();
   }
 
-  List<Place> get baggageList => _baggageList;
-  List<Place> get selectedList => _selectedList;
+  void changeMode(bool selectMode) {
+    _selectMode = !selectMode;
+    notifyListeners();
+  }
+
+  void clearWidget(BuildContext context) {
+    Navigator.pop(context);
+    _baggageList = [];
+    _selectedList = [];
+    _checkboxValue = false;
+    _isSelected = false;
+    _selectMode = false;
+    notifyListeners();
+  }
+
+  void goToLocationDetail(BuildContext context, int locationId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LocationDetailPage(locationId: locationId),
+      ),
+    );
+  }
+
+  List<BaggageResponse> get baggageList => _baggageList;
+  List<BaggageResponse> get selectedList => _selectedList;
   bool get checkboxValue => _checkboxValue;
   bool get isSelected => _isSelected;
+  bool get selectMode => _selectMode;
 }

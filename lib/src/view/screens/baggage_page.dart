@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
+import 'package:trip_planner/size_config.dart';
+import 'package:trip_planner/src/view/widgets/tag_category.dart';
 import 'package:trip_planner/src/view_models/baggage_view_model.dart';
 
 class BaggagePage extends StatefulWidget {
-  // final bool isMultiSelection;
-
-  // Baggage({
-  //   Key? key,
-  //   this.isMultiSelection = false,
-  // }) : super(key: key);
-
   @override
   _BaggagePageState createState() => _BaggagePageState();
 }
 
 class _BaggagePageState extends State<BaggagePage> {
-  // bool _checkbox = false;
-  // List<Place> _selectdList = [];
+  final SlidableController slidableController = SlidableController();
 
   @override
   void initState() {
@@ -27,88 +22,134 @@ class _BaggagePageState extends State<BaggagePage> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     final baggageViewModel = Provider.of<BaggageViewModel>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "กระเป๋าเดินทาง",
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 5, 20, 0),
-            child: Row(
-              children: [
-                Checkbox(
-                  activeColor: Palette.PrimaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+    return WillPopScope(
+        child: Scaffold(
+          appBar: AppBar(
+            leading: Visibility(
+              visible: baggageViewModel.selectMode,
+              child: Row(
+                children: [
+                  Checkbox(
+                    activeColor: Palette.PrimaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    value: baggageViewModel.checkboxValue,
+                    onChanged: (value) {
+                      baggageViewModel.setCheckboxValue(
+                        baggageViewModel.checkboxValue,
+                      );
+                    },
                   ),
-                  value: baggageViewModel.checkboxValue,
-                  onChanged: (value) {
-                    baggageViewModel.setCheckboxValue(
-                      baggageViewModel.checkboxValue,
-                    );
-                  },
-                ),
-                Text(
-                  'เลือกทั้งหมดไปสร้างทริป',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Palette.DarkGrey,
+                  Text(
+                    'ทั้งหมด',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Palette.AdditionText,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
+            leadingWidth: getProportionateScreenWidth(150),
+            title: Text(
+              "กระเป๋าเดินทาง",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+              ),
+            ),
+            centerTitle: true,
+            backgroundColor: Colors.white,
+            actions: [
+              TextButton(
+                onPressed: () {
+                  baggageViewModel.selectMode
+                      ? baggageViewModel.changeMode(baggageViewModel.selectMode)
+                      : baggageViewModel.clearWidget(context);
+                },
+                child: baggageViewModel.selectMode
+                    ? Text("เสร็จสิ้น")
+                    : Text("ยกเลิก"),
+              ),
+            ],
           ),
-          Expanded(
+          body: SafeArea(
             child: Stack(
               children: [
                 ListView(
-                  padding: EdgeInsets.only(bottom: 60),
+                  padding: EdgeInsets.fromLTRB(
+                    0,
+                    getProportionateScreenHeight(10),
+                    0,
+                    getProportionateScreenHeight(60),
+                  ),
                   children: baggageViewModel.baggageList.map((item) {
-                    return Dismissible(
-                      key: UniqueKey(),
-                      direction: baggageViewModel.selectedList.contains(item)
-                          ? DismissDirection.none
-                          : DismissDirection.endToStart,
-                      onDismissed: (_) {
-                        setState(() {
-                          baggageViewModel.baggageList.remove(item);
-                        });
-                      },
-                      background: Container(
-                        color: Colors.red,
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(right: 15),
-                          child: Icon(
-                            Icons.delete,
-                            color: Colors.white,
-                          ),
-                        ),
+                    return Slidable.builder(
+                      key: Key(item.locationName),
+                      controller: slidableController,
+                      actionPane: SlidableDrawerActionPane(),
+                      actionExtentRatio: 0.25,
+                      enabled: baggageViewModel.selectedList.contains(item) || baggageViewModel.selectMode
+                          ? false
+                          : true,
+                      movementDuration: Duration(milliseconds: 500),
+                      dismissal: SlidableDismissal(
+                        child: SlidableDrawerDismissal(),
+                        closeOnCanceled: true,
+                        onDismissed: (_) {
+                          baggageViewModel.deleteItem(item);
+                        },
+                      ),
+                      secondaryActionDelegate: SlideActionBuilderDelegate(
+                        actionCount: 1,
+                        builder: (context, index, animation, renderingMode) {
+                          return IconSlideAction(
+                            caption: 'ลบรายการ',
+                            color: Colors.red,
+                            icon: Icons.delete,
+                            onTap: () => {
+                              if (slidableController.activeState != null)
+                                Slidable.of(context)?.dismiss(
+                                    actionType: SlideActionType.secondary)
+                              else
+                                Slidable.of(context)?.close()
+                            },
+                          );
+                        },
                       ),
                       child: InkWell(
+                        onLongPress: () => {
+                          if (!baggageViewModel.selectMode)
+                            {
+                              baggageViewModel.toggleSelection(
+                                baggageViewModel.selectedList.contains(item),
+                                item,
+                              ),
+                              baggageViewModel
+                                  .changeMode(baggageViewModel.selectMode)
+                            }
+                        },
                         onTap: () => {
-                          baggageViewModel.toggleSelection(
-                            baggageViewModel.selectedList.contains(item),
-                            item,
-                          ),
+                          baggageViewModel.selectMode
+                              ? baggageViewModel.toggleSelection(
+                                  baggageViewModel.selectedList.contains(item),
+                                  item,
+                                )
+                              : baggageViewModel.goToLocationDetail(
+                                  context, item.locationId)
                         },
                         child: Container(
-                          height: 110,
+                          height: getProportionateScreenHeight(110),
                           child: Row(
                             children: [
                               Padding(
-                                padding: EdgeInsets.only(left: 15),
+                                padding: EdgeInsets.only(
+                                  left: getProportionateScreenWidth(15),
+                                ),
                                 child: Stack(
                                   children: [
                                     Center(
@@ -165,7 +206,12 @@ class _BaggagePageState extends State<BaggagePage> {
                               ),
                               Expanded(
                                 child: Padding(
-                                  padding: EdgeInsets.fromLTRB(10, 5, 15, 5),
+                                  padding: EdgeInsets.fromLTRB(
+                                    getProportionateScreenWidth(10),
+                                    getProportionateScreenHeight(5),
+                                    getProportionateScreenWidth(15),
+                                    getProportionateScreenHeight(5),
+                                  ),
                                   child: Container(
                                     child: Column(
                                       crossAxisAlignment:
@@ -175,10 +221,11 @@ class _BaggagePageState extends State<BaggagePage> {
                                       children: [
                                         Padding(
                                           padding: EdgeInsets.only(
-                                            bottom: 5,
+                                            bottom:
+                                                getProportionateScreenHeight(5),
                                           ),
                                           child: Text(
-                                            item.name,
+                                            item.locationName,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
@@ -193,28 +240,14 @@ class _BaggagePageState extends State<BaggagePage> {
                                           maxLines: 2,
                                           style: TextStyle(
                                             fontSize: 12,
-                                            color: Palette.DarkGrey,
+                                            color: Palette.BodyText,
                                           ),
                                         ),
                                         Spacer(
                                           flex: 2,
                                         ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            color: Palette.TagGrey,
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(10),
-                                            ),
-                                          ),
-                                          padding:
-                                              EdgeInsets.fromLTRB(8, 3, 8, 3),
-                                          child: Text(
-                                            "ที่เที่ยว",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 10,
-                                            ),
-                                          ),
+                                        TagCategory(
+                                          category: item.category,
                                         )
                                       ],
                                     ),
@@ -229,17 +262,18 @@ class _BaggagePageState extends State<BaggagePage> {
                   }).toList(),
                 ),
                 Positioned(
-                  height: 48,
-                  bottom: 5,
-                  left: 15,
-                  right: 15,
+                  height: getProportionateScreenHeight(48),
+                  bottom: getProportionateScreenHeight(5),
+                  left: getProportionateScreenWidth(15),
+                  right: getProportionateScreenWidth(15),
                   child: ElevatedButton(
                     onPressed: () {
                       baggageViewModel.selectedList
-                          .forEach((element) => print(element.name));
+                          .forEach((element) => print(element.locationName));
                       print("-------------------- " +
                           baggageViewModel.selectedList.length.toString() +
                           " --------------------");
+                      // baggageViewModel.createTripWithSelectedList(baggageViewModel.selectedList);
                     },
                     child: Text(
                       'เริ่มสร้างทริป',
@@ -259,8 +293,10 @@ class _BaggagePageState extends State<BaggagePage> {
               ],
             ),
           ),
-        ],
-      ),
-    );
+        ),
+        onWillPop: () async {
+          baggageViewModel.clearWidget(context);
+          return true;
+        });
   }
 }
