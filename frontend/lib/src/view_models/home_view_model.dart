@@ -10,19 +10,19 @@ class HomeViewModel with ChangeNotifier {
   List<LocationCardResponse> _locationRecommendedList = [];
   List<TripCardResponse> _tripRecommendedList = [];
 
-  Future<void> getHotLocationList() async {
+  Future<List<LocationCardResponse>> getHotLocationList() async {
     _hotLocationList = await HomeService().getHotLocationList();
-    notifyListeners();
+    return _hotLocationList;
   }
 
-  Future<void> getLocationRecommendedList() async {
+  Future<List<LocationCardResponse>> getLocationRecommendedList() async {
     _locationRecommendedList = await HomeService().getLocationRecommendedList();
-    notifyListeners();
+    return _locationRecommendedList;
   }
 
-  Future<void> getTripRecommendedList() async {
+  Future<List<TripCardResponse>> getTripRecommendedList() async {
     _tripRecommendedList = await HomeService().getTripRecommendedList();
-    notifyListeners();
+    return _tripRecommendedList;
   }
 
   String showTravelingDay(int travelingDay) {
