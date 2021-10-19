@@ -21,8 +21,8 @@ class LocationCard extends StatelessWidget {
     final homeViewModel = Provider.of<HomeViewModel>(context);
 
     return Container(
-      padding: EdgeInsets.symmetric(
-        vertical: getProportionateScreenHeight(15),
+      padding: EdgeInsets.only(
+        top: getProportionateScreenHeight(15),
       ),
       child: Column(
         children: [
@@ -68,7 +68,7 @@ class LocationCard extends StatelessWidget {
           Container(
             padding: EdgeInsets.only(top: getProportionateScreenHeight(10)),
             alignment: Alignment.centerLeft,
-            height: getProportionateScreenHeight(140),
+            height: getProportionateScreenHeight(160),
             child: ListView(
               padding: EdgeInsets.fromLTRB(
                 getProportionateScreenWidth(15),
@@ -102,16 +102,18 @@ class LocationCard extends StatelessWidget {
                           ),
                           clipBehavior: Clip.antiAlias,
                         ),
-                        Container(
-                          width: 100,
-                          child: Text(
-                            location.locationName,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Palette.DarkGrey,
+                        Expanded(
+                          child: Container(
+                            width: 100,
+                            child: Text(
+                              location.locationName,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Palette.DarkGrey,
+                              ),
                             ),
                           ),
                         ),
