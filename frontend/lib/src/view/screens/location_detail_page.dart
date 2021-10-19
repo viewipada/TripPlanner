@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
@@ -27,6 +30,7 @@ class LocationDetailPage extends StatefulWidget {
 class _LocationDetailPageState extends State<LocationDetailPage> {
   final int _locationId;
   _LocationDetailPageState(this._locationId);
+  Completer<GoogleMapController> _controller = Completer();
 
   @override
   Widget build(BuildContext context) {
@@ -238,9 +242,35 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                       ),
                     ),
                     Container(
-                      color: Colors.amber,
                       width: double.infinity,
                       height: getProportionateScreenHeight(170),
+                      child: GoogleMap(
+                        myLocationEnabled: true,
+                        mapType: MapType.normal,
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(
+                              locationDetailViewModel.locationDetail.latitude,
+                              locationDetailViewModel.locationDetail.longitude),
+                          zoom: 15,
+                        ),
+                        markers: {
+                          Marker(
+                              markerId: MarkerId(locationDetailViewModel
+                                  .locationDetail.locationName),
+                              position: LatLng(
+                                  locationDetailViewModel
+                                      .locationDetail.latitude,
+                                  locationDetailViewModel
+                                      .locationDetail.longitude),
+                              infoWindow: InfoWindow(
+                                title: locationDetailViewModel
+                                    .locationDetail.locationName,
+                              )),
+                        },
+                        onMapCreated: (GoogleMapController controller) {
+                          _controller.complete(controller);
+                        },
+                      ),
                     ),
                     Container(
                       margin: EdgeInsets.fromLTRB(
