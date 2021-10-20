@@ -89,35 +89,16 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              IconButton(
-                                constraints: BoxConstraints(),
-                                onPressed: () {
-                                  print('นำทางบน google map');
-                                },
-                                icon: Icon(
-                                  Icons.directions_outlined,
-                                  size: 23,
-                                ),
-                                padding: EdgeInsets.zero,
-                              ),
-                              SizedBox(
-                                width: getProportionateScreenWidth(24),
-                              ),
-                              IconButton(
-                                constraints: BoxConstraints(),
-                                onPressed: () {
-                                  print('เพิ่มลง cart');
-                                },
-                                icon: ImageIcon(
-                                  AssetImage(IconAssets.baggageAdd),
-                                  color: Colors.black,
-                                ),
-                                padding: EdgeInsets.zero,
-                              ),
-                            ],
+                          IconButton(
+                            constraints: BoxConstraints(),
+                            onPressed: () {
+                              print('เพิ่มลง cart');
+                            },
+                            icon: ImageIcon(
+                              AssetImage(IconAssets.baggageAdd),
+                              color: Colors.black,
+                            ),
+                            padding: EdgeInsets.zero,
                           ),
                         ],
                       ),
@@ -245,7 +226,8 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                       width: double.infinity,
                       height: getProportionateScreenHeight(170),
                       child: GoogleMap(
-                        myLocationEnabled: true,
+                        myLocationButtonEnabled: false,
+                        // myLocationEnabled: true,
                         mapType: MapType.normal,
                         initialCameraPosition: CameraPosition(
                           target: LatLng(
@@ -253,6 +235,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                               locationDetailViewModel.locationDetail.longitude),
                           zoom: 15,
                         ),
+                        zoomControlsEnabled: false,
                         markers: {
                           Marker(
                               markerId: MarkerId(locationDetailViewModel
