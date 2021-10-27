@@ -8,30 +8,42 @@ class BaggageCart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Padding(
-      padding: EdgeInsets.fromLTRB(
-        0,
-        getProportionateScreenHeight(5),
-        getProportionateScreenWidth(15),
-        getProportionateScreenHeight(5),
-      ),
-      child: CircleAvatar(
-        backgroundColor: Palette.SecondaryColor,
-        radius: 20,
-        child: IconButton(
-          padding: EdgeInsets.zero,
-          icon: ImageIcon(
-            AssetImage(IconAssets.baggage),
+    
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(right: getProportionateScreenWidth(15)),
+          child: CircleAvatar(
+            backgroundColor: Palette.SecondaryColor,
+            radius: 20,
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              icon: ImageIcon(
+                AssetImage(IconAssets.baggage),
+              ),
+              color: Colors.white,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => BaggagePage()),
+                );
+              },
+            ),
           ),
-          color: Colors.white,
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => BaggagePage()),
-            );
-          },
         ),
-      ),
+        Positioned(
+          top: getProportionateScreenHeight(3),
+          right: getProportionateScreenWidth(5),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+                shape: BoxShape.circle, color: Palette.NotificationColor),
+            alignment: Alignment.center,
+            child: Text('10'),
+          ),
+        )
+      ],
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/view/widgets/baggage_cart.dart';
+import 'package:trip_planner/src/view/widgets/loading.dart';
 import 'package:trip_planner/src/view/widgets/location_card.dart';
 import 'package:trip_planner/src/view/widgets/trip_card.dart';
 import 'package:trip_planner/src/view_models/home_view_model.dart';
@@ -13,14 +14,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  @override
-  void initState() {
-    Provider.of<HomeViewModel>(context, listen: false).getHotLocationList();
-    Provider.of<HomeViewModel>(context, listen: false)
-        .getLocationRecommendedList();
-    Provider.of<HomeViewModel>(context, listen: false).getTripRecommendedList();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,19 +58,49 @@ class _HomePageState extends State<HomePage> {
                   fit: BoxFit.fitWidth,
                 ),
               ),
-              LocationCard(
-                header: " สถานที่ยอดฮิต",
-                locationList: homeViewModel.hotLocationList,
+              FutureBuilder(
+                future: Provider.of<HomeViewModel>(context, listen: false)
+                    .getHotLocationList(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    return LocationCard(
+                      header: " สถานที่ยอดฮิต",
+                      locationList: homeViewModel.hotLocationList,
+                    );
+                  } else {
+                    return loadingLocationCard(" สถานที่ยอดฮิต");
+                  }
+                },
               ),
               Divider(),
-              LocationCard(
-                header: " แนะนำสำหรับคุณ",
-                locationList: homeViewModel.locationRecommendedList,
+              FutureBuilder(
+                future: Provider.of<HomeViewModel>(context, listen: false)
+                    .getLocationRecommendedList(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    return LocationCard(
+                      header: " แนะนำสำหรับคุณ",
+                      locationList: homeViewModel.locationRecommendedList,
+                    );
+                  } else {
+                    return loadingLocationCard(" แนะนำสำหรับคุณ");
+                  }
+                },
               ),
               Divider(),
-              TripCard(
-                header: " ทริปที่คุณอาจถูกใจ",
-                tripList: homeViewModel.tripRecommendedList,
+              FutureBuilder(
+                future: Provider.of<HomeViewModel>(context, listen: false)
+                    .getTripRecommendedList(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    return TripCard(
+                      header: " ทริปที่คุณอาจถูกใจ",
+                      tripList: homeViewModel.tripRecommendedList,
+                    );
+                  } else {
+                    return loadingTripCard(" ทริปที่คุณอาจถูกใจ");
+                  }
+                },
               ),
             ],
           ),
@@ -85,4 +108,73 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
+
+Widget loadingLocationCard(String header) {
+  return Container(
+    padding: EdgeInsets.only(
+      top: getProportionateScreenHeight(15),
+    ),
+    child: Column(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: getProportionateScreenWidth(15),
+          ),
+          child: Container(
+            alignment: Alignment.bottomLeft,
+            child: Text(
+              header,
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(left: getProportionateScreenWidth(15)),
+          padding: EdgeInsets.only(top: getProportionateScreenHeight(10)),
+          alignment: Alignment.topCenter,
+          height: getProportionateScreenHeight(160),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ShimmerLocationCard(),
+              ShimmerLocationCard(),
+              ShimmerLocationCard(),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget loadingTripCard(String header) {
+  return Container(
+    padding: EdgeInsets.symmetric(
+      vertical: getProportionateScreenHeight(15),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: getProportionateScreenWidth(15),
+          ),
+          child: Text(
+            header,
+            textAlign: TextAlign.start,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        ShimmerTripCard(),
+      ],
+    ),
+  );
 }
