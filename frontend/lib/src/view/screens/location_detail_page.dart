@@ -340,6 +340,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                             ),
                           ),
                           RatingBarIndicator(
+                            unratedColor: Palette.Outline,
                             rating: locationDetailViewModel
                                 .locationDetail.averageRating,
                             itemBuilder: (context, index) => Icon(
@@ -364,7 +365,8 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                       ),
                       child: OutlinedButton(
                         onPressed: () {
-                          print('เพิ่มรีวิวของคุณ');
+                          locationDetailViewModel.goToReviewPage(
+                              context, locationDetailViewModel.locationDetail.locationName);
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
