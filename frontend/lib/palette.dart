@@ -12,4 +12,5 @@ class Palette {
   static const BackIconColor = Color(0xff212121);
   static const CautionColor = Color(0xffEBAD34);
   static const NotificationColor = Color(0xffE31E18);
+  static const DeleteColor = Color(0xffD44843);
 }
