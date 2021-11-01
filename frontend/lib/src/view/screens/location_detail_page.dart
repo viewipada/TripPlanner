@@ -357,16 +357,16 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                       reviews: locationDetailViewModel.locationDetail.reviews,
                     ),
                     Padding(
-                      padding: EdgeInsets.fromLTRB(
-                        getProportionateScreenWidth(15),
-                        getProportionateScreenHeight(5),
-                        getProportionateScreenWidth(15),
-                        getProportionateScreenHeight(5),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: getProportionateScreenWidth(15),
+                        vertical: getProportionateScreenHeight(5),
                       ),
                       child: OutlinedButton(
                         onPressed: () {
                           locationDetailViewModel.goToReviewPage(
-                              context, locationDetailViewModel.locationDetail.locationName);
+                              context,
+                              locationDetailViewModel
+                                  .locationDetail.locationName);
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
