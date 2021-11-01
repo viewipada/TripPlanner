@@ -7,8 +7,11 @@ module.exports = (sequelize, Sequelize) => {
     dayWork: {
       type: Sequelize.DATE,
     },
-    hourWork: {
-      type: Sequelize.DATETIME,
+    startWork: {
+      type: Sequelize.TIME,
+    },
+    stopWork: {
+      type: Sequelize.TIME,
     },
     status: {
       type: Sequelize.BOOLEAN,
