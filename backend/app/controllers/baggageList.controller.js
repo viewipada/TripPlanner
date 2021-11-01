@@ -1,6 +1,6 @@
 const db = require("../models");
 const Baggage = db.baggage;
-const Location =  db.locations;
+const Location = db.locations;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -37,9 +37,7 @@ exports.findAll = (req, res) => {
     ? { locationName: { [Op.iLike]: `%${locationName}%` } }
     : null;
 
-  Location.
-
-  Baggage.findAll({ where: condition })
+  Location.Baggage.findAll({ where: condition })
     .then((data) => {
       res.send(data);
     })
@@ -55,22 +53,22 @@ exports.delete = (req, res) => {
   const id = req.params.baggageItemId;
 
   Baggage.destroy({
-    where: { id: id }
+    where: { id: id },
   })
-    .then(num => {
+    .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Baggage was deleted successfully!"
+          message: "Baggage was deleted successfully!",
         });
       } else {
         res.send({
-          message: `Cannot delete Baggage with id=${id}. Maybe Baggage was not found!`
+          message: `Cannot delete Baggage with id=${id}. Maybe Baggage was not found!`,
         });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).send({
-        message: "Could not delete Baggage with id=" + id
+        message: "Could not delete Baggage with id=" + id,
       });
     });
 };
