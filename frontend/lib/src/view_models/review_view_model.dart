@@ -22,7 +22,7 @@ class ReviewViewModel with ChangeNotifier {
     }
   }
 
-  Future deleteImage(File image) async {
+  void deleteImage(File image) {
     _images.remove(image);
     notifyListeners();
   }
