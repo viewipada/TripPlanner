@@ -21,6 +21,9 @@ class _ReviewPageState extends State<ReviewPage> {
   final String locationName;
   _ReviewPageState(this.locationName);
 
+  String _caption = '';
+  double _rating = 0;
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -84,7 +87,7 @@ class _ReviewPageState extends State<ReviewPage> {
                           color: Palette.CautionColor,
                         ),
                         onRatingUpdate: (rating) {
-                          print(rating);
+                          _rating = rating;
                         },
                       ),
                     ),
@@ -120,6 +123,7 @@ class _ReviewPageState extends State<ReviewPage> {
                           fontSize: 16,
                         ),
                       ),
+                      onChanged: (value) => _caption = value.trim(),
                     ),
                   ),
                   Row(
@@ -243,7 +247,9 @@ class _ReviewPageState extends State<ReviewPage> {
                 right: getProportionateScreenWidth(15),
                 child: ElevatedButton(
                   onPressed: () {
-                    print('ส่งรีวิว');
+                    print('rating => ${_rating}');
+                    print('caption => ${_caption}');
+                    print('images => ${reviewViewModel.images}');
                   },
                   child: Text(
                     'ส่งรีวิว',
