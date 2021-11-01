@@ -67,21 +67,26 @@ class _ReviewPageState extends State<ReviewPage> {
                       ),
                     ),
                   ),
-                  Center(
-                    child: RatingBar.builder(
-                      glow: false,
-                      unratedColor: Palette.Outline,
-                      initialRating: 0,
-                      minRating: 1,
-                      direction: Axis.horizontal,
-                      itemCount: 5,
-                      itemBuilder: (context, _) => Icon(
-                        Icons.star_rounded,
-                        color: Palette.CautionColor,
+                  Container(
+                    margin: EdgeInsets.only(
+                      bottom: getProportionateScreenHeight(15),
+                    ),
+                    child: Center(
+                      child: RatingBar.builder(
+                        glow: false,
+                        unratedColor: Palette.Outline,
+                        initialRating: 0,
+                        minRating: 1,
+                        direction: Axis.horizontal,
+                        itemCount: 5,
+                        itemBuilder: (context, _) => Icon(
+                          Icons.star_rounded,
+                          color: Palette.CautionColor,
+                        ),
+                        onRatingUpdate: (rating) {
+                          print(rating);
+                        },
                       ),
-                      onRatingUpdate: (rating) {
-                        print(rating);
-                      },
                     ),
                   ),
                   Container(
@@ -103,6 +108,8 @@ class _ReviewPageState extends State<ReviewPage> {
                     margin: EdgeInsets.symmetric(
                       horizontal: getProportionateScreenWidth(15),
                     ),
+                    padding: EdgeInsets.only(
+                        bottom: getProportionateScreenHeight(15)),
                     child: TextField(
                       maxLines: 5,
                       maxLength: 120,
@@ -115,27 +122,43 @@ class _ReviewPageState extends State<ReviewPage> {
                       ),
                     ),
                   ),
-                  Container(
-                    alignment: Alignment.bottomLeft,
-                    margin: EdgeInsets.only(
-                      bottom: getProportionateScreenHeight(15),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: getProportionateScreenWidth(15),
-                      // vertical: getProportionateScreenHeight(15),
-                    ),
-                    child: Text(
-                      'ใส่รูป',
-                      style: TextStyle(
-                        color: Palette.BodyText,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: getProportionateScreenWidth(15),
+                        ),
+                        child: Text(
+                          'ใส่รูป',
+                          style: TextStyle(
+                            color: Palette.BodyText,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
-                    ),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: getProportionateScreenWidth(25),
+                        ),
+                        child: Text(
+                          '${reviewViewModel.images.length}/3',
+                          style: TextStyle(
+                            fontSize: 12.5,
+                            color: Palette.AdditionText,
+                          ),
+                          textAlign: TextAlign.end,
+                        ),
+                      ),
+                    ],
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(
-                        horizontal: getProportionateScreenWidth(15)),
+                      horizontal: getProportionateScreenWidth(15),
+                      vertical: getProportionateScreenHeight(15),
+                    ),
                     child: Row(
                       children: [
                         addImageButton(
@@ -150,7 +173,7 @@ class _ReviewPageState extends State<ReviewPage> {
                         addImageButton(
                           reviewViewModel,
                           ImageSource.gallery,
-                          Icons.add_a_photo_rounded,
+                          Icons.add_photo_alternate_rounded,
                           'คลังรูปภาพ',
                         ),
                       ],
@@ -161,7 +184,6 @@ class _ReviewPageState extends State<ReviewPage> {
                     alignment: Alignment.topCenter,
                     margin: EdgeInsets.symmetric(
                       horizontal: getProportionateScreenWidth(15),
-                      vertical: getProportionateScreenHeight(15),
                     ),
                     child: GridView.builder(
                       physics: NeverScrollableScrollPhysics(),
