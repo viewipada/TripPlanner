@@ -21,7 +21,6 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to API application." });
 });
 
-require("./app/routes/tutorial.routes")(app);
 require("./app/routes/baggage.routes")(app);
 require("./app/routes/location.routes")(app);
 require("./app/routes/review.routes")(app);

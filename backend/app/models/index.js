@@ -25,7 +25,7 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.baggages = require("./baggage.model.js")(sequelize, Sequelize);
+db.baggage = require("./baggage.model.js")(sequelize, Sequelize);
 db.locations = require("./location.model.js")(sequelize, Sequelize);
 db.reviews = require("./review.model.js")(sequelize, Sequelize);
 db.tripItems = require("./tripItem.model.js")(sequelize, Sequelize);
