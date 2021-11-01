@@ -1,11 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
+import 'package:trip_planner/src/view_models/review_view_model.dart';
 
 class ReviewPage extends StatefulWidget {
   ReviewPage({
@@ -22,30 +21,10 @@ class _ReviewPageState extends State<ReviewPage> {
   final String locationName;
   _ReviewPageState(this.locationName);
 
-  List<File> images = [];
-
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    // final navigationBarViewModel = Provider.of<NavigationBarViewModel>(context);
-    Future pickImageFromSource(ImageSource source) async {
-      try {
-        final image = await ImagePicker().pickImage(source: source);
-        if (image == null) return;
-        final imageTemporary = File(image.path);
-        setState(() {
-          this.images.add(imageTemporary);
-        });
-      } on PlatformException catch (e) {
-        print('Failed to pick image $e form camera');
-      }
-    }
-
-    Future deleteImage(File image) async {
-      setState(() {
-        this.images.remove(image);
-      });
-    }
+    final reviewViewModel = Provider.of<ReviewViewModel>(context);
 
     return GestureDetector(
       onTap: () {
@@ -159,98 +138,20 @@ class _ReviewPageState extends State<ReviewPage> {
                         horizontal: getProportionateScreenWidth(15)),
                     child: Row(
                       children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: images.length == 3
-                                ? null
-                                : () {
-                                    pickImageFromSource(ImageSource.camera);
-                                  },
-                            style: ElevatedButton.styleFrom(
-                              shadowColor: Colors.transparent,
-                              padding: EdgeInsets.symmetric(
-                                vertical: getProportionateScreenHeight(10),
-                              ),
-                              primary: Colors.white,
-                              side: BorderSide(
-                                width: 1,
-                                color: images.length == 3
-                                    ? Palette.AdditionText
-                                    : Palette.PrimaryColor,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.add_a_photo_rounded,
-                                  color: images.length == 3
-                                      ? Palette.AdditionText
-                                      : Palette.PrimaryColor,
-                                ),
-                                Text(
-                                  'กล้องถ่ายรูป',
-                                  style: TextStyle(
-                                    color: images.length == 3
-                                        ? Palette.AdditionText
-                                        : Palette.PrimaryColor,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                        addImageButton(
+                          reviewViewModel,
+                          ImageSource.camera,
+                          Icons.add_a_photo_rounded,
+                          'กล้องถ่ายรูป',
                         ),
                         SizedBox(
                           width: getProportionateScreenWidth(5),
                         ),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: images.length == 3
-                                ? null
-                                : () {
-                                    pickImageFromSource(ImageSource.gallery);
-                                  },
-                            style: ElevatedButton.styleFrom(
-                              shadowColor: Colors.transparent,
-                              padding: EdgeInsets.symmetric(
-                                vertical: getProportionateScreenHeight(10),
-                              ),
-                              primary: Colors.white,
-                              side: BorderSide(
-                                width: 1,
-                                color: images.length == 3
-                                    ? Palette.AdditionText
-                                    : Palette.PrimaryColor,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.add_photo_alternate_rounded,
-                                  color: images.length == 3
-                                      ? Palette.AdditionText
-                                      : Palette.PrimaryColor,
-                                ),
-                                Text(
-                                  'คลังรูปภาพ',
-                                  style: TextStyle(
-                                    color: images.length == 3
-                                        ? Palette.AdditionText
-                                        : Palette.PrimaryColor,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                        addImageButton(
+                          reviewViewModel,
+                          ImageSource.gallery,
+                          Icons.add_a_photo_rounded,
+                          'คลังรูปภาพ',
                         ),
                       ],
                     ),
@@ -268,7 +169,7 @@ class _ReviewPageState extends State<ReviewPage> {
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
                       ),
-                      itemCount: images.length,
+                      itemCount: reviewViewModel.images.length,
                       itemBuilder: (context, index) {
                         return Stack(
                           children: [
@@ -278,7 +179,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                     borderRadius: BorderRadius.all(
                                         Radius.circular(10.0))),
                                 child: Image.file(
-                                  this.images[index],
+                                  reviewViewModel.images[index],
                                   height: 100,
                                   width: 100,
                                   fit: BoxFit.cover,
@@ -295,7 +196,8 @@ class _ReviewPageState extends State<ReviewPage> {
                                 child: IconButton(
                                   padding: EdgeInsets.zero,
                                   onPressed: () {
-                                    deleteImage(this.images[index]);
+                                    reviewViewModel.deleteImage(
+                                        reviewViewModel.images[index]);
                                   },
                                   icon: Icon(
                                     Icons.cancel_rounded,
@@ -342,4 +244,51 @@ class _ReviewPageState extends State<ReviewPage> {
       ),
     );
   }
+}
+
+Widget addImageButton(ReviewViewModel reviewViewModel, ImageSource source,
+    IconData iconData, String title) {
+  final _color = reviewViewModel.images.length == 3
+      ? Palette.AdditionText
+      : Palette.PrimaryColor;
+
+  return Expanded(
+    child: ElevatedButton(
+      onPressed: reviewViewModel.images.length == 3
+          ? null
+          : () {
+              reviewViewModel.pickImageFromSource(source);
+            },
+      style: ElevatedButton.styleFrom(
+        shadowColor: Colors.transparent,
+        padding: EdgeInsets.symmetric(
+          vertical: getProportionateScreenHeight(10),
+        ),
+        primary: Colors.white,
+        side: BorderSide(
+          width: 1,
+          color: _color,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            iconData,
+            color: _color,
+          ),
+          Text(
+            title,
+            style: TextStyle(
+              color: _color,
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
