@@ -117,6 +117,8 @@ class _ReviewPageState extends State<ReviewPage> {
                       maxLines: 5,
                       maxLength: 120,
                       decoration: const InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
                         border: OutlineInputBorder(),
                         hintText: 'ประทับใจ สถานที่สวย บรรยากาศชวนฝัน',
                         hintStyle: TextStyle(
