@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/src/view/screens/home_page.dart';
+import 'package:trip_planner/src/view/screens/trip_form_page.dart';
 import 'package:trip_planner/src/view_models/navigation_bar_view_model.dart';
 
 class NavigationBar extends StatefulWidget {
@@ -26,9 +27,7 @@ class _NavigationBarState extends State<NavigationBar> {
             Container(
               color: Colors.amber,
             ),
-            Container(
-              color: Colors.green,
-            ),
+            TripFormPage(),
             Container(
               color: Colors.red,
             ),
