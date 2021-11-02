@@ -258,7 +258,7 @@ class _ReviewPageState extends State<ReviewPage> {
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
                               title: Text(
-                                'กรุณาให้คะแนนด้วยค่ะ',
+                                'กรุณาให้คะแนนด้วยนะคะ',
                                 style: TextStyle(
                                   color: Palette.BodyText,
                                   fontSize: 14,
