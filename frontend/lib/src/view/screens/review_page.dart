@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -249,9 +251,36 @@ class _ReviewPageState extends State<ReviewPage> {
                 right: getProportionateScreenWidth(15),
                 child: ElevatedButton(
                   onPressed: () {
-                    print('rating => ${_rating}');
-                    print('caption => ${_caption}');
-                    print('images => ${reviewViewModel.images}');
+                    _rating != 0
+                        ? print(
+                            'rating => ${_rating}\ncaption => ${_caption}\nimages => ${reviewViewModel.images}')
+                        : showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: Text(
+                                'กรุณาให้คะแนนด้วยค่ะ',
+                                style: TextStyle(
+                                  color: Palette.BodyText,
+                                  fontSize: 14,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              contentPadding: EdgeInsets.zero,
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, 'โอเค'),
+                                  child: const Text(
+                                    'โอเค',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
                   },
                   child: Text(
                     'ส่งรีวิว',
