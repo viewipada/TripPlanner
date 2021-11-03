@@ -6,6 +6,7 @@ import 'package:trip_planner/src/view_models/baggage_view_model.dart';
 import 'package:trip_planner/src/view_models/home_view_model.dart';
 import 'package:trip_planner/src/view_models/location_detail_view_model.dart';
 import 'package:trip_planner/src/view_models/navigation_bar_view_model.dart';
+import 'package:trip_planner/src/view_models/review_view_model.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => HomeViewModel()),
         ChangeNotifierProvider(create: (_) => NavigationBarViewModel()),
         ChangeNotifierProvider(create: (_) => LocationDetailViewModel()),
+        ChangeNotifierProvider(create: (_) => ReviewViewModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

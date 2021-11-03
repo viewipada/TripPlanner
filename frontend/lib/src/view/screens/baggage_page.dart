@@ -109,7 +109,7 @@ class _BaggagePageState extends State<BaggagePage> {
                         builder: (context, index, animation, renderingMode) {
                           return IconSlideAction(
                             caption: 'ลบรายการ',
-                            color: Colors.red,
+                            color: Palette.DeleteColor,
                             icon: Icons.delete,
                             onTap: () => {
                               if (slidableController.activeState != null)

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trip_planner/src/models/response/location_detail_response.dart';
 import 'package:trip_planner/src/services/location_service.dart';
+import 'package:trip_planner/src/view/screens/review_page.dart';
 
 class LocationDetailViewModel with ChangeNotifier {
   bool _readMore = false;
@@ -20,6 +21,15 @@ class LocationDetailViewModel with ChangeNotifier {
     _locationDetail = await LocationService().getLocationDetailById(locationId);
     notifyListeners();
     return _locationDetail;
+  }
+
+  void goToReviewPage(BuildContext context, String locationName) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ReviewPage(locationName: locationName),
+      ),
+    );
   }
 
   bool get readMore => _readMore;
