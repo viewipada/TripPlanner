@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
-import 'package:trip_planner/src/view/widgets/tag_category.dart';
-import 'package:trip_planner/src/view_models/baggage_view_model.dart';
+import 'package:trip_planner/src/view_models/trip_form_view_model.dart';
 
 class TripFormPage extends StatefulWidget {
   @override
@@ -20,7 +18,7 @@ class _TripFormPageState extends State<TripFormPage> {
       fontSize: 16,
       color: Palette.AdditionText,
     );
-    // final baggageViewModel = Provider.of<BaggageViewModel>(context);
+    final tripFormViewModel = Provider.of<TripFormViewModel>(context);
 
     return GestureDetector(
       onTap: () {
@@ -153,7 +151,7 @@ class _TripFormPageState extends State<TripFormPage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        'วันเริ่มต้นทริป',
+                        tripFormViewModel.startDate,
                         style: textStyle,
                       ),
                       Padding(
@@ -162,11 +160,13 @@ class _TripFormPageState extends State<TripFormPage> {
                           vertical: getProportionateScreenHeight(30),
                         ),
                         child: IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            tripFormViewModel.pickDate(context);
+                          },
                           padding: EdgeInsets.zero,
                           constraints: BoxConstraints(),
                           icon: Icon(
-                            Icons.calendar_today_outlined,
+                            Icons.calendar_today_rounded,
                             color: Palette.PrimaryColor,
                           ),
                         ),
@@ -203,7 +203,6 @@ class _TripFormPageState extends State<TripFormPage> {
                             ' ค้นหาจุดเริ่มต้น',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Palette.AdditionText,
                             ),
                           ),
                         ],
@@ -246,7 +245,6 @@ class _TripFormPageState extends State<TripFormPage> {
                             ' เลือกจุดเริ่มต้น',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Palette.AdditionText,
                             ),
                           ),
                         ],
