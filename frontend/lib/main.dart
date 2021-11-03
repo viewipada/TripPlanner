@@ -7,13 +7,13 @@ import 'package:trip_planner/src/view_models/home_view_model.dart';
 import 'package:trip_planner/src/view_models/location_detail_view_model.dart';
 import 'package:trip_planner/src/view_models/navigation_bar_view_model.dart';
 import 'package:trip_planner/src/view_models/review_view_model.dart';
+import 'package:trip_planner/src/view_models/trip_form_view_model.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -23,12 +23,13 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => NavigationBarViewModel()),
         ChangeNotifierProvider(create: (_) => LocationDetailViewModel()),
         ChangeNotifierProvider(create: (_) => ReviewViewModel()),
+        ChangeNotifierProvider(create: (_) => TripFormViewModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'EZtrip',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Palette.PrimarySwatchColor,
           scaffoldBackgroundColor: Palette.BackgroundColor,
           fontFamily: 'Sukhumvit',
           dividerTheme: DividerThemeData(
