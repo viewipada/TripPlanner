@@ -6,11 +6,20 @@ import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/view_models/trip_form_view_model.dart';
 
 class TripFormPage extends StatefulWidget {
+  final double bodyHeight;
+
+  TripFormPage({
+    required this.bodyHeight,
+  });
+
   @override
-  _TripFormPageState createState() => _TripFormPageState();
+  _TripFormPageState createState() => _TripFormPageState(this.bodyHeight);
 }
 
 class _TripFormPageState extends State<TripFormPage> {
+  final double bodyHeight;
+  _TripFormPageState(this.bodyHeight);
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -21,12 +30,7 @@ class _TripFormPageState extends State<TripFormPage> {
     final tripFormViewModel = Provider.of<TripFormViewModel>(context);
 
     return GestureDetector(
-      onTap: () {
-        FocusScopeNode currentFocus = FocusScope.of(context);
-        if (!currentFocus.hasPrimaryFocus) {
-          currentFocus.unfocus();
-        }
-      },
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -52,9 +56,11 @@ class _TripFormPageState extends State<TripFormPage> {
           backgroundColor: Colors.white,
         ),
         body: SafeArea(
-          child: Stack(
-            children: [
-              Column(
+          child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            child: Container(
+              height: getBodyHeightWithAppBarAndBottomBar(bodyHeight),
+              child: Column(
                 children: [
                   Container(
                     alignment: Alignment.bottomLeft,
@@ -258,31 +264,37 @@ class _TripFormPageState extends State<TripFormPage> {
                       ),
                     ),
                   ),
+                  Expanded(
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          height: getProportionateScreenHeight(48),
+                          bottom: getProportionateScreenHeight(15),
+                          left: getProportionateScreenWidth(15),
+                          right: getProportionateScreenWidth(15),
+                          child: ElevatedButton(
+                            onPressed: () {},
+                            child: Text(
+                              'เริ่มสร้างทริป',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              primary: Palette.PrimaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-              Positioned(
-                height: getProportionateScreenHeight(48),
-                bottom: getProportionateScreenHeight(15),
-                left: getProportionateScreenWidth(15),
-                right: getProportionateScreenWidth(15),
-                child: ElevatedButton(
-                  onPressed: () {},
-                  child: Text(
-                    'เริ่มสร้างทริป',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    primary: Palette.PrimaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),

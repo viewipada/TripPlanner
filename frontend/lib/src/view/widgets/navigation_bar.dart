@@ -17,21 +17,25 @@ class _NavigationBarState extends State<NavigationBar> {
 
     return Scaffold(
       body: SafeArea(
-        child: PageView(
-          controller: navigationBarViewModel.pageController,
-          onPageChanged: (index) {
-            navigationBarViewModel.onSlidePageView(index);
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return PageView(
+              controller: navigationBarViewModel.pageController,
+              onPageChanged: (index) {
+                navigationBarViewModel.onSlidePageView(index);
+              },
+              children: [
+                HomePage(),
+                Container(
+                  color: Colors.amber,
+                ),
+                TripFormPage(bodyHeight: constraints.maxHeight),
+                Container(
+                  color: Colors.red,
+                ),
+              ],
+            );
           },
-          children: [
-            HomePage(),
-            Container(
-              color: Colors.amber,
-            ),
-            TripFormPage(),
-            Container(
-              color: Colors.red,
-            ),
-          ],
         ),
       ),
       bottomNavigationBar: SafeArea(
