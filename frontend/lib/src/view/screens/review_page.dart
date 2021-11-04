@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -264,20 +265,22 @@ class _ReviewPageState extends State<ReviewPage> {
                                       builder: (BuildContext context) =>
                                           AlertDialog(
                                         title: Text(
-                                          'กรุณาให้คะแนนด้วยนะคะ',
+                                          'กรุณาให้คะแนนสถานที่นี้',
                                           style: TextStyle(
                                             color: Palette.BodyText,
                                             fontSize: 14,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                           textAlign: TextAlign.center,
                                         ),
                                         contentPadding: EdgeInsets.zero,
+                                        actionsAlignment: MainAxisAlignment.center,
                                         actions: <Widget>[
                                           TextButton(
                                             onPressed: () =>
                                                 Navigator.pop(context, 'โอเค'),
                                             child: const Text(
-                                              'โอเค',
+                                              'โอเค!',
                                               style: TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.bold,
