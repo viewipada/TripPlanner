@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +35,51 @@ class _TripFormPageState extends State<TripFormPage> {
       child: Scaffold(
         appBar: AppBar(
           leading: TextButton(
-            onPressed: () {},
+            onPressed: () => showDialog<String>(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title: const Text(
+                  'ต้องการยกเลิกทริปหรือไม่',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    color: Palette.BodyText,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                content: const Text(
+                  'ทริปที่คุณสร้างไว้ยังไม่สำเร็จ หากคุณยกเลิกทริปจะไม่สามารถนำกลับมาทำต่อได้',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Palette.AdditionText,
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'ทำต่อ'),
+                    child: const Text(
+                      'ทำต่อ',
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'ยกเลิกทริป'),
+                    child: const Text(
+                      'ยกเลิกทริป',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
+                      ),
+                    ),
+                    style: TextButton.styleFrom(
+                      backgroundColor: Palette.NotificationColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             child: Text("ยกเลิก"),
             style: TextButton.styleFrom(
               padding: EdgeInsets.symmetric(
