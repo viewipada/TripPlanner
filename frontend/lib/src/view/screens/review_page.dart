@@ -39,7 +39,6 @@ class _ReviewPageState extends State<ReviewPage> {
         }
       },
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: Text(
             "ให้คะแนนสถานที่",
@@ -52,9 +51,14 @@ class _ReviewPageState extends State<ReviewPage> {
           backgroundColor: Colors.white,
         ),
         body: SafeArea(
-          child: Stack(
-            children: [
-              Column(
+          child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            child: Container(
+              height: SizeConfig.screenHeight -
+                  AppBar().preferredSize.height -
+                  MediaQuery.of(context).padding.bottom -
+                  MediaQuery.of(context).padding.top,
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
@@ -242,62 +246,69 @@ class _ReviewPageState extends State<ReviewPage> {
                       },
                     ),
                   ),
+                  Expanded(
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          height: getProportionateScreenHeight(48),
+                          bottom: getProportionateScreenHeight(15),
+                          left: getProportionateScreenWidth(15),
+                          right: getProportionateScreenWidth(15),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _rating != 0
+                                  ? print(
+                                      'rating => ${_rating}\ncaption => ${_caption}\nimages => ${reviewViewModel.images}')
+                                  : showDialog<String>(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          AlertDialog(
+                                        title: Text(
+                                          'กรุณาให้คะแนนด้วยนะคะ',
+                                          style: TextStyle(
+                                            color: Palette.BodyText,
+                                            fontSize: 14,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        contentPadding: EdgeInsets.zero,
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context, 'โอเค'),
+                                            child: const Text(
+                                              'โอเค',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                            },
+                            child: Text(
+                              'ส่งรีวิว',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              primary: Palette.PrimaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-              Positioned(
-                height: getProportionateScreenHeight(48),
-                bottom: getProportionateScreenHeight(5),
-                left: getProportionateScreenWidth(15),
-                right: getProportionateScreenWidth(15),
-                child: ElevatedButton(
-                  onPressed: () {
-                    _rating != 0
-                        ? print(
-                            'rating => ${_rating}\ncaption => ${_caption}\nimages => ${reviewViewModel.images}')
-                        : showDialog<String>(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                              title: Text(
-                                'กรุณาให้คะแนนด้วยนะคะ',
-                                style: TextStyle(
-                                  color: Palette.BodyText,
-                                  fontSize: 14,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              contentPadding: EdgeInsets.zero,
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(context, 'โอเค'),
-                                  child: const Text(
-                                    'โอเค',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                  },
-                  child: Text(
-                    'ส่งรีวิว',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    primary: Palette.PrimaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
