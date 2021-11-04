@@ -32,7 +32,6 @@ class _TripFormPageState extends State<TripFormPage> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           leading: TextButton(
             onPressed: () {},
