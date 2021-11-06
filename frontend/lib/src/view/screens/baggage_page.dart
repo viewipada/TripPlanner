@@ -349,12 +349,8 @@ class _BaggagePageState extends State<BaggagePage> {
                   right: getProportionateScreenWidth(15),
                   child: ElevatedButton(
                     onPressed: () {
-                      baggageViewModel.selectedList
-                          .forEach((element) => print(element.locationName));
-                      print("-------------------- " +
-                          baggageViewModel.selectedList.length.toString() +
-                          " --------------------");
-                      // baggageViewModel.createTripWithSelectedList(baggageViewModel.selectedList);
+                      baggageViewModel.goToCreateTripForm(
+                          context, baggageViewModel.selectedList);
                     },
                     child: Text(
                       'เริ่มสร้างทริป',
