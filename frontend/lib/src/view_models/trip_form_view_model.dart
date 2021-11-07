@@ -35,6 +35,14 @@ class TripFormViewModel with ChangeNotifier {
     );
   }
 
+  void goToCreateTrip(BuildContext context,
+      List<BaggageResponse> startPointList, BaggageResponse startPoint) {
+    startPointList.remove(startPoint);
+    startPointList.insert(0, startPoint);
+    startPointList
+        .forEach((startPointList) => print(startPointList.locationName));
+  }
+
   DateTime get date => _date!;
   String get startDate => _startDate;
 }

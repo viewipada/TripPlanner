@@ -10,18 +10,22 @@ import 'package:trip_planner/src/view_models/trip_form_view_model.dart';
 
 class TripFormPage extends StatefulWidget {
   final List<BaggageResponse> startPointList;
+  final int pointIndex;
 
   TripFormPage({
     required this.startPointList,
+    required this.pointIndex,
   });
 
   @override
-  _TripFormPageState createState() => _TripFormPageState(this.startPointList);
+  _TripFormPageState createState() =>
+      _TripFormPageState(this.startPointList, this.pointIndex);
 }
 
 class _TripFormPageState extends State<TripFormPage> {
   final List<BaggageResponse> startPointList;
-  _TripFormPageState(this.startPointList);
+  final int pointIndex;
+  _TripFormPageState(this.startPointList, this.pointIndex);
 
   @override
   Widget build(BuildContext context) {
@@ -235,9 +239,29 @@ class _TripFormPageState extends State<TripFormPage> {
                         margin: EdgeInsets.only(
                             bottom: getProportionateScreenHeight(15)),
                         alignment: Alignment.bottomLeft,
-                        child: Text(
-                          'จุดเริ่มต้นการท่องเที่ยว',
-                          style: textStyle,
+                        child: Row(
+                          children: [
+                            Text(
+                              'จุดเริ่มต้นการท่องเที่ยว',
+                              style: textStyle,
+                            ),
+                            if (!startPointList.isEmpty)
+                              IconButton(
+                                constraints: BoxConstraints(),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: getProportionateScreenWidth(5),
+                                  vertical: 0,
+                                ),
+                                onPressed: () {
+                                  tripFormViewModel.goToSearchStartPoint(
+                                      context, startPointList);
+                                },
+                                icon: Icon(
+                                  Icons.edit_location_alt_outlined,
+                                  color: Palette.BodyText,
+                                ),
+                              ),
+                          ],
                         ),
                       ),
                       startPointList.isEmpty
@@ -273,7 +297,8 @@ class _TripFormPageState extends State<TripFormPage> {
                                 ),
                               ),
                             )
-                          : StartPointCard(item: startPointList[0])
+                          : StartPointCard(
+                              item: startPointList.elementAt(this.pointIndex))
                     ],
                   ),
                 ),
@@ -286,7 +311,10 @@ class _TripFormPageState extends State<TripFormPage> {
                   horizontal: getProportionateScreenWidth(15),
                 ),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    tripFormViewModel.goToCreateTrip(context, startPointList,
+                        startPointList.elementAt(this.pointIndex));
+                  },
                   child: Text(
                     'เริ่มสร้างทริป',
                     style: TextStyle(

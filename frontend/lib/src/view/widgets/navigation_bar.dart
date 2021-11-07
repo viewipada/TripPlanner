@@ -29,9 +29,7 @@ class _NavigationBarState extends State<NavigationBar> {
                 Container(
                   color: Colors.amber,
                 ),
-                TripFormPage(
-                  startPointList: [],
-                ),
+                TripFormPage(startPointList: [], pointIndex: 0),
                 Container(
                   color: Colors.red,
                 ),
