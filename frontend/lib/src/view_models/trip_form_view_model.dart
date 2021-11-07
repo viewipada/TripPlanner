@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:trip_planner/src/models/response/baggage_response.dart';
+import 'package:trip_planner/src/view/screens/search_start_point_page.dart';
 
 class TripFormViewModel with ChangeNotifier {
   DateTime? _date;
@@ -20,6 +22,17 @@ class TripFormViewModel with ChangeNotifier {
     _date = newDate;
     _startDate = '${_date!.day}/${_date!.month}/${_date!.year}';
     notifyListeners();
+  }
+
+  void goToSearchStartPoint(
+      BuildContext context, List<BaggageResponse> startPointList) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            SearchStartPointPage(startPointList: startPointList),
+      ),
+    );
   }
 
   DateTime get date => _date!;

@@ -247,7 +247,8 @@ class _TripFormPageState extends State<TripFormPage> {
                               ),
                               child: OutlinedButton(
                                 onPressed: () {
-                                  print('เลือกจุดเริ่มต้น');
+                                  tripFormViewModel.goToSearchStartPoint(
+                                      context, startPointList);
                                 },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
