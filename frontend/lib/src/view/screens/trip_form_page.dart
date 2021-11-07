@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
+import 'package:trip_planner/src/view/widgets/start_point_card.dart';
 import 'package:trip_planner/src/view_models/trip_form_view_model.dart';
 
 class TripFormPage extends StatefulWidget {
@@ -239,37 +240,39 @@ class _TripFormPageState extends State<TripFormPage> {
                           style: textStyle,
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: getProportionateScreenWidth(15),
-                        ),
-                        child: OutlinedButton(
-                          onPressed: () {
-                            print('เลือกจุดเริ่มต้น');
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Icon(
-                                Icons.location_on_outlined,
+                      startPointList.isEmpty
+                          ? Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: getProportionateScreenWidth(15),
                               ),
-                              Text(
-                                ' เลือกจุดเริ่มต้น',
-                                style: TextStyle(
-                                  fontSize: 14,
+                              child: OutlinedButton(
+                                onPressed: () {
+                                  print('เลือกจุดเริ่มต้น');
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Icon(
+                                      Icons.location_on_outlined,
+                                    ),
+                                    Text(
+                                      ' เลือกจุดเริ่มต้น',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                style: OutlinedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  padding: EdgeInsets.all(12),
+                                  primary: Palette.AdditionText,
+                                  alignment: Alignment.center,
+                                  side: BorderSide(color: Palette.AdditionText),
                                 ),
                               ),
-                            ],
-                          ),
-                          style: OutlinedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            padding: EdgeInsets.all(12),
-                            primary: Palette.AdditionText,
-                            alignment: Alignment.center,
-                            side: BorderSide(color: Palette.AdditionText),
-                          ),
-                        ),
-                      ),
+                            )
+                          : StartPointCard(item: startPointList[0])
                     ],
                   ),
                 ),

@@ -71,14 +71,16 @@ class BaggageViewModel with ChangeNotifier {
     );
   }
 
-   void goToCreateTripForm(BuildContext context,List<BaggageResponse>  selectedList){
-       Navigator.push(
+  void goToCreateTripForm(
+      BuildContext context, List<BaggageResponse> selectedList) {
+    Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SearchStartPointPage(startPointList: selectedList),
+        builder: (context) =>
+            SearchStartPointPage(startPointList: selectedList),
       ),
     );
-   }
+  }
 
   List<BaggageResponse> get baggageList => _baggageList;
   List<BaggageResponse> get selectedList => _selectedList;
