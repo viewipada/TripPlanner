@@ -26,7 +26,3 @@ double getProportionateScreenWidth(double inputWidth) {
   double screenWidth = SizeConfig.screenWidth;
   return (inputWidth / 375.0) * screenWidth;
 }
-
-double getBodyHeightWithAppBarAndBottomBar(double inputHeight) {
-  return inputHeight - AppBar().preferredSize.height;
-}

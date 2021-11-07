@@ -29,7 +29,9 @@ class _NavigationBarState extends State<NavigationBar> {
                 Container(
                   color: Colors.amber,
                 ),
-                TripFormPage(bodyHeight: constraints.maxHeight),
+                TripFormPage(
+                  startPointList: [],
+                ),
                 Container(
                   color: Colors.red,
                 ),

@@ -4,22 +4,23 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
+import 'package:trip_planner/src/models/response/baggage_response.dart';
 import 'package:trip_planner/src/view_models/trip_form_view_model.dart';
 
 class TripFormPage extends StatefulWidget {
-  final double bodyHeight;
+  final List<BaggageResponse> startPointList;
 
   TripFormPage({
-    required this.bodyHeight,
+    required this.startPointList,
   });
 
   @override
-  _TripFormPageState createState() => _TripFormPageState(this.bodyHeight);
+  _TripFormPageState createState() => _TripFormPageState(this.startPointList);
 }
 
 class _TripFormPageState extends State<TripFormPage> {
-  final double bodyHeight;
-  _TripFormPageState(this.bodyHeight);
+  final List<BaggageResponse> startPointList;
+  _TripFormPageState(this.startPointList);
 
   @override
   Widget build(BuildContext context) {
@@ -100,245 +101,204 @@ class _TripFormPageState extends State<TripFormPage> {
           backgroundColor: Colors.white,
         ),
         body: SafeArea(
-          child: SingleChildScrollView(
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            child: Container(
-              height: getBodyHeightWithAppBarAndBottomBar(bodyHeight),
-              child: Column(
-                children: [
-                  Container(
-                    alignment: Alignment.bottomLeft,
-                    margin: EdgeInsets.symmetric(
-                      horizontal: getProportionateScreenWidth(15),
-                    ),
-                    padding:
-                        EdgeInsets.only(top: getProportionateScreenHeight(15)),
-                    child: Text(
-                      'ตั้งชื่อทริป',
-                      style: textStyle,
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(
-                      horizontal: getProportionateScreenWidth(15),
-                      vertical: getProportionateScreenHeight(10),
-                    ),
-                    child: TextField(
-                      maxLength: 30,
-                      decoration: const InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(),
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 0, horizontal: 12),
-                        hintText: 'ตั้งชื่อทริป... เช่น ลำโพงมันดัง ลำปางมันดี',
-                        hintStyle: TextStyle(
-                          fontSize: 14,
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
+                  child: Column(
+                    children: [
+                      Container(
+                        alignment: Alignment.bottomLeft,
+                        margin: EdgeInsets.symmetric(
+                          horizontal: getProportionateScreenWidth(15),
+                        ),
+                        padding: EdgeInsets.only(
+                            top: getProportionateScreenHeight(15)),
+                        child: Text(
+                          'ตั้งชื่อทริป',
+                          style: textStyle,
                         ),
                       ),
-                      onChanged: (value) => {},
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(
-                      horizontal: getProportionateScreenWidth(15),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: Text(
-                            'ไปกี่คน',
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                          horizontal: getProportionateScreenWidth(15),
+                          vertical: getProportionateScreenHeight(10),
+                        ),
+                        child: TextField(
+                          maxLength: 30,
+                          decoration: const InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(),
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 0, horizontal: 12),
+                            hintText:
+                                'ตั้งชื่อทริป... เช่น ลำโพงมันดัง ลำปางมันดี',
+                            hintStyle: TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                          onChanged: (value) => {},
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                          horizontal: getProportionateScreenWidth(15),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                'ไปกี่คน',
+                                style: textStyle,
+                              ),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: TextFormField(
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 0, horizontal: 12),
+                                ),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: getProportionateScreenWidth(15),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                'ไปกี่วัน',
+                                style: textStyle,
+                              ),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: TextFormField(
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 0, horizontal: 12),
+                                ),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            tripFormViewModel.startDate,
                             style: textStyle,
                           ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: TextFormField(
-                            keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              filled: true,
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(),
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 0, horizontal: 12),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: getProportionateScreenWidth(15),
+                              vertical: getProportionateScreenHeight(30),
                             ),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: getProportionateScreenWidth(15),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Text(
-                            'ไปกี่วัน',
-                            style: textStyle,
-                          ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: TextFormField(
-                            keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              filled: true,
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(),
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 0, horizontal: 12),
+                            child: IconButton(
+                              onPressed: () {
+                                tripFormViewModel.pickDate(context);
+                              },
+                              padding: EdgeInsets.zero,
+                              constraints: BoxConstraints(),
+                              icon: Icon(
+                                Icons.calendar_today_rounded,
+                                color: Palette.PrimaryColor,
+                              ),
                             ),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
                           ),
+                        ],
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: getProportionateScreenWidth(15),
                         ),
-                      ],
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        tripFormViewModel.startDate,
-                        style: textStyle,
+                        margin: EdgeInsets.only(
+                            bottom: getProportionateScreenHeight(15)),
+                        alignment: Alignment.bottomLeft,
+                        child: Text(
+                          'จุดเริ่มต้นการท่องเที่ยว',
+                          style: textStyle,
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: getProportionateScreenWidth(15),
-                          vertical: getProportionateScreenHeight(30),
                         ),
-                        child: IconButton(
+                        child: OutlinedButton(
                           onPressed: () {
-                            tripFormViewModel.pickDate(context);
+                            print('เลือกจุดเริ่มต้น');
                           },
-                          padding: EdgeInsets.zero,
-                          constraints: BoxConstraints(),
-                          icon: Icon(
-                            Icons.calendar_today_rounded,
-                            color: Palette.PrimaryColor,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.location_on_outlined,
+                              ),
+                              Text(
+                                ' เลือกจุดเริ่มต้น',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            padding: EdgeInsets.all(12),
+                            primary: Palette.AdditionText,
+                            alignment: Alignment.center,
+                            side: BorderSide(color: Palette.AdditionText),
                           ),
                         ),
                       ),
                     ],
                   ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: getProportionateScreenWidth(15),
-                    ),
-                    margin: EdgeInsets.only(
-                        bottom: getProportionateScreenHeight(15)),
-                    alignment: Alignment.bottomLeft,
-                    child: Text(
-                      'จุดเริ่มต้นการท่องเที่ยว',
-                      style: textStyle,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: getProportionateScreenWidth(15),
-                    ),
-                    child: OutlinedButton(
-                      onPressed: () {
-                        print('ค้นหาจุดเริ่มต้น');
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Icon(
-                            Icons.search_rounded,
-                          ),
-                          Text(
-                            ' ค้นหาจุดเริ่มต้น',
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        padding: EdgeInsets.all(12),
-                        primary: Palette.AdditionText,
-                        alignment: Alignment.center,
-                        side: BorderSide(color: Palette.AdditionText),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: getProportionateScreenHeight(5)),
-                    child: Text(
-                      'หรือ',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Palette.AdditionText,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: getProportionateScreenWidth(15),
-                    ),
-                    child: OutlinedButton(
-                      onPressed: () {
-                        print('เลือกจุดเริ่มต้น');
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Icon(
-                            Icons.location_on_outlined,
-                          ),
-                          Text(
-                            ' เลือกจุดเริ่มต้น',
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        padding: EdgeInsets.all(12),
-                        primary: Palette.AdditionText,
-                        alignment: Alignment.center,
-                        side: BorderSide(color: Palette.AdditionText),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          height: getProportionateScreenHeight(48),
-                          bottom: getProportionateScreenHeight(15),
-                          left: getProportionateScreenWidth(15),
-                          right: getProportionateScreenWidth(15),
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            child: Text(
-                              'เริ่มสร้างทริป',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              primary: Palette.PrimaryColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
+              Container(
+                width: double.infinity,
+                height: getProportionateScreenHeight(48),
+                margin: EdgeInsets.symmetric(
+                  vertical: getProportionateScreenHeight(15),
+                  horizontal: getProportionateScreenWidth(15),
+                ),
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: Text(
+                    'เริ่มสร้างทริป',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Palette.PrimaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
