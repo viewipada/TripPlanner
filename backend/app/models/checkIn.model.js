@@ -2,7 +2,6 @@ module.exports = (sequelize, Sequelize) => {
   const CheckIn = sequelize.define(
     "checkIn",
     {
-      timestamps: false,
       checkInId: {
         type: Sequelize.INTEGER,
         primaryKey: true,

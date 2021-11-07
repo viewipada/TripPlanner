@@ -25,26 +25,22 @@ exports.create = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the Baggage.",
+        message: err.message || "Some error occurred while creating the Baggage.",
       });
     });
 };
 
 exports.findAll = (req, res) => {
   const locationName = req.query.locationName;
-  var condition = locationName
-    ? { locationName: { [Op.iLike]: `%${locationName}%` } }
-    : null;
+  var condition = locationName ? { locationName: { [Op.iLike]: `%${locationName}%` } } : null;
 
-  Location.Baggage.findAll({ where: condition })
+  Baggage.findAll({ where: condition })
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving tutorials.",
+        message: err.message || "Some error occurred while retrieving tutorials.",
       });
     });
 };

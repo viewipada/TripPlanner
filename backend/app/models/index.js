@@ -39,4 +39,36 @@ db.trips = require("./trip.model.js")(sequelize, Sequelize);
 db.users = require("./user.model.js")(sequelize, Sequelize);
 db.userInterested = require("./userInterested.model.js")(sequelize, Sequelize);
 
+// Set Relation
+db.locations.hasMany(db.reviews, { foreignKey: "locationId", sourceKey: "locationId" });
+
+db.locations.hasMany(db.checkIns, { foreignKey: "locationId", sourceKey: "locationId" });
+
+db.locations.hasMany(db.locationOpeningDayHours, {
+  foreignKey: "locationId",
+  sourceKey: "locationId",
+});
+
+db.locations.hasMany(db.activities, { foreignKey: "locationId", sourceKey: "locationId" });
+
+db.tripItems.hasOne(db.locations, { foreignKey: "locationId", sourceKey: "locationId" });
+
+db.trips.hasMany(db.tripItems, { foreignKey: "tripId", sourceKey: "tripId" });
+
+db.baggage.hasMany(db.locations, { foreignKey: "locationId", sourceKey: "locationId" });
+
+db.users.hasMany(db.reviews, { fareingkey: "userId", sourceKey: "id" });
+
+db.users.hasMany(db.trips, { fariengkey: "userId", sourceKey: "id" });
+
+db.users.hasMany(db.checkIns, { fariengkey: "userId", sourceKey: "id" });
+
+db.users.hasMany(db.userInterested, { fariengkey: "userId", sourceKey: "id" });
+
+db.users.hasMany(db.activities, { fariengkey: "userId", sourceKey: "id" });
+
+db.users.hasOne(db.baggage, { fariengkey: "userId", sourceKey: "id" });
+
+db.users.hasMany(db.settingDurations, { fariengkey: "userId", sourceKey: "id" });
+
 module.exports = db;
