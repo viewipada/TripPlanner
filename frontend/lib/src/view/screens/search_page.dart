@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/view/widgets/baggage_cart.dart';
+import 'package:trip_planner/src/view_models/search_view_model.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -19,7 +20,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    // final homeViewModel = Provider.of<HomeViewModel>(context);
+    final searchViewModel = Provider.of<SearchViewModel>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -67,7 +68,9 @@ class _SearchPageState extends State<SearchPage> {
                   vertical: getProportionateScreenHeight(5),
                 ),
                 child: ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    searchViewModel.goToMyLocationPage(context, 'ทั้งหมด');
+                  },
                   icon: Icon(
                     Icons.map_rounded,
                     color: Colors.white,
