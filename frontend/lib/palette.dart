@@ -35,4 +35,5 @@ class Palette {
   static const LightGreenColor = Color(0xff5BE7A9);
   static const PeachColor = Color(0xffFF6464);
   static const LightOrangeColor = Color(0xffFFBD67);
+  static const SelectedListTileColor = Color(0xffEBECED);
 }
