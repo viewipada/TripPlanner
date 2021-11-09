@@ -37,6 +37,7 @@ dependencies:
   image_picker: ^0.8.4+3
   shared_preferences: ^2.0.8
   flutter_spinbox: ^0.6.0
+  location: ^4.3.0
 
 dev_dependencies:
   flutter_test:
@@ -56,6 +57,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/map_style.txt
 
   fonts:
     - family: Sukhumvit
