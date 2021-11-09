@@ -245,8 +245,9 @@ class _TripFormPageState extends State<TripFormPage> {
                               'จุดเริ่มต้นการท่องเที่ยว',
                               style: textStyle,
                             ),
-                            if (!startPointList.isEmpty)
-                              IconButton(
+                            Visibility(
+                              visible: startPointList.isNotEmpty,
+                              child: IconButton(
                                 constraints: BoxConstraints(),
                                 padding: EdgeInsets.symmetric(
                                   horizontal: getProportionateScreenWidth(5),
@@ -258,9 +259,10 @@ class _TripFormPageState extends State<TripFormPage> {
                                 },
                                 icon: Icon(
                                   Icons.edit_location_alt_outlined,
-                                  color: Palette.BodyText,
+                                  color: Palette.AdditionText,
                                 ),
                               ),
+                            ),
                           ],
                         ),
                       ),
