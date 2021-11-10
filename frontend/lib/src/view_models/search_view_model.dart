@@ -6,6 +6,11 @@ import 'package:trip_planner/src/view/screens/my_location_page.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 class SearchViewModel with ChangeNotifier {
+  List _radius = [
+    {'r': 1, 'isSelected': false},
+    {'r': 3, 'isSelected': true},
+    {'r': 5, 'isSelected': false}
+  ];
   bool _serviceEnabled = false;
   PermissionStatus _permissionGranted = PermissionStatus.denied;
   LocationData? _userLocation;
@@ -53,6 +58,13 @@ class SearchViewModel with ChangeNotifier {
     );
   }
 
+  void updateRadius(dynamic radius) {
+    _radius.forEach((element) => element['isSelected'] = false);
+    radius['isSelected'] = true;
+    notifyListeners();
+  }
+
   LocationData? get userLocation => _userLocation;
   String get mapStyle => _mapStyle;
+  List get radius => _radius;
 }

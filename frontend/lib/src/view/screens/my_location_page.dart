@@ -30,11 +30,11 @@ class _MyLocationPageState extends State<MyLocationPage> {
     SizeConfig().init(context);
     // print('${currentLocation.latitude} , ${currentLocation.longitude}');
     final searchViewModel = Provider.of<SearchViewModel>(context);
-    final List radius = [
-      {'r': 1, 'isSelected': false},
-      {'r': 3, 'isSelected': true},
-      {'r': 5, 'isSelected': false}
-    ];
+    // final List radius = [
+    //   {'r': 1, 'isSelected': false},
+    //   {'r': 3, 'isSelected': true},
+    //   {'r': 5, 'isSelected': false}
+    // ];
     _showRadiusSelectionAlert(
             BuildContext context, SearchViewModel searchViewModel) =>
         showDialog(
@@ -56,18 +56,29 @@ class _MyLocationPageState extends State<MyLocationPage> {
             contentPadding: EdgeInsets.zero,
             content: Column(
               mainAxisSize: MainAxisSize.min,
-              children: radius
+              children: searchViewModel.radius
                   .map(
                     (r) => Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Divider(),
                         ListTile(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: r['r'] == 5
+                                ? BorderRadius.only(
+                                    topLeft: Radius.zero,
+                                    bottomLeft: Radius.circular(16),
+                                    topRight: Radius.zero,
+                                    bottomRight: Radius.circular(16),
+                                  )
+                                : BorderRadius.zero,
+                          ),
                           contentPadding: EdgeInsets.zero,
                           dense: true,
                           selected: r['isSelected'],
                           selectedTileColor: Palette.SelectedListTileColor,
                           onTap: () {
+                            searchViewModel.updateRadius(r);
                             Navigator.pop(context, r);
                           },
                           title: Text(
@@ -223,43 +234,43 @@ Widget buildGoogleMap(SearchViewModel searchViewModel) {
   Completer<GoogleMapController> _controller = Completer();
 
   return Container(
-      child: GoogleMap(
-        circles: Set.from([
-          Circle(
-            circleId: CircleId('1'),
-            center: LatLng(searchViewModel.userLocation!.latitude ?? 0,
-                searchViewModel.userLocation!.longitude ?? 0),
-            radius: 5000,
-            strokeColor: Palette.AdditionText,
-            fillColor: Color.fromRGBO(110, 121, 140, 0.3),
-            strokeWidth: 1,
-          ),
-        ]),
-        zoomControlsEnabled: false,
-        mapToolbarEnabled: false,
-        myLocationButtonEnabled: false,
-        myLocationEnabled: true,
-        mapType: MapType.normal,
-        initialCameraPosition: CameraPosition(
-          target: LatLng(searchViewModel.userLocation!.latitude ?? 0,
-              searchViewModel.userLocation!.longitude ?? 0),
-          zoom: 12.5,
-        ),
-        markers: {
-          Marker(
-            markerId: MarkerId('1'),
-            position: LatLng(searchViewModel.userLocation!.latitude ?? 0,
-                searchViewModel.userLocation!.longitude ?? 0),
-            infoWindow: InfoWindow(
-              title:
-                  '${searchViewModel.userLocation!.latitude} , ${searchViewModel.userLocation!.longitude}',
-            ),
-          ),
-        },
-        onMapCreated: (GoogleMapController controller) {
-          controller.setMapStyle(searchViewModel.mapStyle);
-          _controller.complete(controller);
-        },
-      ),
+      // child: GoogleMap(
+      //   circles: Set.from([
+      //     Circle(
+      //       circleId: CircleId('1'),
+      //       center: LatLng(searchViewModel.userLocation!.latitude ?? 0,
+      //           searchViewModel.userLocation!.longitude ?? 0),
+      //       radius: 5000,
+      //       strokeColor: Palette.AdditionText,
+      //       fillColor: Color.fromRGBO(110, 121, 140, 0.3),
+      //       strokeWidth: 1,
+      //     ),
+      //   ]),
+      //   zoomControlsEnabled: false,
+      //   mapToolbarEnabled: false,
+      //   myLocationButtonEnabled: false,
+      //   myLocationEnabled: true,
+      //   mapType: MapType.normal,
+      //   initialCameraPosition: CameraPosition(
+      //     target: LatLng(searchViewModel.userLocation!.latitude ?? 0,
+      //         searchViewModel.userLocation!.longitude ?? 0),
+      //     zoom: 12.5,
+      //   ),
+      //   markers: {
+      //     Marker(
+      //       markerId: MarkerId('1'),
+      //       position: LatLng(searchViewModel.userLocation!.latitude ?? 0,
+      //           searchViewModel.userLocation!.longitude ?? 0),
+      //       infoWindow: InfoWindow(
+      //         title:
+      //             '${searchViewModel.userLocation!.latitude} , ${searchViewModel.userLocation!.longitude}',
+      //       ),
+      //     ),
+      //   },
+      //   onMapCreated: (GoogleMapController controller) {
+      //     controller.setMapStyle(searchViewModel.mapStyle);
+      //     _controller.complete(controller);
+      //   },
+      // ),
       );
 }

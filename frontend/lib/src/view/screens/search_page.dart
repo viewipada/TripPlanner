@@ -15,7 +15,6 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  final isSelected = <bool>[false, false, false];
 
   @override
   Widget build(BuildContext context) {
