@@ -176,53 +176,21 @@ class _MyLocationPageState extends State<MyLocationPage> {
             Align(
               alignment: Alignment.bottomLeft,
               child: Container(
-                color: Colors.amber,
                 margin: EdgeInsets.symmetric(
                   vertical: getProportionateScreenHeight(15),
                 ),
-                height: 110,
+                height: getProportionateScreenHeight(110),
                 child: ListView(
                   padding:
                       EdgeInsets.only(left: getProportionateScreenWidth(15)),
                   scrollDirection: Axis.horizontal,
                   physics: ClampingScrollPhysics(),
                   children: [
-                    Container(
-                      color: Colors.blue,
-                      width: SizeConfig.screenWidth -
-                          getProportionateScreenWidth(50),
-                      height: double.infinity,
-                      margin: EdgeInsets.only(
-                        right: getProportionateScreenWidth(15),
-                      ),
-                    ),
-                    Container(
-                      color: Colors.blue,
-                      width: SizeConfig.screenWidth -
-                          getProportionateScreenWidth(50),
-                      height: double.infinity,
-                      margin: EdgeInsets.only(
-                        right: getProportionateScreenWidth(15),
-                      ),
-                    ),
-                    Container(
-                      color: Colors.blue,
-                      width: SizeConfig.screenWidth -
-                          getProportionateScreenWidth(50),
-                      height: double.infinity,
-                      margin: EdgeInsets.only(
-                        right: getProportionateScreenWidth(15),
-                      ),
-                    ),
-                    Container(
-                      color: Colors.blue,
-                      width: SizeConfig.screenWidth -
-                          getProportionateScreenWidth(50),
-                      height: double.infinity,
-                      margin: EdgeInsets.only(
-                        right: getProportionateScreenWidth(15),
-                      ),
-                    ),
+                    pinCard(),
+                    pinCard(),
+                    pinCard(),
+                    pinCard(),
+                    pinCard(),
                   ],
                 ),
               ),
@@ -264,6 +232,87 @@ Widget buildGoogleMap(Completer<GoogleMapController> _controller,
         controller.setMapStyle(searchViewModel.mapStyle);
         _controller.complete(controller);
       },
+    ),
+  );
+}
+
+Widget pinCard() {
+  return Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(10),
+      color: Colors.white,
+      border: Border.all(color: Palette.Outline),
+    ),
+    width: SizeConfig.screenWidth - getProportionateScreenWidth(80),
+    height: double.infinity,
+    margin: EdgeInsets.only(
+      right: getProportionateScreenWidth(15),
+    ),
+    child: Row(
+      children: [
+        Padding(
+          padding:
+              EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(15)),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image(
+              width: getProportionateScreenHeight(80),
+              height: getProportionateScreenHeight(80),
+              fit: BoxFit.cover,
+              image: NetworkImage(
+                  'https://storage.googleapis.com/swapgap-bucket/post/5190314163699712-babbd605-e3ed-407f-bdc8-dba57e81c76e'),
+            ),
+          ),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: SizeConfig.screenWidth - getProportionateScreenWidth(230),
+              padding: EdgeInsets.only(top: getProportionateScreenHeight(15)),
+              child: Text(
+                'บ้านหุ่นเหล็กบ้านหุ่นเหล็กบ้านหุ่นเหล็กบ้านหุ่นเหล็ก',
+                style: TextStyle(
+                  color: Palette.BodyText,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: getProportionateScreenHeight(5)),
+              child: Text(
+                'ห่างออกไป 0.35 km',
+                style: TextStyle(
+                  color: Palette.SecondaryColor,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ],
+        ),
+        Expanded(
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: IconButton(
+              splashRadius: 1,
+              iconSize: 36,
+              onPressed: () {},
+              icon: Icon(
+                Icons.add_circle_outline_rounded,
+                color: Palette.SecondaryColor,
+              ),
+              alignment: Alignment.bottomRight,
+              padding: EdgeInsets.only(
+                right: getProportionateScreenWidth(15),
+                bottom: getProportionateScreenWidth(10),
+              ),
+            ),
+          ),
+        ),
+      ],
     ),
   );
 }
