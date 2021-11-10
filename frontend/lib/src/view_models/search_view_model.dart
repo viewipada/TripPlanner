@@ -1,6 +1,10 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:trip_planner/src/view/screens/my_location_page.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -11,6 +15,7 @@ class SearchViewModel with ChangeNotifier {
     {'r': 3, 'isSelected': true},
     {'r': 5, 'isSelected': false}
   ];
+  double _circleRadius = 3000;
   bool _serviceEnabled = false;
   PermissionStatus _permissionGranted = PermissionStatus.denied;
   LocationData? _userLocation;
@@ -61,10 +66,32 @@ class SearchViewModel with ChangeNotifier {
   void updateRadius(dynamic radius) {
     _radius.forEach((element) => element['isSelected'] = false);
     radius['isSelected'] = true;
+    _circleRadius = radius['r'] * 1000.0;
     notifyListeners();
+  }
+
+  Future<void> updateMapView(
+      Completer<GoogleMapController> _controller, int radius) async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+      target:
+          LatLng(_userLocation!.latitude ?? 0, _userLocation!.longitude ?? 0),
+      zoom: getZoomLevel(radius),
+    )));
+  }
+
+  double getZoomLevel(int radius) {
+    double zoomLevel = 11;
+    if (radius > 0) {
+      double radiusElevated = radius + radius / 2;
+      double scale = radiusElevated / 500;
+      zoomLevel = 16 - log(scale) / log(2);
+    }
+    return zoomLevel;
   }
 
   LocationData? get userLocation => _userLocation;
   String get mapStyle => _mapStyle;
   List get radius => _radius;
+  double get circleRadius => _circleRadius;
 }

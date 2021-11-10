@@ -18,10 +18,16 @@ class MyLocationPage extends StatefulWidget {
 }
 
 class _MyLocationPageState extends State<MyLocationPage> {
+  Completer<GoogleMapController> _controller = Completer();
+  double zoomLevel = 11;
+
   @override
   void initState() {
     Provider.of<SearchViewModel>(context, listen: false).getMapStyle();
     Provider.of<SearchViewModel>(context, listen: false).getUserLocation();
+    zoomLevel =
+        Provider.of<SearchViewModel>(context, listen: false).getZoomLevel(3000);
+
     super.initState();
   }
 
@@ -30,11 +36,7 @@ class _MyLocationPageState extends State<MyLocationPage> {
     SizeConfig().init(context);
     // print('${currentLocation.latitude} , ${currentLocation.longitude}');
     final searchViewModel = Provider.of<SearchViewModel>(context);
-    // final List radius = [
-    //   {'r': 1, 'isSelected': false},
-    //   {'r': 3, 'isSelected': true},
-    //   {'r': 5, 'isSelected': false}
-    // ];
+
     _showRadiusSelectionAlert(
             BuildContext context, SearchViewModel searchViewModel) =>
         showDialog(
@@ -79,6 +81,8 @@ class _MyLocationPageState extends State<MyLocationPage> {
                           selectedTileColor: Palette.SelectedListTileColor,
                           onTap: () {
                             searchViewModel.updateRadius(r);
+                            searchViewModel.updateMapView(
+                                _controller, r['r'] * 1000);
                             Navigator.pop(context, r);
                           },
                           title: Text(
@@ -121,7 +125,7 @@ class _MyLocationPageState extends State<MyLocationPage> {
       body: SafeArea(
         child: Stack(
           children: [
-            buildGoogleMap(searchViewModel),
+            buildGoogleMap(_controller, searchViewModel, zoomLevel),
             Align(
               alignment: Alignment.topRight,
               child: Column(
@@ -230,47 +234,36 @@ class _MyLocationPageState extends State<MyLocationPage> {
   }
 }
 
-Widget buildGoogleMap(SearchViewModel searchViewModel) {
-  Completer<GoogleMapController> _controller = Completer();
-
+Widget buildGoogleMap(Completer<GoogleMapController> _controller,
+    SearchViewModel searchViewModel, double zoomLevel) {
   return Container(
-      // child: GoogleMap(
-      //   circles: Set.from([
-      //     Circle(
-      //       circleId: CircleId('1'),
-      //       center: LatLng(searchViewModel.userLocation!.latitude ?? 0,
-      //           searchViewModel.userLocation!.longitude ?? 0),
-      //       radius: 5000,
-      //       strokeColor: Palette.AdditionText,
-      //       fillColor: Color.fromRGBO(110, 121, 140, 0.3),
-      //       strokeWidth: 1,
-      //     ),
-      //   ]),
-      //   zoomControlsEnabled: false,
-      //   mapToolbarEnabled: false,
-      //   myLocationButtonEnabled: false,
-      //   myLocationEnabled: true,
-      //   mapType: MapType.normal,
-      //   initialCameraPosition: CameraPosition(
-      //     target: LatLng(searchViewModel.userLocation!.latitude ?? 0,
-      //         searchViewModel.userLocation!.longitude ?? 0),
-      //     zoom: 12.5,
-      //   ),
-      //   markers: {
-      //     Marker(
-      //       markerId: MarkerId('1'),
-      //       position: LatLng(searchViewModel.userLocation!.latitude ?? 0,
-      //           searchViewModel.userLocation!.longitude ?? 0),
-      //       infoWindow: InfoWindow(
-      //         title:
-      //             '${searchViewModel.userLocation!.latitude} , ${searchViewModel.userLocation!.longitude}',
-      //       ),
-      //     ),
-      //   },
-      //   onMapCreated: (GoogleMapController controller) {
-      //     controller.setMapStyle(searchViewModel.mapStyle);
-      //     _controller.complete(controller);
-      //   },
-      // ),
-      );
+    child: GoogleMap(
+      circles: Set.from([
+        Circle(
+          circleId: CircleId('1'),
+          center: LatLng(searchViewModel.userLocation!.latitude ?? 0,
+              searchViewModel.userLocation!.longitude ?? 0),
+          radius: searchViewModel.circleRadius,
+          strokeColor: Palette.AdditionText,
+          fillColor: Color.fromRGBO(110, 121, 140, 0.3),
+          strokeWidth: 1,
+        ),
+      ]),
+      zoomControlsEnabled: false,
+      mapToolbarEnabled: false,
+      myLocationButtonEnabled: false,
+      myLocationEnabled: true,
+      mapType: MapType.normal,
+      initialCameraPosition: CameraPosition(
+        target: LatLng(searchViewModel.userLocation!.latitude ?? 0,
+            searchViewModel.userLocation!.longitude ?? 0),
+        zoom: zoomLevel,
+      ),
+      markers: {},
+      onMapCreated: (GoogleMapController controller) {
+        controller.setMapStyle(searchViewModel.mapStyle);
+        _controller.complete(controller);
+      },
+    ),
+  );
 }
