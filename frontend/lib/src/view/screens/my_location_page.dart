@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
+import 'package:trip_planner/src/services/location_nearby_service.dart';
 import 'package:trip_planner/src/view/widgets/baggage_cart.dart';
 import 'package:trip_planner/src/view_models/search_view_model.dart';
 
@@ -177,17 +178,27 @@ class _MyLocationPageState extends State<MyLocationPage> {
               alignment: Alignment.bottomLeft,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    margin: EdgeInsets.symmetric(
-                        horizontal: getProportionateScreenWidth(15)),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.only(
+                      left: getProportionateScreenWidth(15),
+                      right: getProportionateScreenWidth(10),
+                    ),
                     child: Row(
-                      children: [
-                        Padding(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: searchViewModel.locationTypes.map((type) {
+                        return Padding(
                           padding: EdgeInsets.only(
                               right: getProportionateScreenWidth(5)),
                           child: TextButton(
-                            child: Text('ทุกแบบ'),
+                            child: Text(
+                              type['type'],
+                              style: TextStyle(fontSize: 14),
+                            ),
                             style: TextButton.styleFrom(
                               primary: Colors.white,
                               backgroundColor: Palette.AdditionText,
@@ -200,68 +211,14 @@ class _MyLocationPageState extends State<MyLocationPage> {
                               print('Pressed');
                             },
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              right: getProportionateScreenWidth(5)),
-                          child: TextButton(
-                            child: Text('ที่เที่ยว'),
-                            style: TextButton.styleFrom(
-                              primary: Colors.white,
-                              backgroundColor: Palette.SecondaryColor,
-                              shadowColor: Palette.Outline,
-                              elevation: 10,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                            ),
-                            onPressed: () {
-                              print('Pressed');
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              right: getProportionateScreenWidth(5)),
-                          child: TextButton(
-                            child: Text('ที่กิน'),
-                            style: TextButton.styleFrom(
-                              primary: Colors.white,
-                              backgroundColor: Palette.AdditionText,
-                              shadowColor: Palette.Outline,
-                              elevation: 10,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                            ),
-                            onPressed: () {
-                              print('Pressed');
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              right: getProportionateScreenWidth(5)),
-                          child: TextButton(
-                            child: Text('ที่พัก'),
-                            style: TextButton.styleFrom(
-                              primary: Colors.white,
-                              backgroundColor: Palette.AdditionText,
-                              shadowColor: Palette.Outline,
-                              elevation: 10,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                            ),
-                            onPressed: () {
-                              print('Pressed');
-                            },
-                          ),
-                        ),
-                        
-                      ],
+                        );
+                      }).toList(),
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.symmetric(
-                      vertical: getProportionateScreenHeight(15),
+                    margin: EdgeInsets.only(
+                      top: getProportionateScreenHeight(10),
+                      bottom: getProportionateScreenHeight(15),
                     ),
                     height: getProportionateScreenHeight(110),
                     child: ListView(

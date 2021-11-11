@@ -15,6 +15,12 @@ class SearchViewModel with ChangeNotifier {
     {'r': 3, 'isSelected': true},
     {'r': 5, 'isSelected': false}
   ];
+  List _locationTypes = [
+    {'type': 'ทุกแบบ', 'isSelected': false},
+    {'type': 'ที่เที่ยว', 'isSelected': false},
+    {'type': 'ที่กิน', 'isSelected': false},
+    {'type': 'ที่พัก', 'isSelected': false},
+  ];
   double _circleRadius = 3000;
   bool _serviceEnabled = false;
   PermissionStatus _permissionGranted = PermissionStatus.denied;
@@ -94,4 +100,5 @@ class SearchViewModel with ChangeNotifier {
   String get mapStyle => _mapStyle;
   List get radius => _radius;
   double get circleRadius => _circleRadius;
+  List get locationTypes => _locationTypes;
 }
