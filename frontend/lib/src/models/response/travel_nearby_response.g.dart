@@ -26,7 +26,7 @@ Map<String, dynamic> _$LocationNearbyResponseToJson(
       'locationName': instance.locationName,
       'imageUrl': instance.imageUrl,
       'description': instance.description,
-      'category': instance.description,
+      'category': instance.category,
       'latitude': instance.latitude,
       'longitude': instance.longitude,
       'ditanceFromeUser': instance.ditanceFromeUser,
