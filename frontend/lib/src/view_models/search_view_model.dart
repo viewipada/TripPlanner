@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:trip_planner/src/models/response/travel_nearby_response.dart';
+import 'package:trip_planner/src/services/location_nearby_service.dart';
 import 'package:trip_planner/src/view/screens/my_location_page.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -26,6 +28,7 @@ class SearchViewModel with ChangeNotifier {
   PermissionStatus _permissionGranted = PermissionStatus.denied;
   LocationData? _userLocation;
   String _mapStyle = '';
+  List<LocationNearbyResponse> _locationNearbyList = [];
 
   Future<void> getUserLocation() async {
     Location location = new Location();
@@ -60,11 +63,15 @@ class SearchViewModel with ChangeNotifier {
     });
   }
 
-  void goToMyLocationPage(BuildContext context, String catagory) {
+  void goToMyLocationPage(
+      BuildContext context, String category, LocationData userLocation) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => MyLocationPage(),
+        builder: (context) => MyLocationPage(
+          category: category,
+          userLocation: userLocation,
+        ),
       ),
     );
   }
@@ -96,9 +103,18 @@ class SearchViewModel with ChangeNotifier {
     return zoomLevel;
   }
 
+  Future<void> getLocationNearby(
+      String category, LocationData userLocation) async {
+    _locationNearbyList =
+        await LocationNearbyService().getLocationNearby(category, userLocation);
+    notifyListeners();
+    // return _locationNearbyList;
+  }
+
   LocationData? get userLocation => _userLocation;
   String get mapStyle => _mapStyle;
   List get radius => _radius;
   double get circleRadius => _circleRadius;
   List get locationTypes => _locationTypes;
+  List<LocationNearbyResponse> get locationNearbyList => _locationNearbyList;
 }

@@ -15,6 +15,11 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  @override
+  void initState() {
+    Provider.of<SearchViewModel>(context, listen: false).getUserLocation();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +73,10 @@ class _SearchPageState extends State<SearchPage> {
                 ),
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    searchViewModel.goToMyLocationPage(context, 'ทั้งหมด');
+                    if (searchViewModel.userLocation != null) {
+                      searchViewModel.goToMyLocationPage(
+                          context, 'ทุกแบบ', searchViewModel.userLocation!);
+                    }
                   },
                   icon: Icon(
                     Icons.map_rounded,
@@ -97,7 +105,12 @@ class _SearchPageState extends State<SearchPage> {
                 child: Row(
                   children: [
                     OutlinedButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        if (searchViewModel.userLocation != null) {
+                          searchViewModel.goToMyLocationPage(context,
+                              'ที่เที่ยว', searchViewModel.userLocation!);
+                        }
+                      },
                       icon: Icon(
                         Icons.camera_alt_outlined,
                         color: Palette.LightGreenColor,
@@ -130,7 +143,12 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                     ),
                     OutlinedButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        if (searchViewModel.userLocation != null) {
+                          searchViewModel.goToMyLocationPage(
+                              context, 'ที่กิน', searchViewModel.userLocation!);
+                        }
+                      },
                       icon: Icon(
                         Icons.fastfood_outlined,
                         color: Palette.PeachColor,
@@ -157,7 +175,12 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                     ),
                     OutlinedButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        if (searchViewModel.userLocation != null) {
+                          searchViewModel.goToMyLocationPage(
+                              context, 'ที่พัก', searchViewModel.userLocation!);
+                        }
+                      },
                       icon: Icon(
                         Icons.airline_seat_individual_suite_outlined,
                         color: Palette.LightOrangeColor,

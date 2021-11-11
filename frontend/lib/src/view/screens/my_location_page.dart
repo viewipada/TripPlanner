@@ -5,27 +5,42 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
-import 'package:trip_planner/src/services/location_nearby_service.dart';
+import 'package:trip_planner/src/models/response/travel_nearby_response.dart';
 import 'package:trip_planner/src/view/widgets/baggage_cart.dart';
 import 'package:trip_planner/src/view_models/search_view_model.dart';
 
 class MyLocationPage extends StatefulWidget {
+  MyLocationPage({
+    required this.category,
+    required this.userLocation,
+  });
+
+  final String category;
+  final LocationData userLocation;
+
   @override
-  _MyLocationPageState createState() => _MyLocationPageState();
+  _MyLocationPageState createState() =>
+      _MyLocationPageState(this.category, this.userLocation);
 }
 
 class _MyLocationPageState extends State<MyLocationPage> {
+  final String category;
+  final LocationData userLocation;
+  _MyLocationPageState(this.category, this.userLocation);
+
   Completer<GoogleMapController> _controller = Completer();
   double zoomLevel = 11;
 
   @override
   void initState() {
     Provider.of<SearchViewModel>(context, listen: false).getMapStyle();
-    Provider.of<SearchViewModel>(context, listen: false).getUserLocation();
+    Provider.of<SearchViewModel>(context, listen: false)
+        .getLocationNearby(category, userLocation);
     zoomLevel =
         Provider.of<SearchViewModel>(context, listen: false).getZoomLevel(3000);
 
@@ -35,7 +50,6 @@ class _MyLocationPageState extends State<MyLocationPage> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    // print('${currentLocation.latitude} , ${currentLocation.longitude}');
     final searchViewModel = Provider.of<SearchViewModel>(context);
 
     _showRadiusSelectionAlert(
@@ -126,7 +140,8 @@ class _MyLocationPageState extends State<MyLocationPage> {
       body: SafeArea(
         child: Stack(
           children: [
-            buildGoogleMap(_controller, searchViewModel, zoomLevel),
+            buildGoogleMap(
+                _controller, searchViewModel, zoomLevel, userLocation),
             Align(
               alignment: Alignment.topRight,
               child: Column(
@@ -226,13 +241,10 @@ class _MyLocationPageState extends State<MyLocationPage> {
                           left: getProportionateScreenWidth(15)),
                       scrollDirection: Axis.horizontal,
                       physics: ClampingScrollPhysics(),
-                      children: [
-                        pinCard(),
-                        pinCard(),
-                        pinCard(),
-                        pinCard(),
-                        pinCard(),
-                      ],
+                      children:
+                          searchViewModel.locationNearbyList.map((location) {
+                        return pinCard(location);
+                      }).toList(),
                     ),
                   )
                 ],
@@ -245,15 +257,20 @@ class _MyLocationPageState extends State<MyLocationPage> {
   }
 }
 
-Widget buildGoogleMap(Completer<GoogleMapController> _controller,
-    SearchViewModel searchViewModel, double zoomLevel) {
+Widget buildGoogleMap(
+    Completer<GoogleMapController> _controller,
+    SearchViewModel searchViewModel,
+    double zoomLevel,
+    LocationData userLocation) {
   return Container(
     child: GoogleMap(
       circles: Set.from([
         Circle(
-          circleId: CircleId('1'),
-          center: LatLng(searchViewModel.userLocation!.latitude ?? 0,
-              searchViewModel.userLocation!.longitude ?? 0),
+          circleId: CircleId('radiusFormUserLocation'),
+          center: LatLng(
+            userLocation.latitude ?? 0,
+            userLocation.longitude ?? 0,
+          ),
           radius: searchViewModel.circleRadius,
           strokeColor: Palette.AdditionText,
           fillColor: Color.fromRGBO(110, 121, 140, 0.3),
@@ -266,8 +283,10 @@ Widget buildGoogleMap(Completer<GoogleMapController> _controller,
       myLocationEnabled: true,
       mapType: MapType.normal,
       initialCameraPosition: CameraPosition(
-        target: LatLng(searchViewModel.userLocation!.latitude ?? 0,
-            searchViewModel.userLocation!.longitude ?? 0),
+        target: LatLng(
+          userLocation.latitude ?? 0,
+          userLocation.longitude ?? 0,
+        ),
         zoom: zoomLevel,
       ),
       markers: {},
@@ -279,7 +298,7 @@ Widget buildGoogleMap(Completer<GoogleMapController> _controller,
   );
 }
 
-Widget pinCard() {
+Widget pinCard(LocationNearbyResponse location) {
   return Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(10),
@@ -302,8 +321,7 @@ Widget pinCard() {
               width: getProportionateScreenHeight(80),
               height: getProportionateScreenHeight(80),
               fit: BoxFit.cover,
-              image: NetworkImage(
-                  'https://storage.googleapis.com/swapgap-bucket/post/5190314163699712-babbd605-e3ed-407f-bdc8-dba57e81c76e'),
+              image: NetworkImage(location.imageUrl),
             ),
           ),
         ),
@@ -314,7 +332,7 @@ Widget pinCard() {
               width: SizeConfig.screenWidth - getProportionateScreenWidth(230),
               padding: EdgeInsets.only(top: getProportionateScreenHeight(15)),
               child: Text(
-                'บ้านหุ่นเหล็กบ้านหุ่นเหล็กบ้านหุ่นเหล็กบ้านหุ่นเหล็ก',
+                location.locationName,
                 style: TextStyle(
                   color: Palette.BodyText,
                   fontSize: 14,
@@ -327,7 +345,7 @@ Widget pinCard() {
             Padding(
               padding: EdgeInsets.only(top: getProportionateScreenHeight(5)),
               child: Text(
-                'ห่างออกไป 0.35 km',
+                'ห่างออกไป ${location.ditanceFromeUser} km',
                 style: TextStyle(
                   color: Palette.SecondaryColor,
                   fontSize: 14,
