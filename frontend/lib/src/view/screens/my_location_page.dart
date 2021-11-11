@@ -205,25 +205,30 @@ class _MyLocationPageState extends State<MyLocationPage> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: searchViewModel.locationTypes.map((type) {
+                      children:
+                          searchViewModel.locationCategories.map((category) {
                         return Padding(
                           padding: EdgeInsets.only(
                               right: getProportionateScreenWidth(5)),
                           child: TextButton(
                             child: Text(
-                              type['type'],
+                              category['category'],
                               style: TextStyle(fontSize: 14),
                             ),
                             style: TextButton.styleFrom(
                               primary: Colors.white,
-                              backgroundColor: Palette.AdditionText,
+                              backgroundColor: category['isSelected'] == true
+                                  ? Palette.SecondaryColor
+                                  : Palette.AdditionText,
                               shadowColor: Palette.Outline,
                               elevation: 10,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20)),
                             ),
                             onPressed: () {
-                              print('Pressed');
+                              searchViewModel.getLocationNearby(
+                                  category['category'], userLocation);
+                              searchViewModel.updateCategorySelection(category);
                             },
                           ),
                         );
