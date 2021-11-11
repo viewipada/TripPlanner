@@ -12,6 +12,7 @@ import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/travel_nearby_response.dart';
 import 'package:trip_planner/src/view/widgets/baggage_cart.dart';
+import 'package:trip_planner/src/view/widgets/loading.dart';
 import 'package:trip_planner/src/view_models/search_view_model.dart';
 
 class MyLocationPage extends StatefulWidget {
@@ -140,8 +141,18 @@ class _MyLocationPageState extends State<MyLocationPage> {
       body: SafeArea(
         child: Stack(
           children: [
-            buildGoogleMap(
-                _controller, searchViewModel, zoomLevel, userLocation),
+            FutureBuilder(
+              future: searchViewModel
+                  .getMarkersWithRadius(searchViewModel.circleRadius),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  return buildGoogleMap(
+                      _controller, searchViewModel, zoomLevel, userLocation);
+                } else {
+                  return Loading();
+                }
+              },
+            ),
             Align(
               alignment: Alignment.topRight,
               child: Column(
@@ -209,6 +220,7 @@ class _MyLocationPageState extends State<MyLocationPage> {
                           searchViewModel.locationCategories.map((category) {
                         return Padding(
                           padding: EdgeInsets.only(
+                              bottom: getProportionateScreenHeight(10),
                               right: getProportionateScreenWidth(5)),
                           child: TextButton(
                             child: Text(
@@ -235,23 +247,25 @@ class _MyLocationPageState extends State<MyLocationPage> {
                       }).toList(),
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.only(
-                      top: getProportionateScreenHeight(10),
-                      bottom: getProportionateScreenHeight(15),
+                  Visibility(
+                    visible: searchViewModel.locationPinCard.isNotEmpty,
+                    child: Container(
+                      margin: EdgeInsets.only(
+                        bottom: getProportionateScreenHeight(15),
+                      ),
+                      height: getProportionateScreenHeight(110),
+                      child: ListView(
+                        padding: EdgeInsets.only(
+                            left: getProportionateScreenWidth(15)),
+                        scrollDirection: Axis.horizontal,
+                        physics: ClampingScrollPhysics(),
+                        children:
+                            searchViewModel.locationPinCard.map((location) {
+                          return pinCard(location);
+                        }).toList(),
+                      ),
                     ),
-                    height: getProportionateScreenHeight(110),
-                    child: ListView(
-                      padding: EdgeInsets.only(
-                          left: getProportionateScreenWidth(15)),
-                      scrollDirection: Axis.horizontal,
-                      physics: ClampingScrollPhysics(),
-                      children:
-                          searchViewModel.locationNearbyList.map((location) {
-                        return pinCard(location);
-                      }).toList(),
-                    ),
-                  )
+                  ),
                 ],
               ),
             )
@@ -294,7 +308,7 @@ Widget buildGoogleMap(
         ),
         zoom: zoomLevel,
       ),
-      markers: {},
+      markers: searchViewModel.markers,
       onMapCreated: (GoogleMapController controller) {
         controller.setMapStyle(searchViewModel.mapStyle);
         _controller.complete(controller);

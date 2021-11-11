@@ -29,6 +29,8 @@ class SearchViewModel with ChangeNotifier {
   LocationData? _userLocation;
   String _mapStyle = '';
   List<LocationNearbyResponse> _locationNearbyList = [];
+  List<LocationNearbyResponse> _locationPinCard = [];
+  Set<Marker> _markers = Set();
 
   Future<void> getUserLocation() async {
     Location location = new Location();
@@ -114,7 +116,29 @@ class SearchViewModel with ChangeNotifier {
     _locationNearbyList =
         await LocationNearbyService().getLocationNearby(category, userLocation);
     notifyListeners();
-    // return _locationNearbyList;
+  }
+
+  Future<Set<Marker>> getMarkersWithRadius(double radius) async {
+    Set<Marker> markers = Set();
+    List<LocationNearbyResponse> locationPinCard = [];
+    await Future.forEach(_locationNearbyList, (item) async {
+      final location = item as LocationNearbyResponse;
+      if (location.ditanceFromeUser <= radius / 1000) {
+        await markers.add(Marker(
+          markerId: MarkerId(location.locationName),
+          position: LatLng(location.latitude, location.longitude),
+          infoWindow: InfoWindow(
+            title: location.locationName,
+          ),
+          icon: BitmapDescriptor.defaultMarker,
+        ));
+        locationPinCard.add(location);
+      }
+    });
+    _markers = markers;
+    _locationPinCard = locationPinCard;
+    notifyListeners();
+    return _markers;
   }
 
   LocationData? get userLocation => _userLocation;
@@ -123,4 +147,6 @@ class SearchViewModel with ChangeNotifier {
   double get circleRadius => _circleRadius;
   List get locationCategories => _locationCategories;
   List<LocationNearbyResponse> get locationNearbyList => _locationNearbyList;
+  List<LocationNearbyResponse> get locationPinCard => _locationPinCard;
+  Set<Marker> get markers => _markers;
 }
