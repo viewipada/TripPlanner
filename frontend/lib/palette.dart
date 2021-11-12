@@ -14,6 +14,8 @@ class Palette {
   static const CautionColor = Color(0xffEBAD34);
   static const NotificationColor = Color(0xffE31E18);
   static const DeleteColor = Color(0xffD44843);
+  static const BorderInputColor = Color(0xffEBECED);
+  static const InfoText = Color(0xffA5ADBB);
 
   static const MaterialColor PrimarySwatchColor = const MaterialColor(
     0xff41A4C3,

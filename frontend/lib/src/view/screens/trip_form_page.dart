@@ -7,6 +7,7 @@ import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
 import 'package:trip_planner/src/view/widgets/start_point_card.dart';
 import 'package:trip_planner/src/view_models/trip_form_view_model.dart';
+import 'package:flutter_spinbox/flutter_spinbox.dart';
 
 class TripFormPage extends StatefulWidget {
   final List<BaggageResponse> startPointList;
@@ -122,7 +123,7 @@ class _TripFormPageState extends State<TripFormPage> {
                         padding: EdgeInsets.only(
                             top: getProportionateScreenHeight(15)),
                         child: Text(
-                          'ตั้งชื่อทริป',
+                          'ชื่อทริป',
                           style: textStyle,
                         ),
                       ),
@@ -133,19 +134,15 @@ class _TripFormPageState extends State<TripFormPage> {
                         ),
                         child: TextField(
                           maxLength: 30,
-                          decoration: const InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(),
-                            contentPadding: EdgeInsets.symmetric(
-                                vertical: 0, horizontal: 12),
-                            hintText:
-                                'ตั้งชื่อทริป... เช่น ลำโพงมันดัง ลำปางมันดี',
-                            hintStyle: TextStyle(
-                              fontSize: 14,
-                            ),
+                          decoration: InputDecoration(
+                            hintText: 'เช่น ลำโพงมันดัง ลำปางมันดี',
                           ),
-                          onChanged: (value) => {},
+                          onChanged: (value) =>
+                              tripFormViewModel.updateTripNameValue(value),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Palette.AdditionText,
+                          ),
                         ),
                       ),
                       Container(
@@ -155,51 +152,103 @@ class _TripFormPageState extends State<TripFormPage> {
                         child: Row(
                           children: [
                             Expanded(
-                              flex: 1,
-                              child: Text(
-                                'ไปกี่คน',
-                                style: textStyle,
-                              ),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: TextFormField(
-                                keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  border: OutlineInputBorder(),
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: 0, horizontal: 12),
-                                ),
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly
+                              flex: 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom:
+                                            getProportionateScreenHeight(10)),
+                                    child: Text(
+                                      'จำนวนคน',
+                                      style: textStyle,
+                                    ),
+                                  ),
+                                  SpinBox(
+                                    min: 1,
+                                    max: 25,
+                                    value: 1,
+                                    direction: Axis.horizontal,
+                                    textStyle: TextStyle(
+                                        fontSize: 14, color: Palette.BodyText),
+                                    incrementIcon: Icon(
+                                      Icons.add,
+                                      size: 20,
+                                      color: Palette.PrimaryColor,
+                                    ),
+                                    decrementIcon: Icon(
+                                      Icons.remove,
+                                      size: 20,
+                                      color: Palette.PrimaryColor,
+                                    ),
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide(
+                                          color: const Color(0xffEBECED),
+                                        ),
+                                      ),
+                                      contentPadding: EdgeInsets.zero,
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                    ),
+                                    onChanged: (value) => tripFormViewModel
+                                        .updateNumberOfPeopleValue(
+                                            value.toInt()),
+                                  ),
                                 ],
                               ),
                             ),
-                            SizedBox(
-                              width: getProportionateScreenWidth(15),
-                            ),
-                            Expanded(
+                            Spacer(
                               flex: 1,
-                              child: Text(
-                                'ไปกี่วัน',
-                                style: textStyle,
-                              ),
                             ),
                             Expanded(
-                              flex: 2,
-                              child: TextFormField(
-                                keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  border: OutlineInputBorder(),
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: 0, horizontal: 12),
-                                ),
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly
+                              flex: 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom:
+                                            getProportionateScreenHeight(10)),
+                                    child: Text(
+                                      'จำนวนวัน',
+                                      style: textStyle,
+                                    ),
+                                  ),
+                                  SpinBox(
+                                    min: 1,
+                                    max: 15,
+                                    value: 1,
+                                    direction: Axis.horizontal,
+                                    textStyle: TextStyle(
+                                        fontSize: 14, color: Palette.BodyText),
+                                    incrementIcon: Icon(
+                                      Icons.add,
+                                      size: 20,
+                                      color: Palette.PrimaryColor,
+                                    ),
+                                    decrementIcon: Icon(
+                                      Icons.remove,
+                                      size: 20,
+                                      color: Palette.PrimaryColor,
+                                    ),
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide(
+                                          color: const Color(0xffEBECED),
+                                        ),
+                                      ),
+                                      contentPadding: EdgeInsets.zero,
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                    ),
+                                    onChanged: (value) => tripFormViewModel
+                                        .updateNumberOfTravelingDayValue(
+                                            value.toInt()),
+                                  ),
                                 ],
                               ),
                             ),
@@ -209,25 +258,36 @@ class _TripFormPageState extends State<TripFormPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(
-                            tripFormViewModel.startDate,
-                            style: textStyle,
+                          Spacer(
+                            flex: 4,
                           ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: getProportionateScreenWidth(15),
-                              vertical: getProportionateScreenHeight(30),
-                            ),
-                            child: IconButton(
-                              onPressed: () {
-                                tripFormViewModel.pickDate(context);
-                              },
-                              padding: EdgeInsets.zero,
-                              constraints: BoxConstraints(),
-                              icon: Icon(
-                                Icons.calendar_today_rounded,
-                                color: Palette.PrimaryColor,
-                              ),
+                          Expanded(
+                            flex: 3,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  tripFormViewModel.startDate,
+                                  style: textStyle,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: getProportionateScreenWidth(15),
+                                    vertical: getProportionateScreenHeight(30),
+                                  ),
+                                  child: IconButton(
+                                    onPressed: () {
+                                      tripFormViewModel.pickDate(context);
+                                    },
+                                    padding: EdgeInsets.zero,
+                                    constraints: BoxConstraints(),
+                                    icon: Icon(
+                                      Icons.calendar_today_rounded,
+                                      color: Palette.PrimaryColor,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -295,7 +355,10 @@ class _TripFormPageState extends State<TripFormPage> {
                                   padding: EdgeInsets.all(12),
                                   primary: Palette.AdditionText,
                                   alignment: Alignment.center,
-                                  side: BorderSide(color: Palette.AdditionText),
+                                  side: BorderSide(color: Palette.Outline),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
                                 ),
                               ),
                             )
@@ -314,8 +377,14 @@ class _TripFormPageState extends State<TripFormPage> {
                 ),
                 child: ElevatedButton(
                   onPressed: () {
-                    tripFormViewModel.goToCreateTrip(context, startPointList,
-                        startPointList.elementAt(this.pointIndex));
+                    if (tripFormViewModel.tripName == '') {
+                      alertDialog(context, 'กรุณาตั้งชื่อทริป');
+                    } else if (startPointList.isEmpty) {
+                      alertDialog(context, 'กรุณาเลือกจุดเริ่มต้น');
+                    } else {
+                      tripFormViewModel.goToCreateTrip(context, startPointList,
+                          startPointList.elementAt(this.pointIndex));
+                    }
                   },
                   child: Text(
                     'เริ่มสร้างทริป',
@@ -338,4 +407,37 @@ class _TripFormPageState extends State<TripFormPage> {
       ),
     );
   }
+}
+
+alertDialog(BuildContext context, String title) {
+  return showDialog<String>(
+    context: context,
+    builder: (BuildContext _context) => AlertDialog(
+      title: Text(
+        title,
+        style: TextStyle(
+          color: Palette.BodyText,
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+        ),
+        textAlign: TextAlign.center,
+      ),
+      contentPadding: EdgeInsets.zero,
+      actionsAlignment: MainAxisAlignment.center,
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(
+            _context,
+          ),
+          child: const Text(
+            'โอเค!',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }

@@ -40,6 +40,19 @@ class MyApp extends StatelessWidget {
             thickness: 1,
           ),
           unselectedWidgetColor: Palette.Outline,
+          inputDecorationTheme: InputDecorationTheme(
+            enabledBorder: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                borderSide: BorderSide(color: Palette.Outline)),
+            border: OutlineInputBorder(),
+            hintStyle: TextStyle(
+              fontSize: 14,
+              color: Palette.InfoText,
+            ),
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+            filled: true,
+            fillColor: Colors.white,
+          ),
         ),
         home: NavigationBar(),
       ),
