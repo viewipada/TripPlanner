@@ -342,31 +342,34 @@ class _BaggagePageState extends State<BaggagePage> {
                     );
                   }).toList(),
                 ),
-                Positioned(
-                  height: getProportionateScreenHeight(48),
-                  bottom: getProportionateScreenHeight(5),
-                  left: getProportionateScreenWidth(15),
-                  right: getProportionateScreenWidth(15),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      baggageViewModel.goToCreateTripForm(
-                          context, baggageViewModel.selectedList);
-                    },
-                    child: Text(
-                      'เริ่มสร้างทริป',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                Visibility(
+                  visible: !baggageViewModel.selectMode,
+                  child: Positioned(
+                    height: getProportionateScreenHeight(48),
+                    bottom: getProportionateScreenHeight(5),
+                    left: getProportionateScreenWidth(15),
+                    right: getProportionateScreenWidth(15),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        baggageViewModel.goToCreateTripForm(
+                            context, baggageViewModel.selectedList);
+                      },
+                      child: Text(
+                        'เริ่มสร้างทริป',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
                       ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      primary: Palette.PrimaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
+                      style: ElevatedButton.styleFrom(
+                        primary: Palette.PrimaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
                       ),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
