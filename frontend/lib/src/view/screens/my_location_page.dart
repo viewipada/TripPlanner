@@ -44,6 +44,8 @@ class _MyLocationPageState extends State<MyLocationPage> {
         .getLocationNearby(category, userLocation);
     zoomLevel =
         Provider.of<SearchViewModel>(context, listen: false).getZoomLevel(3000);
+    Provider.of<SearchViewModel>(context, listen: false)
+        .initialCategory(category);
 
     super.initState();
   }

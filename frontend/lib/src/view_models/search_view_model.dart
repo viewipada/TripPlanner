@@ -141,6 +141,11 @@ class SearchViewModel with ChangeNotifier {
     return _markers;
   }
 
+  Future<void> initialCategory(String category) async {
+    _locationCategories[await _locationCategories.indexWhere(
+        (index) => index['category'] == category)]['isSelected'] = true;
+  }
+
   LocationData? get userLocation => _userLocation;
   String get mapStyle => _mapStyle;
   List get radius => _radius;
