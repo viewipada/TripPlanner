@@ -10,22 +10,22 @@ class LocationNearbyService {
     if (category == 'ทุกแบบ')
       response = await http.get(
           Uri.parse(
-              'https://run.mocky.io/v3/6ff0efaf-838b-4d4e-83b0-6f5937dac04c'),
+              'https://run.mocky.io/v3/30dc4a2f-72d3-4ed4-aa8d-af38dcdc7825'),
           headers: {"Accept": "application/json"});
     else if (category == 'ที่เที่ยว')
       response = await http.get(
           Uri.parse(
-              'https://run.mocky.io/v3/3acb6742-cee8-447a-ac31-762eda300265'),
+              'https://run.mocky.io/v3/0445b3a8-8fe2-4add-9b10-24a33b70ab54'),
           headers: {"Accept": "application/json"});
     else if (category == 'ที่กิน')
       response = await http.get(
           Uri.parse(
-              'https://run.mocky.io/v3/6b0d1f9d-cda4-4366-88e4-1cdbebf445d0'),
+              'https://run.mocky.io/v3/21a496a2-b45d-4e96-9cb3-7e131d787ac2'),
           headers: {"Accept": "application/json"});
     else
       response = await http.get(
           Uri.parse(
-              'https://run.mocky.io/v3/75b0ec18-df52-4d52-a580-1acf26c9c087'),
+              'https://run.mocky.io/v3/bc9363fa-6155-4bc9-a482-46ddcc4b98d3'),
           headers: {"Accept": "application/json"});
 
     if (response.statusCode == 200) {

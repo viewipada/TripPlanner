@@ -8,6 +8,7 @@ class LocationNearbyResponse {
   String locationName;
   String imageUrl;
   String description;
+  String category;
   double latitude;
   double longitude;
   double ditanceFromeUser;
@@ -17,6 +18,7 @@ class LocationNearbyResponse {
     required this.locationName,
     required this.imageUrl,
     required this.description,
+    required this.category,
     required this.latitude,
     required this.longitude,
     required this.ditanceFromeUser,
