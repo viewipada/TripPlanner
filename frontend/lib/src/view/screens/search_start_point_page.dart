@@ -1,16 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
-import 'package:trip_planner/src/view/screens/trip_form_page.dart';
 import 'package:trip_planner/src/view/widgets/start_point_card.dart';
-import 'package:trip_planner/src/view/widgets/tag_category.dart';
-import 'package:trip_planner/src/view_models/baggage_view_model.dart';
 import 'package:trip_planner/src/view_models/search_start_point_view_model.dart';
 
 class SearchStartPointPage extends StatefulWidget {

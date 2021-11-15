@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
           inputDecorationTheme: InputDecorationTheme(
             enabledBorder: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
-                borderSide: BorderSide(color: Palette.Outline)),
+                borderSide: BorderSide(color: Palette.BorderInputColor)),
             border: OutlineInputBorder(),
             hintStyle: TextStyle(
               fontSize: 14,
