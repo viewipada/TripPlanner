@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
+import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/view/widgets/navigation_bar.dart';
 import 'package:trip_planner/src/view_models/baggage_view_model.dart';
 import 'package:trip_planner/src/view_models/home_view_model.dart';
@@ -44,12 +45,18 @@ class MyApp extends StatelessWidget {
             enabledBorder: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 borderSide: BorderSide(color: Palette.BorderInputColor)),
+            focusedBorder: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                borderSide: BorderSide(color: Palette.PrimaryColor, width: 2)),
             border: OutlineInputBorder(),
             hintStyle: TextStyle(
               fontSize: 14,
               color: Palette.InfoText,
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+            contentPadding: EdgeInsets.symmetric(
+              vertical: getProportionateScreenHeight(15),
+              horizontal: getProportionateScreenWidth(15),
+            ),
             filled: true,
             fillColor: Colors.white,
           ),

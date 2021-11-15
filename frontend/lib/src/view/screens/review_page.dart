@@ -124,13 +124,7 @@ class _ReviewPageState extends State<ReviewPage> {
                       maxLines: 5,
                       maxLength: 120,
                       decoration: const InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(),
                         hintText: 'ประทับใจ สถานที่สวย บรรยากาศชวนฝัน',
-                        hintStyle: TextStyle(
-                          fontSize: 16,
-                        ),
                       ),
                       onChanged: (value) => _caption = value.trim(),
                     ),
@@ -274,7 +268,8 @@ class _ReviewPageState extends State<ReviewPage> {
                                           textAlign: TextAlign.center,
                                         ),
                                         contentPadding: EdgeInsets.zero,
-                                        actionsAlignment: MainAxisAlignment.center,
+                                        actionsAlignment:
+                                            MainAxisAlignment.center,
                                         actions: <Widget>[
                                           TextButton(
                                             onPressed: () =>
