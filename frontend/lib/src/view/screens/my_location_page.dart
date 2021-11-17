@@ -476,7 +476,7 @@ Widget locationListView(SearchViewModel searchViewModel) {
                     children: searchViewModel.locationPinCard
                         .map(
                           (item) => Container(
-                            height: getProportionateScreenHeight(110),
+                            height: getProportionateScreenHeight(120),
                             child: Row(
                               children: [
                                 Padding(
@@ -503,9 +503,9 @@ Widget locationListView(SearchViewModel searchViewModel) {
                                   child: Container(
                                     padding: EdgeInsets.fromLTRB(
                                       getProportionateScreenWidth(10),
-                                      getProportionateScreenHeight(5),
+                                      getProportionateScreenHeight(10),
                                       getProportionateScreenWidth(15),
-                                      getProportionateScreenHeight(5),
+                                      getProportionateScreenHeight(10),
                                     ),
                                     child: Column(
                                       crossAxisAlignment:

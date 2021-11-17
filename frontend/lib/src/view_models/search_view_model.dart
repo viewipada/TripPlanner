@@ -13,6 +13,7 @@ import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/src/models/response/travel_nearby_response.dart';
 import 'package:trip_planner/src/services/location_nearby_service.dart';
 import 'package:trip_planner/src/view/screens/location_detail_page.dart';
+import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/src/models/response/travel_nearby_response.dart';
 import 'package:trip_planner/src/services/location_nearby_service.dart';
 import 'package:trip_planner/src/view/screens/my_location_page.dart';
