@@ -13,6 +13,7 @@ import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/travel_nearby_response.dart';
 import 'package:trip_planner/src/view/widgets/baggage_cart.dart';
 import 'package:trip_planner/src/view/widgets/loading.dart';
+import 'package:trip_planner/src/view/widgets/tag_category.dart';
 import 'package:trip_planner/src/view_models/search_view_model.dart';
 
 class MyLocationPage extends StatefulWidget {
@@ -176,7 +177,13 @@ class _MyLocationPageState extends State<MyLocationPage> {
                           AssetImage(IconAssets.locationListView),
                         ),
                         color: Palette.SecondaryColor,
-                        onPressed: () {},
+                        onPressed: () => showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          context: context,
+                          builder: (context) =>
+                              locationListView(searchViewModel),
+                        ),
                       ),
                     ),
                   ),
@@ -294,7 +301,7 @@ Widget buildGoogleMap(
           ),
           radius: searchViewModel.circleRadius,
           strokeColor: Palette.AdditionText,
-          fillColor: Color.fromRGBO(110, 121, 140, 0.3),
+          fillColor: Color.fromRGBO(110, 121, 140, 0.6),
           strokeWidth: 1,
         ),
       ]),
@@ -395,6 +402,166 @@ Widget pinCard(LocationNearbyResponse location) {
           ),
         ),
       ],
+    ),
+  );
+}
+
+Widget locationListView(SearchViewModel searchViewModel) {
+  return DraggableScrollableSheet(
+    initialChildSize: 0.5,
+    minChildSize: 0.3,
+    maxChildSize: 0.8,
+    builder: (_, controller) => Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            margin: EdgeInsets.symmetric(
+              vertical: getProportionateScreenHeight(15),
+            ),
+            height: getProportionateScreenHeight(5),
+            width: getProportionateScreenWidth(50),
+            decoration: BoxDecoration(
+              color: Palette.Outline,
+              borderRadius: BorderRadius.circular(100),
+            ),
+          ),
+          Expanded(
+            child: searchViewModel.locationPinCard.isEmpty
+                ? Center(
+                    child: Text(
+                      'ไม่มีรายการสถานที่ใกล้ตัวคุณ',
+                      style:
+                          TextStyle(fontSize: 14, color: Palette.AdditionText),
+                    ),
+                  )
+                : ListView(
+                    controller: controller,
+                    children: searchViewModel.locationPinCard
+                        .map(
+                          (item) => Container(
+                            height: getProportionateScreenHeight(120),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    left: getProportionateScreenWidth(15),
+                                  ),
+                                  child: Center(
+                                    child: Container(
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Image(
+                                          width:
+                                              getProportionateScreenHeight(100),
+                                          height:
+                                              getProportionateScreenHeight(100),
+                                          fit: BoxFit.cover,
+                                          image: NetworkImage(item.imageUrl),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    padding: EdgeInsets.fromLTRB(
+                                      getProportionateScreenWidth(10),
+                                      getProportionateScreenHeight(10),
+                                      getProportionateScreenWidth(15),
+                                      getProportionateScreenHeight(10),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            bottom:
+                                                getProportionateScreenHeight(5),
+                                          ),
+                                          child: Text(
+                                            item.locationName,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            bottom:
+                                                getProportionateScreenHeight(5),
+                                          ),
+                                          child: Text(
+                                            item.description,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Palette.BodyText,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              TagCategory(
+                                                category: item.category,
+                                              ),
+                                              ElevatedButton.icon(
+                                                onPressed: () {},
+                                                icon: Icon(
+                                                  Icons.add,
+                                                  color: Colors.white,
+                                                ),
+                                                label: Text(
+                                                  'เพิ่มลงกระเป๋า',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                                style: ElevatedButton.styleFrom(
+                                                    primary:
+                                                        Palette.PrimaryColor,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                    ),
+                                                    elevation: 0),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+          ),
+        ],
+      ),
     ),
   );
 }
