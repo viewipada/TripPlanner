@@ -12,15 +12,15 @@ exports.create = (req, res) => {
   }
 
   // Create a Location
-  const review = {
-    userId: req.body.userId,
-    locationId: req.body.locationId,
-    reviewRate: req.body.reviewRate,
-    reviewCaption: req.body.reviewCaption,
-    reviewImg1: req.body.reviewImg1,
-    reviewImg2: req.body.reviewImg2,
-    reviewImg3: req.body.reviewImg3,
-  };
+  const review = ({
+    userId,
+    locationId,
+    reviewRate,
+    reviewCaption,
+    reviewImg1,
+    reviewImg2,
+    reviewImg3,
+  } = req.body);
 
   // Save Location in the database
   Review.create(review)
@@ -29,17 +29,14 @@ exports.create = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the Location.",
+        message: err.message || "Some error occurred while creating the Location.",
       });
     });
 };
 
 exports.findAll = (req, res) => {
-  const locationId = req.query.locationId;
-  var condition = locationId
-    ? { locationId: { [Op.iLike]: `%${locationId}%` } }
-    : null;
+  const { locationId } = req.query;
+  var condition = locationId ? { locationId: { [Op.iLike]: `%${locationId}%` } } : null;
 
   Review.findAll({ where: condition })
     .then((data) => {
@@ -47,8 +44,7 @@ exports.findAll = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving tutorials.",
+        message: err.message || "Some error occurred while retrieving tutorials.",
       });
     });
 };

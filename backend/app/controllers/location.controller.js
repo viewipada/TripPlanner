@@ -12,22 +12,7 @@ exports.create = (req, res) => {
   }
 
   // Create a Location
-  const location = {
-    locationName: req.body.locationName,
-    locationCategory: req.body.locationCategory,
-    locationDescription: req.body.locationDescription,
-    locationNumber: req.body.locationNumber,
-    locationWebsite: req.body.locationWebsite,
-    locationImgUrl: req.body.locationImgUrl,
-    locationLat: req.body.locationLat,
-    locationLong: req.body.locationLong,
-    locationProvince: req.body.locationProvince,
-    locationAvgRating: req.body.locationAvgRating,
-    locationSumReview: req.body.locationSumReview,
-    locationSumCheckIn: req.body.locationSumCheckIn,
-    createBy: req.body.createBy,
-    locationStatus: req.body.locationStatus,
-  };
+  const location = req.body;
 
   // Save Location in the database
   Location.create(location)
@@ -36,18 +21,15 @@ exports.create = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the Location.",
+        message: err.message || "Some error occurred while creating the Location.",
       });
     });
 };
 
 // Retrieve all objects in Locations Table
 exports.findAll = (req, res) => {
-  const locationName = req.query.locationName;
-  var condition = locationName
-    ? { locationName: { [Op.iLike]: `%${locationName}%` } }
-    : null;
+  const { locationName } = req.query;
+  var condition = locationName ? { locationName: { [Op.iLike]: `%${locationName}%` } } : null;
 
   Location.findAll({ where: condition })
     .then((data) => {
@@ -55,8 +37,7 @@ exports.findAll = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving Locations.",
+        message: err.message || "Some error occurred while retrieving Locations.",
       });
     });
 };

@@ -8,37 +8,38 @@ module.exports = (sequelize, Sequelize) => {
     locationName: {
       type: Sequelize.STRING(30),
     },
-    locationCategory: {
+    category: {
       type: Sequelize.INTEGER,
     },
-    locationDescription: {
+    description: {
       type: Sequelize.STRING(300),
     },
-    locationNumber: {
+    contactNumber: {
       type: Sequelize.STRING(10),
     },
-    locationWebsite: {
+    website: {
       type: Sequelize.STRING,
     },
-    locationImgUrl: {
+    imageUrl: {
       type: Sequelize.STRING,
     },
-    locationLat: {
+    latitude: {
       type: Sequelize.DOUBLE,
     },
-    locationLong: {
+    longitude: {
       type: Sequelize.DOUBLE,
     },
-    locationProvince: {
+    province: {
       type: Sequelize.STRING(100),
+      defaultValue: "Angthong",
     },
-    locationAvgRating: {
+    averageRating: {
       type: Sequelize.FLOAT,
     },
-    locationSumReview: {
+    totalReview: {
       type: Sequelize.INTEGER,
     },
-    locationSumCheckIn: {
+    totalCheckin: {
       type: Sequelize.INTEGER,
     },
     createBy: {
@@ -46,6 +47,7 @@ module.exports = (sequelize, Sequelize) => {
     },
     locationStatus: {
       type: Sequelize.STRING(15),
+      defaultValue: "inprogress",
     },
   });
 
