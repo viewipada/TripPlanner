@@ -17,7 +17,7 @@ module.exports = (sequelize, Sequelize) => {
     numberTravellingDay: {
       type: Sequelize.INTEGER,
     },
-    trevelStaetDate: {
+    trevelStartDate: {
       type: Sequelize.DATE,
       defaultValue: Sequelize.NOW,
     },

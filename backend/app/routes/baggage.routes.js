@@ -1,13 +1,15 @@
 module.exports = (app) => {
-  const baggages = require("../controllers/baggageList.controller.js");
+  const Baggage = require("../controllers/baggageList.controller.js");
 
   var router = require("express").Router();
 
   // Create a new Baggage
-  router.post("/", baggages.create);
+  router.post("/", Baggage.create);
 
-  // Retrieve all baggages
-  router.get("/", baggages.findAll);
+  router.get("/:userId", Baggage.findOne);
 
-  app.use("/api/baggages", router);
+  // Delete an Item in baggage
+  router.delete("/:baggageItemId", Baggage.delete);
+
+  app.use("/api/baggage", router);
 };
