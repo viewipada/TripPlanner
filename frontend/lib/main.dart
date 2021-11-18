@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
-import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/view/widgets/navigation_bar.dart';
 import 'package:trip_planner/src/view_models/baggage_view_model.dart';
 import 'package:trip_planner/src/view_models/home_view_model.dart';
@@ -54,8 +53,8 @@ class MyApp extends StatelessWidget {
               color: Palette.InfoText,
             ),
             contentPadding: EdgeInsets.symmetric(
-              vertical: getProportionateScreenHeight(15),
-              horizontal: getProportionateScreenWidth(15),
+              vertical: 15,
+              horizontal: 15,
             ),
             filled: true,
             fillColor: Colors.white,
