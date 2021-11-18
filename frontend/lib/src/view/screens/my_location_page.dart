@@ -4,9 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
@@ -263,16 +265,17 @@ class _MyLocationPageState extends State<MyLocationPage> {
                         bottom: getProportionateScreenHeight(15),
                       ),
                       height: getProportionateScreenHeight(110),
-                      child: ListView(
-                        padding: EdgeInsets.only(
-                            left: getProportionateScreenWidth(15)),
-                        scrollDirection: Axis.horizontal,
-                        physics: ClampingScrollPhysics(),
-                        children:
-                            searchViewModel.locationPinCard.map((location) {
-                          return pinCard(location);
-                        }).toList(),
-                      ),
+                      child: ScrollablePositionedList.builder(
+                          padding: EdgeInsets.only(
+                              left: getProportionateScreenWidth(15)),
+                          scrollDirection: Axis.horizontal,
+                          physics: ClampingScrollPhysics(),
+                          initialScrollIndex: 0,
+                          itemScrollController:
+                              searchViewModel.itemScrollController,
+                          itemCount: searchViewModel.locationPinCard.length,
+                          itemBuilder: (context, index) =>
+                              pinCard(searchViewModel.locationPinCard[index])),
                     ),
                   ),
                 ],

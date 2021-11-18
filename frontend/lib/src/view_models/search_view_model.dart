@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/src/models/response/travel_nearby_response.dart';
 import 'package:trip_planner/src/services/location_nearby_service.dart';
@@ -34,6 +35,7 @@ class SearchViewModel with ChangeNotifier {
   List<LocationNearbyResponse> _locationNearbyList = [];
   List<LocationNearbyResponse> _locationPinCard = [];
   Set<Marker> _markers = Set();
+  ItemScrollController _itemScrollController = ItemScrollController();
 
   Future<void> getUserLocation() async {
     Location location = new Location();
@@ -126,24 +128,30 @@ class SearchViewModel with ChangeNotifier {
     List<LocationNearbyResponse> locationPinCard = [];
     await Future.forEach(_locationNearbyList, (item) async {
       final location = item as LocationNearbyResponse;
+
       if (location.ditanceFromeUser <= radius / 1000) {
-        await markers.add(Marker(
-          markerId: MarkerId(location.locationName),
-          position: LatLng(location.latitude, location.longitude),
-          infoWindow: InfoWindow(
-            title: location.locationName,
-          ),
-          icon: await BitmapDescriptor.fromBytes(
-            await getBytesFromAsset(
-              location.category == 'ที่เที่ยว'
-                  ? IconAssets.travelMarker
-                  : location.category == 'ที่กิน'
-                      ? IconAssets.foodMarker
-                      : IconAssets.hotelMarker,
-              100,
-            ),
-          ),
-        ));
+        final _markerId = MarkerId('${locationPinCard.length}');
+        await markers.add(
+          Marker(
+              markerId: _markerId,
+              position: LatLng(location.latitude, location.longitude),
+              infoWindow: InfoWindow(
+                title: location.locationName,
+              ),
+              icon: await BitmapDescriptor.fromBytes(
+                await getBytesFromAsset(
+                  location.category == 'ที่เที่ยว'
+                      ? IconAssets.travelMarker
+                      : location.category == 'ที่กิน'
+                          ? IconAssets.foodMarker
+                          : IconAssets.hotelMarker,
+                  100,
+                ),
+              ),
+              onTap: () {
+                scrollToPinCard(int.parse(_markerId.value));
+              }),
+        );
         locationPinCard.add(location);
       }
     });
@@ -151,6 +159,15 @@ class SearchViewModel with ChangeNotifier {
     _locationPinCard = locationPinCard;
     notifyListeners();
     return _markers;
+  }
+
+  Future scrollToPinCard(int index) async {
+    if (_itemScrollController.isAttached) {
+      await _itemScrollController.scrollTo(
+        index: index,
+        duration: Duration(seconds: 1),
+      );
+    }
   }
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
@@ -176,4 +193,5 @@ class SearchViewModel with ChangeNotifier {
   List<LocationNearbyResponse> get locationNearbyList => _locationNearbyList;
   List<LocationNearbyResponse> get locationPinCard => _locationPinCard;
   Set<Marker> get markers => _markers;
+  ItemScrollController get itemScrollController => _itemScrollController;
 }
