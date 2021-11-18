@@ -6,9 +6,6 @@ module.exports = (app) => {
   // Create a new Baggage
   router.post("/", Baggage.create);
 
-  // Retrieve all Baggage
-  router.get("/", Baggage.findAll);
-
   router.get("/:userId", Baggage.findOne);
 
   // Delete an Item in baggage

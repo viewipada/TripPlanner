@@ -28,21 +28,6 @@ exports.create = (req, res) => {
     });
 };
 
-exports.findAll = (req, res) => {
-  const { locationName } = req.query;
-  var condition = locationName ? { locationName: { [Op.iLike]: `%${locationName}%` } } : null;
-
-  Baggage.findAll({ where: condition })
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while retrieving tutorials.",
-      });
-    });
-};
-
 exports.findOne = async (req, res) => {
   const { userId } = req.params;
 
