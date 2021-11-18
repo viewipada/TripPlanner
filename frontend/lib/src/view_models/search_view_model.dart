@@ -12,6 +12,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/src/models/response/travel_nearby_response.dart';
 import 'package:trip_planner/src/services/location_nearby_service.dart';
+import 'package:trip_planner/src/view/screens/location_detail_page.dart';
 import 'package:trip_planner/src/view/screens/my_location_page.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -183,6 +184,15 @@ class SearchViewModel with ChangeNotifier {
   Future<void> initialCategory(String category) async {
     _locationCategories[await _locationCategories.indexWhere(
         (index) => index['category'] == category)]['isSelected'] = true;
+  }
+
+  void goToLocationDetail(BuildContext context, int locationId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LocationDetailPage(locationId: locationId),
+      ),
+    );
   }
 
   LocationData? get userLocation => _userLocation;

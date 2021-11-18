@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -266,16 +267,36 @@ class _MyLocationPageState extends State<MyLocationPage> {
                       ),
                       height: getProportionateScreenHeight(110),
                       child: ScrollablePositionedList.builder(
-                          padding: EdgeInsets.only(
-                              left: getProportionateScreenWidth(15)),
-                          scrollDirection: Axis.horizontal,
-                          physics: ClampingScrollPhysics(),
-                          initialScrollIndex: 0,
-                          itemScrollController:
-                              searchViewModel.itemScrollController,
-                          itemCount: searchViewModel.locationPinCard.length,
-                          itemBuilder: (context, index) =>
-                              pinCard(searchViewModel.locationPinCard[index])),
+                        padding: EdgeInsets.only(
+                            left: getProportionateScreenWidth(15)),
+                        scrollDirection: Axis.horizontal,
+                        physics: ClampingScrollPhysics(),
+                        initialScrollIndex: 0,
+                        itemScrollController:
+                            searchViewModel.itemScrollController,
+                        itemCount: searchViewModel.locationPinCard.length,
+                        itemBuilder: (context, index) => InkWell(
+                            onTap: () {
+                              showModalBottomSheet(
+                                backgroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20),
+                                  ),
+                                ),
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return locationDetailsBottomSheet(
+                                    searchViewModel.locationPinCard[index],
+                                    searchViewModel,
+                                    context,
+                                  );
+                                },
+                              );
+                            },
+                            child: pinCard(
+                                searchViewModel.locationPinCard[index])),
+                      ),
                     ),
                   ),
                 ],
@@ -322,6 +343,7 @@ Widget buildGoogleMap(
       ),
       markers: searchViewModel.markers,
       onMapCreated: (GoogleMapController controller) {
+        Future.delayed(Duration(seconds: 1));
         controller.setMapStyle(searchViewModel.mapStyle);
         _controller.complete(controller);
       },
@@ -572,6 +594,109 @@ Widget locationListView(SearchViewModel searchViewModel) {
           ),
         ],
       ),
+    ),
+  );
+}
+
+Widget locationDetailsBottomSheet(LocationNearbyResponse location,
+    SearchViewModel searchViewModel, BuildContext context) {
+  return Container(
+    padding: EdgeInsets.symmetric(
+        vertical: getProportionateScreenHeight(15),
+        horizontal: getProportionateScreenWidth(15)),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Center(
+          child: Container(
+            margin: EdgeInsets.only(
+              bottom: getProportionateScreenHeight(15),
+            ),
+            height: getProportionateScreenHeight(5),
+            width: getProportionateScreenWidth(50),
+            decoration: BoxDecoration(
+              color: Palette.Outline,
+              borderRadius: BorderRadius.circular(100),
+            ),
+          ),
+        ),
+        Text(
+          location.locationName,
+          style: TextStyle(
+            color: Palette.BodyText,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Expanded(
+          flex: 3,
+          child: Container(
+            margin: EdgeInsets.symmetric(
+                vertical: getProportionateScreenHeight(15)),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              image: DecorationImage(
+                image: NetworkImage(location.imageUrl),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Text(
+            location.description,
+            style: TextStyle(
+              color: Palette.AdditionText,
+              fontSize: 12,
+            ),
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: () {
+                  searchViewModel.goToLocationDetail(
+                      context, location.locationId);
+                },
+                child: Text(
+                  'ดูเพิ่มเติม',
+                  style: TextStyle(fontSize: 14),
+                ),
+              ),
+              SizedBox(width: getProportionateScreenWidth(15)),
+              ElevatedButton.icon(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 20,
+                ),
+                label: Text(
+                  'เพิ่มลงกระเป๋า',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                    primary: Palette.PrimaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    elevation: 0),
+              ),
+            ],
+          ),
+        ),
+      ],
     ),
   );
 }
