@@ -9,5 +9,7 @@ module.exports = (app) => {
   // Retrieve all reviews
   router.get("/", reviews.findAll);
 
+  router.get("/:locationId", reviews.findAllReviewLocation);
+
   app.use("/api/reviews", router);
 };
