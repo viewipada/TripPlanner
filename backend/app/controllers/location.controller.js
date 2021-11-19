@@ -27,23 +27,19 @@ exports.create = (req, res) => {
 };
 
 // Retrieve all objects in Locations Table
-exports.findAll = (req, res) => {
-  const { locationName } = req.query;
-  var condition = locationName ? { locationName: { [Op.iLike]: `%${locationName}%` } } : null;
+exports.findAll = async (req, res) => {
+  let locationData = await Location.findAll();
 
-  Location.findAll({ where: condition })
-    .then((data) => {
-      res.send(data);
+  const data = await Promise.all(
+    locationData.map(async ({ locationId, locationName, imageUrl }) => {
+      return { locationId, locationName, imageUrl };
     })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while retrieving Locations.",
-      });
-    });
+  );
+  return res.status(200).json(data);
 };
 
 exports.findOne = (req, res) => {
-  const locationId = req.params.locationId;
+  const { locationId } = req.params;
 
   Location.findByPk(locationId)
     .then((data) => {
