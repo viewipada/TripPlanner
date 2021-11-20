@@ -41,20 +41,55 @@ class _SearchPageState extends State<SearchPage> {
           BaggageCart(),
         ],
         backgroundColor: Colors.white,
+        elevation: 0,
       ),
       body: SafeArea(
         child: Container(
-          margin: EdgeInsets.symmetric(
-            horizontal: getProportionateScreenWidth(15),
-            vertical: getProportionateScreenHeight(15),
-          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Container(
+                margin:
+                    EdgeInsets.only(bottom: getProportionateScreenHeight(10)),
+                decoration: BoxDecoration(
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                        color: Colors.black54,
+                        blurRadius: 5.0,
+                        offset: Offset(0.0, 0.75))
+                  ],
+                  color: Colors.white,
+                ),
+                child: InkWell(
+                  onTap: () => searchViewModel.goToSearchResultPage(context),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: getProportionateScreenWidth(15),
+                      vertical: getProportionateScreenHeight(10),
+                    ),
+                    child: TextField(
+                      enabled: false,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.search_rounded,
+                          color: Palette.AdditionText,
+                          size: 30,
+                        ),
+                        hintText: 'ค้นหาที่เที่ยวเลย',
+                      ),
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Palette.AdditionText,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               Padding(
                 padding: EdgeInsets.symmetric(
                   vertical: getProportionateScreenHeight(5),
+                  horizontal: getProportionateScreenWidth(15),
                 ),
                 child: Text(
                   'หาอะไรทำรอบตัวคุณ',
@@ -70,6 +105,7 @@ class _SearchPageState extends State<SearchPage> {
                 width: double.infinity,
                 margin: EdgeInsets.symmetric(
                   vertical: getProportionateScreenHeight(5),
+                  horizontal: getProportionateScreenWidth(15),
                 ),
                 child: ElevatedButton.icon(
                   onPressed: () {
@@ -101,6 +137,7 @@ class _SearchPageState extends State<SearchPage> {
               Container(
                 margin: EdgeInsets.symmetric(
                   vertical: getProportionateScreenHeight(5),
+                  horizontal: getProportionateScreenWidth(15),
                 ),
                 child: Row(
                   children: [

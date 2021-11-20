@@ -49,7 +49,9 @@ class MyApp extends StatelessWidget {
             focusedBorder: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 borderSide: BorderSide(color: Palette.PrimaryColor, width: 2)),
-            border: OutlineInputBorder(),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                borderSide: BorderSide(color: Palette.BorderInputColor)),
             hintStyle: TextStyle(
               fontSize: 14,
               color: Palette.InfoText,

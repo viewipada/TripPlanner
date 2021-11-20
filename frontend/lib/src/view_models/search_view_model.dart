@@ -18,6 +18,7 @@ import 'package:trip_planner/src/models/response/travel_nearby_response.dart';
 import 'package:trip_planner/src/services/location_nearby_service.dart';
 import 'package:trip_planner/src/view/screens/my_location_page.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:trip_planner/src/view/screens/search_result_page.dart';
 
 class SearchViewModel with ChangeNotifier {
   List _radius = [
@@ -194,6 +195,15 @@ class SearchViewModel with ChangeNotifier {
       context,
       MaterialPageRoute(
         builder: (context) => LocationDetailPage(locationId: locationId),
+      ),
+    );
+  }
+
+   void goToSearchResultPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SearchResultPage(),
       ),
     );
   }
