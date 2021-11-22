@@ -384,6 +384,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                           ],
                         ),
                         style: OutlinedButton.styleFrom(
+                          backgroundColor: Colors.white,
                           primary: Palette.SecondaryColor,
                           alignment: Alignment.center,
                           side: BorderSide(color: Palette.SecondaryColor),

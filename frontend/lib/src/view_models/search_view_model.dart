@@ -199,13 +199,17 @@ class SearchViewModel with ChangeNotifier {
     );
   }
 
-   void goToSearchResultPage(BuildContext context) {
+  void goToSearchResultPage(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => SearchResultPage(),
       ),
     );
+  }
+
+  void goBack(BuildContext context) {
+    Navigator.pop(context);
   }
 
   LocationData? get userLocation => _userLocation;
