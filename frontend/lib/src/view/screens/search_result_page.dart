@@ -9,16 +9,30 @@ import 'package:trip_planner/src/view/widgets/baggage_cart.dart';
 import 'package:trip_planner/src/view_models/search_view_model.dart';
 
 class SearchResultPage extends StatefulWidget {
-  @override
-  _SearchResultPageState createState() => _SearchResultPageState();
+  SearchResultPage({
+    required this.category,
+    required this.filtered,
+  });
+
+  final String category;
+  final String filtered;
+
+  _SearchResultPageState createState() =>
+      _SearchResultPageState(this.category, this.filtered);
 }
 
 class _SearchResultPageState extends State<SearchResultPage> {
-  List dropdownItemList = [
-    {'label': 'เรียงตามคะแนน', 'value': 'เรียงตามคะแนน'},
-    {'label': 'เรียงตามระยะทาง', 'value': 'เรียงตามระยะทาง'},
-    {'label': 'เรียงตามยอดเช็คอิน', 'value': 'เรียงตามยอดเช็คอิน'},
-  ];
+  final String category;
+  final String filtered;
+  _SearchResultPageState(this.category, this.filtered);
+
+  @override
+  void initState() {
+    // Provider.of<SearchViewModel>(context, listen: false).getMapStyle();
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -92,8 +106,6 @@ class _SearchResultPageState extends State<SearchResultPage> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(
-                        bottom: getProportionateScreenHeight(10)),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border(
@@ -132,10 +144,12 @@ class _SearchResultPageState extends State<SearchResultPage> {
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(
-                        horizontal: getProportionateScreenWidth(15)),
+                      horizontal: getProportionateScreenWidth(15),
+                      vertical: getProportionateScreenHeight(10),
+                    ),
                     child: CoolDropdown(
-                      dropdownList: dropdownItemList,
-                      defaultValue: dropdownItemList[0],
+                      dropdownList: searchViewModel.dropdownItemList,
+                      defaultValue: searchViewModel.dropdownItemList[0],
                       dropdownHeight: 170,
                       dropdownItemGap: 0,
                       dropdownWidth: getProportionateScreenWidth(150),
@@ -165,17 +179,93 @@ class _SearchResultPageState extends State<SearchResultPage> {
                   Expanded(
                     child: TabBarView(
                       children: <Widget>[
-                        Center(
-                          child: Text("It's cloudy here"),
+                        SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 300,
+                                color: Colors.amber,
+                              ),
+                              Container(
+                                height: 300,
+                                color: Colors.blue,
+                              ),
+                              Container(
+                                height: 300,
+                                color: Colors.amber,
+                              ),
+                              Container(
+                                height: 300,
+                                color: Colors.blue,
+                              ),
+                            ],
+                          ),
                         ),
-                        Center(
-                          child: Text("It's rainy here"),
+                        SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 300,
+                                color: Colors.amber,
+                              ),
+                              Container(
+                                height: 300,
+                                color: Colors.blue,
+                              ),
+                              Container(
+                                height: 300,
+                                color: Colors.amber,
+                              ),
+                              Container(
+                                height: 300,
+                                color: Colors.blue,
+                              ),
+                            ],
+                          ),
                         ),
-                        Center(
-                          child: Text("It's sunny here"),
+                        SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 300,
+                                color: Colors.amber,
+                              ),
+                              Container(
+                                height: 300,
+                                color: Colors.blue,
+                              ),
+                              Container(
+                                height: 300,
+                                color: Colors.amber,
+                              ),
+                              Container(
+                                height: 300,
+                                color: Colors.blue,
+                              ),
+                            ],
+                          ),
                         ),
-                        Center(
-                          child: Text("It's sunny here"),
+                        SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 300,
+                                color: Colors.amber,
+                              ),
+                              Container(
+                                height: 300,
+                                color: Colors.blue,
+                              ),
+                              Container(
+                                height: 300,
+                                color: Colors.amber,
+                              ),
+                              Container(
+                                height: 300,
+                                color: Colors.blue,
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),

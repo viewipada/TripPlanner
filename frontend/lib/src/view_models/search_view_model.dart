@@ -21,6 +21,11 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:trip_planner/src/view/screens/search_result_page.dart';
 
 class SearchViewModel with ChangeNotifier {
+  List _dropdownItemList = [
+    {'label': 'เรียงตามคะแนน', 'value': 'เรียงตามคะแนน'},
+    {'label': 'เรียงตามระยะทาง', 'value': 'เรียงตามระยะทาง'},
+    {'label': 'เรียงตามยอดเช็คอิน', 'value': 'เรียงตามยอดเช็คอิน'},
+  ];
   List _radius = [
     {'r': 1, 'isSelected': false},
     {'r': 3, 'isSelected': true},
@@ -203,7 +208,8 @@ class SearchViewModel with ChangeNotifier {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SearchResultPage(),
+        builder: (context) =>
+            SearchResultPage(category: 'ทั้งหมด', filtered: 'เรียงตามคะแนน'),
       ),
     );
   }
@@ -221,4 +227,5 @@ class SearchViewModel with ChangeNotifier {
   List<LocationNearbyResponse> get locationPinCard => _locationPinCard;
   Set<Marker> get markers => _markers;
   ItemScrollController get itemScrollController => _itemScrollController;
+  List get dropdownItemList => _dropdownItemList;
 }
