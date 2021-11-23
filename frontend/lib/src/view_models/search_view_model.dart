@@ -10,8 +10,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:trip_planner/assets.dart';
+import 'package:trip_planner/src/models/response/search_result_response.dart';
 import 'package:trip_planner/src/models/response/travel_nearby_response.dart';
 import 'package:trip_planner/src/services/location_nearby_service.dart';
+import 'package:trip_planner/src/services/search_result_service.dart';
 import 'package:trip_planner/src/view/screens/location_detail_page.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/src/models/response/travel_nearby_response.dart';
@@ -44,6 +46,7 @@ class SearchViewModel with ChangeNotifier {
   String _mapStyle = '';
   List<LocationNearbyResponse> _locationNearbyList = [];
   List<LocationNearbyResponse> _locationPinCard = [];
+  List<SearchResultResponse> _searchResultCard = [];
   Set<Marker> _markers = Set();
   ItemScrollController _itemScrollController = ItemScrollController();
 
@@ -218,6 +221,12 @@ class SearchViewModel with ChangeNotifier {
     Navigator.pop(context);
   }
 
+  Future<void> getSearchResultBy(String category, String sortedBy) async {
+    _searchResultCard =
+        await SearchResultService().getSearchResultBy(category, sortedBy);
+    notifyListeners();
+  }
+
   LocationData? get userLocation => _userLocation;
   String get mapStyle => _mapStyle;
   List get radius => _radius;
@@ -225,6 +234,7 @@ class SearchViewModel with ChangeNotifier {
   List get locationCategories => _locationCategories;
   List<LocationNearbyResponse> get locationNearbyList => _locationNearbyList;
   List<LocationNearbyResponse> get locationPinCard => _locationPinCard;
+  List<SearchResultResponse> get searchResultCard => _searchResultCard;
   Set<Marker> get markers => _markers;
   ItemScrollController get itemScrollController => _itemScrollController;
   List get dropdownItemList => _dropdownItemList;
