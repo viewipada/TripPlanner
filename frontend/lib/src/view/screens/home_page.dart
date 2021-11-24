@@ -14,7 +14,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -164,6 +163,7 @@ Widget loadingTripCard(String header) {
           padding: EdgeInsets.symmetric(
             horizontal: getProportionateScreenWidth(15),
           ),
+          margin: EdgeInsets.only(bottom: getProportionateScreenHeight(10)),
           child: Text(
             header,
             textAlign: TextAlign.start,

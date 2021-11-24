@@ -24,9 +24,15 @@ import 'package:trip_planner/src/view/screens/search_result_page.dart';
 
 class SearchViewModel with ChangeNotifier {
   List _dropdownItemList = [
-    {'label': 'เรียงตามคะแนน', 'value': 'เรียงตามคะแนน'},
-    {'label': 'เรียงตามระยะทาง', 'value': 'เรียงตามระยะทาง'},
-    {'label': 'เรียงตามยอดเช็คอิน', 'value': 'เรียงตามยอดเช็คอิน'},
+    {'label': 'เรียงตามคะแนน', 'value': 'rating'},
+    {'label': 'เรียงตามระยะทาง', 'value': 'distance'},
+    {'label': 'เรียงตามยอดเช็คอิน', 'value': 'checkin'},
+  ];
+  List _tabs = [
+    {'label': 'ทั้งหมด', 'value': 'all'},
+    {'label': 'ที่เที่ยว', 'value': 'travel'},
+    {'label': 'ที่กิน', 'value': 'food'},
+    {'label': 'ที่พัก', 'value': 'hotel'},
   ];
   List _radius = [
     {'r': 1, 'isSelected': false},
@@ -211,8 +217,7 @@ class SearchViewModel with ChangeNotifier {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            SearchResultPage(category: 'ทั้งหมด', filtered: 'เรียงตามคะแนน'),
+        builder: (context) => SearchResultPage(),
       ),
     );
   }
@@ -222,8 +227,12 @@ class SearchViewModel with ChangeNotifier {
   }
 
   Future<void> getSearchResultBy(String category, String sortedBy) async {
-    _searchResultCard =
-        await SearchResultService().getSearchResultBy(category, sortedBy);
+    _searchResultCard = await [];
+    notifyListeners();
+
+    _searchResultCard = await Future.delayed(Duration(seconds: 1), () async {
+      return await SearchResultService().getSearchResultBy(category, sortedBy);
+    });
     notifyListeners();
   }
 
@@ -238,4 +247,5 @@ class SearchViewModel with ChangeNotifier {
   Set<Marker> get markers => _markers;
   ItemScrollController get itemScrollController => _itemScrollController;
   List get dropdownItemList => _dropdownItemList;
+  List get tabs => _tabs;
 }
