@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/src/view/screens/home_page.dart';
+import 'package:trip_planner/src/view/screens/trip_form_page.dart';
 import 'package:trip_planner/src/view_models/navigation_bar_view_model.dart';
 
 class NavigationBar extends StatefulWidget {
@@ -16,23 +17,25 @@ class _NavigationBarState extends State<NavigationBar> {
 
     return Scaffold(
       body: SafeArea(
-        child: PageView(
-          controller: navigationBarViewModel.pageController,
-          onPageChanged: (index) {
-            navigationBarViewModel.onSlidePageView(index);
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return PageView(
+              controller: navigationBarViewModel.pageController,
+              onPageChanged: (index) {
+                navigationBarViewModel.onSlidePageView(index);
+              },
+              children: [
+                HomePage(),
+                Container(
+                  color: Colors.amber,
+                ),
+                TripFormPage(startPointList: [], pointIndex: 0),
+                Container(
+                  color: Colors.red,
+                ),
+              ],
+            );
           },
-          children: [
-            HomePage(),
-            Container(
-              color: Colors.amber,
-            ),
-            Container(
-              color: Colors.green,
-            ),
-            Container(
-              color: Colors.red,
-            ),
-          ],
         ),
       ),
       bottomNavigationBar: SafeArea(

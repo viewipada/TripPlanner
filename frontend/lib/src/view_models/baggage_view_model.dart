@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
 import 'package:trip_planner/src/services/baggage_service.dart';
 import 'package:trip_planner/src/view/screens/location_detail_page.dart';
+import 'package:trip_planner/src/view/screens/search_start_point_page.dart';
 
 class BaggageViewModel with ChangeNotifier {
   List<BaggageResponse> _baggageList = [];
@@ -66,6 +67,17 @@ class BaggageViewModel with ChangeNotifier {
       context,
       MaterialPageRoute(
         builder: (context) => LocationDetailPage(locationId: locationId),
+      ),
+    );
+  }
+
+  void goToCreateTripForm(
+      BuildContext context, List<BaggageResponse> selectedList) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            SearchStartPointPage(startPointList: selectedList),
       ),
     );
   }
