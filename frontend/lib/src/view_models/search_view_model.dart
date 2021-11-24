@@ -53,8 +53,10 @@ class SearchViewModel with ChangeNotifier {
   List<LocationNearbyResponse> _locationNearbyList = [];
   List<LocationNearbyResponse> _locationPinCard = [];
   List<SearchResultResponse> _searchResultCard = [];
+  List<SearchResultResponse> _queryResult = [];
   Set<Marker> _markers = Set();
   ItemScrollController _itemScrollController = ItemScrollController();
+  bool _isQuery = false;
 
   Future<void> getUserLocation() async {
     Location location = new Location();
@@ -230,9 +232,30 @@ class SearchViewModel with ChangeNotifier {
     _searchResultCard = await [];
     notifyListeners();
 
-    _searchResultCard = await Future.delayed(Duration(seconds: 1), () async {
+    _searchResultCard =
+        await Future.delayed(Duration(milliseconds: 500), () async {
       return await SearchResultService().getSearchResultBy(category, sortedBy);
     });
+    notifyListeners();
+  }
+
+  void isQueryMode() {
+    _isQuery = true;
+    notifyListeners();
+  }
+
+  void isSearchMode() {
+    _isQuery = false;
+    notifyListeners();
+  }
+
+  Future<void> query(
+      List<SearchResultResponse> allLocationList, String searchMessage) async {
+    _queryResult = await allLocationList.where((location) {
+      final nameLower = location.locationName.toLowerCase();
+      final searchMessageLower = searchMessage.toLowerCase();
+      return nameLower.contains(searchMessageLower);
+    }).toList();
     notifyListeners();
   }
 
@@ -244,8 +267,10 @@ class SearchViewModel with ChangeNotifier {
   List<LocationNearbyResponse> get locationNearbyList => _locationNearbyList;
   List<LocationNearbyResponse> get locationPinCard => _locationPinCard;
   List<SearchResultResponse> get searchResultCard => _searchResultCard;
+  List<SearchResultResponse> get queryResult => _queryResult;
   Set<Marker> get markers => _markers;
   ItemScrollController get itemScrollController => _itemScrollController;
   List get dropdownItemList => _dropdownItemList;
   List get tabs => _tabs;
+  bool get isQuery => _isQuery;
 }

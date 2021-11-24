@@ -5,6 +5,7 @@ import 'package:flutter/painting.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
+import 'package:trip_planner/src/models/response/search_result_response.dart';
 import 'package:trip_planner/src/view/widgets/baggage_cart.dart';
 import 'package:trip_planner/src/view/widgets/loading.dart';
 import 'package:trip_planner/src/view/widgets/tag_category.dart';
@@ -15,10 +16,16 @@ class SearchResultPage extends StatefulWidget {
 }
 
 class _SearchResultPageState extends State<SearchResultPage> {
+  List<SearchResultResponse> allLocationList = [];
+  final textController = TextEditingController();
+
   @override
   void initState() {
     Provider.of<SearchViewModel>(context, listen: false)
-        .getSearchResultBy('all', 'rating');
+        .getSearchResultBy('all', 'rating')
+        .then((value) => allLocationList =
+            Provider.of<SearchViewModel>(context, listen: false)
+                .searchResultCard);
 
     super.initState();
   }
@@ -80,6 +87,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
                         vertical: getProportionateScreenHeight(10),
                       ),
                       child: TextField(
+                        controller: textController,
                         decoration: InputDecoration(
                           prefixIcon: Icon(
                             Icons.search_rounded,
@@ -89,7 +97,8 @@ class _SearchResultPageState extends State<SearchResultPage> {
                             icon: Icon(Icons.cancel_rounded,
                                 color: Palette.Outline),
                             onPressed: () {
-                              /* Clear the search field */
+                              textController.clear();
+                              searchViewModel.isSearchMode();
                             },
                           ),
                           hintText: 'ค้นหาที่เที่ยวเลย',
@@ -98,46 +107,113 @@ class _SearchResultPageState extends State<SearchResultPage> {
                           fontSize: 14,
                           color: Palette.AdditionText,
                         ),
+                        onChanged: (value) {
+                          if (value.length == 0) {
+                            searchViewModel.isSearchMode();
+                          } else {
+                            searchViewModel.isQueryMode();
+                            searchViewModel.query(allLocationList, value);
+                          }
+                        },
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Colors.black54,
+                    Visibility(
+                      visible: !searchViewModel.isQuery,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border(
+                            bottom: BorderSide(
+                              color: Colors.black54,
+                            ),
                           ),
                         ),
-                      ),
-                      child: TabBar(
-                        labelColor: Palette.BodyText,
-                        labelStyle: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Sukhumvit',
+                        child: TabBar(
+                          labelColor: Palette.BodyText,
+                          labelStyle: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Sukhumvit',
+                          ),
+                          unselectedLabelStyle: TextStyle(
+                            fontSize: 14,
+                            color: Palette.AdditionText,
+                            fontFamily: 'Sukhumvit',
+                          ),
+                          tabs: searchViewModel.tabs
+                              .map(
+                                (item) => Tab(
+                                  text: item['label'],
+                                ),
+                              )
+                              .toList(),
                         ),
-                        unselectedLabelStyle: TextStyle(
-                          fontSize: 14,
-                          color: Palette.AdditionText,
-                          fontFamily: 'Sukhumvit',
-                        ),
-                        tabs: searchViewModel.tabs
-                            .map(
-                              (item) => Tab(
-                                text: item['label'],
-                              ),
-                            )
-                            .toList(),
                       ),
                     ),
-                    Expanded(
-                      child: TabBarView(
-                        children: <Widget>[
-                          buildTabBarView(context, searchViewModel, 0),
-                          buildTabBarView(context, searchViewModel, 1),
-                          buildTabBarView(context, searchViewModel, 2),
-                          buildTabBarView(context, searchViewModel, 3),
-                        ],
+                    Visibility(
+                      visible: !searchViewModel.isQuery,
+                      child: Expanded(
+                        child: TabBarView(
+                          children: <Widget>[
+                            buildTabBarView(context, searchViewModel, 0),
+                            buildTabBarView(context, searchViewModel, 1),
+                            buildTabBarView(context, searchViewModel, 2),
+                            buildTabBarView(context, searchViewModel, 3),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: searchViewModel.isQuery,
+                      child: Expanded(
+                        child: searchViewModel.queryResult.isEmpty
+                            ? Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'ไม่พบผลลัพธ์\nมาช่วยเพิ่มสถานที่กันเถอะ',
+                                    style: TextStyle(
+                                      color: Palette.AdditionText,
+                                      fontSize: 14,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  ElevatedButton.icon(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      Icons.add,
+                                      color: Colors.white,
+                                      size: 20,
+                                    ),
+                                    label: Text(
+                                      'สร้างสถานที่',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                        primary: Palette.SecondaryColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                        ),
+                                        elevation: 0),
+                                  ),
+                                ],
+                              )
+                            : ListView.builder(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: getProportionateScreenHeight(10)),
+                                itemCount: searchViewModel.queryResult.length,
+                                itemBuilder: (context, index) =>
+                                    buildSearchResultCard(
+                                        context,
+                                        searchViewModel,
+                                        searchViewModel.queryResult[index]),
+                              ),
                       ),
                     ),
                   ],
@@ -205,126 +281,121 @@ Widget buildTabBarView(
                 physics: NeverScrollableScrollPhysics(),
                 children: searchViewModel.searchResultCard
                     .map(
-                      (item) => InkWell(
-                        onTap: () => searchViewModel.goToLocationDetail(
-                            context, item.locationId),
-                        child: Container(
-                          height: getProportionateScreenHeight(110),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  left: getProportionateScreenWidth(15),
-                                ),
-                                child: Center(
-                                  child: Container(
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Image(
-                                        width:
-                                            getProportionateScreenHeight(100),
-                                        height:
-                                            getProportionateScreenHeight(100),
-                                        fit: BoxFit.cover,
-                                        image: NetworkImage(item.imageUrl),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  padding: EdgeInsets.fromLTRB(
-                                    getProportionateScreenWidth(10),
-                                    getProportionateScreenHeight(5),
-                                    getProportionateScreenWidth(15),
-                                    getProportionateScreenHeight(5),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                          bottom:
-                                              getProportionateScreenHeight(5),
-                                        ),
-                                        child: Text(
-                                          item.locationName,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                          bottom:
-                                              getProportionateScreenHeight(5),
-                                        ),
-                                        child: Text(
-                                          item.description,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 2,
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Palette.BodyText,
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: [
-                                            TagCategory(
-                                              category: item.category,
-                                            ),
-                                            ElevatedButton.icon(
-                                              onPressed: () {},
-                                              icon: Icon(
-                                                Icons.add,
-                                                color: Colors.white,
-                                                size: 20,
-                                              ),
-                                              label: Text(
-                                                'เพิ่มลงกระเป๋า',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                              style: ElevatedButton.styleFrom(
-                                                  primary: Palette.PrimaryColor,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                  ),
-                                                  elevation: 0),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      (item) =>
+                          buildSearchResultCard(context, searchViewModel, item),
                     )
                     .toList(),
               )
       ],
+    ),
+  );
+}
+
+Widget buildSearchResultCard(BuildContext context,
+    SearchViewModel searchViewModel, SearchResultResponse item) {
+  return InkWell(
+    onTap: () => searchViewModel.goToLocationDetail(context, item.locationId),
+    child: Container(
+      height: getProportionateScreenHeight(110),
+      child: Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              left: getProportionateScreenWidth(15),
+            ),
+            child: Center(
+              child: Container(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image(
+                    width: getProportionateScreenHeight(100),
+                    height: getProportionateScreenHeight(100),
+                    fit: BoxFit.cover,
+                    image: NetworkImage(item.imageUrl),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.fromLTRB(
+                getProportionateScreenWidth(10),
+                getProportionateScreenHeight(5),
+                getProportionateScreenWidth(15),
+                getProportionateScreenHeight(5),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                      bottom: getProportionateScreenHeight(5),
+                    ),
+                    child: Text(
+                      item.locationName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      bottom: getProportionateScreenHeight(5),
+                    ),
+                    child: Text(
+                      item.description,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Palette.BodyText,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        TagCategory(
+                          category: item.category,
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.add,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          label: Text(
+                            'เพิ่มลงกระเป๋า',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                              primary: Palette.PrimaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              elevation: 0),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     ),
   );
 }
