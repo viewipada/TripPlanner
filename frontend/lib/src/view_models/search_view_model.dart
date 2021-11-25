@@ -222,6 +222,14 @@ class SearchViewModel with ChangeNotifier {
   }
 
   void goBack(BuildContext context) {
+    _isQuery = false;
+    _locationCategories.forEach((item) {
+      item['isSelected'] = false;
+    });
+    _circleRadius = 3000;
+    _radius.forEach((element) => element['r'] == 3
+        ? element['isSelected'] = true
+        : element['isSelected'] = false);
     Navigator.pop(context);
   }
 

@@ -26,6 +26,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
         .then((value) => allLocationList =
             Provider.of<SearchViewModel>(context, listen: false)
                 .searchResultCard);
+    textController.clear();
 
     super.initState();
   }

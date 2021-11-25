@@ -131,6 +131,13 @@ class _MyLocationPageState extends State<MyLocationPage> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_rounded),
+          color: Palette.BackIconColor,
+          onPressed: () {
+            searchViewModel.goBack(context);
+          },
+        ),
         title: Text(
           "ตำแหน่งของฉัน",
           style: TextStyle(
