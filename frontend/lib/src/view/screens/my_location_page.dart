@@ -14,7 +14,6 @@ import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/travel_nearby_response.dart';
-import 'package:trip_planner/src/services/location_nearby_service.dart';
 import 'package:trip_planner/src/view/widgets/baggage_cart.dart';
 import 'package:trip_planner/src/view/widgets/loading.dart';
 import 'package:trip_planner/src/view/widgets/tag_category.dart';
