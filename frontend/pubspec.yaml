@@ -37,10 +37,15 @@ dependencies:
   image_picker: ^0.8.4+3
   shared_preferences: ^2.0.8
   flutter_spinbox: ^0.6.0
+  location: ^4.3.0
+  json_annotation: ^4.3.0
+  scrollable_positioned_list: ^0.2.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  json_serializable: ^6.0.1
+  build_runner: ^2.1.5
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -56,6 +61,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/map_style.txt
 
   fonts:
     - family: Sukhumvit

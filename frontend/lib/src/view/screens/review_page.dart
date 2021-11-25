@@ -258,6 +258,10 @@ class _ReviewPageState extends State<ReviewPage> {
                                       context: context,
                                       builder: (BuildContext context) =>
                                           AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                        ),
                                         title: Text(
                                           'กรุณาให้คะแนนสถานที่นี้',
                                           style: TextStyle(
