@@ -10,13 +10,27 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:trip_planner/assets.dart';
+import 'package:trip_planner/src/models/response/search_result_response.dart';
 import 'package:trip_planner/src/models/response/travel_nearby_response.dart';
 import 'package:trip_planner/src/services/location_nearby_service.dart';
+import 'package:trip_planner/src/services/search_result_service.dart';
 import 'package:trip_planner/src/view/screens/location_detail_page.dart';
 import 'package:trip_planner/src/view/screens/my_location_page.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:trip_planner/src/view/screens/search_result_page.dart';
 
 class SearchViewModel with ChangeNotifier {
+  List _dropdownItemList = [
+    {'label': 'เรียงตามคะแนน', 'value': 'rating'},
+    {'label': 'เรียงตามระยะทาง', 'value': 'distance'},
+    {'label': 'เรียงตามยอดเช็คอิน', 'value': 'checkin'},
+  ];
+  List _tabs = [
+    {'label': 'ทั้งหมด', 'value': 'all'},
+    {'label': 'ที่เที่ยว', 'value': 'travel'},
+    {'label': 'ที่กิน', 'value': 'food'},
+    {'label': 'ที่พัก', 'value': 'hotel'},
+  ];
   List _radius = [
     {'r': 1, 'isSelected': false},
     {'r': 3, 'isSelected': true},
@@ -35,8 +49,11 @@ class SearchViewModel with ChangeNotifier {
   String _mapStyle = '';
   List<LocationNearbyResponse> _locationNearbyList = [];
   List<LocationNearbyResponse> _locationPinCard = [];
+  List<SearchResultResponse> _searchResultCard = [];
+  List<SearchResultResponse> _queryResult = [];
   Set<Marker> _markers = Set();
   ItemScrollController _itemScrollController = ItemScrollController();
+  bool _isQuery = false;
 
   Future<void> getUserLocation() async {
     Location location = new Location();
@@ -195,6 +212,50 @@ class SearchViewModel with ChangeNotifier {
     );
   }
 
+  void goToSearchResultPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SearchResultPage(),
+      ),
+    );
+  }
+
+  void goBack(BuildContext context) {
+    Navigator.pop(context);
+  }
+
+  Future<void> getSearchResultBy(String category, String sortedBy) async {
+    _searchResultCard = await [];
+    notifyListeners();
+
+    _searchResultCard =
+        await Future.delayed(Duration(milliseconds: 500), () async {
+      return await SearchResultService().getSearchResultBy(category, sortedBy);
+    });
+    notifyListeners();
+  }
+
+  void isQueryMode() {
+    _isQuery = true;
+    notifyListeners();
+  }
+
+  void isSearchMode() {
+    _isQuery = false;
+    notifyListeners();
+  }
+
+  Future<void> query(
+      List<SearchResultResponse> allLocationList, String searchMessage) async {
+    _queryResult = await allLocationList.where((location) {
+      final nameLower = location.locationName.toLowerCase();
+      final searchMessageLower = searchMessage.toLowerCase();
+      return nameLower.contains(searchMessageLower);
+    }).toList();
+    notifyListeners();
+  }
+
   LocationData? get userLocation => _userLocation;
   String get mapStyle => _mapStyle;
   List get radius => _radius;
@@ -202,6 +263,11 @@ class SearchViewModel with ChangeNotifier {
   List get locationCategories => _locationCategories;
   List<LocationNearbyResponse> get locationNearbyList => _locationNearbyList;
   List<LocationNearbyResponse> get locationPinCard => _locationPinCard;
+  List<SearchResultResponse> get searchResultCard => _searchResultCard;
+  List<SearchResultResponse> get queryResult => _queryResult;
   Set<Marker> get markers => _markers;
   ItemScrollController get itemScrollController => _itemScrollController;
+  List get dropdownItemList => _dropdownItemList;
+  List get tabs => _tabs;
+  bool get isQuery => _isQuery;
 }

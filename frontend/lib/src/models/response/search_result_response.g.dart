@@ -1,33 +1,33 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'travel_nearby_response.dart';
+part of 'search_result_response.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-LocationNearbyResponse _$LocationNearbyResponseFromJson(
+SearchResultResponse _$SearchResultResponseFromJson(
         Map<String, dynamic> json) =>
-    LocationNearbyResponse(
+    SearchResultResponse(
       locationId: json['locationId'] as int,
       locationName: json['locationName'] as String,
       imageUrl: json['imageUrl'] as String,
       description: json['description'] as String,
       category: json['category'] as String,
-      latitude: (json['latitude'] as num).toDouble(),
-      longitude: (json['longitude'] as num).toDouble(),
+      rating: (json['rating'] as num).toDouble(),
       ditanceFromeUser: (json['ditanceFromeUser'] as num).toDouble(),
+      totalCheckin: json['totalCheckin'] as int,
     );
 
-Map<String, dynamic> _$LocationNearbyResponseToJson(
-        LocationNearbyResponse instance) =>
+Map<String, dynamic> _$SearchResultResponseToJson(
+        SearchResultResponse instance) =>
     <String, dynamic>{
       'locationId': instance.locationId,
       'locationName': instance.locationName,
       'imageUrl': instance.imageUrl,
       'description': instance.description,
       'category': instance.category,
-      'latitude': instance.latitude,
-      'longitude': instance.longitude,
+      'rating': instance.rating,
       'ditanceFromeUser': instance.ditanceFromeUser,
+      'totalCheckin': instance.totalCheckin,
     };

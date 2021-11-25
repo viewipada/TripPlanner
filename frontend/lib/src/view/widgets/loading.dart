@@ -50,7 +50,7 @@ class ShimmerTripCard extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-        vertical: getProportionateScreenHeight(15),
+        vertical: getProportionateScreenHeight(5),
         horizontal: getProportionateScreenWidth(15),
       ),
       child: Row(

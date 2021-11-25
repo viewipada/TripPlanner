@@ -184,8 +184,9 @@ class _MyLocationPageState extends State<MyLocationPage> {
                           isScrollControlled: true,
                           backgroundColor: Colors.transparent,
                           context: context,
-                          builder: (context) => makeDismissible(
-                              locationListView(searchViewModel), context),
+                          builder: (_context) => makeDismissible(
+                              locationListView(context, searchViewModel),
+                              _context),
                         ),
                       ),
                     ),
@@ -437,7 +438,7 @@ Widget makeDismissible(Widget child, BuildContext context) => GestureDetector(
       child: GestureDetector(onTap: () {}, child: child),
     );
 
-Widget locationListView(SearchViewModel searchViewModel) {
+Widget locationListView(BuildContext context, SearchViewModel searchViewModel) {
   return DraggableScrollableSheet(
     initialChildSize: 0.5,
     minChildSize: 0.3,
@@ -474,118 +475,130 @@ Widget locationListView(SearchViewModel searchViewModel) {
                     controller: controller,
                     children: searchViewModel.locationPinCard
                         .map(
-                          (item) => Container(
-                            height: getProportionateScreenHeight(110),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    left: getProportionateScreenWidth(15),
-                                  ),
-                                  child: Center(
-                                    child: Container(
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: Image(
-                                          width:
-                                              getProportionateScreenHeight(100),
-                                          height:
-                                              getProportionateScreenHeight(100),
-                                          fit: BoxFit.cover,
-                                          image: NetworkImage(item.imageUrl),
+                          (item) => InkWell(
+                            onTap: () => searchViewModel.goToLocationDetail(
+                                context, item.locationId),
+                            child: Container(
+                              height: getProportionateScreenHeight(110),
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      left: getProportionateScreenWidth(15),
+                                    ),
+                                    child: Center(
+                                      child: Container(
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Image(
+                                            width: getProportionateScreenHeight(
+                                                100),
+                                            height:
+                                                getProportionateScreenHeight(
+                                                    100),
+                                            fit: BoxFit.cover,
+                                            image: NetworkImage(item.imageUrl),
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    padding: EdgeInsets.fromLTRB(
-                                      getProportionateScreenWidth(10),
-                                      getProportionateScreenHeight(5),
-                                      getProportionateScreenWidth(15),
-                                      getProportionateScreenHeight(5),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                            bottom:
-                                                getProportionateScreenHeight(5),
-                                          ),
-                                          child: Text(
-                                            item.locationName,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 14,
+                                  Expanded(
+                                    child: Container(
+                                      padding: EdgeInsets.fromLTRB(
+                                        getProportionateScreenWidth(10),
+                                        getProportionateScreenHeight(5),
+                                        getProportionateScreenWidth(15),
+                                        getProportionateScreenHeight(5),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              bottom:
+                                                  getProportionateScreenHeight(
+                                                      5),
                                             ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                            bottom:
-                                                getProportionateScreenHeight(5),
-                                          ),
-                                          child: Text(
-                                            item.description,
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Palette.BodyText,
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              TagCategory(
-                                                category: item.category,
+                                            child: Text(
+                                              item.locationName,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14,
                                               ),
-                                              ElevatedButton.icon(
-                                                onPressed: () {},
-                                                icon: Icon(
-                                                  Icons.add,
-                                                  color: Colors.white,
-                                                  size: 20,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              bottom:
+                                                  getProportionateScreenHeight(
+                                                      5),
+                                            ),
+                                            child: Text(
+                                              item.description,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Palette.BodyText,
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: [
+                                                TagCategory(
+                                                  category: item.category,
                                                 ),
-                                                label: Text(
-                                                  'เพิ่มลงกระเป๋า',
-                                                  style: TextStyle(
+                                                ElevatedButton.icon(
+                                                  onPressed: () {},
+                                                  icon: Icon(
+                                                    Icons.add,
                                                     color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 14,
+                                                    size: 20,
                                                   ),
-                                                ),
-                                                style: ElevatedButton.styleFrom(
-                                                    primary:
-                                                        Palette.PrimaryColor,
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
+                                                  label: Text(
+                                                    'เพิ่มลงกระเป๋า',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14,
                                                     ),
-                                                    elevation: 0),
-                                              ),
-                                            ],
+                                                  ),
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                          primary: Palette
+                                                              .PrimaryColor,
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5),
+                                                          ),
+                                                          elevation: 0),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         )
