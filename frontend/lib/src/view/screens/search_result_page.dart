@@ -196,12 +196,12 @@ class _SearchResultPageState extends State<SearchResultPage> {
                                       ),
                                     ),
                                     style: ElevatedButton.styleFrom(
-                                        primary: Palette.SecondaryColor,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                        ),
-                                        elevation: 0),
+                                      primary: Palette.SecondaryColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                      ),
+                                    ),
                                   ),
                                 ],
                               )

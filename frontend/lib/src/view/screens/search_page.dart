@@ -219,7 +219,7 @@ class _SearchPageState extends State<SearchPage> {
                         }
                       },
                       icon: Icon(
-                        Icons.airline_seat_individual_suite_outlined,
+                        Icons.hotel_outlined,
                         color: Palette.LightOrangeColor,
                         size: 27,
                       ),
