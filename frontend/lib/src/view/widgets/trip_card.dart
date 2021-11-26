@@ -62,8 +62,8 @@ class TripCard extends StatelessWidget {
                           child: Image.network(
                             trip.imageUrl,
                             fit: BoxFit.cover,
-                            height: 100,
-                            width: 100,
+                            height: getProportionateScreenHeight(100),
+                            width: getProportionateScreenHeight(100),
                           ),
                           clipBehavior: Clip.antiAlias,
                         ),

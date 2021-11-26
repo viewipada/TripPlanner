@@ -17,7 +17,7 @@ class Loading extends StatelessWidget {
           color: Palette.PrimaryColor,
           size: getProportionateScreenWidth(100),
         ),
-        Text('กรุณารอสักครู่...', style: FontAssets.bodyText,)
+        Text('กรุณารอสักครู่...', style: FontAssets.bodyText)
       ],
     );
   }
@@ -32,8 +32,8 @@ class ShimmerLocationCard extends StatelessWidget {
       baseColor: Palette.DarkGrey,
       highlightColor: Palette.TagGrey,
       child: Container(
-        width: 100,
-        height: 100,
+        width: getProportionateScreenHeight(100),
+        height: getProportionateScreenHeight(100),
         margin: EdgeInsets.only(right: getProportionateScreenWidth(15)),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),

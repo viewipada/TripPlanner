@@ -234,8 +234,11 @@ class _BaggagePageState extends State<BaggagePage> {
                                           borderRadius:
                                               BorderRadius.circular(10),
                                           child: Image(
-                                            width: 100,
-                                            height: 100,
+                                            width: getProportionateScreenHeight(
+                                                100),
+                                            height:
+                                                getProportionateScreenHeight(
+                                                    100),
                                             fit: BoxFit.cover,
                                             image: NetworkImage(item.imageUrl),
                                           ),
@@ -247,8 +250,10 @@ class _BaggagePageState extends State<BaggagePage> {
                                           .contains(item),
                                       child: Center(
                                         child: Container(
-                                          width: 100,
-                                          height: 100,
+                                          width:
+                                              getProportionateScreenHeight(100),
+                                          height:
+                                              getProportionateScreenHeight(100),
                                           alignment: Alignment.center,
                                           decoration: BoxDecoration(
                                             borderRadius:

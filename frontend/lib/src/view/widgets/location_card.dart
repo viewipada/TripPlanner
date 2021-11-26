@@ -92,8 +92,8 @@ class LocationCard extends StatelessWidget {
                           child: Image.network(
                             location.imageUrl,
                             fit: BoxFit.cover,
-                            height: 100,
-                            width: 100,
+                            height: getProportionateScreenHeight(100),
+                            width: getProportionateScreenHeight(100),
                           ),
                           clipBehavior: Clip.antiAlias,
                         ),

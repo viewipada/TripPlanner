@@ -188,15 +188,16 @@ class _ReviewPageState extends State<ReviewPage> {
                       itemBuilder: (context, index) {
                         return Stack(
                           children: [
-                            Center(
+                            Container(
+                              margin: EdgeInsets.only(top: getProportionateScreenHeight(5)),
                               child: Card(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.all(
                                         Radius.circular(10.0))),
                                 child: Image.file(
                                   reviewViewModel.images[index],
-                                  height: 100,
-                                  width: 100,
+                                  height: getProportionateScreenHeight(100),
+                                  width: getProportionateScreenHeight(100),
                                   fit: BoxFit.cover,
                                 ),
                                 clipBehavior: Clip.antiAlias,
@@ -204,7 +205,7 @@ class _ReviewPageState extends State<ReviewPage> {
                             ),
                             Positioned(
                               top: 0,
-                              right: 0,
+                              right: getProportionateScreenHeight(5),
                               child: CircleAvatar(
                                 backgroundColor: Palette.BackgroundColor,
                                 radius: 12,

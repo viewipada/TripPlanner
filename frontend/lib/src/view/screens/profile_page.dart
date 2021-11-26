@@ -132,6 +132,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                     ),
+                    margin: EdgeInsets.only(
+                        bottom: getProportionateScreenHeight(10)),
                     child: TabBar(
                       labelColor: Palette.BodyText,
                       indicatorColor: Palette.SecondaryColor,
@@ -165,10 +167,10 @@ class _ProfilePageState extends State<ProfilePage> {
                               Padding(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: getProportionateScreenWidth(15),
-                                  vertical: getProportionateScreenHeight(15),
+                                  vertical: getProportionateScreenHeight(5),
                                 ),
                                 child: Text(
-                                  ' ทริปของฉัน',
+                                  'ทริปของฉัน',
                                   style: FontAssets.titleText,
                                 ),
                               ),
@@ -195,8 +197,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                             child: Image.network(
                                               'https://cms.dmpcdn.com/travel/2020/05/26/fafac540-9f50-11ea-81a6-432b2bbc8436_original.jpg',
                                               fit: BoxFit.cover,
-                                              height: 100,
-                                              width: 100,
+                                              height:
+                                                  getProportionateScreenHeight(
+                                                      100),
+                                              width:
+                                                  getProportionateScreenHeight(
+                                                      100),
                                             ),
                                             clipBehavior: Clip.antiAlias,
                                           ),
@@ -262,6 +268,22 @@ class _ProfilePageState extends State<ProfilePage> {
                                   );
                                 }).toList(),
                               ),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(
+                                  getProportionateScreenWidth(15),
+                                  getProportionateScreenHeight(15),
+                                  getProportionateScreenWidth(15),
+                                  getProportionateScreenHeight(5),
+                                ),
+                                child: Text(
+                                  'รูปภาพ',
+                                  style: FontAssets.titleText,
+                                ),
+                              ),
+                              buildGridReviewPicture(),
+                              buildGridReviewPicture(),
+                              buildGridReviewPicture(),
+                              SizedBox(height: getProportionateScreenHeight(5)),
                             ],
                           ),
                         ),
@@ -284,7 +306,7 @@ Widget createLocationTabEmpty() {
     children: [
       Padding(
         padding: EdgeInsets.only(
-          top: getProportionateScreenHeight(30),
+          top: getProportionateScreenHeight(15),
           bottom: getProportionateScreenHeight(10),
         ),
         child: Text(
@@ -316,5 +338,71 @@ Widget createLocationTabEmpty() {
         ),
       ),
     ],
+  );
+}
+
+Widget buildGridReviewPicture() {
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(15)),
+    margin: EdgeInsets.only(bottom: getProportionateScreenHeight(10)),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'รีวิว วัดม่วง',
+          style: TextStyle(
+              color: Palette.BodyText,
+              fontSize: 14,
+              fontWeight: FontWeight.bold),
+        ),
+        Text(
+          'บรรยากาศดีมากๆๆๆค่ะ ต้องมาอีกให้ดั้ยยย',
+          style: FontAssets.bodyText,
+        ),
+        GridView(
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            crossAxisSpacing: getProportionateScreenWidth(10),
+          ),
+          children: [
+            Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              child: Image.asset(
+                ImageAssets.homeBanner,
+                height: getProportionateScreenHeight(100),
+                width: getProportionateScreenHeight(100),
+                fit: BoxFit.cover,
+              ),
+              clipBehavior: Clip.antiAlias,
+            ),
+            Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              child: Image.asset(
+                ImageAssets.homeBanner,
+                height: getProportionateScreenHeight(100),
+                width: getProportionateScreenHeight(100),
+                fit: BoxFit.cover,
+              ),
+              clipBehavior: Clip.antiAlias,
+            ),
+            Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              child: Image.asset(
+                ImageAssets.homeBanner,
+                height: getProportionateScreenHeight(100),
+                width: getProportionateScreenHeight(100),
+                fit: BoxFit.cover,
+              ),
+              clipBehavior: Clip.antiAlias,
+            ),
+          ],
+        ),
+      ],
+    ),
   );
 }
