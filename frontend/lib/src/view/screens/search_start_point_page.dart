@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
 import 'package:trip_planner/src/view/widgets/start_point_card.dart';
@@ -30,10 +31,7 @@ class _SearchStartPointPageState extends State<SearchStartPointPage> {
       appBar: AppBar(
         title: Text(
           "เลือกจุดเริ่มต้น",
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-          ),
+          style: FontAssets.headingText,
         ),
         centerTitle: true,
         backgroundColor: Colors.white,

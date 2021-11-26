@@ -69,10 +69,7 @@ class _MyLocationPageState extends State<MyLocationPage> {
             ),
             title: Text(
               'แสดงสถานที่ในรัศมี',
-              style: TextStyle(
-                fontSize: 14,
-                color: Palette.AdditionText,
-              ),
+              style: FontAssets.bodyText,
               textAlign: TextAlign.center,
             ),
             titlePadding: EdgeInsets.symmetric(
@@ -140,10 +137,7 @@ class _MyLocationPageState extends State<MyLocationPage> {
         ),
         title: Text(
           "ตำแหน่งของฉัน",
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-          ),
+          style: FontAssets.headingText,
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
@@ -245,7 +239,7 @@ class _MyLocationPageState extends State<MyLocationPage> {
                           child: TextButton(
                             child: Text(
                               category['category'],
-                              style: TextStyle(fontSize: 14),
+                              style: TextStyle(fontSize: 16),
                             ),
                             style: TextButton.styleFrom(
                               primary: Colors.white,
@@ -255,7 +249,7 @@ class _MyLocationPageState extends State<MyLocationPage> {
                               shadowColor: Palette.Outline,
                               elevation: 10,
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20)),
+                                  borderRadius: BorderRadius.circular(100)),
                             ),
                             onPressed: () {
                               searchViewModel.getLocationNearby(
@@ -394,11 +388,7 @@ Widget pinCard(LocationNearbyResponse location) {
               padding: EdgeInsets.only(top: getProportionateScreenHeight(15)),
               child: Text(
                 location.locationName,
-                style: TextStyle(
-                  color: Palette.BodyText,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: FontAssets.subtitleText,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -474,8 +464,7 @@ Widget locationListView(BuildContext context, SearchViewModel searchViewModel) {
                 ? Center(
                     child: Text(
                       'ไม่มีรายการสถานที่ใกล้ตัวคุณ',
-                      style:
-                          TextStyle(fontSize: 14, color: Palette.AdditionText),
+                      style: FontAssets.bodyText,
                     ),
                   )
                 : ListView(
@@ -525,36 +514,23 @@ Widget locationListView(BuildContext context, SearchViewModel searchViewModel) {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                              bottom:
-                                                  getProportionateScreenHeight(
-                                                      5),
-                                            ),
-                                            child: Text(
-                                              item.locationName,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14,
-                                              ),
-                                            ),
+                                          Text(
+                                            item.locationName,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: FontAssets.subtitleText,
                                           ),
                                           Padding(
                                             padding: EdgeInsets.only(
                                               bottom:
                                                   getProportionateScreenHeight(
-                                                      5),
+                                                      15),
                                             ),
                                             child: Text(
                                               item.description,
                                               overflow: TextOverflow.ellipsis,
-                                              maxLines: 2,
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Palette.BodyText,
-                                              ),
+                                              maxLines: 1,
+                                              style: FontAssets.bodyText,
                                             ),
                                           ),
                                           Expanded(
@@ -642,11 +618,7 @@ Widget locationDetailsBottomSheet(LocationNearbyResponse location,
         ),
         Text(
           location.locationName,
-          style: TextStyle(
-            color: Palette.BodyText,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+          style: FontAssets.subtitleText,
         ),
         Expanded(
           flex: 3,
@@ -666,10 +638,7 @@ Widget locationDetailsBottomSheet(LocationNearbyResponse location,
           flex: 1,
           child: Text(
             location.description,
-            style: TextStyle(
-              color: Palette.AdditionText,
-              fontSize: 12,
-            ),
+            style: FontAssets.bodyText,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
           ),
@@ -687,7 +656,7 @@ Widget locationDetailsBottomSheet(LocationNearbyResponse location,
                 },
                 child: Text(
                   'ดูเพิ่มเติม',
-                  style: TextStyle(fontSize: 14),
+                  style: TextStyle(fontSize: 14, fontFamily: 'Sukhumvit'),
                 ),
               ),
               SizedBox(width: getProportionateScreenWidth(15)),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
@@ -49,28 +50,17 @@ class StartPointCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                        bottom: getProportionateScreenHeight(5),
-                      ),
-                      child: Text(
-                        item.locationName,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
+                    Text(
+                      item.locationName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: FontAssets.subtitleText,
                     ),
                     Text(
                       item.description,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Palette.BodyText,
-                      ),
+                      style: FontAssets.bodyText,
                     ),
                     Spacer(
                       flex: 2,

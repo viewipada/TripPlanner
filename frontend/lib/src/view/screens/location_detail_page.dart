@@ -47,7 +47,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
           return CustomScrollView(
             slivers: [
               SliverAppBar(
-                expandedHeight: getProportionateScreenHeight(200),
+                expandedHeight: getProportionateScreenHeight(220),
                 flexibleSpace: FlexibleSpaceBar(
                   background: Image.network(
                     locationDetailViewModel.locationDetail.imageUrl,
@@ -84,10 +84,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                         children: [
                           Text(
                             locationDetailViewModel.locationDetail.locationName,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: FontAssets.titleText,
                           ),
                           IconButton(
                             constraints: BoxConstraints(),
@@ -120,10 +117,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                       ),
                       child: Text(
                         locationDetailViewModel.locationDetail.description,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Palette.BodyText,
-                        ),
+                        style: FontAssets.bodyText,
                         maxLines: locationDetailViewModel.readMore ? 100 : 3,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -144,7 +138,8 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                         style: TextButton.styleFrom(
                           alignment: Alignment.center,
                           padding: EdgeInsets.zero,
-                          textStyle: TextStyle(fontSize: 10),
+                          textStyle:
+                              TextStyle(fontSize: 12, fontFamily: 'Sukhumvit'),
                         ),
                       ),
                     ),
@@ -157,11 +152,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                       ),
                       child: Text(
                         'รายละเอียด',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Palette.BodyText,
-                        ),
+                        style: FontAssets.subtitleText,
                       ),
                     ),
                     detailLocation('วันเวลาเปิด-ปิด',
@@ -182,11 +173,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                         children: [
                           Text(
                             'ตำแหน่งบนแผนที่',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: Palette.BodyText,
-                            ),
+                            style: FontAssets.subtitleText,
                           ),
                           Container(
                             decoration: BoxDecoration(
@@ -212,7 +199,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                                   ' เช็คอินแล้ว ${locationDetailViewModel.locationDetail.totalCheckin} คน',
                                   style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 12,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 )
@@ -224,7 +211,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                     ),
                     Container(
                       width: double.infinity,
-                      height: getProportionateScreenHeight(170),
+                      height: getProportionateScreenHeight(175),
                       child: GoogleMap(
                         myLocationButtonEnabled: false,
                         // myLocationEnabled: true,
@@ -272,10 +259,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                           ),
                           Text(
                             ' เวลาที่ใช้ ${locationDetailViewModel.locationDetail.duration}hr',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: FontAssets.bodyText,
                           ),
                         ],
                       ),
@@ -296,10 +280,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                               child: Text(
                                 'รีวิว (${locationDetailViewModel.locationDetail.totalReview})',
                                 textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: FontAssets.subtitleText,
                               ),
                             ),
                           ),
@@ -312,10 +293,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                                 child: Text(
                                   "ดูเพิ่มเติม >> ",
                                   textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                    color: Palette.AdditionText,
-                                    fontSize: 12,
-                                  ),
+                                  style: FontAssets.hintText,
                                 ),
                               ),
                             ),
@@ -334,10 +312,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                         children: [
                           Text(
                             '${locationDetailViewModel.locationDetail.averageRating} ',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Palette.AdditionText,
-                            ),
+                            style: FontAssets.bodyText,
                           ),
                           RatingBarIndicator(
                             unratedColor: Palette.Outline,
@@ -348,7 +323,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                               color: Palette.CautionColor,
                             ),
                             itemCount: 5,
-                            itemSize: 18,
+                            itemSize: 20,
                           ),
                         ],
                       ),
@@ -424,20 +399,14 @@ Widget detailLocation(String title, String detail) {
           flex: 1,
           child: Text(
             title,
-            style: TextStyle(
-              fontSize: 12,
-              color: Palette.BodyText,
-            ),
+            style: TextStyle(color: Palette.BodyText, fontSize: 14),
           ),
         ),
         Expanded(
-          flex: 3,
+          flex: 2,
           child: Text(
             detail,
-            style: TextStyle(
-              fontSize: 12,
-              color: Palette.AdditionText,
-            ),
+            style: FontAssets.bodyText,
           ),
         ),
       ],

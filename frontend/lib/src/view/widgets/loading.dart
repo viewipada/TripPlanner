@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 
@@ -16,7 +17,7 @@ class Loading extends StatelessWidget {
           color: Palette.PrimaryColor,
           size: getProportionateScreenWidth(100),
         ),
-        Text('กรุณารอสักครู่...')
+        Text('กรุณารอสักครู่...', style: FontAssets.bodyText,)
       ],
     );
   }

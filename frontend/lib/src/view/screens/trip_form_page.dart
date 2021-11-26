@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
@@ -30,10 +31,6 @@ class _TripFormPageState extends State<TripFormPage> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    final textStyle = TextStyle(
-      fontSize: 16,
-      color: Palette.AdditionText,
-    );
     final tripFormViewModel = Provider.of<TripFormViewModel>(context);
 
     return GestureDetector(
@@ -97,10 +94,7 @@ class _TripFormPageState extends State<TripFormPage> {
           leadingWidth: getProportionateScreenWidth(70),
           title: Text(
             "สร้างทริป",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 18,
-            ),
+            style: FontAssets.headingText,
           ),
           centerTitle: true,
           backgroundColor: Colors.white,
@@ -123,7 +117,7 @@ class _TripFormPageState extends State<TripFormPage> {
                             top: getProportionateScreenHeight(15)),
                         child: Text(
                           'ชื่อทริป',
-                          style: textStyle,
+                          style: FontAssets.titleText,
                         ),
                       ),
                       Container(
@@ -138,10 +132,10 @@ class _TripFormPageState extends State<TripFormPage> {
                           ),
                           onChanged: (value) =>
                               tripFormViewModel.updateTripNameValue(value),
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Palette.AdditionText,
-                          ),
+                          // style: TextStyle(
+                          //   fontSize: 14,
+                          //   color: Palette.AdditionText,
+                          // ),
                         ),
                       ),
                       Container(
@@ -161,7 +155,7 @@ class _TripFormPageState extends State<TripFormPage> {
                                             getProportionateScreenHeight(10)),
                                     child: Text(
                                       'จำนวนคน',
-                                      style: textStyle,
+                                      style: FontAssets.titleText,
                                     ),
                                   ),
                                   SpinBox(
@@ -213,7 +207,7 @@ class _TripFormPageState extends State<TripFormPage> {
                                             getProportionateScreenHeight(10)),
                                     child: Text(
                                       'จำนวนวัน',
-                                      style: textStyle,
+                                      style: FontAssets.titleText,
                                     ),
                                   ),
                                   SpinBox(
@@ -267,7 +261,7 @@ class _TripFormPageState extends State<TripFormPage> {
                               children: [
                                 Text(
                                   tripFormViewModel.startDate,
-                                  style: textStyle,
+                                  style: FontAssets.bodyText,
                                 ),
                                 Padding(
                                   padding: EdgeInsets.symmetric(
@@ -302,7 +296,7 @@ class _TripFormPageState extends State<TripFormPage> {
                           children: [
                             Text(
                               'จุดเริ่มต้นการท่องเที่ยว',
-                              style: textStyle,
+                              style: FontAssets.titleText,
                             ),
                             Visibility(
                               visible: startPointList.isNotEmpty,

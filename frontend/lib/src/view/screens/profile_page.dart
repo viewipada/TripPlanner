@@ -6,6 +6,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/view/widgets/baggage_cart.dart';
@@ -101,16 +102,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                 children: [
                                   Text(
                                     'มุก วิภา',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16),
+                                    style: FontAssets.titleText,
                                   ),
                                   Text(
                                     'Sliver traveller',
-                                    style: TextStyle(
-                                      color: Palette.AdditionText,
-                                      fontSize: 16,
-                                    ),
+                                    style: FontAssets.bodyText,
                                   ),
                                 ],
                               ),
@@ -140,12 +136,12 @@ class _ProfilePageState extends State<ProfilePage> {
                       labelColor: Palette.BodyText,
                       indicatorColor: Palette.SecondaryColor,
                       labelStyle: TextStyle(
-                        fontSize: 14,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Sukhumvit',
                       ),
                       unselectedLabelStyle: TextStyle(
-                        fontSize: 14,
+                        fontSize: 16,
                         color: Palette.AdditionText,
                         fontFamily: 'Sukhumvit',
                       ),
@@ -173,11 +169,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                                 child: Text(
                                   ' ทริปของฉัน',
-                                  style: TextStyle(
-                                    color: Palette.BodyText,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
+                                  style: FontAssets.titleText,
                                 ),
                               ),
                               ListView(
@@ -231,13 +223,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         maxLines: 1,
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14,
-                                                          color:
-                                                              Palette.DarkGrey,
-                                                        ),
+                                                        style: FontAssets
+                                                            .subtitleText,
                                                       ),
                                                     ),
                                                     Text(
@@ -245,33 +232,24 @@ class _ProfilePageState extends State<ProfilePage> {
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                       maxLines: 1,
-                                                      style: TextStyle(
-                                                        fontSize: 12,
-                                                        color: Palette
-                                                            .AdditionText,
-                                                      ),
+                                                      style:
+                                                          FontAssets.bodyText,
                                                     ),
                                                     Text(
                                                       '10 ที่เที่ยว',
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                       maxLines: 1,
-                                                      style: TextStyle(
-                                                        fontSize: 12,
-                                                        color: Palette
-                                                            .AdditionText,
-                                                      ),
+                                                      style:
+                                                          FontAssets.bodyText,
                                                     ),
                                                     Text(
                                                       '2 วัน 1 คืน',
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                       maxLines: 1,
-                                                      style: TextStyle(
-                                                        fontSize: 12,
-                                                        color: Palette
-                                                            .AdditionText,
-                                                      ),
+                                                      style:
+                                                          FontAssets.bodyText,
                                                     ),
                                                   ],
                                                 ),
@@ -311,7 +289,7 @@ Widget createLocationTabEmpty() {
         ),
         child: Text(
           'คุณยังไม่เคยสร้างสถานที่\nมาช่วยเพิ่มสถานที่กันเถอะ',
-          style: TextStyle(color: Palette.BodyText, fontSize: 14),
+          style: FontAssets.bodyText,
           textAlign: TextAlign.center,
         ),
       ),

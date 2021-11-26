@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
@@ -126,10 +127,7 @@ class _BaggagePageState extends State<BaggagePage> {
                   ),
                   Text(
                     'ทั้งหมด',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Palette.AdditionText,
-                    ),
+                    style: FontAssets.bodyText,
                   ),
                 ],
               ),
@@ -137,10 +135,7 @@ class _BaggagePageState extends State<BaggagePage> {
             leadingWidth: getProportionateScreenWidth(150),
             title: Text(
               "กระเป๋าเดินทาง",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-              ),
+              style: FontAssets.headingText,
             ),
             centerTitle: true,
             backgroundColor: Colors.white,
@@ -275,6 +270,7 @@ class _BaggagePageState extends State<BaggagePage> {
                                                     .toString(),
                                                 style: TextStyle(
                                                   color: Colors.white,
+                                                  fontSize: 14,
                                                 ),
                                               ),
                                             ),
@@ -300,29 +296,17 @@ class _BaggagePageState extends State<BaggagePage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                            bottom:
-                                                getProportionateScreenHeight(5),
-                                          ),
-                                          child: Text(
-                                            item.locationName,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 14,
-                                            ),
-                                          ),
+                                        Text(
+                                          item.locationName,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: FontAssets.subtitleText,
                                         ),
                                         Text(
                                           item.description,
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 2,
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Palette.BodyText,
-                                          ),
+                                          style: FontAssets.bodyText,
                                         ),
                                         Spacer(
                                           flex: 2,

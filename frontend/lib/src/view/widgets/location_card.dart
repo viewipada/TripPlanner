@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/location_card_response.dart';
@@ -38,10 +39,7 @@ class LocationCard extends StatelessWidget {
                     child: Text(
                       this.header,
                       textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: FontAssets.titleText,
                     ),
                   ),
                 ),
@@ -54,10 +52,7 @@ class LocationCard extends StatelessWidget {
                       child: Text(
                         "ดูเพิ่มเติม >> ",
                         textAlign: TextAlign.end,
-                        style: TextStyle(
-                          color: Palette.AdditionText,
-                          fontSize: 12,
-                        ),
+                        style: FontAssets.hintText,
                       ),
                     ),
                   ),
@@ -66,7 +61,7 @@ class LocationCard extends StatelessWidget {
             ),
           ),
           Container(
-            padding: EdgeInsets.only(top: getProportionateScreenHeight(10)),
+            padding: EdgeInsets.only(top: getProportionateScreenHeight(5)),
             alignment: Alignment.centerLeft,
             height: getProportionateScreenHeight(160),
             child: ListView(
@@ -109,11 +104,7 @@ class LocationCard extends StatelessWidget {
                               location.locationName,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: Palette.DarkGrey,
-                              ),
+                              style: FontAssets.subtitleText,
                             ),
                           ),
                         ),

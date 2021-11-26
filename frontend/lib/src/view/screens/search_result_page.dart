@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:provider/provider.dart';
+import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/search_result_response.dart';
@@ -63,11 +64,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
               ),
               title: Text(
                 "ค้นหา",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
+                style: FontAssets.headingText,
               ),
               centerTitle: true,
               actions: [
@@ -104,10 +101,6 @@ class _SearchResultPageState extends State<SearchResultPage> {
                           ),
                           hintText: 'ค้นหาที่เที่ยวเลย',
                         ),
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Palette.AdditionText,
-                        ),
                         onChanged: (value) {
                           if (value.length == 0) {
                             searchViewModel.isSearchMode();
@@ -132,12 +125,12 @@ class _SearchResultPageState extends State<SearchResultPage> {
                         child: TabBar(
                           labelColor: Palette.BodyText,
                           labelStyle: TextStyle(
-                            fontSize: 14,
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Sukhumvit',
                           ),
                           unselectedLabelStyle: TextStyle(
-                            fontSize: 14,
+                            fontSize: 16,
                             color: Palette.AdditionText,
                             fontFamily: 'Sukhumvit',
                           ),
@@ -172,13 +165,15 @@ class _SearchResultPageState extends State<SearchResultPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    'ไม่พบผลลัพธ์\nมาช่วยเพิ่มสถานที่กันเถอะ',
-                                    style: TextStyle(
-                                      color: Palette.AdditionText,
-                                      fontSize: 14,
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom:
+                                            getProportionateScreenHeight(10)),
+                                    child: Text(
+                                      'ไม่พบผลลัพธ์\nมาช่วยเพิ่มสถานที่กันเถอะ',
+                                      style: FontAssets.bodyText,
+                                      textAlign: TextAlign.center,
                                     ),
-                                    textAlign: TextAlign.center,
                                   ),
                                   ElevatedButton.icon(
                                     onPressed: () {},
@@ -330,32 +325,21 @@ Widget buildSearchResultCard(BuildContext context,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                      bottom: getProportionateScreenHeight(5),
-                    ),
-                    child: Text(
-                      item.locationName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                    ),
+                  Text(
+                    item.locationName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: FontAssets.subtitleText,
                   ),
                   Padding(
                     padding: EdgeInsets.only(
-                      bottom: getProportionateScreenHeight(5),
+                      bottom: getProportionateScreenHeight(15),
                     ),
                     child: Text(
                       item.description,
                       overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Palette.BodyText,
-                      ),
+                      maxLines: 1,
+                      style: FontAssets.bodyText,
                     ),
                   ),
                   Expanded(

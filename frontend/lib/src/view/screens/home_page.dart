@@ -36,11 +36,7 @@ class _HomePageState extends State<HomePage> {
         ),
         title: Text(
           "เริ่มต้นความสนุกกับ EZtrip",
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
+          style: FontAssets.headingText,
         ),
         actions: [
           BaggageCart(),
@@ -125,10 +121,7 @@ Widget loadingLocationCard(String header) {
             child: Text(
               header,
               textAlign: TextAlign.start,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: FontAssets.titleText,
             ),
           ),
         ),
@@ -163,14 +156,11 @@ Widget loadingTripCard(String header) {
           padding: EdgeInsets.symmetric(
             horizontal: getProportionateScreenWidth(15),
           ),
-          margin: EdgeInsets.only(bottom: getProportionateScreenHeight(10)),
+          margin: EdgeInsets.only(bottom: getProportionateScreenHeight(5)),
           child: Text(
             header,
             textAlign: TextAlign.start,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            style: FontAssets.titleText,
           ),
         ),
         ShimmerTripCard(),

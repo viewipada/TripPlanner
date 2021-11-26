@@ -1,7 +1,11 @@
+import 'package:flutter/cupertino.dart';
+import 'package:trip_planner/palette.dart';
+
 class ImageAssets {
   static const String logo = 'assets/images/logo.png';
   static const String homeBanner = 'assets/images/home_banner.png';
 }
+
 class IconAssets {
   static const String copyToEdit = 'assets/icons/copyToEdit.png';
   static const String baggage = 'assets/icons/luggage.png';
@@ -11,4 +15,17 @@ class IconAssets {
   static const String travelMarker = 'assets/icons/travel_pin.png';
   static const String foodMarker = 'assets/icons/food_pin.png';
   static const String hotelMarker = 'assets/icons/hotel_pin.png';
+}
+
+class FontAssets {
+  static const TextStyle headingText = TextStyle(
+      color: Palette.HeadingText, fontSize: 20, fontWeight: FontWeight.bold);
+  static const TextStyle titleText = TextStyle(
+      color: Palette.BodyText, fontSize: 18, fontWeight: FontWeight.bold);
+  static const TextStyle subtitleText = TextStyle(
+      color: Palette.BodyText, fontSize: 16, fontWeight: FontWeight.bold);
+  static const TextStyle bodyText =
+      TextStyle(color: Palette.AdditionText, fontSize: 14);
+  static const TextStyle hintText =
+      TextStyle(color: Palette.AdditionText, fontSize: 12);
 }

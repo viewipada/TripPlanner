@@ -35,14 +35,11 @@ class TripCard extends StatelessWidget {
             child: Text(
               this.header,
               textAlign: TextAlign.start,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: FontAssets.titleText,
             ),
           ),
           Container(
-            padding: EdgeInsets.only(top: getProportionateScreenHeight(10)),
+            padding: EdgeInsets.only(top: getProportionateScreenHeight(5)),
             child: ListView(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
@@ -94,11 +91,7 @@ class TripCard extends StatelessWidget {
                                           trip.tripName,
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                            color: Palette.DarkGrey,
-                                          ),
+                                          style: FontAssets.subtitleText,
                                         ),
                                         IconButton(
                                           constraints: BoxConstraints(),
@@ -116,30 +109,21 @@ class TripCard extends StatelessWidget {
                                     'จาก ${trip.startedPoint} ไปยัง ${trip.endedPoint}',
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Palette.AdditionText,
-                                    ),
+                                    style: FontAssets.bodyText,
                                   ),
                                   Text(
                                     trip.sumOfLocation.toString() +
                                         ' ที่เที่ยว',
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Palette.AdditionText,
-                                    ),
+                                    style: FontAssets.bodyText,
                                   ),
                                   Text(
                                     homeViewModel
                                         .showTravelingDay(trip.travelingDay),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Palette.AdditionText,
-                                    ),
+                                    style: FontAssets.bodyText,
                                   ),
                                 ],
                               ),

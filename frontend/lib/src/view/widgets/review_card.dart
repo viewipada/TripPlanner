@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/review_response.dart';
@@ -45,16 +46,12 @@ class ReviewCard extends StatelessWidget {
                         children: [
                           Text(
                             review.username,
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: Palette.BodyText,
-                            ),
+                            style: FontAssets.subtitleText,
                           ),
                           Text(
                             review.createdDate,
                             style: TextStyle(
-                              fontSize: 10,
+                              fontSize: 12,
                               fontWeight: FontWeight.bold,
                               color: Palette.AdditionText,
                             ),
@@ -63,10 +60,7 @@ class ReviewCard extends StatelessWidget {
                       ),
                       Text(
                         review.caption,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Palette.AdditionText,
-                        ),
+                        style: FontAssets.bodyText,
                       ),
                     ],
                   ),

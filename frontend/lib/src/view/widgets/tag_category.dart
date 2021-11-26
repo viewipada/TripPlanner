@@ -20,14 +20,14 @@ class TagCategory extends StatelessWidget {
         ),
       ),
       padding: EdgeInsets.symmetric(
-        horizontal: getProportionateScreenWidth(8),
-        vertical: getProportionateScreenHeight(3),
+        horizontal: getProportionateScreenWidth(9),
+        vertical: getProportionateScreenHeight(2),
       ),
       child: Text(
         this.category,
         style: TextStyle(
           color: Colors.white,
-          fontSize: 10,
+          fontSize: 12,
         ),
       ),
     );

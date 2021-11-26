@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/view_models/review_view_model.dart';
@@ -43,10 +44,7 @@ class _ReviewPageState extends State<ReviewPage> {
         appBar: AppBar(
           title: Text(
             "ให้คะแนนสถานที่",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 18,
-            ),
+            style: FontAssets.headingText,
           ),
           centerTitle: true,
           backgroundColor: Colors.white,
@@ -70,11 +68,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     ),
                     child: Text(
                       '${this.locationName} เป็นอย่างไรบ้าง?',
-                      style: TextStyle(
-                        color: Palette.BodyText,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: FontAssets.titleText,
                     ),
                   ),
                   Container(
@@ -107,11 +101,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     ),
                     child: Text(
                       'เขียนความรู้สึก หรือ บรรยากาศที่คุณได้จากที่นี่',
-                      style: TextStyle(
-                        color: Palette.BodyText,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: FontAssets.titleText,
                     ),
                   ),
                   Container(
@@ -139,16 +129,12 @@ class _ReviewPageState extends State<ReviewPage> {
                         ),
                         child: Text(
                           'ใส่รูป',
-                          style: TextStyle(
-                            color: Palette.BodyText,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: FontAssets.titleText,
                         ),
                       ),
                       Container(
                         padding: EdgeInsets.symmetric(
-                          horizontal: getProportionateScreenWidth(25),
+                          horizontal: getProportionateScreenWidth(30),
                         ),
                         child: Text(
                           '${reviewViewModel.images.length}/3',
@@ -356,7 +342,7 @@ Widget addImageButton(ReviewViewModel reviewViewModel, ImageSource source,
             title,
             style: TextStyle(
               color: _color,
-              fontSize: 12,
+              fontSize: 14,
             ),
           ),
         ],

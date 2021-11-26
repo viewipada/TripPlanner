@@ -4,6 +4,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/view/widgets/baggage_cart.dart';
@@ -30,11 +31,7 @@ class _SearchPageState extends State<SearchPage> {
       appBar: AppBar(
         title: Text(
           "สำรวจ",
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
+          style: FontAssets.headingText,
         ),
         centerTitle: true,
         actions: [
@@ -78,10 +75,6 @@ class _SearchPageState extends State<SearchPage> {
                         ),
                         hintText: 'ค้นหาที่เที่ยวเลย',
                       ),
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Palette.AdditionText,
-                      ),
                     ),
                   ),
                 ),
@@ -93,11 +86,7 @@ class _SearchPageState extends State<SearchPage> {
                 ),
                 child: Text(
                   'หาอะไรทำรอบตัวคุณ',
-                  style: TextStyle(
-                    color: Palette.BodyText,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
+                  style: FontAssets.titleText,
                 ),
               ),
               Container(
