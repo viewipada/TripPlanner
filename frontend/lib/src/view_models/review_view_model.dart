@@ -27,5 +27,10 @@ class ReviewViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  void goBack(BuildContext context) {
+    _images = [];
+    Navigator.pop(context);
+  }
+
   List<File> get images => _images;
 }

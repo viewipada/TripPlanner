@@ -42,6 +42,13 @@ class _ReviewPageState extends State<ReviewPage> {
       },
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+          icon: Icon(Icons.arrow_back_rounded),
+          color: Palette.BackIconColor,
+          onPressed: () {
+            reviewViewModel.goBack(context);
+          },
+        ),
           title: Text(
             "ให้คะแนนสถานที่",
             style: FontAssets.headingText,
