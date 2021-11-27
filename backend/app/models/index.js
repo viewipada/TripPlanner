@@ -49,13 +49,13 @@ db.locations.hasMany(db.locationOpeningDayHours, {
   sourceKey: "locationId",
 });
 
-db.locations.hasMany(db.activities, { foreignKey: "locationId", sourceKey: "locationId" });
+//db.locations.hasMany(db.activities, { foreignKey: "locationId", sourceKey: "locationId" });
 
-db.tripItems.hasOne(db.locations, { foreignKey: "locationId", sourceKey: "locationId" });
+//db.tripItems.hasOne(db.locations, { foreignKey: "locationId", sourceKey: "locationId" });
 
 db.trips.hasMany(db.tripItems, { foreignKey: "tripId", sourceKey: "tripId" });
 
-db.baggage.hasMany(db.locations, { foreignKey: "locationId", sourceKey: "locationId" });
+//db.baggage.hasMany(db.locations, { foreignKey: "locationId", sourceKey: "locationId" });
 
 db.users.hasMany(db.reviews, { foreingkey: "userId", sourceKey: "id" });
 

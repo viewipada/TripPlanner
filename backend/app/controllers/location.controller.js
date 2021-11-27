@@ -1,5 +1,8 @@
 const db = require("../models");
 const Location = db.locations;
+const Review = db.reviews;
+const User = db.users;
+
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -38,22 +41,48 @@ exports.findAll = async (req, res) => {
   return res.status(200).json(data);
 };
 
-exports.findOne = (req, res) => {
+exports.findOne = async (req, res) => {
   const { locationId } = req.params;
 
-  Location.findByPk(locationId)
-    .then((data) => {
-      if (data) {
-        res.send(data);
-      } else {
-        res.status(404).send({
-          message: `Cannot find Location with locationId=${locationId}.`,
+  let locationData = await Location.findOne({ where: { locationId }, raw: true });
+  console.log(locationData);
+
+  let reviewData = await Review.findAll({
+    where: {
+      locationId,
+    },
+    raw: true,
+  });
+
+  const data = await Promise.all(
+    reviewData.map(
+      async ({
+        userId,
+        reviewRate: rating,
+        reviewCaption: caption,
+        reviewImg1,
+        reviewImg2,
+        reviewImg3,
+        createdAt,
+      }) => {
+        let { imgUrl: profileImage, username } = await User.findOne({
+          where: {
+            id: userId,
+          },
+          raw: true,
         });
+
+        return {
+          profileImage,
+          username,
+          rating,
+          caption,
+          images: [reviewImg1, reviewImg2, reviewImg3].filter((image) => image),
+          createdAt,
+        };
       }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Error retrieving Location with locationId=" + locationId,
-      });
-    });
+    )
+  );
+  locationData.reviewers = data;
+  return res.status(200).json(locationData);
 };
