@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
+import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
 import 'package:trip_planner/src/view/widgets/start_point_card.dart';
@@ -40,8 +41,22 @@ class _SearchStartPointPageState extends State<SearchStartPointPage> {
         child: Column(
           children: [
             Container(
-              height: 70,
-              color: Colors.amber,
+              padding: EdgeInsets.symmetric(
+                horizontal: getProportionateScreenWidth(15),
+                vertical: getProportionateScreenHeight(10),
+              ),
+              child: TextField(
+                readOnly: true,
+                enabled: false,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(
+                    Icons.search_rounded,
+                    color: Palette.AdditionText,
+                    size: 30,
+                  ),
+                  hintText: 'ค้นหาจุดเริ่มต้น',
+                ),
+              ),
             ),
             Expanded(
               child: Padding(
