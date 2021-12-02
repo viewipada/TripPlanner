@@ -184,7 +184,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                       children: profileViewModel
                                           .profileResponse.reviews
                                           .map((review) {
-                                        return buildGridReviewPicture(review);
+                                        return buildGridReviewPicture(
+                                            context, review);
                                       }).toList(),
                                     ),
                                     // SizedBox(height: getProportionateScreenHeight(5)),
@@ -250,7 +251,7 @@ Widget createLocationTabEmpty() {
   );
 }
 
-Widget buildGridReviewPicture(MyReviewResponse review) {
+Widget buildGridReviewPicture(BuildContext context, MyReviewResponse review) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(15)),
     margin: EdgeInsets.only(bottom: getProportionateScreenHeight(15)),
@@ -296,16 +297,31 @@ Widget buildGridReviewPicture(MyReviewResponse review) {
               crossAxisSpacing: getProportionateScreenWidth(10),
             ),
             children: review.images.map((image) {
-              return Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                child: Image.network(
-                  image,
-                  height: getProportionateScreenHeight(100),
-                  width: getProportionateScreenHeight(100),
-                  fit: BoxFit.cover,
+              return GestureDetector(
+                onLongPress: () => showDialog(
+                  context: context,
+                  builder: (_) => Dialog(
+                    backgroundColor: Colors.transparent,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Image.network(
+                        image,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
                 ),
-                clipBehavior: Clip.antiAlias,
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                  child: Image.network(
+                    image,
+                    height: getProportionateScreenHeight(100),
+                    width: getProportionateScreenHeight(100),
+                    fit: BoxFit.cover,
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                ),
               );
             }).toList(),
           ),
