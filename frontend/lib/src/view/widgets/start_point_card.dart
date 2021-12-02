@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:trip_planner/assets.dart';
-import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
 import 'package:trip_planner/src/view/widgets/tag_category.dart';

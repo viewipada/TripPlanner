@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
-import 'package:trip_planner/src/view/widgets/baggage_cart.dart';
-import 'package:trip_planner/src/view_models/search_view_model.dart';
+import 'package:trip_planner/src/models/response/my_review_response.dart';
+import 'package:trip_planner/src/models/response/trip_card_response.dart';
+import 'package:trip_planner/src/view_models/profile_view_model.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -18,48 +20,16 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  // @override
-  // void initState() {
-  //   Provider.of<SearchViewModel>(context, listen: false).getUserLocation();
-  //   super.initState();
-  // }
-  final tripList = [
-    {
-      "tripId": 1,
-      "tripName": "วัดม่วง",
-      "imageUrl":
-          "https://cms.dmpcdn.com/travel/2020/05/26/fafac540-9f50-11ea-81a6-432b2bbc8436_original.jpg",
-      "startedPoint": "บ้าน",
-      "endedPoint": "วัดม่วง",
-      "sumOfLocation": 15,
-      "travelingDay": 3
-    },
-    {
-      "tripId": 2,
-      "tripName": "บ้านหุ่นเหล็ก",
-      "imageUrl":
-          "https://storage.googleapis.com/swapgap-bucket/post/5190314163699712-babbd605-e3ed-407f-bdc8-dba57e81c76e",
-      "startedPoint": "บ้านพ่อ",
-      "endedPoint": "วัดหุ่นเหล็ก",
-      "sumOfLocation": 5,
-      "travelingDay": 2
-    },
-    {
-      "tripId": 3,
-      "tripName": "วัดขุนอินทประมูล",
-      "imageUrl":
-          "https://tiewpakklang.com/wp-content/uploads/2018/09/33716.jpg",
-      "startedPoint": "บ้านแม่",
-      "endedPoint": "สนามบินสุวรรณภูเก็ต",
-      "sumOfLocation": 15,
-      "travelingDay": 3
-    }
-  ];
+  @override
+  void initState() {
+    Provider.of<ProfileViewModel>(context, listen: false).getMyProfile();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    // final searchViewModel = Provider.of<SearchViewModel>(context);
+    final profileViewModel = Provider.of<ProfileViewModel>(context);
     return DefaultTabController(
       initialIndex: 0,
       length: 2,
@@ -89,7 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           children: [
                             CircleAvatar(
                               backgroundImage: NetworkImage(
-                                  'https://picsum.photos/id/237/200/300'),
+                                  profileViewModel.profileResponse.userImage),
                               radius: 30,
                             ),
                             Padding(
@@ -101,7 +71,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    'มุก วิภา',
+                                    profileViewModel.profileResponse.username,
                                     style: FontAssets.titleText,
                                   ),
                                   Text(
@@ -177,95 +147,9 @@ class _ProfilePageState extends State<ProfilePage> {
                               ListView(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
-                                children: tripList.map((trip) {
-                                  return InkWell(
-                                    onTap: () {
-                                      print('click on trip ');
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal:
-                                            getProportionateScreenWidth(15),
-                                      ),
-                                      height: getProportionateScreenHeight(110),
-                                      child: Row(
-                                        children: [
-                                          Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(10.0))),
-                                            child: Image.network(
-                                              'https://cms.dmpcdn.com/travel/2020/05/26/fafac540-9f50-11ea-81a6-432b2bbc8436_original.jpg',
-                                              fit: BoxFit.cover,
-                                              height:
-                                                  getProportionateScreenHeight(
-                                                      100),
-                                              width:
-                                                  getProportionateScreenHeight(
-                                                      100),
-                                            ),
-                                            clipBehavior: Clip.antiAlias,
-                                          ),
-                                          Expanded(
-                                            child: Padding(
-                                              padding: EdgeInsets.fromLTRB(
-                                                getProportionateScreenWidth(10),
-                                                getProportionateScreenHeight(5),
-                                                0,
-                                                getProportionateScreenHeight(5),
-                                              ),
-                                              child: Container(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Container(
-                                                      padding: EdgeInsets.only(
-                                                          bottom:
-                                                              getProportionateScreenHeight(
-                                                                  5)),
-                                                      child: Text(
-                                                        'อ่างทองไม่เหงา มีเรา 3 คน',
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        maxLines: 1,
-                                                        style: FontAssets
-                                                            .subtitleText,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      'จาก นี่ ไปยัง นั่น',
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 1,
-                                                      style:
-                                                          FontAssets.bodyText,
-                                                    ),
-                                                    Text(
-                                                      '10 ที่เที่ยว',
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 1,
-                                                      style:
-                                                          FontAssets.bodyText,
-                                                    ),
-                                                    Text(
-                                                      '2 วัน 1 คืน',
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 1,
-                                                      style:
-                                                          FontAssets.bodyText,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
+                                children: profileViewModel.profileResponse.trips
+                                    .map((trip) {
+                                  return buildTripList(profileViewModel, trip);
                                 }).toList(),
                               ),
                               Padding(
@@ -280,10 +164,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                   style: FontAssets.titleText,
                                 ),
                               ),
-                              buildGridReviewPicture(),
-                              buildGridReviewPicture(),
-                              buildGridReviewPicture(),
-                              SizedBox(height: getProportionateScreenHeight(5)),
+                              ListView(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                children: profileViewModel
+                                    .profileResponse.reviews
+                                    .map((review) {
+                                  return buildGridReviewPicture(review);
+                                }).toList(),
+                              ),
+                              // SizedBox(height: getProportionateScreenHeight(5)),
                             ],
                           ),
                         ),
@@ -341,68 +231,141 @@ Widget createLocationTabEmpty() {
   );
 }
 
-Widget buildGridReviewPicture() {
+Widget buildGridReviewPicture(MyReviewResponse review) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(15)),
-    margin: EdgeInsets.only(bottom: getProportionateScreenHeight(10)),
+    margin: EdgeInsets.only(bottom: getProportionateScreenHeight(15)),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'รีวิว วัดม่วง',
+          'รีวิว ${review.locationName}',
           style: TextStyle(
               color: Palette.BodyText,
               fontSize: 14,
               fontWeight: FontWeight.bold),
         ),
-        Text(
-          'บรรยากาศดีมากๆๆๆค่ะ ต้องมาอีกให้ดั้ยยย',
-          style: FontAssets.bodyText,
-        ),
-        GridView(
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: getProportionateScreenWidth(10),
-          ),
+        Row(
           children: [
-            Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              child: Image.asset(
-                ImageAssets.homeBanner,
-                height: getProportionateScreenHeight(100),
-                width: getProportionateScreenHeight(100),
-                fit: BoxFit.cover,
-              ),
-              clipBehavior: Clip.antiAlias,
+            Text(
+              '${review.rating} ',
+              style: FontAssets.bodyText,
             ),
-            Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              child: Image.asset(
-                ImageAssets.homeBanner,
-                height: getProportionateScreenHeight(100),
-                width: getProportionateScreenHeight(100),
-                fit: BoxFit.cover,
+            RatingBarIndicator(
+              unratedColor: Palette.Outline,
+              rating: review.rating,
+              itemBuilder: (context, index) => Icon(
+                Icons.star_rounded,
+                color: Palette.CautionColor,
               ),
-              clipBehavior: Clip.antiAlias,
-            ),
-            Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              child: Image.asset(
-                ImageAssets.homeBanner,
-                height: getProportionateScreenHeight(100),
-                width: getProportionateScreenHeight(100),
-                fit: BoxFit.cover,
-              ),
-              clipBehavior: Clip.antiAlias,
+              itemCount: 5,
+              itemSize: 20,
             ),
           ],
         ),
+        Text(
+          review.caption,
+          style: FontAssets.bodyText,
+        ),
+        Visibility(
+          visible: review.images.isNotEmpty,
+          child: GridView(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: getProportionateScreenWidth(10),
+            ),
+            children: review.images.map((image) {
+              return Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                child: Image.network(
+                  image,
+                  height: getProportionateScreenHeight(100),
+                  width: getProportionateScreenHeight(100),
+                  fit: BoxFit.cover,
+                ),
+                clipBehavior: Clip.antiAlias,
+              );
+            }).toList(),
+          ),
+        ),
       ],
+    ),
+  );
+}
+
+Widget buildTripList(ProfileViewModel profileViewModel, TripCardResponse trip) {
+  return InkWell(
+    onTap: () {
+      print('click on trip ');
+    },
+    child: Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: getProportionateScreenWidth(15),
+      ),
+      height: getProportionateScreenHeight(110),
+      child: Row(
+        children: [
+          Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0))),
+            child: Image.network(
+              trip.imageUrl,
+              fit: BoxFit.cover,
+              height: getProportionateScreenHeight(100),
+              width: getProportionateScreenHeight(100),
+            ),
+            clipBehavior: Clip.antiAlias,
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(
+                getProportionateScreenWidth(10),
+                getProportionateScreenHeight(5),
+                0,
+                getProportionateScreenHeight(5),
+              ),
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.only(
+                          bottom: getProportionateScreenHeight(5)),
+                      child: Text(
+                        trip.tripName,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        style: FontAssets.subtitleText,
+                      ),
+                    ),
+                    Text(
+                      'จาก ${trip.startedPoint} ไปยัง ${trip.endedPoint}',
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: FontAssets.bodyText,
+                    ),
+                    Text(
+                      '${trip.sumOfLocation} ที่เที่ยว',
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: FontAssets.bodyText,
+                    ),
+                    Text(
+                      profileViewModel.showTravelingDay(trip.travelingDay),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: FontAssets.bodyText,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     ),
   );
 }
