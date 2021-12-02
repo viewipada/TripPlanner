@@ -6,10 +6,10 @@ import 'package:trip_planner/src/services/profile_service.dart';
 class ProfileViewModel with ChangeNotifier {
   late ProfileResponse _profileResponse;
 
-  Future<void> getMyProfile() async {
+  Future<ProfileResponse> getMyProfile() async {
     _profileResponse = await ProfileService().getMyProfile();
-    notifyListeners();
-    // return await ProfileService().getMyProfile();
+    // notifyListeners();
+    return _profileResponse;
   }
 
   String showTravelingDay(int travelingDay) {

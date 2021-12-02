@@ -12,6 +12,7 @@ import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/my_review_response.dart';
 import 'package:trip_planner/src/models/response/trip_card_response.dart';
+import 'package:trip_planner/src/view/widgets/loading.dart';
 import 'package:trip_planner/src/view_models/profile_view_model.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -41,148 +42,166 @@ class _ProfilePageState extends State<ProfilePage> {
 
         return Scaffold(
           body: SafeArea(
-            child: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      vertical: getProportionateScreenHeight(20),
-                      horizontal: getProportionateScreenWidth(15),
-                    ),
-                    color: Colors.white,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: FutureBuilder(
+              future: Provider.of<ProfileViewModel>(context, listen: false)
+                  .getMyProfile(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  return Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                  profileViewModel.profileResponse.userImage),
-                              radius: 30,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  left: getProportionateScreenWidth(15)),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: getProportionateScreenHeight(20),
+                            horizontal: getProportionateScreenWidth(15),
+                          ),
+                          color: Colors.white,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
                                 children: [
-                                  Text(
-                                    profileViewModel.profileResponse.username,
-                                    style: FontAssets.titleText,
+                                  CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        profileViewModel
+                                            .profileResponse.userImage),
+                                    radius: 30,
                                   ),
-                                  Text(
-                                    'Sliver traveller',
-                                    style: FontAssets.bodyText,
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        left: getProportionateScreenWidth(15)),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          profileViewModel
+                                              .profileResponse.username,
+                                          style: FontAssets.titleText,
+                                        ),
+                                        Text(
+                                          'Sliver traveller',
+                                          style: FontAssets.bodyText,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.menu_rounded),
-                          color: Palette.AdditionText,
-                          iconSize: 30,
-                          padding: EdgeInsets.zero,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border(
-                        bottom: BorderSide(
-                          color: Colors.black54,
-                        ),
-                      ),
-                    ),
-                    margin: EdgeInsets.only(
-                        bottom: getProportionateScreenHeight(10)),
-                    child: TabBar(
-                      labelColor: Palette.BodyText,
-                      indicatorColor: Palette.SecondaryColor,
-                      labelStyle: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Sukhumvit',
-                      ),
-                      unselectedLabelStyle: TextStyle(
-                        fontSize: 16,
-                        color: Palette.AdditionText,
-                        fontFamily: 'Sukhumvit',
-                      ),
-                      tabs: [
-                        Tab(
-                          text: 'ทริปและรูปภาพ',
-                        ),
-                        Tab(
-                          text: 'สถานที่',
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: TabBarView(
-                      children: <Widget>[
-                        SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: getProportionateScreenWidth(15),
-                                  vertical: getProportionateScreenHeight(5),
-                                ),
-                                child: Text(
-                                  'ทริปของฉัน',
-                                  style: FontAssets.titleText,
-                                ),
+                              IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.menu_rounded),
+                                color: Palette.AdditionText,
+                                iconSize: 30,
+                                padding: EdgeInsets.zero,
                               ),
-                              ListView(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                children: profileViewModel.profileResponse.trips
-                                    .map((trip) {
-                                  return buildTripList(profileViewModel, trip);
-                                }).toList(),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(
-                                  getProportionateScreenWidth(15),
-                                  getProportionateScreenHeight(15),
-                                  getProportionateScreenWidth(15),
-                                  getProportionateScreenHeight(5),
-                                ),
-                                child: Text(
-                                  'รูปภาพ',
-                                  style: FontAssets.titleText,
-                                ),
-                              ),
-                              ListView(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                children: profileViewModel
-                                    .profileResponse.reviews
-                                    .map((review) {
-                                  return buildGridReviewPicture(review);
-                                }).toList(),
-                              ),
-                              // SizedBox(height: getProportionateScreenHeight(5)),
                             ],
                           ),
                         ),
-                        createLocationTabEmpty(),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Colors.black54,
+                              ),
+                            ),
+                          ),
+                          child: TabBar(
+                            labelColor: Palette.BodyText,
+                            indicatorColor: Palette.SecondaryColor,
+                            labelStyle: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Sukhumvit',
+                            ),
+                            unselectedLabelStyle: TextStyle(
+                              fontSize: 16,
+                              color: Palette.AdditionText,
+                              fontFamily: 'Sukhumvit',
+                            ),
+                            tabs: [
+                              Tab(
+                                text: 'ทริปและรูปภาพ',
+                              ),
+                              Tab(
+                                text: 'สถานที่',
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: TabBarView(
+                            children: <Widget>[
+                              SingleChildScrollView(
+                                padding: EdgeInsets.only(
+                                    top: getProportionateScreenHeight(10)),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal:
+                                            getProportionateScreenWidth(15),
+                                        vertical:
+                                            getProportionateScreenHeight(5),
+                                      ),
+                                      child: Text(
+                                        'ทริปของฉัน',
+                                        style: FontAssets.titleText,
+                                      ),
+                                    ),
+                                    ListView(
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      children: profileViewModel
+                                          .profileResponse.trips
+                                          .map((trip) {
+                                        return buildTripList(
+                                            profileViewModel, trip);
+                                      }).toList(),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                        getProportionateScreenWidth(15),
+                                        getProportionateScreenHeight(15),
+                                        getProportionateScreenWidth(15),
+                                        getProportionateScreenHeight(5),
+                                      ),
+                                      child: Text(
+                                        'รูปภาพ',
+                                        style: FontAssets.titleText,
+                                      ),
+                                    ),
+                                    ListView(
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      children: profileViewModel
+                                          .profileResponse.reviews
+                                          .map((review) {
+                                        return buildGridReviewPicture(review);
+                                      }).toList(),
+                                    ),
+                                    // SizedBox(height: getProportionateScreenHeight(5)),
+                                  ],
+                                ),
+                              ),
+                              createLocationTabEmpty(),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                ],
-              ),
+                  );
+                } else {
+                  return Loading();
+                }
+              },
             ),
           ),
         );
