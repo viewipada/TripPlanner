@@ -6,6 +6,8 @@ const { sequelize } = require("./app/models");
 
 const app = express();
 
+global.__basedir = __dirname;
+
 app.use(cors());
 
 // parse requests of content-type - application/json
@@ -14,7 +16,9 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
-db.sequelize.sync();
+db.sequelize.sync({ force: true }).then(() => {
+  console.log("Drop and Resync with { force: true }");
+});
 
 // simple route
 app.get("/", (req, res) => {
@@ -24,6 +28,7 @@ app.get("/", (req, res) => {
 require("./app/routes/baggage.routes")(app);
 require("./app/routes/location.routes")(app);
 require("./app/routes/review.routes")(app);
+require("./app/routes/file.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
