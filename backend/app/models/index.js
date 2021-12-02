@@ -28,6 +28,7 @@ db.sequelize = sequelize;
 db.activities = require("./activity.model.js")(sequelize, Sequelize);
 db.baggage = require("./baggage.model.js")(sequelize, Sequelize);
 db.checkIns = require("./checkIn.model.js")(sequelize, Sequelize);
+db.files = require("./file.model.js")(sequelize, Sequelize);
 db.locations = require("./location.model.js")(sequelize, Sequelize);
 db.locationCategories = require("./locationCategory.model.js")(sequelize, Sequelize);
 db.locationOpeningDayHours = require("./locationOpeningDayHour.model.js")(sequelize, Sequelize);
@@ -49,13 +50,13 @@ db.locations.hasMany(db.locationOpeningDayHours, {
   sourceKey: "locationId",
 });
 
-db.locations.hasMany(db.activities, { foreignKey: "locationId", sourceKey: "locationId" });
+//db.locations.hasMany(db.activities, { foreignKey: "locationId", sourceKey: "locationId" });
 
-db.tripItems.hasOne(db.locations, { foreignKey: "locationId", sourceKey: "locationId" });
+//db.tripItems.hasOne(db.locations, { foreignKey: "locationId", sourceKey: "locationId" });
 
 db.trips.hasMany(db.tripItems, { foreignKey: "tripId", sourceKey: "tripId" });
 
-db.baggage.hasMany(db.locations, { foreignKey: "locationId", sourceKey: "locationId" });
+//db.baggage.hasMany(db.locations, { foreignKey: "locationId", sourceKey: "locationId" });
 
 db.users.hasMany(db.reviews, { foreingkey: "userId", sourceKey: "id" });
 

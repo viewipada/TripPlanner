@@ -1,5 +1,6 @@
 const db = require("../models");
 const Review = db.reviews;
+const User = db.users;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -32,6 +33,48 @@ exports.create = (req, res) => {
         message: err.message || "Some error occurred while creating the Location.",
       });
     });
+};
+
+exports.findAllReviewLocation = async (req, res) => {
+  const { locationId } = req.params;
+
+  let reviewData = await Review.findAll({
+    where: {
+      locationId,
+    },
+    raw: true,
+  });
+
+  const data = await Promise.all(
+    reviewData.map(
+      async ({
+        userId,
+        reviewRate: rating,
+        reviewCaption: caption,
+        reviewImg1,
+        reviewImg2,
+        reviewImg3,
+        createdAt,
+      }) => {
+        let { imgUrl: profileImage, username } = await User.findOne({
+          where: {
+            id: userId,
+          },
+          raw: true,
+        });
+
+        return {
+          profileImage,
+          username,
+          rating,
+          caption,
+          images: [reviewImg1, reviewImg2, reviewImg3].filter((image) => image),
+          createdAt,
+        };
+      }
+    )
+  );
+  return res.status(200).json(data);
 };
 
 exports.findAll = (req, res) => {

@@ -6,7 +6,7 @@ module.exports = (sequelize, Sequelize) => {
       primaryKey: true,
     },
     locationName: {
-      type: Sequelize.STRING(30),
+      type: Sequelize.STRING(50),
     },
     category: {
       type: Sequelize.INTEGER,
@@ -21,7 +21,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
     },
     imageUrl: {
-      type: Sequelize.STRING,
+      type: Sequelize.STRING(500),
     },
     latitude: {
       type: Sequelize.DOUBLE,

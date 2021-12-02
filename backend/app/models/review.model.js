@@ -20,7 +20,7 @@ module.exports = (sequelize, Sequelize) => {
     reviewImg2: {
       type: Sequelize.STRING,
     },
-    reviewImg2: {
+    reviewImg3: {
       type: Sequelize.STRING,
     },
   });

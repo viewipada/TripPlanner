@@ -1,6 +1,7 @@
 const db = require("../models");
 const Location = db.locations;
-const Op = db.Sequelize.Op;
+const Review = db.reviews;
+const User = db.users;
 
 exports.create = (req, res) => {
   // Validate request
@@ -27,37 +28,59 @@ exports.create = (req, res) => {
 };
 
 // Retrieve all objects in Locations Table
-exports.findAll = (req, res) => {
-  const { locationName } = req.query;
-  var condition = locationName ? { locationName: { [Op.iLike]: `%${locationName}%` } } : null;
+exports.findAll = async (req, res) => {
+  let locationData = await Location.findAll();
 
-  Location.findAll({ where: condition })
-    .then((data) => {
-      res.send(data);
+  const data = await Promise.all(
+    locationData.map(async ({ locationId, locationName, imageUrl }) => {
+      return { locationId, locationName, imageUrl };
     })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while retrieving Locations.",
-      });
-    });
+  );
+  return res.status(200).json(data);
 };
 
-exports.findOne = (req, res) => {
-  const locationId = req.params.locationId;
+exports.findOne = async (req, res) => {
+  const { locationId } = req.params;
 
-  Location.findByPk(locationId)
-    .then((data) => {
-      if (data) {
-        res.send(data);
-      } else {
-        res.status(404).send({
-          message: `Cannot find Location with locationId=${locationId}.`,
+  let locationData = await Location.findOne({ where: { locationId }, raw: true });
+  console.log(locationData);
+
+  let reviewData = await Review.findAll({
+    where: {
+      locationId,
+    },
+    raw: true,
+  });
+
+  const data = await Promise.all(
+    reviewData.map(
+      async ({
+        userId,
+        reviewRate: rating,
+        reviewCaption: caption,
+        reviewImg1,
+        reviewImg2,
+        reviewImg3,
+        createdAt,
+      }) => {
+        let { imgUrl: profileImage, username } = await User.findOne({
+          where: {
+            id: userId,
+          },
+          raw: true,
         });
+
+        return {
+          profileImage,
+          username,
+          rating,
+          caption,
+          images: [reviewImg1, reviewImg2, reviewImg3].filter((image) => image),
+          createdAt,
+        };
       }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Error retrieving Location with locationId=" + locationId,
-      });
-    });
+    )
+  );
+  locationData.reviewers = data;
+  return res.status(200).json(locationData);
 };
