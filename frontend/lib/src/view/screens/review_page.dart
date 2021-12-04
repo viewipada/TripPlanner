@@ -42,13 +42,64 @@ class _ReviewPageState extends State<ReviewPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-          icon: Icon(Icons.arrow_back_rounded),
-          color: Palette.BackIconColor,
-          onPressed: () {
-            reviewViewModel.goBack(context);
-          },
-        ),
+          leading: TextButton(
+            onPressed: () => showDialog<String>(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title: const Text(
+                  'ต้องการยกเลิกรีวิวหรือไม่',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    color: Palette.BodyText,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                content: const Text(
+                  'หากคุณยกเลิก รีวิวที่คุณเขียนจะไม่ถูกเพิ่มในสถานที่นี้',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Palette.AdditionText,
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'ทำต่อ'),
+                    child: const Text(
+                      'ทำต่อ',
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, 'ทำต่อ');
+                      reviewViewModel.goBack(context);
+                    },
+                    child: const Text(
+                      'ยกเลิกรีวิว',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
+                      ),
+                    ),
+                    style: TextButton.styleFrom(
+                      backgroundColor: Palette.NotificationColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            child: Text("ยกเลิก"),
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.symmetric(
+                horizontal: getProportionateScreenWidth(15),
+              ),
+              alignment: Alignment.centerLeft,
+            ),
+          ),
+          leadingWidth: getProportionateScreenWidth(70),
           title: Text(
             "ให้คะแนนสถานที่",
             style: FontAssets.headingText,
@@ -196,7 +247,8 @@ class _ReviewPageState extends State<ReviewPage> {
                         return Stack(
                           children: [
                             Container(
-                              margin: EdgeInsets.only(top: getProportionateScreenHeight(5)),
+                              margin: EdgeInsets.only(
+                                  top: getProportionateScreenHeight(5)),
                               child: Card(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.all(
