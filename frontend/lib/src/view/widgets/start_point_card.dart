@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:trip_planner/assets.dart';
+import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
-import 'package:trip_planner/src/models/response/baggage_response.dart';
 import 'package:trip_planner/src/view/widgets/tag_category.dart';
 
 class StartPointCard extends StatelessWidget {
   StartPointCard({
-    required this.item,
+    required this.imageUrl,
+    required this.locationName,
+    required this.description,
+    required this.category,
   });
-  final BaggageResponse item;
+  final String imageUrl;
+  final String locationName;
+  final String description;
+  final String category;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +36,11 @@ class StartPointCard extends StatelessWidget {
                     width: getProportionateScreenHeight(100),
                     height: getProportionateScreenHeight(100),
                     fit: BoxFit.cover,
-                    image: NetworkImage(item.imageUrl),
+                    image: imageUrl == ''
+                        ? Image.asset(ImageAssets.noPreview).image
+                        : imageUrl == 'myLocation'
+                            ? Image.asset(ImageAssets.myLocation).image
+                            : NetworkImage(imageUrl),
                   ),
                 ),
               ),
@@ -50,13 +60,19 @@ class StartPointCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      item.locationName,
+                      locationName,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: FontAssets.subtitleText,
+                      style: description ==
+                              'เลือกตำแหน่งปัจจุบันเป็นจุดเริ่มต้นทริป'
+                          ? TextStyle(
+                              color: Palette.PrimaryColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold)
+                          : FontAssets.subtitleText,
                     ),
                     Text(
-                      item.description,
+                      description,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       style: FontAssets.bodyText,
@@ -64,9 +80,12 @@ class StartPointCard extends StatelessWidget {
                     Spacer(
                       flex: 2,
                     ),
-                    TagCategory(
-                      category: item.category,
-                    )
+                    Visibility(
+                      visible: category != '',
+                      child: TagCategory(
+                        category: category,
+                      ),
+                    ),
                   ],
                 ),
               ),

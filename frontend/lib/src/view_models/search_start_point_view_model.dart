@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_place/google_place.dart';
+import 'package:location/location.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
 import 'package:trip_planner/src/view/screens/trip_form_page.dart';
 import 'package:uuid/uuid.dart';
@@ -10,6 +11,7 @@ class SearchStartPointViewModel with ChangeNotifier {
   String? _sessionToken;
   List<AutocompletePrediction> _predictions = [];
   DetailsResult? _detailsResult;
+  Map<String, String>? _startPointFormGoogleMap;
 
   void selectedStartPoint(BuildContext context,
       List<BaggageResponse> startPointList, BaggageResponse startPoint) {
@@ -33,7 +35,8 @@ class SearchStartPointViewModel with ChangeNotifier {
     }
   }
 
-  void getDetils(GooglePlace googlePlace, String placeId) async {
+  void getDetails(BuildContext context, List<BaggageResponse> startPointList,
+      GooglePlace googlePlace, String placeId, String description) async {
     var result = await googlePlace.details.get(
       placeId,
       region: 'th',
@@ -42,13 +45,49 @@ class SearchStartPointViewModel with ChangeNotifier {
     );
     if (result != null && result.result != null) {
       _detailsResult = result.result!;
-      print(_detailsResult!.name);
-      String latLng = _detailsResult != null &&
-              _detailsResult!.geometry != null &&
-              _detailsResult!.geometry!.location != null
-          ? 'Geometry: ${_detailsResult!.geometry!.location!.lat.toString()},${_detailsResult!.geometry!.location!.lng.toString()}'
-          : "Geometry: null";
+
+      if (_detailsResult != null &&
+          _detailsResult!.geometry != null &&
+          _detailsResult!.geometry!.location != null) {
+        _startPointFormGoogleMap = {
+          'locationName': _detailsResult!.name!,
+          'description': description,
+          'lat': _detailsResult!.geometry!.location!.lat.toString(),
+          'lng': _detailsResult!.geometry!.location!.lng.toString(),
+        };
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TripFormPage(
+              startPointList: startPointList,
+              pointIndex: 0,
+              startPointFormGoogleMap: _startPointFormGoogleMap,
+            ),
+          ),
+        );
+      }
     }
+  }
+
+  void selectedUserLocation(BuildContext context,
+      List<BaggageResponse> startPointList, LocationData userLocation) async {
+    _startPointFormGoogleMap = {
+      'locationName': 'ตำแหน่งของฉัน',
+      'description':
+          'พิกัดปัจจุบันอยู่ที่ (${userLocation.latitude}, ${userLocation.longitude})',
+      'lat': userLocation.latitude.toString(),
+      'lng': userLocation.longitude.toString(),
+    };
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TripFormPage(
+          startPointList: startPointList,
+          pointIndex: 0,
+          startPointFormGoogleMap: _startPointFormGoogleMap,
+        ),
+      ),
+    );
   }
 
   void createSessionToken() {
@@ -69,4 +108,5 @@ class SearchStartPointViewModel with ChangeNotifier {
   String? get sessionToken => _sessionToken;
   List<AutocompletePrediction> get predictions => _predictions;
   DetailsResult? get detailsResult => _detailsResult;
+  // Map<String, String>? get startPointFormGoogleMap => _startPointFormGoogleMap ?? null;
 }

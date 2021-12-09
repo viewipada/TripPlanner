@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,21 +14,25 @@ import 'package:flutter_spinbox/flutter_spinbox.dart';
 class TripFormPage extends StatefulWidget {
   final List<BaggageResponse> startPointList;
   final int pointIndex;
+  final Map<String, String>? startPointFormGoogleMap;
 
   TripFormPage({
     required this.startPointList,
     required this.pointIndex,
+    this.startPointFormGoogleMap,
   });
 
   @override
-  _TripFormPageState createState() =>
-      _TripFormPageState(this.startPointList, this.pointIndex);
+  _TripFormPageState createState() => _TripFormPageState(
+      this.startPointList, this.pointIndex, this.startPointFormGoogleMap);
 }
 
 class _TripFormPageState extends State<TripFormPage> {
   final List<BaggageResponse> startPointList;
   final int pointIndex;
-  _TripFormPageState(this.startPointList, this.pointIndex);
+  final Map<String, String>? startPointFormGoogleMap;
+  _TripFormPageState(
+      this.startPointList, this.pointIndex, this.startPointFormGoogleMap);
 
   @override
   Widget build(BuildContext context) {
@@ -322,7 +328,8 @@ class _TripFormPageState extends State<TripFormPage> {
                                 style: FontAssets.titleText,
                               ),
                               Visibility(
-                                visible: startPointList.isNotEmpty,
+                                visible: startPointList.isNotEmpty ||
+                                    startPointFormGoogleMap != null,
                                 child: IconButton(
                                   constraints: BoxConstraints(),
                                   padding: EdgeInsets.symmetric(
@@ -342,44 +349,69 @@ class _TripFormPageState extends State<TripFormPage> {
                             ],
                           ),
                         ),
-                        startPointList.isEmpty
-                            ? Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: getProportionateScreenWidth(15),
-                                ),
-                                child: OutlinedButton(
-                                  onPressed: () {
-                                    tripFormViewModel.goToSearchStartPoint(
-                                        context, startPointList);
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Icon(
-                                        Icons.location_on_outlined,
+                        startPointFormGoogleMap == null
+                            ? startPointList.isEmpty
+                                ? Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          getProportionateScreenWidth(15),
+                                    ),
+                                    child: OutlinedButton(
+                                      onPressed: () {
+                                        tripFormViewModel.goToSearchStartPoint(
+                                            context, startPointList);
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Icon(
+                                            Icons.location_on_outlined,
+                                          ),
+                                          Text(
+                                            ' เลือกจุดเริ่มต้น',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      Text(
-                                        ' เลือกจุดเริ่มต้น',
-                                        style: TextStyle(
-                                          fontSize: 14,
+                                      style: OutlinedButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                        padding: EdgeInsets.all(12),
+                                        primary: Palette.AdditionText,
+                                        alignment: Alignment.center,
+                                        side:
+                                            BorderSide(color: Palette.Outline),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                  style: OutlinedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    padding: EdgeInsets.all(12),
-                                    primary: Palette.AdditionText,
-                                    alignment: Alignment.center,
-                                    side: BorderSide(color: Palette.Outline),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
                                     ),
-                                  ),
-                                ),
-                              )
+                                  )
+                                : StartPointCard(
+                                    imageUrl: startPointList
+                                        .elementAt(this.pointIndex)
+                                        .imageUrl,
+                                    locationName: startPointList
+                                        .elementAt(this.pointIndex)
+                                        .locationName,
+                                    description: startPointList
+                                        .elementAt(this.pointIndex)
+                                        .description,
+                                    category: startPointList
+                                        .elementAt(this.pointIndex)
+                                        .category,
+                                  )
                             : StartPointCard(
-                                item: startPointList.elementAt(this.pointIndex))
+                                imageUrl: '',
+                                locationName:
+                                    startPointFormGoogleMap!['locationName']!,
+                                description:
+                                    startPointFormGoogleMap!['description']!,
+                                category: '',
+                              ),
                       ],
                     ),
                   ),

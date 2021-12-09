@@ -4,6 +4,8 @@ import 'package:trip_planner/palette.dart';
 class ImageAssets {
   static const String logo = 'assets/images/logo.png';
   static const String homeBanner = 'assets/images/home_banner.png';
+  static const String noPreview = 'assets/images/no_preview.png';
+  static const String myLocation = 'assets/images/my_location.png';
 }
 
 class IconAssets {
