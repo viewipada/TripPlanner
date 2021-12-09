@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_place/google_place.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
@@ -21,6 +22,15 @@ class SearchStartPointPage extends StatefulWidget {
 class _SearchStartPointPageState extends State<SearchStartPointPage> {
   final List<BaggageResponse> startPointList;
   _SearchStartPointPageState(this.startPointList);
+
+  late GooglePlace googlePlace;
+  final String googleAPI = "AIzaSyC3IbO2CjNOMP1g1F_Y7jamCp0aEu4asKE";
+
+  @override
+  void initState() {
+    googlePlace = GooglePlace(googleAPI);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +56,6 @@ class _SearchStartPointPageState extends State<SearchStartPointPage> {
                 vertical: getProportionateScreenHeight(10),
               ),
               child: TextField(
-                readOnly: true,
-                enabled: false,
                 decoration: InputDecoration(
                   prefixIcon: Icon(
                     Icons.search_rounded,
@@ -56,23 +64,70 @@ class _SearchStartPointPageState extends State<SearchStartPointPage> {
                   ),
                   hintText: 'ค้นหาจุดเริ่มต้น',
                 ),
+                onChanged: (value) {
+                  if (searchStartPointViewModel.sessionToken == null) {
+                    searchStartPointViewModel.createSessionToken();
+                  }
+                  if (value.isNotEmpty) {
+                    searchStartPointViewModel.autoCompleteSearch(
+                        googlePlace, value);
+                  } else {
+                    searchStartPointViewModel.clearPredictions();
+                  }
+                },
               ),
             ),
             Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                    vertical: getProportionateScreenHeight(10)),
-                child: ListView(
-                  children: startPointList.map((item) {
-                    return InkWell(
-                        onTap: () => {
-                              searchStartPointViewModel.selectedStartPoint(
-                                  context, startPointList, item)
-                            },
-                        child: StartPointCard(item: item));
-                  }).toList(),
-                ),
-              ),
+              child: searchStartPointViewModel.predictions.isEmpty
+                  ? ListView(
+                      padding: EdgeInsets.symmetric(
+                          vertical: getProportionateScreenHeight(10)),
+                      children: startPointList.map((item) {
+                        return InkWell(
+                            onTap: () => {
+                                  searchStartPointViewModel.selectedStartPoint(
+                                      context, startPointList, item)
+                                },
+                            child: StartPointCard(item: item));
+                      }).toList(),
+                    )
+                  : ListView.builder(
+                      padding: EdgeInsets.symmetric(
+                          vertical: getProportionateScreenHeight(10)),
+                      itemCount: searchStartPointViewModel.predictions.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          leading: CircleAvatar(
+                            child: Icon(
+                              Icons.pin_drop,
+                              color: Colors.white,
+                            ),
+                          ),
+                          title: Text(
+                            searchStartPointViewModel
+                                .predictions[index].description!,
+                            style: FontAssets.bodyText,
+                          ),
+                          onTap: () {
+                            searchStartPointViewModel.closeSessionToken();
+                            searchStartPointViewModel.getDetils(
+                                googlePlace,
+                                searchStartPointViewModel
+                                    .predictions[index].placeId!);
+                            // debugPrint(predictions[index].placeId);
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => DetailsPage(
+                            //       placeId: predictions[index].placeId!,
+                            //       googlePlace: googlePlace,
+                            //     ),
+                            //   ),
+                            // );
+                          },
+                        );
+                      },
+                    ),
             ),
           ],
         ),

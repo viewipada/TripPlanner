@@ -41,6 +41,8 @@ dependencies:
   json_annotation: ^4.3.0
   scrollable_positioned_list: ^0.2.3
   cool_dropdown: ^1.4.1
+  google_place: ^0.4.3
+  uuid: ^3.0.5
 
 dev_dependencies:
   flutter_test:

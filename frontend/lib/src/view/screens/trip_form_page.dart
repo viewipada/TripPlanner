@@ -5,7 +5,6 @@ import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
-import 'package:trip_planner/src/view/widgets/navigation_bar.dart';
 import 'package:trip_planner/src/view/widgets/start_point_card.dart';
 import 'package:trip_planner/src/view_models/trip_form_view_model.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
