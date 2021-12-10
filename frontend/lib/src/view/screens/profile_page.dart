@@ -94,7 +94,74 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ],
                               ),
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  showModalBottomSheet(
+                                    backgroundColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(20),
+                                      ),
+                                    ),
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Center(
+                                            child: Container(
+                                              margin: EdgeInsets.symmetric(
+                                                vertical:
+                                                    getProportionateScreenHeight(
+                                                        15),
+                                              ),
+                                              height:
+                                                  getProportionateScreenHeight(
+                                                      5),
+                                              width:
+                                                  getProportionateScreenWidth(
+                                                      50),
+                                              decoration: BoxDecoration(
+                                                color: Palette.Outline,
+                                                borderRadius:
+                                                    BorderRadius.circular(100),
+                                              ),
+                                            ),
+                                          ),
+                                          ListTile(
+                                            title: Text(
+                                              'แก้ไขข้อมูลผู้ใช้',
+                                              style: FontAssets.bodyText,
+                                            ),
+                                            onTap: () {},
+                                          ),
+                                          ListTile(
+                                            title: Text(
+                                              'ตั้งเวลาที่ใช้ในสถานที่',
+                                              style: FontAssets.bodyText,
+                                            ),
+                                            onTap: () {},
+                                          ),
+                                          ListTile(
+                                            title: Text(
+                                              'ตั้งค่าความสนใจ',
+                                              style: FontAssets.bodyText,
+                                            ),
+                                            onTap: () {},
+                                          ),
+                                          ListTile(
+                                            title: Text(
+                                              'ออกจากระบบ',
+                                              style: TextStyle(
+                                                  color: Palette.DeleteColor,
+                                                  fontSize: 14),
+                                            ),
+                                            onTap: () {},
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
                                 icon: Icon(Icons.menu_rounded),
                                 color: Palette.AdditionText,
                                 iconSize: 30,
