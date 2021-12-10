@@ -16,10 +16,6 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
-db.sequelize.sync({ force: true }).then(() => {
-  console.log("Drop and Resync with { force: true }");
-});
-
 // simple route
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to API application." });

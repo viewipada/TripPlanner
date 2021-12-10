@@ -52,35 +52,41 @@ exports.findOne = async (req, res) => {
     raw: true,
   });
 
-  const data = await Promise.all(
-    reviewData.map(
-      async ({
-        userId,
-        reviewRate: rating,
-        reviewCaption: caption,
-        reviewImg1,
-        reviewImg2,
-        reviewImg3,
-        createdAt,
-      }) => {
-        let { imgUrl: profileImage, username } = await User.findOne({
-          where: {
-            id: userId,
-          },
-          raw: true,
-        });
-
-        return {
-          profileImage,
-          username,
-          rating,
-          caption,
-          images: [reviewImg1, reviewImg2, reviewImg3].filter((image) => image),
+  console.log(reviewData);
+  if (reviewData == []) locationData.reviewers = [];
+  else {
+    console.log(5555555);
+    const data = await Promise.all(
+      reviewData.map(
+        async ({
+          userId,
+          reviewRate: rating,
+          reviewCaption: caption,
+          reviewImg1,
+          reviewImg2,
+          reviewImg3,
           createdAt,
-        };
-      }
-    )
-  );
-  locationData.reviewers = data;
+        }) => {
+          let { imgUrl: profileImage, username } = await User.findOne({
+            where: {
+              id: userId,
+            },
+            raw: true,
+          });
+
+          return {
+            profileImage,
+            username,
+            rating,
+            caption,
+            images: [reviewImg1, reviewImg2, reviewImg3].filter((image) => image),
+            createdAt,
+          };
+        }
+      )
+    );
+    locationData.reviewers = data;
+  }
+
   return res.status(200).json(locationData);
 };
