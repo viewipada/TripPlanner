@@ -67,6 +67,7 @@ class SearchStartPointViewModel with ChangeNotifier {
         );
       }
     }
+    clearPredictions();
   }
 
   void selectedUserLocation(BuildContext context,

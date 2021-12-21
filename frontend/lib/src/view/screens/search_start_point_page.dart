@@ -174,7 +174,6 @@ class _SearchStartPointPageState extends State<SearchStartPointPage> {
                                     searchStartPointViewModel
                                         .predictions[index].description!,
                                   );
-                                  searchStartPointViewModel.clearPredictions();
                                 },
                               );
                             },
