@@ -12,17 +12,20 @@ import 'package:trip_planner/src/view_models/search_view_model.dart';
 class SearchStartPointPage extends StatefulWidget {
   SearchStartPointPage({
     required this.startPointList,
+    required this.startPointValue,
   });
 
   final List<BaggageResponse> startPointList;
+  final bool startPointValue;
   @override
   _SearchStartPointPageState createState() =>
-      _SearchStartPointPageState(this.startPointList);
+      _SearchStartPointPageState(this.startPointList, this.startPointValue);
 }
 
 class _SearchStartPointPageState extends State<SearchStartPointPage> {
   final List<BaggageResponse> startPointList;
-  _SearchStartPointPageState(this.startPointList);
+  final bool startPointValue;
+  _SearchStartPointPageState(this.startPointList, this.startPointValue);
 
   final textController = TextEditingController();
 
@@ -33,6 +36,8 @@ class _SearchStartPointPageState extends State<SearchStartPointPage> {
   void initState() {
     googlePlace = GooglePlace(googleAPI);
     textController.clear();
+    Provider.of<SearchStartPointViewModel>(context, listen: false)
+        .initialStartPointValue(startPointValue);
     super.initState();
   }
 
@@ -52,6 +57,13 @@ class _SearchStartPointPageState extends State<SearchStartPointPage> {
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
           appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back_rounded),
+              color: Palette.BackIconColor,
+              onPressed: () {
+                searchStartPointViewModel.goBack(context);
+              },
+            ),
             title: Text(
               "เลือกจุดเริ่มต้น",
               style: FontAssets.headingText,

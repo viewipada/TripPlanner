@@ -9,6 +9,8 @@ class TripFormViewModel with ChangeNotifier {
   String _tripName = '';
   int _totalPeople = 1;
   int _totalTravelingDay = 1;
+  Map<String, String>? _startPointFromGoogle;
+  BaggageResponse? _startPointFromBaggage;
 
   Future pickDate(BuildContext context) async {
     final newDate = await showDatePicker(
@@ -28,22 +30,45 @@ class TripFormViewModel with ChangeNotifier {
   }
 
   void goToSearchStartPoint(
-      BuildContext context, List<BaggageResponse> startPointList) {
-    Navigator.push(
+      BuildContext context, List<BaggageResponse> startPointList) async {
+    final result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            SearchStartPointPage(startPointList: startPointList),
-      ),
+          builder: (context) => SearchStartPointPage(
+              startPointList: startPointList, startPointValue: true)),
     );
+    if (result is Map<String, String>) {
+      _startPointFromGoogle = result;
+      _startPointFromBaggage = null;
+    } else {
+      _startPointFromGoogle = null;
+      _startPointFromBaggage = result as BaggageResponse;
+    }
+    notifyListeners();
   }
 
-  void goToCreateTrip(BuildContext context,
-      List<BaggageResponse> startPointList, BaggageResponse startPoint) {
-    startPointList.remove(startPoint);
-    startPointList.insert(0, startPoint);
-    startPointList
-        .forEach((startPointList) => print(startPointList.locationName));
+  void goToCreateTrip(
+      BuildContext context,
+      List<BaggageResponse> startPointList,
+      BaggageResponse? startPointFromBaggage,
+      Map<String, String>? startPointFromGoogle) {
+    if (startPointFromBaggage != null &&
+        startPointList.contains(startPointFromBaggage)) {
+      startPointList.remove(startPointFromBaggage);
+      startPointList.insert(0, startPointFromBaggage);
+      // startPointList
+      //     .forEach((startPointList) => print(startPointList.locationName));
+    } else if (startPointFromGoogle != null) {
+      startPointList.insert(
+        0,
+        BaggageResponse(
+            locationId: 0,
+            locationName: startPointFromGoogle['locationName']!,
+            imageUrl: '',
+            category: '',
+            description: startPointFromGoogle['description']!),
+      );
+    }
   }
 
   void updateTripNameValue(String tripName) {
@@ -61,9 +86,35 @@ class TripFormViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  DateTime get date => _date!;
+  void getStartPoint(startPoint) async {
+    if (startPoint != null) {
+      if (startPoint is Map<String, String>) {
+        _startPointFromGoogle = await startPoint;
+        _startPointFromBaggage = null;
+      } else {
+        _startPointFromGoogle = null;
+        _startPointFromBaggage = await startPoint as BaggageResponse;
+      }
+      notifyListeners();
+    }
+  }
+
+  void cancelTrip(BuildContext context) {
+    _date = null;
+    _startDate = 'วันเริ่มต้นทริป';
+    _tripName = '';
+    _totalPeople = 1;
+    _totalTravelingDay = 1;
+    _startPointFromGoogle = null;
+    _startPointFromBaggage = null;
+    Navigator.of(context).pop();
+  }
+
+  DateTime? get date => _date;
   String get startDate => _startDate;
   String get tripName => _tripName;
   int get totalPeople => _totalPeople;
   int get totalTravelingDay => _totalTravelingDay;
+  Map<String, String>? get startPointFromGoogle => _startPointFromGoogle;
+  BaggageResponse? get startPointFromBaggage => _startPointFromBaggage;
 }

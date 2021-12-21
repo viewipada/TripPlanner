@@ -76,8 +76,8 @@ class BaggageViewModel with ChangeNotifier {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            SearchStartPointPage(startPointList: selectedList),
+        builder: (context) => SearchStartPointPage(
+            startPointList: selectedList, startPointValue: false),
       ),
     );
   }

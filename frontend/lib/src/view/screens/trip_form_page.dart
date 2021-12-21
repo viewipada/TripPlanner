@@ -13,26 +13,33 @@ import 'package:flutter_spinbox/flutter_spinbox.dart';
 
 class TripFormPage extends StatefulWidget {
   final List<BaggageResponse> startPointList;
-  final int pointIndex;
-  final Map<String, String>? startPointFormGoogleMap;
+  final startPoint;
 
   TripFormPage({
     required this.startPointList,
-    required this.pointIndex,
-    this.startPointFormGoogleMap,
+    this.startPoint,
   });
 
   @override
   _TripFormPageState createState() => _TripFormPageState(
-      this.startPointList, this.pointIndex, this.startPointFormGoogleMap);
+        this.startPointList,
+        this.startPoint,
+      );
 }
 
 class _TripFormPageState extends State<TripFormPage> {
   final List<BaggageResponse> startPointList;
-  final int pointIndex;
-  final Map<String, String>? startPointFormGoogleMap;
-  _TripFormPageState(
-      this.startPointList, this.pointIndex, this.startPointFormGoogleMap);
+  final startPoint;
+
+  _TripFormPageState(this.startPointList, this.startPoint);
+
+  @override
+  void initState() {
+    Provider.of<TripFormViewModel>(context, listen: false)
+        .getStartPoint(startPoint);
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +47,16 @@ class _TripFormPageState extends State<TripFormPage> {
     final tripFormViewModel = Provider.of<TripFormViewModel>(context);
 
     _showCancelTripModal(
-            BuildContext context, TripFormViewModel tripFormViewModel) =>
+        BuildContext context, TripFormViewModel tripFormViewModel) {
+      if (tripFormViewModel.date == null &&
+          tripFormViewModel.startDate == 'วันเริ่มต้นทริป' &&
+          tripFormViewModel.tripName == '' &&
+          tripFormViewModel.totalPeople == 1 &&
+          tripFormViewModel.totalTravelingDay == 1 &&
+          tripFormViewModel.startPointFromGoogle == null &&
+          tripFormViewModel.startPointFromBaggage == null) {
+        Navigator.of(context).pop();
+      } else {
         showDialog<String>(
           context: context,
           builder: (BuildContext context) => AlertDialog(
@@ -73,12 +89,7 @@ class _TripFormPageState extends State<TripFormPage> {
               TextButton(
                 onPressed: () {
                   Navigator.pop(context, 'ยกเลิกทริป');
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => NavigationBar(),
-                  //   ),
-                  // );
+                  tripFormViewModel.cancelTrip(context);
                 },
                 child: const Text(
                   'ยกเลิกทริป',
@@ -94,6 +105,8 @@ class _TripFormPageState extends State<TripFormPage> {
             ],
           ),
         );
+      }
+    }
 
     return WillPopScope(
       onWillPop: () async {
@@ -328,8 +341,11 @@ class _TripFormPageState extends State<TripFormPage> {
                                 style: FontAssets.titleText,
                               ),
                               Visibility(
-                                visible: startPointList.isNotEmpty ||
-                                    startPointFormGoogleMap != null,
+                                visible: tripFormViewModel
+                                            .startPointFromGoogle !=
+                                        null ||
+                                    tripFormViewModel.startPointFromBaggage !=
+                                        null,
                                 child: IconButton(
                                   constraints: BoxConstraints(),
                                   padding: EdgeInsets.symmetric(
@@ -349,8 +365,8 @@ class _TripFormPageState extends State<TripFormPage> {
                             ],
                           ),
                         ),
-                        startPointFormGoogleMap == null
-                            ? startPointList.isEmpty
+                        tripFormViewModel.startPointFromGoogle == null
+                            ? tripFormViewModel.startPointFromBaggage == null
                                 ? Padding(
                                     padding: EdgeInsets.symmetric(
                                       horizontal:
@@ -391,25 +407,21 @@ class _TripFormPageState extends State<TripFormPage> {
                                     ),
                                   )
                                 : StartPointCard(
-                                    imageUrl: startPointList
-                                        .elementAt(this.pointIndex)
-                                        .imageUrl,
-                                    locationName: startPointList
-                                        .elementAt(this.pointIndex)
-                                        .locationName,
-                                    description: startPointList
-                                        .elementAt(this.pointIndex)
-                                        .description,
-                                    category: startPointList
-                                        .elementAt(this.pointIndex)
-                                        .category,
+                                    imageUrl: tripFormViewModel
+                                        .startPointFromBaggage!.imageUrl,
+                                    locationName: tripFormViewModel
+                                        .startPointFromBaggage!.locationName,
+                                    description: tripFormViewModel
+                                        .startPointFromBaggage!.description,
+                                    category: tripFormViewModel
+                                        .startPointFromBaggage!.category,
                                   )
                             : StartPointCard(
                                 imageUrl: '',
-                                locationName:
-                                    startPointFormGoogleMap!['locationName']!,
-                                description:
-                                    startPointFormGoogleMap!['description']!,
+                                locationName: tripFormViewModel
+                                    .startPointFromGoogle!['locationName']!,
+                                description: tripFormViewModel
+                                    .startPointFromGoogle!['description']!,
                                 category: '',
                               ),
                       ],
@@ -427,13 +439,16 @@ class _TripFormPageState extends State<TripFormPage> {
                     onPressed: () {
                       if (tripFormViewModel.tripName == '') {
                         alertDialog(context, 'กรุณาตั้งชื่อทริป');
-                      } else if (startPointList.isEmpty) {
+                      } else if (tripFormViewModel.startPointFromBaggage ==
+                              null &&
+                          tripFormViewModel.startPointFromGoogle == null) {
                         alertDialog(context, 'กรุณาเลือกจุดเริ่มต้น');
                       } else {
                         tripFormViewModel.goToCreateTrip(
                             context,
                             startPointList,
-                            startPointList.elementAt(this.pointIndex));
+                            tripFormViewModel.startPointFromBaggage,
+                            tripFormViewModel.startPointFromGoogle);
                       }
                     },
                     child: Text(

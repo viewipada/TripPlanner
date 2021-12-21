@@ -12,18 +12,25 @@ class SearchStartPointViewModel with ChangeNotifier {
   List<AutocompletePrediction> _predictions = [];
   DetailsResult? _detailsResult;
   Map<String, String>? _startPointFormGoogleMap;
+  bool _haveStartPoint = false;
 
   void selectedStartPoint(BuildContext context,
       List<BaggageResponse> startPointList, BaggageResponse startPoint) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TripFormPage(
-          startPointList: startPointList,
-          pointIndex: startPointList.indexOf(startPoint),
+    if (_haveStartPoint) {
+      Navigator.pop(
+          context, startPointList[startPointList.indexOf(startPoint)]);
+    } else {
+      Navigator.of(context).pop();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TripFormPage(
+            startPointList: startPointList,
+            startPoint: startPointList[startPointList.indexOf(startPoint)],
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   void autoCompleteSearch(GooglePlace googlePlace, String value) async {
@@ -55,16 +62,21 @@ class SearchStartPointViewModel with ChangeNotifier {
           'lat': _detailsResult!.geometry!.location!.lat.toString(),
           'lng': _detailsResult!.geometry!.location!.lng.toString(),
         };
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => TripFormPage(
-              startPointList: startPointList,
-              pointIndex: 0,
-              startPointFormGoogleMap: _startPointFormGoogleMap,
+
+        if (_haveStartPoint) {
+          Navigator.pop(context, _startPointFormGoogleMap);
+        } else {
+          Navigator.of(context).pop();
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TripFormPage(
+                startPointList: startPointList,
+                startPoint: _startPointFormGoogleMap,
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
     }
     clearPredictions();
@@ -79,16 +91,20 @@ class SearchStartPointViewModel with ChangeNotifier {
       'lat': userLocation.latitude.toString(),
       'lng': userLocation.longitude.toString(),
     };
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TripFormPage(
-          startPointList: startPointList,
-          pointIndex: 0,
-          startPointFormGoogleMap: _startPointFormGoogleMap,
+    if (_haveStartPoint) {
+      Navigator.pop(context, _startPointFormGoogleMap);
+    } else {
+      Navigator.of(context).pop();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TripFormPage(
+            startPointList: startPointList,
+            startPoint: _startPointFormGoogleMap,
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   void createSessionToken() {
@@ -104,6 +120,14 @@ class SearchStartPointViewModel with ChangeNotifier {
   void closeSessionToken() {
     _sessionToken = null;
     notifyListeners();
+  }
+
+  void initialStartPointValue(bool startPointValue) {
+    _haveStartPoint = startPointValue;
+  }
+
+  void goBack(BuildContext context) {
+    Navigator.pop(context);
   }
 
   String? get sessionToken => _sessionToken;
