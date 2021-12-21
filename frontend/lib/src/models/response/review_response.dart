@@ -1,7 +1,7 @@
 class ReviewResponse {
   String profileImage;
   String username;
-  double rating;
+  int rating;
   String caption;
   List<String> images;
   String createdDate;
@@ -22,7 +22,7 @@ class ReviewResponse {
       rating: json['rating'],
       caption: json['caption'] ?? '',
       images: json['images'].cast<String>(),
-      createdDate: json['createdDate'],
+      createdDate: json['createdAt'],
     );
   }
 

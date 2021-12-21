@@ -105,7 +105,13 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                           left: getProportionateScreenWidth(15)),
                       child: TagCategory(
                         category:
-                            locationDetailViewModel.locationDetail.category,
+                            locationDetailViewModel.locationDetail.category == 1
+                                ? 'ที่เที่ยว'
+                                : locationDetailViewModel
+                                            .locationDetail.category ==
+                                        2
+                                    ? 'ที่กิน'
+                                    : 'ที่พัก',
                       ),
                     ),
                     Container(
@@ -115,32 +121,62 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                         getProportionateScreenWidth(15),
                         getProportionateScreenHeight(5),
                       ),
-                      child: Text(
-                        locationDetailViewModel.locationDetail.description,
-                        style: FontAssets.bodyText,
-                        maxLines: locationDetailViewModel.readMore ? 100 : 3,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                        bottom: getProportionateScreenHeight(5),
-                      ),
-                      width: double.infinity,
-                      height: 20,
-                      child: TextButton(
-                        onPressed: () {
-                          locationDetailViewModel.toggleReadmoreButton();
+                      child: LayoutBuilder(
+                        builder: (context, size) {
+                          var span = TextSpan(
+                            text: locationDetailViewModel
+                                .locationDetail.description,
+                            style: FontAssets.bodyText,
+                          );
+
+                          var tp = TextPainter(
+                            maxLines: 3,
+                            textAlign: TextAlign.left,
+                            textDirection: TextDirection.ltr,
+                            text: span,
+                          );
+
+                          tp.layout(maxWidth: size.maxWidth);
+
+                          var exceeded = tp.didExceedMaxLines;
+
+                          return Column(
+                            children: [
+                              Text.rich(
+                                span,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines:
+                                    locationDetailViewModel.readMore ? 100 : 3,
+                              ),
+                              Visibility(
+                                visible: exceeded,
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                    bottom: getProportionateScreenHeight(5),
+                                  ),
+                                  width: double.infinity,
+                                  height: 20,
+                                  child: TextButton(
+                                    onPressed: () {
+                                      locationDetailViewModel
+                                          .toggleReadmoreButton();
+                                    },
+                                    child: Text(locationDetailViewModel.readMore
+                                        ? 'ดูน้อยลง'
+                                        : 'ดูเพิ่มเติม'),
+                                    style: TextButton.styleFrom(
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.zero,
+                                      textStyle: TextStyle(
+                                          fontSize: 12,
+                                          fontFamily: 'Sukhumvit'),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
                         },
-                        child: Text(locationDetailViewModel.readMore
-                            ? 'ดูน้อยลง'
-                            : 'ดูเพิ่มเติม'),
-                        style: TextButton.styleFrom(
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.zero,
-                          textStyle:
-                              TextStyle(fontSize: 12, fontFamily: 'Sukhumvit'),
-                        ),
                       ),
                     ),
                     Padding(
@@ -155,8 +191,8 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                         style: FontAssets.subtitleText,
                       ),
                     ),
-                    detailLocation('วันเวลาเปิด-ปิด',
-                        locationDetailViewModel.locationDetail.openingHour),
+                    // detailLocation('วันเวลาเปิด-ปิด',
+                    //     locationDetailViewModel.locationDetail.openingHour),
                     detailLocation('เบอร์ติดต่อ',
                         locationDetailViewModel.locationDetail.contactNumber),
                     detailLocation('เว็บไซต์',
@@ -258,7 +294,8 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                             size: 18,
                           ),
                           Text(
-                            ' เวลาที่ใช้ ${locationDetailViewModel.locationDetail.duration}hr',
+                            // ' เวลาที่ใช้ ${locationDetailViewModel.locationDetail.duration}hr',
+                            ' เวลาที่ใช้ 1hr',
                             style: FontAssets.bodyText,
                           ),
                         ],
@@ -317,7 +354,8 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                           RatingBarIndicator(
                             unratedColor: Palette.Outline,
                             rating: locationDetailViewModel
-                                .locationDetail.averageRating,
+                                .locationDetail.averageRating
+                                .toDouble(),
                             itemBuilder: (context, index) => Icon(
                               Icons.star_rounded,
                               color: Palette.CautionColor,
@@ -372,6 +410,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
             ],
           );
         } else if (snapshot.hasError) {
+          print(snapshot.error);
           return Container(
             color: Colors.red,
           );
@@ -394,6 +433,7 @@ Widget detailLocation(String title, String detail) {
     child: Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           flex: 1,

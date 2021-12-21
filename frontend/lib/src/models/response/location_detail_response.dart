@@ -5,13 +5,13 @@ class LocationDetailResponse {
   final double longitude;
   final String locationName;
   final String imageUrl;
-  final String category;
+  final int category;
   final String description;
-  final String openingHour;
+  // final String openingHour;
   final String contactNumber;
   final String website;
-  final int duration;
-  final double averageRating;
+  // final int duration;
+  final int averageRating;
   final int totalReview;
   final int totalCheckin;
   final List<ReviewResponse> reviews;
@@ -23,10 +23,10 @@ class LocationDetailResponse {
     required this.imageUrl,
     required this.category,
     required this.description,
-    required this.openingHour,
+    // required this.openingHour,
     required this.contactNumber,
     required this.website,
-    required this.duration,
+    // required this.duration,
     required this.averageRating,
     required this.totalReview,
     required this.totalCheckin,
@@ -34,7 +34,7 @@ class LocationDetailResponse {
   });
 
   factory LocationDetailResponse.fromJson(Map<String, dynamic> json) {
-    var reviewList = json['reviews'] as List;
+    var reviewList = json['reviewers'] as List;
 
     return LocationDetailResponse(
       latitude: json['latitude'],
@@ -43,10 +43,10 @@ class LocationDetailResponse {
       imageUrl: json['imageUrl'],
       category: json['category'],
       description: json['description'],
-      openingHour: json['openingHour'],
+      // openingHour: json['openingHour'],
       contactNumber: json['contactNumber'],
       website: json['website'],
-      duration: json['duration'],
+      // duration: json['duration'],
       averageRating: json['averageRating'],
       totalReview: json['totalReview'],
       totalCheckin: json['totalCheckin'],
@@ -54,22 +54,22 @@ class LocationDetailResponse {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['latitude'] = this.latitude;
-    data['longitude'] = this.longitude;
-    data['imageUrl'] = this.imageUrl;
-    data['category'] = this.category;
-    data['description'] = this.description;
-    data['openingHour'] = this.openingHour;
-    data['contactNumber'] = this.contactNumber;
-    data['website'] = this.website;
-    data['duration'] = this.duration;
-    data['averageRating'] = this.averageRating;
-    data['totalReview'] = this.totalReview;
-    data['totalCheckin'] = this.totalCheckin;
-    data['reviews'] = this.reviews.map((v) => v.toJson()).toList();
+  // Map<String, dynamic> toJson() {
+  //   final Map<String, dynamic> data = new Map<String, dynamic>();
+  //   data['latitude'] = this.latitude;
+  //   data['longitude'] = this.longitude;
+  //   data['imageUrl'] = this.imageUrl;
+  //   data['category'] = this.category;
+  //   data['description'] = this.description;
+  //   data['openingHour'] = this.openingHour;
+  //   data['contactNumber'] = this.contactNumber;
+  //   data['website'] = this.website;
+  //   data['duration'] = this.duration;
+  //   data['averageRating'] = this.averageRating;
+  //   data['totalReview'] = this.totalReview;
+  //   data['totalCheckin'] = this.totalCheckin;
+  //   data['reviews'] = this.reviews.map((v) => v.toJson()).toList();
 
-    return data;
-  }
+  //   return data;
+  // }
 }

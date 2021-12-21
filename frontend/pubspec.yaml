@@ -43,6 +43,7 @@ dependencies:
   cool_dropdown: ^1.4.1
   google_place: ^0.4.3
   uuid: ^3.0.5
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
