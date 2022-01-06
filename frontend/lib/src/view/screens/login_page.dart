@@ -13,6 +13,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final passwordFocusNode = FocusNode();
+  final confirmPasswordFocusNode = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -164,6 +167,7 @@ class _LoginPageState extends State<LoginPage> {
                                             getProportionateScreenHeight(10),
                                       ),
                                       TextFormField(
+                                        focusNode: passwordFocusNode,
                                         keyboardType:
                                             TextInputType.visiblePassword,
                                         obscureText: !_confirmPasswordVisible,
@@ -175,6 +179,7 @@ class _LoginPageState extends State<LoginPage> {
                                               setState(() =>
                                                   _confirmPasswordVisible =
                                                       !_confirmPasswordVisible);
+                                              passwordFocusNode.requestFocus();
                                             },
                                             icon: _confirmPasswordVisible
                                                 ? Icon(Icons
@@ -212,6 +217,7 @@ class _LoginPageState extends State<LoginPage> {
                                             getProportionateScreenHeight(10),
                                       ),
                                       TextFormField(
+                                        focusNode: confirmPasswordFocusNode,
                                         keyboardType:
                                             TextInputType.visiblePassword,
                                         obscureText: !_passwordVisible,
@@ -222,6 +228,8 @@ class _LoginPageState extends State<LoginPage> {
                                             onPressed: () {
                                               setState(() => _passwordVisible =
                                                   !_passwordVisible);
+                                              confirmPasswordFocusNode
+                                                  .requestFocus();
                                             },
                                             icon: _passwordVisible
                                                 ? Icon(Icons
@@ -390,6 +398,7 @@ class _LoginPageState extends State<LoginPage> {
                                       height: getProportionateScreenHeight(10),
                                     ),
                                     TextFormField(
+                                      focusNode: passwordFocusNode,
                                       keyboardType:
                                           TextInputType.visiblePassword,
                                       obscureText: !_passwordVisible,
@@ -400,6 +409,7 @@ class _LoginPageState extends State<LoginPage> {
                                           onPressed: () {
                                             setState(() => _passwordVisible =
                                                 !_passwordVisible);
+                                            passwordFocusNode.requestFocus();
                                           },
                                           icon: _passwordVisible
                                               ? Icon(
@@ -498,292 +508,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-// Widget loginModal(
-//     BuildContext context, _formKey, LoginViewModel loginViewModel) {
-//   return Container(
-//     padding: EdgeInsets.only(
-//       bottom: MediaQuery.of(context).viewInsets.bottom,
-//     ),
-//     margin: EdgeInsets.symmetric(
-//       horizontal: getProportionateScreenWidth(15),
-//       vertical: getProportionateScreenHeight(15),
-//     ),
-//     child: Form(
-//       key: _formKey,
-//       child: Column(
-//         mainAxisSize: MainAxisSize.min,
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Align(
-//             alignment: Alignment.centerRight,
-//             child: IconButton(
-//               padding: EdgeInsets.zero,
-//               constraints: BoxConstraints(),
-//               icon: Icon(
-//                 Icons.cancel_outlined,
-//                 color: Palette.AdditionText,
-//               ),
-//               onPressed: () => Navigator.of(context).pop(),
-//             ),
-//           ),
-//           Text(
-//             'เข้าสู่ระบบ',
-//             style: FontAssets.headingText,
-//           ),
-//           SizedBox(
-//             height: getProportionateScreenHeight(15),
-//           ),
-//           TextFormField(
-//             decoration: InputDecoration(
-//               prefixIcon: Icon(Icons.person_outline),
-//               labelText: 'ชื่อผู้ใช้',
-//               counterText: "",
-//             ),
-//             textInputAction: TextInputAction.next,
-//             maxLength: 15,
-//             inputFormatters: [
-//               FilteringTextInputFormatter.deny(
-//                 RegExp(r'\s'),
-//               ),
-//             ],
-//             validator: (value) {
-//               if (value!.trim().isEmpty) {
-//                 return 'โปรดระบุ';
-//               }
-//               return null;
-//             },
-//             onChanged: (value) => loginViewModel.userNameChanged(value),
-//           ),
-//           SizedBox(
-//             height: getProportionateScreenHeight(10),
-//           ),
-//           TextFormField(
-//             keyboardType: TextInputType.visiblePassword,
-//             obscureText: !loginViewModel.passwordVisible,
-//             decoration: InputDecoration(
-//               prefixIcon: Icon(Icons.lock_outline_rounded),
-//               suffixIcon: IconButton(
-//                 onPressed: () {
-//                   loginViewModel.togglePasswordVisible();
-//                   print(loginViewModel.passwordVisible);
-//                 },
-//                 icon: loginViewModel.passwordVisible
-//                     ? Icon(Icons.visibility_off_outlined)
-//                     : Icon(Icons.visibility_outlined),
-//               ),
-//               labelText: 'รหัสผ่าน',
-//             ),
-//             inputFormatters: [
-//               FilteringTextInputFormatter.deny(
-//                 RegExp(r'\s'),
-//               ),
-//             ],
-//             validator: (value) {
-//               RegExp regex =
-//                   RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$');
-//               if (value!.trim().isEmpty) {
-//                 return 'โปรดระบุ';
-//               } else if (value.length < 8) {
-//                 return 'กรุณาระบุอย่างน้อย 8 ตัวอักษร';
-//               } else {
-//                 if (regex.hasMatch(value)) {
-//                   return null;
-//                 } else {
-//                   return 'กรุณาระบุตามรูปแบบที่กำหนด';
-//                 }
-//               }
-//             },
-//           ),
-//           SizedBox(
-//             height: getProportionateScreenHeight(48),
-//           ),
-//           Container(
-//             width: double.infinity,
-//             height: getProportionateScreenHeight(48),
-//             child: ElevatedButton(
-//               onPressed: () {
-//                 // Validate returns true if the form is valid, or false otherwise.
-//                 if (_formKey.currentState!.validate()) {
-//                   // If the form is valid, display a snackbar. In the real world,
-//                   // you'd often call a server or save the information in a database.
-//                   print('valid');
-//                 }
-//               },
-//               child: Text(
-//                 'เข้าสู่ระบบ',
-//                 style: TextStyle(
-//                   fontWeight: FontWeight.bold,
-//                   fontSize: 14,
-//                 ),
-//               ),
-//               style: ElevatedButton.styleFrom(
-//                 primary: Palette.PrimaryColor,
-//                 shape: RoundedRectangleBorder(
-//                   borderRadius: BorderRadius.circular(5),
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     ),
-//   );
-// }
-
-// Widget registerModal(
-//     BuildContext context, _formKey, LoginViewModel loginViewModel) {
-  // return Container(
-  //   padding: EdgeInsets.only(
-  //     bottom: MediaQuery.of(context).viewInsets.bottom,
-  //   ),
-  //   margin: EdgeInsets.symmetric(
-  //     horizontal: getProportionateScreenWidth(15),
-  //     vertical: getProportionateScreenHeight(15),
-  //   ),
-  //   child: Form(
-  //     key: _formKey,
-  //     child: Column(
-  //       mainAxisSize: MainAxisSize.min,
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         Align(
-  //           alignment: Alignment.centerRight,
-  //           child: IconButton(
-  //             padding: EdgeInsets.zero,
-  //             constraints: BoxConstraints(),
-  //             icon: Icon(
-  //               Icons.cancel_outlined,
-  //               color: Palette.AdditionText,
-  //             ),
-  //             onPressed: () => Navigator.of(context).pop(),
-  //           ),
-  //         ),
-  //         Text(
-  //           'สร้างบัญชีใหม่',
-  //           style: FontAssets.headingText,
-  //         ),
-  //         SizedBox(
-  //           height: getProportionateScreenHeight(15),
-  //         ),
-  //         TextFormField(
-  //           decoration: InputDecoration(
-  //             prefixIcon: Icon(Icons.person_outline),
-  //             labelText: 'ชื่อผู้ใช้',
-  //             counterText: "",
-  //           ),
-  //           textInputAction: TextInputAction.next,
-  //           maxLength: 15,
-  //           inputFormatters: [
-  //             FilteringTextInputFormatter.deny(
-  //               RegExp(r'\s'),
-  //             ),
-  //           ],
-  //           validator: (value) {
-  //             if (value!.trim().isEmpty) {
-  //               return 'โปรดระบุ';
-  //             }
-  //             return null;
-  //           },
-  //           onChanged: (value) => loginViewModel.userNameChanged(value),
-  //         ),
-  //         SizedBox(
-  //           height: getProportionateScreenHeight(10),
-  //         ),
-  //         TextFormField(
-  //           keyboardType: TextInputType.visiblePassword,
-  //           obscureText: !_passwordVisible,
-  //           decoration: InputDecoration(
-  //             prefixIcon: Icon(Icons.lock_outline_rounded),
-  //             suffixIcon: IconButton(
-  //               onPressed: () {
-  //                 setState(() => _passwordVisible = !_passwordVisible);
-  //               },
-  //               icon: _passwordVisible
-  //                   ? Icon(Icons.visibility_off_outlined)
-  //                   : Icon(Icons.visibility_outlined),
-  //             ),
-  //             labelText: 'รหัสผ่าน',
-  //           ),
-  //           inputFormatters: [
-  //             FilteringTextInputFormatter.deny(
-  //               RegExp(r'\s'),
-  //             ),
-  //           ],
-  //           validator: (value) {
-  //             RegExp regex =
-  //                 RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$');
-  //             if (value!.trim().isEmpty) {
-  //               return 'โปรดระบุ';
-  //             } else if (value.length < 8) {
-  //               return 'กรุณาระบุอย่างน้อย 8 ตัวอักษร';
-  //             } else {
-  //               if (regex.hasMatch(value)) {
-  //                 return null;
-  //               } else {
-  //                 return 'กรุณาระบุตามรูปแบบที่กำหนด';
-  //               }
-  //             }
-  //           },
-  //           onChanged: (value) => loginViewModel.passwordChanged(value),
-  //         ),
-  //         SizedBox(
-  //           height: getProportionateScreenHeight(10),
-  //         ),
-  //         TextFormField(
-  //           obscureText: true,
-  //           decoration: InputDecoration(
-  //             prefixIcon: Icon(Icons.lock_outline_rounded),
-  //             suffixIcon: Icon(Icons.visibility_outlined),
-  //             labelText: 'ยืนยันรหัสผ่าน',
-  //           ),
-  //           inputFormatters: [
-  //             FilteringTextInputFormatter.deny(
-  //               RegExp(r'\s'),
-  //             ),
-  //           ],
-  //           validator: (value) {
-  //             if (value!.trim().isEmpty) {
-  //               return 'โปรดระบุ';
-  //             } else if (value != loginViewModel.password) {
-  //               return 'รหัสผ่านไม่ตรงกัน';
-  //             }
-  //             return null;
-  //           },
-  //           onChanged: (value) => loginViewModel.confirmPasswordChanged(value),
-  //         ),
-  //         SizedBox(
-  //           height: getProportionateScreenHeight(48),
-  //         ),
-  //         Container(
-  //           width: double.infinity,
-  //           height: getProportionateScreenHeight(48),
-  //           child: ElevatedButton(
-  //             onPressed: () {
-  //               // Validate returns true if the form is valid, or false otherwise.
-  //               if (_formKey.currentState!.validate()) {
-  //                 // If the form is valid, display a snackbar. In the real world,
-  //                 // you'd often call a server or save the information in a database.
-  //                 print('valid');
-  //               }
-  //             },
-  //             child: Text(
-  //               'ลงทะเบียน',
-  //               style: TextStyle(
-  //                 fontWeight: FontWeight.bold,
-  //                 fontSize: 14,
-  //               ),
-  //             ),
-  //             style: ElevatedButton.styleFrom(
-  //               primary: Palette.PrimaryColor,
-  //               shape: RoundedRectangleBorder(
-  //                 borderRadius: BorderRadius.circular(5),
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   ),
-  // );
-// }
