@@ -6,6 +6,7 @@ class ImageAssets {
   static const String homeBanner = 'assets/images/home_banner.png';
   static const String noPreview = 'assets/images/no_preview.png';
   static const String myLocation = 'assets/images/my_location.png';
+  static const String loginBackground = 'assets/images/login_bg.png';
 }
 
 class IconAssets {
