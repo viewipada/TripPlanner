@@ -31,4 +31,6 @@ class FontAssets {
       TextStyle(color: Palette.AdditionText, fontSize: 14);
   static const TextStyle hintText =
       TextStyle(color: Palette.AdditionText, fontSize: 12);
+  static const TextStyle requiredField = TextStyle(
+      color: Palette.SecondaryColor, fontWeight: FontWeight.bold, fontSize: 16);
 }
