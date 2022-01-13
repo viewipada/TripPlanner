@@ -34,3 +34,7 @@ class FontAssets {
   static const TextStyle requiredField = TextStyle(
       color: Palette.SecondaryColor, fontWeight: FontWeight.bold, fontSize: 16);
 }
+
+class GoogleAssets {
+  static const String googleAPI = "AIzaSyC3IbO2CjNOMP1g1F_Y7jamCp0aEu4asKE";
+}

@@ -30,11 +30,10 @@ class _SearchStartPointPageState extends State<SearchStartPointPage> {
   final textController = TextEditingController();
 
   late GooglePlace googlePlace;
-  final String googleAPI = "AIzaSyC3IbO2CjNOMP1g1F_Y7jamCp0aEu4asKE";
 
   @override
   void initState() {
-    googlePlace = GooglePlace(googleAPI);
+    googlePlace = GooglePlace(GoogleAssets.googleAPI);
     textController.clear();
     Provider.of<SearchStartPointViewModel>(context, listen: false)
         .initialStartPointValue(startPointValue);

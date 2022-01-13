@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:trip_planner/src/services/create_location_service.dart';
+import 'package:trip_planner/src/view/screens/location_picker_page.dart';
 
 class CreateLocationViewModel with ChangeNotifier {
   File? _images;
@@ -60,6 +62,10 @@ class CreateLocationViewModel with ChangeNotifier {
       'closedTime': '16:00'
     },
   ];
+  List _provinceList = [
+    {'label': 'อ่างทอง', 'value': LatLng(14.589605, 100.455055)}
+  ];
+  LatLng? _provinceLatLng;
   bool _openingEveryday = false;
   String? _locationCategoryValue;
   String? _locationTypeValue;
@@ -168,8 +174,9 @@ class CreateLocationViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateProvinceValue(String province) {
-    _provinceValue = province;
+  void updateProvinceValue(province) {
+    _provinceValue = province['label'];
+    _provinceLatLng = province['value'];
     notifyListeners();
   }
 
@@ -201,6 +208,24 @@ class CreateLocationViewModel with ChangeNotifier {
     });
     return _isValid;
   }
+
+  void goToLocationPickerPage(
+      BuildContext context, LatLng initialLatLng) async {
+    final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              LocationPickerPage(initialLatLng: initialLatLng),
+        ));
+    print(result);
+    notifyListeners();
+  }
+
+  // void selectedLocationPin(BuildContext context, LatLng initialLatLng) {
+
+  //   Navigator.pop(context, '');
+  // }
+
   // void deleteImage(File image) {
   //   _images.remove(image);
   //   notifyListeners();
@@ -223,5 +248,7 @@ class CreateLocationViewModel with ChangeNotifier {
   bool get locationCategoryValid => _locationCategoryValid;
   bool get locationTypeValid => _locationTypeValid;
   bool get provinceValid => _provinceValid;
+  List get provinceList => _provinceList;
+  LatLng? get provinceLatLng => _provinceLatLng;
   // bool get isSameHour => _isSameHour;
 }

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
@@ -390,9 +391,7 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                       padding: EdgeInsets.symmetric(
                           horizontal: getProportionateScreenWidth(15)),
                       child: CoolDropdown(
-                        dropdownList: [
-                          {'label': 'อ่างทอง', 'value': 'อ่างทอง'}
-                        ],
+                        dropdownList: createLocationViewModel.provinceList,
                         placeholder: 'กรุณาเลือก',
                         dropdownHeight: 70,
                         dropdownItemGap: 0,
@@ -423,7 +422,7 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                         ),
                         onChange: (selectedItem) {
                           createLocationViewModel
-                              .updateProvinceValue(selectedItem['label']);
+                              .updateProvinceValue(selectedItem);
                         },
                         resultBD: BoxDecoration(
                           color: Colors.white,
@@ -450,50 +449,116 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                       ),
                     ),
                     Subtitle('ตำแหน่งบนแผนที่ ', '*'),
-                    InkWell(
-                      onTap: () => print('แตะ'),
+                    IgnorePointer(
+                      ignoring: createLocationViewModel.provinceLatLng == null,
                       child: Container(
+                        width: double.infinity,
                         padding: EdgeInsets.symmetric(
                           horizontal: getProportionateScreenWidth(15),
-                          vertical: getProportionateScreenHeight(10),
+                          // vertical: getProportionateScreenHeight(10),
                         ),
-                        child: TextField(
-                          enabled: false,
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(
-                              Icons.not_listed_location_outlined,
-                              color: Palette.AdditionText,
-                              size: 30,
+                        child: TextButton.icon(
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.symmetric(
+                                vertical: getProportionateScreenHeight(12)),
+                            backgroundColor:
+                                createLocationViewModel.provinceLatLng == null
+                                    ? Palette.BorderInputColor
+                                    : Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              side: BorderSide(color: Palette.BorderInputColor),
                             ),
-                            hintText: 'แตะเพื่อกำหนดตำแหน่งสถานที่',
                           ),
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () => print('แตะ'),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: getProportionateScreenWidth(15),
-                          vertical: getProportionateScreenHeight(10),
-                        ),
-                        child: TextField(
-                          enabled: false,
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(
-                              Icons.location_on_rounded,
-                              color: Palette.SecondaryColor,
-                              size: 30,
-                            ),
-                            hintText: 'กำหนดตำแหน่งสถานที่แล้ว',
-                            hintStyle: TextStyle(
-                              color: Palette.SecondaryColor,
+                          onPressed: () =>
+                              createLocationViewModel.goToLocationPickerPage(
+                                  context,
+                                  createLocationViewModel.provinceLatLng!),
+                          icon: Icon(
+                            Icons.not_listed_location_outlined,
+                            color: Palette.InfoText,
+                            size: 30,
+                          ),
+                          label: Text(
+                            'แตะเพื่อกำหนดตำแหน่งสถานที่',
+                            style: TextStyle(
                               fontSize: 14,
+                              color: Palette.InfoText,
                             ),
                           ),
                         ),
                       ),
+                      // InkWell(
+                      //   onTap: () =>
+                      //       createLocationViewModel.goToLocationPickerPage(
+                      //           context,
+                      //           createLocationViewModel.provinceLatLng!),
+                      //   child: Container(
+                      //     padding: EdgeInsets.symmetric(
+                      //       horizontal: getProportionateScreenWidth(15),
+                      //       // vertical: getProportionateScreenHeight(10),
+                      //     ),
+                      //     child: TextField(
+                      //       enabled: false,
+                      //       decoration: InputDecoration(
+                      //         prefixIcon: Icon(
+                      //           Icons.not_listed_location_outlined,
+                      //           color: Palette.AdditionText,
+                      //           size: 30,
+                      //         ),
+                      //         hintText: 'แตะเพื่อกำหนดตำแหน่งสถานที่',
+                      //         fillColor:
+                      //             createLocationViewModel.provinceLatLng == null
+                      //                 ? Palette.BorderInputColor
+                      //                 : Colors.white,
+                      //         filled: true,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                     ),
+                    // TextButton.icon(
+                    //   style: TextButton.styleFrom(
+                    //     textStyle:FontAssets.hintText,
+                    //     backgroundColor: Colors.white,
+                    //     shape: RoundedRectangleBorder(
+                    //       borderRadius: BorderRadius.circular(10.0),
+                    //     ),
+                    //   ),
+                    //   onPressed: () => {},
+                    //   icon: Icon(
+                    //             Icons.not_listed_location_outlined,
+                    //             color: Palette.AdditionText,
+                    //             size: 30,
+                    //           ),
+                    //   label: Text(
+                    //     'แตะเพื่อกำหนดตำแหน่งสถานที่',
+                    //   ),
+                    // ),
+                    // InkWell(
+                    //   onTap: () => print('แตะ'),
+                    //   child: Container(
+                    //     padding: EdgeInsets.symmetric(
+                    //       horizontal: getProportionateScreenWidth(15),
+                    //       vertical: getProportionateScreenHeight(10),
+                    //     ),
+                    //     child: TextField(
+                    //       enabled: false,
+                    //       decoration: InputDecoration(
+                    //         prefixIcon: Icon(
+                    //           Icons.location_on_rounded,
+                    //           color: Palette.SecondaryColor,
+                    //           size: 30,
+                    //         ),
+                    //         hintText: 'กำหนดตำแหน่งสถานที่แล้ว',
+                    //         hintStyle: TextStyle(
+                    //           color: Palette.SecondaryColor,
+                    //           fontSize: 14,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     Subtitle('เขียนแนะนำสถานที่เบื้องต้น ', '*'),
                     Container(
                       height: getProportionateScreenHeight(150),
