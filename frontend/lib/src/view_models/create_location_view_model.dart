@@ -73,6 +73,7 @@ class CreateLocationViewModel with ChangeNotifier {
   bool _locationCategoryValid = true;
   bool _locationTypeValid = true;
   bool _provinceValid = true;
+  LatLng? _locationPin;
   // bool _isSameHour = false;
   // TimeOfDay _openTime = TimeOfDay(hour: 14, minute: 0);
 
@@ -211,20 +212,19 @@ class CreateLocationViewModel with ChangeNotifier {
 
   void goToLocationPickerPage(
       BuildContext context, LatLng initialLatLng) async {
-    final result = await Navigator.push(
+    LatLng result = await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) =>
               LocationPickerPage(initialLatLng: initialLatLng),
         ));
-    print(result);
+    _locationPin = result;
     notifyListeners();
   }
 
-  // void selectedLocationPin(BuildContext context, LatLng initialLatLng) {
-
-  //   Navigator.pop(context, '');
-  // }
+  void selectedLocationPin(BuildContext context, LatLng locationPin) {
+    Navigator.pop(context, locationPin);
+  }
 
   // void deleteImage(File image) {
   //   _images.remove(image);
@@ -250,5 +250,6 @@ class CreateLocationViewModel with ChangeNotifier {
   bool get provinceValid => _provinceValid;
   List get provinceList => _provinceList;
   LatLng? get provinceLatLng => _provinceLatLng;
+  LatLng? get locationPin => _locationPin;
   // bool get isSameHour => _isSameHour;
 }
