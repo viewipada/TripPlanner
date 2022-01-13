@@ -782,11 +782,22 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                               createLocationViewModel.validateDropdown();
                           if (_formKey.currentState!.validate() &&
                               dropdownValid) {
-                            // If the form is valid, display a snackbar. In the real world,
-                            // you'd often call a server or save the information in a database.
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Processing Data')),
-                            );
+                            bool openingHourValid =
+                                createLocationViewModel.validateOpeningHour();
+                            if (createLocationViewModel.knowOpeningHour! &&
+                                !openingHourValid) {
+                              alertDialog(context, 'กรุณาระบุวันเวลาทำการ');
+                            } else {
+                              // If the form is valid, display a snackbar. In the real world,
+                              // you'd often call a server or save the information in a database.
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Processing Data')),
+                              );
+                            }
+                          } else {
+                            alertDialog(
+                                context, 'กรุณาระบุข้อมูลที่จำเป็นให้ครบ');
                           }
                         },
                         child: Text(
@@ -880,6 +891,39 @@ Widget addImageButton(CreateLocationViewModel createLocationViewModel,
           ),
         ],
       ),
+    ),
+  );
+}
+
+alertDialog(BuildContext context, String title) {
+  return showDialog<String>(
+    context: context,
+    builder: (BuildContext _context) => AlertDialog(
+      title: Text(
+        title,
+        style: TextStyle(
+          color: Palette.BodyText,
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+        ),
+        textAlign: TextAlign.center,
+      ),
+      contentPadding: EdgeInsets.zero,
+      actionsAlignment: MainAxisAlignment.center,
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(
+            _context,
+          ),
+          child: const Text(
+            'โอเค!',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
     ),
   );
 }

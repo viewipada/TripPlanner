@@ -177,9 +177,9 @@ class CreateLocationViewModel with ChangeNotifier {
     _locationCategoryValid = _locationCategoryValue != null;
     _locationTypeValid = _locationTypeValue != null;
     _provinceValid = _provinceValue != null;
-    print(_locationCategoryValid);
-    print(_locationTypeValid);
-    print(_provinceValid);
+    // print(_locationCategoryValid);
+    // print(_locationTypeValid);
+    // print(_provinceValid);
     notifyListeners();
 
     if (_locationCategoryValue == null ||
@@ -189,6 +189,17 @@ class CreateLocationViewModel with ChangeNotifier {
     }
 
     return true;
+  }
+
+  bool validateOpeningHour() {
+    bool _isValid = false;
+    _dayOfWeek.forEach((element) {
+      if (element['isOpening'] == true) {
+        _isValid = true;
+        return;
+      }
+    });
+    return _isValid;
   }
   // void deleteImage(File image) {
   //   _images.remove(image);
