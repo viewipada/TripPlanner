@@ -226,15 +226,11 @@ class CreateLocationViewModel with ChangeNotifier {
     Navigator.pop(context, locationPin);
   }
 
-  // void deleteImage(File image) {
-  //   _images.remove(image);
-  //   notifyListeners();
-  // }
-
-  // void goBack(BuildContext context) {
-  //   _images = [];
-  //   Navigator.pop(context);
-  // }
+  Future goToNewLocationPinWithSearch(
+      _controller, LatLng searchLocation) async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newLatLng(searchLocation));
+  }
 
   File? get images => _images;
   bool? get knowOpeningHour => _knowOpeningHour;

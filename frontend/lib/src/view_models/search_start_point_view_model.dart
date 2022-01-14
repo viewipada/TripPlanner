@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_place/google_place.dart';
 import 'package:location/location.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
@@ -80,6 +81,27 @@ class SearchStartPointViewModel with ChangeNotifier {
       }
     }
     clearPredictions();
+  }
+
+  Future<LatLng> getLatLng(BuildContext context, GooglePlace googlePlace,
+      String placeId, LatLng currentPin) async {
+    var result = await googlePlace.details.get(
+      placeId,
+      region: 'th',
+      language: 'th',
+      fields: 'geometry',
+    );
+    if (result != null && result.result != null) {
+      _detailsResult = result.result!;
+
+      if (_detailsResult != null &&
+          _detailsResult!.geometry != null &&
+          _detailsResult!.geometry!.location != null) {
+        return LatLng(_detailsResult!.geometry!.location!.lat!,
+            _detailsResult!.geometry!.location!.lng!);
+      }
+    }
+    return currentPin;
   }
 
   void selectedUserLocation(BuildContext context,

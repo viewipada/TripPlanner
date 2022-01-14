@@ -185,15 +185,21 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
                           ),
                           onTap: () {
                             searchStartPointViewModel.closeSessionToken();
-                            // searchStartPointViewModel.getDetails(
-                            //   context,
-                            //   startPointList,
-                            //   googlePlace,
-                            //   searchStartPointViewModel
-                            //       .predictions[index].placeId!,
-                            //   searchStartPointViewModel
-                            //       .predictions[index].description!,
-                            // );
+                            searchStartPointViewModel
+                                .getLatLng(
+                                    context,
+                                    googlePlace,
+                                    searchStartPointViewModel
+                                        .predictions[index].placeId!,
+                                    LatLng(cameraPosition.target.latitude,
+                                        cameraPosition.target.longitude))
+                                .then((value) => createLocationViewModel
+                                    .goToNewLocationPinWithSearch(
+                                        _controller, value))
+                                .then((value) => searchStartPointViewModel
+                                    .clearPredictions());
+                            textController.clear();
+                            FocusScope.of(context).unfocus();
                           },
                         );
                       },
@@ -208,7 +214,10 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
                 right: getProportionateScreenWidth(15),
                 child: ElevatedButton(
                   onPressed: () {
-                    createLocationViewModel.selectedLocationPin(context,LatLng(cameraPosition.target.latitude,cameraPosition.target.longitude));
+                    createLocationViewModel.selectedLocationPin(
+                        context,
+                        LatLng(cameraPosition.target.latitude,
+                            cameraPosition.target.longitude));
                     // print(
                     //     "Location ${cameraPosition.target.latitude} ${cameraPosition.target.longitude}");
                     // print("Address: ${textController.text}");
