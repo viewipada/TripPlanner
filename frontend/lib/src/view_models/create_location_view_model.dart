@@ -242,6 +242,10 @@ class CreateLocationViewModel with ChangeNotifier {
     controller.animateCamera(CameraUpdate.newLatLng(searchLocation));
   }
 
+  void goBack(BuildContext context) {
+    Navigator.pop(context);
+  }
+
   File? get images => _images;
   bool? get knowOpeningHour => _knowOpeningHour;
   List get dayOfWeek => _dayOfWeek;

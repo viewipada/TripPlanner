@@ -189,7 +189,7 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context, 'ทำต่อ');
-                      // reviewViewModel.goBack(context);
+                      createLocationViewModel.goBack(context);
                     },
                     child: const Text(
                       'ยกเลิกสร้างสถานที่',

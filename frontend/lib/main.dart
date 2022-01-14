@@ -75,8 +75,8 @@ class MyApp extends StatelessWidget {
         
         home: 
         // LoginPage()
-        // NavigationBar(),
-        CreateLocationPage()
+        NavigationBar(),
+        // CreateLocationPage()
       ),
     );
   }
