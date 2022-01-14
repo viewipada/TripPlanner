@@ -74,6 +74,7 @@ class CreateLocationViewModel with ChangeNotifier {
   bool _locationTypeValid = true;
   bool _provinceValid = true;
   LatLng? _locationPin;
+  bool _locationPinValid = true;
   // bool _isSameHour = false;
   // TimeOfDay _openTime = TimeOfDay(hour: 14, minute: 0);
 
@@ -210,6 +211,15 @@ class CreateLocationViewModel with ChangeNotifier {
     return _isValid;
   }
 
+  bool validateLocationPin() {
+    if (_locationPin == null)
+      _locationPinValid = false;
+    else
+      _locationPinValid = true;
+
+    return _locationPinValid;
+  }
+
   void goToLocationPickerPage(
       BuildContext context, LatLng initialLatLng) async {
     LatLng result = await Navigator.push(
@@ -244,6 +254,7 @@ class CreateLocationViewModel with ChangeNotifier {
   bool get locationCategoryValid => _locationCategoryValid;
   bool get locationTypeValid => _locationTypeValid;
   bool get provinceValid => _provinceValid;
+  bool get locationPinValid => _locationPinValid;
   List get provinceList => _provinceList;
   LatLng? get provinceLatLng => _provinceLatLng;
   LatLng? get locationPin => _locationPin;

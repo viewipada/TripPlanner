@@ -467,7 +467,11 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                                     : Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              side: BorderSide(color: Palette.BorderInputColor),
+                              side: BorderSide(
+                                  color:
+                                      createLocationViewModel.locationPinValid
+                                          ? Palette.BorderInputColor
+                                          : Colors.red),
                             ),
                           ),
                           onPressed: () => createLocationViewModel
@@ -788,8 +792,11 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                         onPressed: () {
                           bool dropdownValid =
                               createLocationViewModel.validateDropdown();
+                          bool locationPinValid =
+                              createLocationViewModel.validateLocationPin();
                           if (_formKey.currentState!.validate() &&
-                              dropdownValid) {
+                              dropdownValid &&
+                              locationPinValid) {
                             bool openingHourValid =
                                 createLocationViewModel.validateOpeningHour();
                             if (createLocationViewModel.knowOpeningHour! &&
