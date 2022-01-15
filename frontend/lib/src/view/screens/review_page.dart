@@ -126,7 +126,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     ),
                     child: Text(
                       '${this.locationName} เป็นอย่างไรบ้าง?',
-                      style: FontAssets.titleText,
+                      style: FontAssets.subtitleText,
                     ),
                   ),
                   Container(
@@ -159,7 +159,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     ),
                     child: Text(
                       'เขียนความรู้สึก หรือ บรรยากาศที่คุณได้จากที่นี่',
-                      style: FontAssets.titleText,
+                      style: FontAssets.subtitleText,
                     ),
                   ),
                   Container(
@@ -187,7 +187,7 @@ class _ReviewPageState extends State<ReviewPage> {
                         ),
                         child: Text(
                           'ใส่รูป',
-                          style: FontAssets.titleText,
+                          style: FontAssets.subtitleText,
                         ),
                       ),
                       Container(
