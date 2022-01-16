@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:trip_planner/src/view/screens/on_boarding_page.dart';
 import 'package:trip_planner/src/view/screens/pdpa_page.dart';
 import 'package:trip_planner/src/view/widgets/navigation_bar.dart';
 
@@ -78,7 +79,15 @@ class LoginViewModel with ChangeNotifier {
       ),
     );
   }
-  
+
+  void goToOnboarding(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => OnBoardingPage(),
+      ),
+    );
+  }
 
   String get userName => _userName;
   String get password => _password;

@@ -238,7 +238,7 @@ class _PdpaPageState extends State<PdpaPage> {
                     ),
                     child: ElevatedButton(
                       onPressed: () => loginViewModel.validateData()
-                          ? loginViewModel.goToHomePage(context)
+                          ? loginViewModel.goToOnboarding(context)
                           : null,
                       child: Text(
                         'ยืนยันข้อมูล',
