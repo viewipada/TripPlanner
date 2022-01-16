@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/src/view/screens/create_location.dart';
 import 'package:trip_planner/src/view/screens/login_page.dart';
+import 'package:trip_planner/src/view/screens/pdpa_page.dart';
+import 'package:trip_planner/src/view/screens/review_page.dart';
 import 'package:trip_planner/src/view/widgets/navigation_bar.dart';
 import 'package:trip_planner/src/view_models/baggage_view_model.dart';
 import 'package:trip_planner/src/view_models/create_location_view_model.dart';
@@ -75,8 +77,8 @@ class MyApp extends StatelessWidget {
         
         home: 
         // LoginPage()
-        NavigationBar(),
-        // CreateLocationPage()
+        // NavigationBar(),
+        PdpaPage()
       ),
     );
   }

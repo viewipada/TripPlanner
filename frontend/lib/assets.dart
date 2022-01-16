@@ -7,6 +7,7 @@ class ImageAssets {
   static const String noPreview = 'assets/images/no_preview.png';
   static const String myLocation = 'assets/images/my_location.png';
   static const String loginBackground = 'assets/images/login_bg.png';
+  static const String pdpaBackground = 'assets/images/pdpa.jpg';
 }
 
 class IconAssets {
