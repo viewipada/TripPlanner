@@ -76,9 +76,9 @@ class MyApp extends StatelessWidget {
         ),
         
         home: 
-        // LoginPage()
+        LoginPage()
         // NavigationBar(),
-        PdpaPage()
+        // PdpaPage()
       ),
     );
   }

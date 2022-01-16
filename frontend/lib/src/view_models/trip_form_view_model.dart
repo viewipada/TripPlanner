@@ -16,8 +16,8 @@ class TripFormViewModel with ChangeNotifier {
     final newDate = await showDatePicker(
       context: context,
       initialDate: _date == null ? DateTime.now() : _date!,
-      firstDate: DateTime(DateTime.now().year - 5),
-      lastDate: DateTime(DateTime.now().year + 5),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(DateTime.now().year + 10),
     );
 
     if (newDate == null) {

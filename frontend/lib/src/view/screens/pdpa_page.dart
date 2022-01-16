@@ -99,7 +99,9 @@ class _PdpaPageState extends State<PdpaPage> {
                               Expanded(
                                 flex: 2,
                                 child: OutlinedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    loginViewModel.pickDate(context);
+                                  },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -107,7 +109,7 @@ class _PdpaPageState extends State<PdpaPage> {
                                         Icons.calendar_today_rounded,
                                       ),
                                       Text(
-                                        ' วว/ดด/ปป',
+                                        loginViewModel.startDate,
                                         style: TextStyle(fontSize: 14),
                                       ),
                                     ],
@@ -127,11 +129,11 @@ class _PdpaPageState extends State<PdpaPage> {
                             ],
                           ),
                         ),
-                        Padding(
+                        Container(
                           padding: EdgeInsets.symmetric(
-                            horizontal: getProportionateScreenWidth(15),
-                            vertical: getProportionateScreenHeight(5),
-                          ),
+                              horizontal: getProportionateScreenWidth(15)),
+                          margin: EdgeInsets.only(
+                              bottom: getProportionateScreenHeight(15)),
                           child: Row(
                             children: [
                               Expanded(
@@ -177,6 +179,7 @@ class _PdpaPageState extends State<PdpaPage> {
                             ],
                           ),
                         ),
+                        Divider(),
                         Container(
                           margin: EdgeInsets.only(
                               bottom: getProportionateScreenHeight(15)),
@@ -201,7 +204,7 @@ class _PdpaPageState extends State<PdpaPage> {
                             vertical: getProportionateScreenHeight(5),
                           ),
                           child: Text(
-                            'EZtrip ให้ความสำคัญต่อข้อมูลส่วนบุคคลของคุณ โดยข้อมูลข้างต้นจะนำไปใช้ในการพัฒนาและปรับปรุงระบบแนะนำให้มีประสิทธิภาพยิ่งขึ้น เพื่อให้คุณได้รับประสบการณ์การใช้งานที่ดีและตรงใจ ทั้งนี้ ข้อมูลจะถูกจัดเก็บไว้ในฐานข้อมูลของระบบ โดยไม่มีการเปิดเผยให้ผู้ใช้อื่นเห็นหรือเผยแพร่ออกสู่สาธารณะ',
+                            'EZtrip ให้ความสำคัญต่อข้อมูลส่วนบุคคลของคุณ โดยข้อมูลข้างต้นจะนำไปใช้ในการพัฒนาและปรับปรุงระบบแนะนำให้มีประสิทธิภาพยิ่งขึ้น เพื่อให้คุณได้รับประสบการณ์การใช้งานที่ดีและประทับใจ ทั้งนี้ ข้อมูลจะถูกจัดเก็บไว้ในฐานข้อมูลของระบบ โดยไม่มีการเปิดเผยให้ผู้ใช้อื่นเห็นหรือเผยแพร่ออกสู่สาธารณะ',
                             style: FontAssets.bodyText,
                           ),
                         ),
@@ -234,7 +237,9 @@ class _PdpaPageState extends State<PdpaPage> {
                       horizontal: getProportionateScreenWidth(15),
                     ),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => loginViewModel.validateData()
+                          ? loginViewModel.goToHomePage(context)
+                          : null,
                       child: Text(
                         'ยืนยันข้อมูล',
                         style: TextStyle(
@@ -243,7 +248,9 @@ class _PdpaPageState extends State<PdpaPage> {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        primary: Palette.PrimaryColor,
+                        primary: loginViewModel.validateData()
+                            ? Palette.PrimaryColor
+                            : Palette.InfoText,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5),
                         ),
