@@ -4,6 +4,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics import pairwise_distances
 from sklearn.model_selection import train_test_split
 
+#test
 # g = "/recommendation/rating_final.csv"
 # df_restaurant = pd.read_csv(g)
 df_restaurant = pd.read_csv("C:/Users/User/Desktop/Project/Project/Git/rating_final.csv")
