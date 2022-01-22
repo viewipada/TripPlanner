@@ -34,7 +34,7 @@ module.exports = (sequelize, Sequelize) => {
       defaultValue: "Angthong",
     },
     averageRating: {
-      type: Sequelize.FLOAT,
+      type: Sequelize.DOUBLE,
     },
     totalReview: {
       type: Sequelize.INTEGER,
