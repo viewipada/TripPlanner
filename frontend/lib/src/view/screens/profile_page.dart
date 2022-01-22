@@ -22,12 +22,6 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   @override
-  void initState() {
-    Provider.of<ProfileViewModel>(context, listen: false).getMyProfile();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     final profileViewModel = Provider.of<ProfileViewModel>(context);
@@ -129,10 +123,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                           ),
                                           ListTile(
                                             title: Text(
-                                              'แก้ไขข้อมูลผู้ใช้',
+                                              'แก้ไขข้อมูลส่วนตัว',
                                               style: FontAssets.bodyText,
                                             ),
-                                            onTap: () {},
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                              profileViewModel
+                                                  .goToEditProfile(context);
+                                            },
                                           ),
                                           ListTile(
                                             title: Text(
