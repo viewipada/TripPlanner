@@ -1,7 +1,9 @@
+const { response } = require("express");
 const db = require("../models");
 const Location = db.locations;
 const Review = db.reviews;
 const User = db.users;
+const Duration = db.settingDurations;
 
 exports.create = (req, res) => {
   // Validate request
@@ -43,7 +45,6 @@ exports.findOne = async (req, res) => {
   const { locationId } = req.params;
 
   let locationData = await Location.findOne({ where: { locationId }, raw: true });
-  console.log(locationData);
 
   let reviewData = await Review.findAll({
     where: {
@@ -52,10 +53,20 @@ exports.findOne = async (req, res) => {
     raw: true,
   });
 
-  console.log(reviewData);
+  console.log(locationData.category);
+  let durationData = await Promise.all(
+    Duration.findOne({
+      where: {
+        category: locationData.category,
+      },
+      raw: true,
+    })
+  ).catch(() => {});
+  console.log(durationData);
+
   if (reviewData == []) locationData.reviewers = [];
   else {
-    console.log(5555555);
+    //console.log(5555555);
     const data = await Promise.all(
       reviewData.map(
         async ({
@@ -85,8 +96,11 @@ exports.findOne = async (req, res) => {
         }
       )
     );
+
     locationData.reviewers = data;
   }
+
+  console.log(locationData);
 
   return res.status(200).json(locationData);
 };
