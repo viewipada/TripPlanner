@@ -259,7 +259,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ],
                                 ),
                               ),
-                              createLocationTabEmpty(),
+                              createLocationTabEmpty(context, profileViewModel),
                             ],
                           ),
                         ),
@@ -278,7 +278,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-Widget createLocationTabEmpty() {
+Widget createLocationTabEmpty(context, ProfileViewModel profileViewModel) {
   return Column(
     children: [
       Padding(
@@ -293,7 +293,7 @@ Widget createLocationTabEmpty() {
         ),
       ),
       ElevatedButton.icon(
-        onPressed: () {},
+        onPressed: () => profileViewModel.goToCreateLocationPage(context),
         icon: Icon(
           Icons.add,
           color: Colors.white,

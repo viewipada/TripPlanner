@@ -6,6 +6,12 @@ class ImageAssets {
   static const String homeBanner = 'assets/images/home_banner.png';
   static const String noPreview = 'assets/images/no_preview.png';
   static const String myLocation = 'assets/images/my_location.png';
+  static const String loginBackground = 'assets/images/login_bg.png';
+  static const String pdpaBackground = 'assets/images/pdpa.jpg';
+  static const String boarding_1 = 'assets/images/boarding_1.png';
+  static const String boarding_2 = 'assets/images/boarding_2.png';
+  static const String boarding_3 = 'assets/images/boarding_3.png';
+  static const String boarding_4 = 'assets/images/boarding_4.png';
 }
 
 class IconAssets {
@@ -30,4 +36,10 @@ class FontAssets {
       TextStyle(color: Palette.AdditionText, fontSize: 14);
   static const TextStyle hintText =
       TextStyle(color: Palette.AdditionText, fontSize: 12);
+  static const TextStyle requiredField = TextStyle(
+      color: Palette.SecondaryColor, fontWeight: FontWeight.bold, fontSize: 16);
+}
+
+class GoogleAssets {
+  static const String googleAPI = "AIzaSyC3IbO2CjNOMP1g1F_Y7jamCp0aEu4asKE";
 }

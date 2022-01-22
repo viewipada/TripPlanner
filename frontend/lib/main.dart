@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
+import 'package:trip_planner/src/view/screens/create_location.dart';
+import 'package:trip_planner/src/view/screens/login_page.dart';
+import 'package:trip_planner/src/view/screens/pdpa_page.dart';
+import 'package:trip_planner/src/view/screens/review_page.dart';
 import 'package:trip_planner/src/view/widgets/navigation_bar.dart';
 import 'package:trip_planner/src/view_models/baggage_view_model.dart';
+import 'package:trip_planner/src/view_models/create_location_view_model.dart';
 import 'package:trip_planner/src/view_models/home_view_model.dart';
 import 'package:trip_planner/src/view_models/location_detail_view_model.dart';
+import 'package:trip_planner/src/view_models/login_view_model.dart';
 import 'package:trip_planner/src/view_models/navigation_bar_view_model.dart';
 import 'package:trip_planner/src/view_models/profile_view_model.dart';
 import 'package:trip_planner/src/view_models/review_view_model.dart';
@@ -30,6 +36,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => SearchStartPointViewModel()),
         ChangeNotifierProvider(create: (_) => SearchViewModel()),
         ChangeNotifierProvider(create: (_) => ProfileViewModel()),
+        ChangeNotifierProvider(create: (_) => LoginViewModel()),
+        ChangeNotifierProvider(create: (_) => CreateLocationViewModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -66,7 +74,11 @@ class MyApp extends StatelessWidget {
             fillColor: Colors.white,
           ),
         ),
-        home: NavigationBar(),
+        
+        home: 
+        LoginPage()
+        // NavigationBar(),
+        // PdpaPage()
       ),
     );
   }

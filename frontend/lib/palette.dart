@@ -16,6 +16,7 @@ class Palette {
   static const DeleteColor = Color(0xffD44843);
   static const BorderInputColor = Color(0xffEBECED);
   static const InfoText = Color(0xffA5ADBB);
+  static const DotNotActive = Color(0xffDAE8E2);
 
   static const MaterialColor PrimarySwatchColor = const MaterialColor(
     0xff41A4C3,
