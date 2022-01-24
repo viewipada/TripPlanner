@@ -4,6 +4,19 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics import pairwise_distances
 from sklearn.model_selection import train_test_split
 
+df_restaurant = pd.read_csv("C:/Users/User/Desktop/Project/Project/Git/rating_final.csv")
+df_restaurant_cuisine = pd.read_csv('C:/Users/User/Desktop/Project/Project/Git/chefmozcuisine.csv')
+
+x_train, x_test = train_test_split(df_restaurant, test_size = 0.30, random_state = 42)
+
+user_data = x_train.pivot(index = 'userID', columns = 'placeID', values = 'rating').fillna(0)
+
+dummy_train = x_train.pivot(index = 'userID', columns = 'placeID', values = 'rating').fillna(0)
+
+dummy_test = x_test.pivot(index = 'userID', columns = 'placeID', values = 'rating').fillna(1)
+
+
+#---------------------------------
 #test
 # g = "/recommendation/rating_final.csv"
 # df_restaurant = pd.read_csv(g)
