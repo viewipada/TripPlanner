@@ -1,5 +1,7 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI
 # from fastapi.responses import HTMLResponse
+
+# File, UploadFile
 
 app = FastAPI()
 
@@ -8,10 +10,10 @@ app = FastAPI()
 async def main():
     return {"message": "This is the Recommondation of the API"}
 
-@app.get('/name')
-def get_name(name: str):
-    return {'message': f'Welcome to recommendation {name}'}
 
+@app.get('/{name}')
+def get_name(name: str):
+    return {'Welcome to recommendation system' f'{name}'}
 
 
 # from fastapi import FastAPI
