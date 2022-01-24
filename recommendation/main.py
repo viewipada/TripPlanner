@@ -8,6 +8,11 @@ app = FastAPI()
 async def main():
     return {"message": "This is the Recommondation of the API"}
 
+@app.get('/name')
+def get_name(name: str):
+    return {'message': f'Welcome to recommendation {name}'}
+
+
 
 # from fastapi import FastAPI
 # # from colabcode import ColabCode
