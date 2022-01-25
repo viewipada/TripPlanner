@@ -26,6 +26,8 @@ class IconAssets {
 }
 
 class FontAssets {
+  static const TextStyle headingOnboarding = TextStyle(
+      color: Palette.PrimaryColor, fontSize: 20, fontWeight: FontWeight.bold);
   static const TextStyle headingText = TextStyle(
       color: Palette.HeadingText, fontSize: 20, fontWeight: FontWeight.bold);
   static const TextStyle titleText = TextStyle(
