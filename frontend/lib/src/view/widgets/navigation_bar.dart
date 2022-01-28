@@ -29,15 +29,7 @@ class _NavigationBarState extends State<NavigationBar> {
               children: [
                 HomePage(),
                 SearchPage(),
-                Container( //waiting for Something Page
-                    child: TextButton(
-                  child: Text('create trip'),
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => TripFormPage(startPointList: [])),
-                  ),
-                ),),
+                Container(),
                 ProfilePage(),
               ],
             );
