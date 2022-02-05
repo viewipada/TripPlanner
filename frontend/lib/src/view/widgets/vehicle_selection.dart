@@ -35,7 +35,7 @@ class VehicleSelection extends StatelessWidget {
                           e['title'],
                           style: e['isSelected']
                               ? TextStyle(
-                                  color: Palette.PrimaryColor,
+                                  color: Palette.AdditionText,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14)
                               : FontAssets.bodyText,
