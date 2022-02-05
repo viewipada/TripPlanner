@@ -31,6 +31,46 @@ class TripStepperViewModel with ChangeNotifier {
     },
   ];
 
+  List _vehicles = [
+    {
+      'icon': Icon(
+        Icons.directions_car_outlined,
+      ),
+      'isSelected': true,
+      'title': 'รถยนต์ส่วนตัว'
+    },
+    {
+      'icon': Icon(
+        Icons.directions_bike_outlined,
+        size: 22,
+      ),
+      'isSelected': false,
+      'title': 'จักรยาน'
+    },
+    {
+      'icon': Icon(
+        Icons.directions_bus_filled_outlined,
+      ),
+      'isSelected': false,
+      'title': 'ขนส่งสาธารณะ'
+    },
+    {
+      'icon': Icon(
+        Icons.directions_walk_outlined,
+      ),
+      'isSelected': false,
+      'title': 'เดินเท้า'
+    },
+    {
+      'icon': Icon(
+        Icons.car_rental_outlined,
+        size: 28,
+      ),
+      'isSelected': false,
+      'title': 'รถเช่า'
+    },
+  ];
+
   void go(int index) {
     if (index == -1 && _index <= 0) {
       print("it's first Step!");
@@ -51,6 +91,15 @@ class TripStepperViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  void selectedVehicle(vehicle) {
+    vehicles.forEach((element) {
+      element['isSelected'] = false;
+    });
+    vehicle['isSelected'] = true;
+    notifyListeners();
+  }
+
   List get steps => _steps;
   int get index => _index;
+  List get vehicles => _vehicles;
 }
