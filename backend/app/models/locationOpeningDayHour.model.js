@@ -3,17 +3,14 @@ module.exports = (sequelize, Sequelize) => {
     locationId: {
       type: Sequelize.INTEGER,
     },
-    dayWork: {
-      type: Sequelize.DATE,
-    },
-    startWork: {
-      type: Sequelize.TIME,
-    },
-    stopWork: {
-      type: Sequelize.TIME,
-    },
-    status: {
-      type: Sequelize.BOOLEAN,
+    openingDayHour: {
+      type: Sequelize.STRING,
+      get: function () {
+        return JSON.parse(this.getDataValue("openingDayhour"));
+      },
+      set: function (val) {
+        return this.setDataValue("openingDayhour", JSON.stringify(val));
+      },
     },
   });
   return LocationOpeningDayHour;

@@ -4,6 +4,9 @@ module.exports = (sequelize, Sequelize) => {
       unique: true,
       type: Sequelize.STRING(15),
     },
+    password: {
+      type: Sequelize.TEXT,
+    },
     imgUrl: {
       type: Sequelize.STRING,
     },

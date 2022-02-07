@@ -4,6 +4,7 @@ const Location = db.locations;
 const Review = db.reviews;
 const User = db.users;
 const Duration = db.settingDurations;
+const OpeningDayHour = db.locationOpeningDayHours;
 
 exports.create = (req, res) => {
   // Validate request
@@ -21,6 +22,12 @@ exports.create = (req, res) => {
   Location.create(location)
     .then((data) => {
       res.status(201).send(data);
+
+      const openingDayHourData = {
+        location: data.locationId,
+        openingDayHour: req.body.openingDayHour,
+      };
+      OpeningDayHour.create(openingDayHourData);
     })
     .catch((err) => {
       res.status(500).send({
@@ -53,7 +60,10 @@ exports.findOne = async (req, res) => {
     raw: true,
   });
 
-  console.log(locationData.category);
+  console.log("reviewData : " + reviewData);
+
+  console.log("category : " + locationData.category);
+
   let durationData = await Promise.all(
     Duration.findOne({
       where: {
@@ -62,11 +72,10 @@ exports.findOne = async (req, res) => {
       raw: true,
     })
   ).catch(() => {});
-  console.log(durationData);
+  console.log("duration : " + durationData);
 
-  if (reviewData == []) locationData.reviewers = [];
+  if (reviewData.length == 0) locationData.reviewers = [];
   else {
-    //console.log(5555555);
     const data = await Promise.all(
       reviewData.map(
         async ({
@@ -78,12 +87,17 @@ exports.findOne = async (req, res) => {
           reviewImg3,
           createdAt,
         }) => {
-          let { imgUrl: profileImage, username } = await User.findOne({
-            where: {
-              id: userId,
-            },
-            raw: true,
-          });
+          try {
+            console.log(123456);
+            let { imgUrl: profileImage, username } = await User.findOne({
+              where: {
+                id: userId,
+              },
+              raw: true,
+            });
+          } catch (error) {
+            console.error(error);
+          }
 
           return {
             profileImage,
@@ -95,7 +109,7 @@ exports.findOne = async (req, res) => {
           };
         }
       )
-    );
+    ).catch(() => {});
 
     locationData.reviewers = data;
   }
