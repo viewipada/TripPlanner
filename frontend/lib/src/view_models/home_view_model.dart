@@ -4,6 +4,7 @@ import 'package:trip_planner/src/models/response/location_card_response.dart';
 import 'package:trip_planner/src/models/response/trip_card_response.dart';
 import 'package:trip_planner/src/services/home_service.dart';
 import 'package:trip_planner/src/view/screens/location_detail_page.dart';
+import 'package:trip_planner/src/view/screens/trip_form_page.dart';
 
 class HomeViewModel with ChangeNotifier {
   List<LocationCardResponse> _hotLocationList = [];
@@ -37,6 +38,13 @@ class HomeViewModel with ChangeNotifier {
       context,
       MaterialPageRoute(
           builder: (context) => LocationDetailPage(locationId: locationId)),
+    );
+  }
+
+  void goToTripFormPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => TripFormPage(startPointList: [])),
     );
   }
 

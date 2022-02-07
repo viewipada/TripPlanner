@@ -46,6 +46,9 @@ class _ReviewPageState extends State<ReviewPage> {
             onPressed: () => showDialog<String>(
               context: context,
               builder: (BuildContext context) => AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 title: const Text(
                   'ต้องการยกเลิกรีวิวหรือไม่',
                   style: TextStyle(
@@ -78,7 +81,7 @@ class _ReviewPageState extends State<ReviewPage> {
                       reviewViewModel.goBack(context);
                     },
                     child: const Text(
-                      'ยกเลิกรีวิว',
+                      'ยกเลิก',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.white,

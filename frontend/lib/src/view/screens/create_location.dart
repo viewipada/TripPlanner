@@ -33,6 +33,9 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
         context: context,
         builder: (BuildContext context) => StatefulBuilder(
           builder: (context, setState) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
             title: Text(
               'ตั้งเวลา${day['day']}',
               style: TextStyle(
@@ -160,6 +163,9 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
             onPressed: () => showDialog<String>(
               context: context,
               builder: (BuildContext context) => AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 title: const Text(
                   'ต้องการยกเลิกสร้างสถานที่หรือไม่',
                   style: TextStyle(
@@ -865,55 +871,13 @@ Widget Subtitle(String text, String symbol) {
   );
 }
 
-Widget addImageButton(CreateLocationViewModel createLocationViewModel,
-    ImageSource source, IconData iconData, String title) {
-  final _color = createLocationViewModel.images != null
-      ? Palette.AdditionText
-      : Palette.PrimaryColor;
-
-  return Expanded(
-    child: ElevatedButton(
-      onPressed: () {
-        createLocationViewModel.pickImageFromSource(source);
-      },
-      style: ElevatedButton.styleFrom(
-        shadowColor: Colors.transparent,
-        padding: EdgeInsets.symmetric(
-          vertical: getProportionateScreenHeight(10),
-        ),
-        primary: Colors.white,
-        side: BorderSide(
-          width: 1,
-          color: _color,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5),
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            iconData,
-            color: _color,
-          ),
-          Text(
-            title,
-            style: TextStyle(
-              color: _color,
-              fontSize: 14,
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
 alertDialog(BuildContext context, String title) {
   return showDialog<String>(
     context: context,
     builder: (BuildContext _context) => AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
       title: Text(
         title,
         style: TextStyle(

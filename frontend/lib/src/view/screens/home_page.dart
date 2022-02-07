@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
+import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/view/widgets/baggage_cart.dart';
 import 'package:trip_planner/src/view/widgets/loading.dart';
@@ -46,6 +47,7 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 child: Image.asset(
@@ -53,6 +55,46 @@ class _HomePageState extends State<HomePage> {
                   fit: BoxFit.fitWidth,
                 ),
               ),
+              Container(
+                padding: EdgeInsets.only(
+                  top: getProportionateScreenHeight(15),
+                ),
+                margin: EdgeInsets.symmetric(
+                    horizontal: getProportionateScreenWidth(15)),
+                child: Text(
+                  'สร้างทริปง่าย ๆ ได้ด้วยตัวคุณ',
+                  textAlign: TextAlign.start,
+                  style: FontAssets.titleText,
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                height: getProportionateScreenHeight(48),
+                margin: EdgeInsets.symmetric(
+                  vertical: getProportionateScreenHeight(10),
+                  horizontal: getProportionateScreenWidth(15),
+                ),
+                child: ElevatedButton(
+                  onPressed: () => homeViewModel.goToTripFormPage(context),
+                  child: Text(
+                    'เริ่มสร้างทริป',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Palette.PrimaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: getProportionateScreenHeight(15),
+              ),
+              Divider(),
               FutureBuilder(
                 future: Provider.of<HomeViewModel>(context, listen: false)
                     .getHotLocationList(),

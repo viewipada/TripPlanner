@@ -60,6 +60,9 @@ class _TripFormPageState extends State<TripFormPage> {
         showDialog<String>(
           context: context,
           builder: (BuildContext context) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
             title: const Text(
               'ต้องการยกเลิกทริปหรือไม่',
               style: TextStyle(
@@ -88,11 +91,11 @@ class _TripFormPageState extends State<TripFormPage> {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context, 'ยกเลิกทริป');
+                  Navigator.pop(context, 'ยกเลิก');
                   tripFormViewModel.cancelTrip(context);
                 },
                 child: const Text(
-                  'ยกเลิกทริป',
+                  'ยกเลิก',
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.white,
@@ -479,6 +482,9 @@ alertDialog(BuildContext context, String title) {
   return showDialog<String>(
     context: context,
     builder: (BuildContext _context) => AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
       title: Text(
         title,
         style: TextStyle(

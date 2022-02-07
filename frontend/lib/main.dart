@@ -1,3 +1,4 @@
+import 'package:enhance_stepper/enhance_stepper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
@@ -5,6 +6,7 @@ import 'package:trip_planner/src/view/screens/create_location.dart';
 import 'package:trip_planner/src/view/screens/login_page.dart';
 import 'package:trip_planner/src/view/screens/pdpa_page.dart';
 import 'package:trip_planner/src/view/screens/review_page.dart';
+import 'package:trip_planner/src/view/screens/trip_stepper_page.dart';
 import 'package:trip_planner/src/view/widgets/navigation_bar.dart';
 import 'package:trip_planner/src/view_models/baggage_view_model.dart';
 import 'package:trip_planner/src/view_models/create_location_view_model.dart';
@@ -17,6 +19,7 @@ import 'package:trip_planner/src/view_models/review_view_model.dart';
 import 'package:trip_planner/src/view_models/search_start_point_view_model.dart';
 import 'package:trip_planner/src/view_models/trip_form_view_model.dart';
 import 'package:trip_planner/src/view_models/search_view_model.dart';
+import 'package:trip_planner/src/view_models/trip_stepper_view_model.dart';
 
 void main() {
   runApp(MyApp());
@@ -38,48 +41,51 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ProfileViewModel()),
         ChangeNotifierProvider(create: (_) => LoginViewModel()),
         ChangeNotifierProvider(create: (_) => CreateLocationViewModel()),
+        ChangeNotifierProvider(create: (_) => TripStepperViewModel()),
       ],
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'EZtrip',
-        theme: ThemeData(
-          primarySwatch: Palette.PrimarySwatchColor,
-          scaffoldBackgroundColor: Palette.BackgroundColor,
-          fontFamily: 'Sukhumvit',
-          dividerTheme: DividerThemeData(
-            color: Palette.Outline,
-            space: 0,
-            thickness: 1,
-          ),
-          unselectedWidgetColor: Palette.Outline,
-          inputDecorationTheme: InputDecorationTheme(
-            enabledBorder: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                borderSide: BorderSide(color: Palette.BorderInputColor)),
-            focusedBorder: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                borderSide: BorderSide(color: Palette.PrimaryColor, width: 2)),
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                borderSide: BorderSide(color: Palette.BorderInputColor)),
-            hintStyle: TextStyle(
-              fontSize: 14,
-              color: Palette.InfoText,
+          debugShowCheckedModeBanner: false,
+          title: 'EZtrip',
+          theme: ThemeData(
+            canvasColor: Colors.white,
+            primarySwatch: Palette.PrimarySwatchColor,
+            scaffoldBackgroundColor: Palette.BackgroundColor,
+            fontFamily: 'Sukhumvit',
+            dividerTheme: DividerThemeData(
+              color: Palette.Outline,
+              space: 0,
+              thickness: 1,
             ),
-            contentPadding: EdgeInsets.symmetric(
-              vertical: 15,
-              horizontal: 15,
+            unselectedWidgetColor: Palette.Outline,
+            inputDecorationTheme: InputDecorationTheme(
+              enabledBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderSide: BorderSide(color: Palette.BorderInputColor)),
+              focusedBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderSide:
+                      BorderSide(color: Palette.PrimaryColor, width: 2)),
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderSide: BorderSide(color: Palette.BorderInputColor)),
+              hintStyle: TextStyle(
+                fontSize: 14,
+                color: Palette.InfoText,
+              ),
+              contentPadding: EdgeInsets.symmetric(
+                vertical: 15,
+                horizontal: 15,
+              ),
+              filled: true,
+              fillColor: Colors.white,
             ),
-            filled: true,
-            fillColor: Colors.white,
           ),
-        ),
-        
-        home: 
-        LoginPage()
-        // NavigationBar(),
-        // PdpaPage()
-      ),
+          home:
+              // LoginPage()
+              TripStepperPage()
+          // NavigationBar(),
+          // PdpaPage()
+          ),
     );
   }
 }
