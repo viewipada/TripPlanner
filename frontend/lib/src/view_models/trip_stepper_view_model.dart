@@ -61,14 +61,6 @@ class TripStepperViewModel with ChangeNotifier {
       'isSelected': false,
       'title': 'เดินเท้า'
     },
-    {
-      'icon': Icon(
-        Icons.car_rental_outlined,
-        size: 28,
-      ),
-      'isSelected': false,
-      'title': 'รถเช่า'
-    },
   ];
 
   void go(int index) {

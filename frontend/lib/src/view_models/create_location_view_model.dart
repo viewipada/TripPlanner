@@ -243,6 +243,63 @@ class CreateLocationViewModel with ChangeNotifier {
   }
 
   void goBack(BuildContext context) {
+    _images = null;
+    _knowOpeningHour = true;
+    _locationType = [];
+    _dayOfWeek = [
+      {
+        'day': 'วันจันทร์',
+        'isOpening': false,
+        'openTime': '9:00',
+        'closedTime': '16:00'
+      },
+      {
+        'day': 'วันอังคาร',
+        'isOpening': false,
+        'openTime': '9:00',
+        'closedTime': '16:00'
+      },
+      {
+        'day': 'วันพุธ',
+        'isOpening': false,
+        'openTime': '9:00',
+        'closedTime': '16:00'
+      },
+      {
+        'day': 'วันพฤหัสบดี',
+        'isOpening': false,
+        'openTime': '9:00',
+        'closedTime': '16:00'
+      },
+      {
+        'day': 'วันศุกร์',
+        'isOpening': false,
+        'openTime': '9:00',
+        'closedTime': '16:00'
+      },
+      {
+        'day': 'วันเสาร์',
+        'isOpening': false,
+        'openTime': '9:00',
+        'closedTime': '16:00'
+      },
+      {
+        'day': 'วันอาทิตย์',
+        'isOpening': false,
+        'openTime': '9:00',
+        'closedTime': '16:00'
+      },
+    ];
+    _provinceLatLng = null;
+    _openingEveryday = false;
+    _locationCategoryValue = null;
+    _locationTypeValue = null;
+    _provinceValue = null;
+    _locationCategoryValid = true;
+    _locationTypeValid = true;
+    _provinceValid = true;
+    _locationPin = null;
+    _locationPinValid = true;
     Navigator.pop(context);
   }
 
