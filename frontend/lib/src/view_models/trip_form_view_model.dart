@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
 import 'package:trip_planner/src/view/screens/search_start_point_page.dart';
+import 'package:trip_planner/src/view/screens/trip_stepper_page.dart';
 
 class TripFormViewModel with ChangeNotifier {
   DateTime? _date;
@@ -69,6 +70,10 @@ class TripFormViewModel with ChangeNotifier {
             description: startPointFromGoogle['description']!),
       );
     }
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => TripStepperPage()),
+    );
   }
 
   void updateTripNameValue(String tripName) {

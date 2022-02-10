@@ -62,6 +62,7 @@ class TripStepperViewModel with ChangeNotifier {
       'title': 'เดินเท้า'
     },
   ];
+  List<int> _items = List<int>.generate(50, (int index) => index);
 
   void go(int index) {
     if (index == -1 && _index <= 0) {
@@ -91,7 +92,17 @@ class TripStepperViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  void onReorder(int oldIndex, int newIndex) {
+    if (oldIndex < newIndex) {
+      newIndex -= 1;
+    }
+    final int item = _items.removeAt(oldIndex);
+    _items.insert(newIndex, item);
+    notifyListeners();
+  }
+
   List get steps => _steps;
   int get index => _index;
   List get vehicles => _vehicles;
+  List<int> get items => _items;
 }

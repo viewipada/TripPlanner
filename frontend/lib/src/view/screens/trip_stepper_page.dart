@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
+import 'package:trip_planner/src/view/widgets/travel_step_selection.dart';
 import 'package:trip_planner/src/view/widgets/vehicle_selection.dart';
 import 'package:trip_planner/src/view_models/trip_stepper_view_model.dart';
 
@@ -83,10 +84,12 @@ class _TripStepperPageState extends State<TripStepperPage> {
                   content: e['title'] == 'พาหนะ'
                       ? VehicleSelection(
                           tripStepperViewModel: tripStepperViewModel)
-                      : Container(
-                          height: 800,
-                          color: Colors.green,
-                        ),
+                      : e['title'] == 'ที่เที่ยว'
+                          ? TravelStepSelection(tripStepperViewModel: tripStepperViewModel)
+                          : Container(
+                              height: 800,
+                              color: Colors.green,
+                            ),
                 ),
               )
               .toList(),
