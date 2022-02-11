@@ -58,18 +58,18 @@ db.trips.hasMany(db.tripItems, { foreignKey: "tripId", sourceKey: "tripId" });
 
 //db.baggage.hasMany(db.locations, { foreignKey: "locationId", sourceKey: "locationId" });
 
-db.users.hasMany(db.reviews, { foreingkey: "userId", sourceKey: "id" });
+//db.users.hasMany(db.reviews, { foreingkey: "userId", sourceKey: "id" });
 
-db.users.hasMany(db.trips, { foriengkey: "userId", sourceKey: "id" });
+//db.users.hasMany(db.trips, { foriengkey: "userId", sourceKey: "id" });
 
-db.users.hasMany(db.checkIns, { foriengkey: "userId", sourceKey: "id" });
+//db.users.hasMany(db.checkIns, { foriengkey: "userId", sourceKey: "id" });
 
-db.users.hasMany(db.userInterested, { foriengkey: "userId", sourceKey: "id" });
+//db.users.hasMany(db.userInterested, { foriengkey: "userId", sourceKey: "id" });
 
-db.users.hasMany(db.activities, { foriengkey: "userId", sourceKey: "id" });
+//db.users.hasMany(db.activities, { foriengkey: "userId", sourceKey: "id" });
 
-db.users.hasOne(db.baggage, { foriengkey: "userId", sourceKey: "id" });
+//db.users.hasOne(db.baggage, { foriengkey: "userId", sourceKey: "id" });
 
-db.users.hasMany(db.settingDurations, { foriengkey: "userId", sourceKey: "id" });
+//db.users.hasMany(db.settingDurations, { foriengkey: "userId", sourceKey: "id" });
 
 module.exports = db;

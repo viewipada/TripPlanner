@@ -109,7 +109,9 @@ exports.findOne = async (req, res) => {
           };
         }
       )
-    ).catch(() => {});
+    ).catch((err) => {
+      console.log(err);
+    });
 
     locationData.reviewers = data;
   }
