@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -16,6 +18,8 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
+db.sequelize.sync();
+
 // simple route
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to API application." });
@@ -25,6 +29,7 @@ require("./app/routes/baggage.routes")(app);
 require("./app/routes/location.routes")(app);
 require("./app/routes/review.routes")(app);
 require("./app/routes/file.routes")(app);
+require("./app/routes/authen.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
