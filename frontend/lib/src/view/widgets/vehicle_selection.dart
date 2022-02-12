@@ -30,7 +30,12 @@ class VehicleSelection extends StatelessWidget {
                     children: [
                       ListTile(
                         tileColor: Colors.white,
-                        leading: e['icon'],
+                        leading: e['icon'] == Icons.directions_bike_outlined
+                            ? Icon(
+                                e['icon'],
+                                size: 22,
+                              )
+                            : Icon(e['icon']),
                         title: Text(
                           e['title'],
                           style: e['isSelected']

@@ -80,13 +80,13 @@ class TravelStepSelection extends StatelessWidget {
               return Material(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.transparent,
+                    color: Palette.BackgroundColor,
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 0,
-                        blurRadius: 1,
+                        blurRadius: 3,
                         offset: Offset(2, 4), // changes position of shadow
                       ),
                     ],
@@ -106,125 +106,152 @@ class TravelStepSelection extends StatelessWidget {
 }
 
 Widget buildTripItem(int index, TripStepperViewModel tripStepperViewModel) {
-  return Container(
-    // height: getProportionateScreenHeight(90),
+  return Column(
     key: Key('$index'),
-    margin: EdgeInsets.symmetric(vertical: getProportionateScreenHeight(5)),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.3),
-          spreadRadius: 0,
-          blurRadius: 1,
-          offset: Offset(2, 4), // changes position of shadow
-        ),
-      ],
-    ),
-    child: Row(
-      children: [
-        Card(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10.0),
-            bottomLeft: Radius.circular(10.0),
-          )),
-          child: Image.network(
-            tripStepperViewModel.items[index]['imageUrl'],
-            fit: BoxFit.cover,
-            height: getProportionateScreenHeight(80),
-            width: getProportionateScreenHeight(80),
-          ),
-          clipBehavior: Clip.antiAlias,
-        ),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(
-              getProportionateScreenWidth(10),
-              getProportionateScreenHeight(10),
-              0,
-              0,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '${tripStepperViewModel.items.indexOf(tripStepperViewModel.items[index]) + 1}. ${tripStepperViewModel.items[index]['locationName']}',
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: TextStyle(
-                    color: Palette.AdditionText,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      tripStepperViewModel.items[index]['drivingDuration'] == null
+          ? SizedBox()
+          : Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: getProportionateScreenHeight(5),
+                horizontal: getProportionateScreenWidth(10),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    tripStepperViewModel.vehiclesSelected,
+                    color: Palette.InfoText,
+                    size: 18,
                   ),
+                  Text(
+                    '  ${tripStepperViewModel.items[index]['drivingDuration']} min',
+                    style: FontAssets.hintText,
+                  ),
+                ],
+              ),
+            ),
+      Container(
+        // height: getProportionateScreenHeight(90),
+        margin: EdgeInsets.symmetric(vertical: getProportionateScreenHeight(5)),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 0,
+              blurRadius: 1,
+              offset: Offset(2, 4), // changes position of shadow
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10.0),
+                bottomLeft: Radius.circular(10.0),
+              )),
+              child: Image.network(
+                tripStepperViewModel.items[index]['imageUrl'],
+                fit: BoxFit.cover,
+                height: getProportionateScreenHeight(80),
+                width: getProportionateScreenHeight(80),
+              ),
+              clipBehavior: Clip.antiAlias,
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                  getProportionateScreenWidth(10),
+                  getProportionateScreenHeight(10),
+                  0,
+                  0,
                 ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    TextButton.icon(
-                      icon: Icon(
-                        Icons.access_time_rounded,
-                        color: Palette.LightSecondary,
-                        size: 18,
+                    Text(
+                      '${tripStepperViewModel.items.indexOf(tripStepperViewModel.items[index]) + 1}. ${tripStepperViewModel.items[index]['locationName']}',
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: TextStyle(
+                        color: Palette.AdditionText,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
                       ),
-                      label: Text(
-                        '${tripStepperViewModel.items[index]['startTime']}',
-                        style: FontAssets.hintText,
-                      ),
-                      style: ButtonStyle(
-                        overlayColor:
-                            MaterialStateProperty.all(Colors.transparent),
-                        padding: MaterialStateProperty.all(EdgeInsets.zero),
-                        alignment: Alignment.bottomLeft,
-                      ),
-                      onPressed: () => print('time'),
                     ),
-                    TextButton.icon(
-                      icon: Icon(
-                        Icons.place_outlined,
-                        color: Palette.PrimaryColor,
-                        size: 18,
-                      ),
-                      label: Text(
-                        '${tripStepperViewModel.items[index]['distance']}',
-                        style: FontAssets.hintText,
-                      ),
-                      style: ButtonStyle(
-                        overlayColor:
-                            MaterialStateProperty.all(Colors.transparent),
-                        padding: MaterialStateProperty.all(EdgeInsets.zero),
-                        alignment: Alignment.bottomLeft,
-                      ),
-                      onPressed: () => null,
-                    ),
-                    TextButton.icon(
-                      icon: Icon(
-                        Icons.hourglass_empty_rounded,
-                        color: Palette.SecondaryColor,
-                        size: 18,
-                      ),
-                      label: Text(
-                        '${tripStepperViewModel.items[index]['duration']}',
-                        style: FontAssets.hintText,
-                      ),
-                      style: ButtonStyle(
-                        overlayColor:
-                            MaterialStateProperty.all(Colors.transparent),
-                        padding: MaterialStateProperty.all(EdgeInsets.zero),
-                        alignment: Alignment.bottomLeft,
-                      ),
-                      onPressed: () => null,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton.icon(
+                          icon: Icon(
+                            Icons.access_time_rounded,
+                            color: Palette.LightSecondary,
+                            size: 18,
+                          ),
+                          label: Text(
+                            '${tripStepperViewModel.items[index]['startTime']}',
+                            style: FontAssets.hintText,
+                          ),
+                          style: ButtonStyle(
+                            overlayColor:
+                                MaterialStateProperty.all(Colors.transparent),
+                            padding: MaterialStateProperty.all(EdgeInsets.zero),
+                            alignment: Alignment.bottomLeft,
+                          ),
+                          onPressed: () => print('time'),
+                        ),
+                        TextButton.icon(
+                          icon: Icon(
+                            Icons.place_outlined,
+                            color: Palette.PrimaryColor,
+                            size: 18,
+                          ),
+                          label: Text(
+                            '${tripStepperViewModel.items[index]['distance']}',
+                            style: FontAssets.hintText,
+                          ),
+                          style: ButtonStyle(
+                            overlayColor:
+                                MaterialStateProperty.all(Colors.transparent),
+                            padding: MaterialStateProperty.all(EdgeInsets.zero),
+                            alignment: Alignment.bottomLeft,
+                          ),
+                          onPressed: () => null,
+                        ),
+                        TextButton.icon(
+                          icon: Icon(
+                            Icons.hourglass_empty_rounded,
+                            color: Palette.SecondaryColor,
+                            size: 18,
+                          ),
+                          label: Text(
+                            '${tripStepperViewModel.items[index]['duration']}',
+                            style: FontAssets.hintText,
+                          ),
+                          style: ButtonStyle(
+                            overlayColor:
+                                MaterialStateProperty.all(Colors.transparent),
+                            padding: MaterialStateProperty.all(EdgeInsets.zero),
+                            alignment: Alignment.bottomLeft,
+                          ),
+                          onPressed: () => null,
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
-      ],
-    ),
+      ),
+    ],
   );
 }

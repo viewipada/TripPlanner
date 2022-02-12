@@ -33,31 +33,22 @@ class TripStepperViewModel with ChangeNotifier {
 
   List _vehicles = [
     {
-      'icon': Icon(
-        Icons.directions_car_outlined,
-      ),
+      'icon': Icons.directions_car_outlined,
       'isSelected': true,
       'title': 'รถยนต์ส่วนตัว'
     },
     {
-      'icon': Icon(
-        Icons.directions_bike_outlined,
-        size: 22,
-      ),
+      'icon': Icons.directions_bike_outlined,
       'isSelected': false,
       'title': 'จักรยาน'
     },
     {
-      'icon': Icon(
-        Icons.directions_bus_filled_outlined,
-      ),
+      'icon': Icons.directions_bus_filled_outlined,
       'isSelected': false,
       'title': 'ขนส่งสาธารณะ'
     },
     {
-      'icon': Icon(
-        Icons.directions_walk_outlined,
-      ),
+      'icon': Icons.directions_walk_outlined,
       'isSelected': false,
       'title': 'เดินเท้า'
     },
@@ -71,6 +62,7 @@ class TripStepperViewModel with ChangeNotifier {
       "startTime": "7.00",
       "distance": "จุดเริ่มต้น",
       "duration": "1 hr",
+      "drivingDuration": null,
     },
     {
       "locationId": 2,
@@ -80,6 +72,7 @@ class TripStepperViewModel with ChangeNotifier {
       "startTime": "7.00",
       "distance": "5 km",
       "duration": "1 hr",
+      "drivingDuration": 10,
     },
     {
       "locationId": 3,
@@ -89,6 +82,7 @@ class TripStepperViewModel with ChangeNotifier {
       "startTime": "7.00",
       "distance": "5 km",
       "duration": "1 hr",
+      "drivingDuration": 10,
     },
     {
       "locationId": 4,
@@ -98,6 +92,7 @@ class TripStepperViewModel with ChangeNotifier {
       "startTime": "7.00",
       "distance": "5 km",
       "duration": "1 hr",
+      "drivingDuration": 10,
     },
     {
       "locationId": 5,
@@ -107,6 +102,7 @@ class TripStepperViewModel with ChangeNotifier {
       "startTime": "7.00",
       "distance": "5 km",
       "duration": "1 hr",
+      "drivingDuration": 10,
     },
     {
       "locationId": 6,
@@ -115,6 +111,7 @@ class TripStepperViewModel with ChangeNotifier {
       "startTime": "7.00",
       "distance": "5 km",
       "duration": "1 hr",
+      "drivingDuration": 10,
     },
     {
       "locationId": 7,
@@ -124,6 +121,7 @@ class TripStepperViewModel with ChangeNotifier {
       "startTime": "7.00",
       "distance": "5 km",
       "duration": "1 hr",
+      "drivingDuration": 10,
     },
     {
       "locationId ": 8,
@@ -133,6 +131,7 @@ class TripStepperViewModel with ChangeNotifier {
       "startTime": "7.00",
       "distance": "5 km",
       "duration": "1 hr",
+      "drivingDuration": 10,
     },
     {
       "locationId": 9,
@@ -142,6 +141,7 @@ class TripStepperViewModel with ChangeNotifier {
       "startTime": "7.00",
       "distance": "5 km",
       "duration": "1 hr",
+      "drivingDuration": 10,
     },
     {
       "locationId": 10,
@@ -151,8 +151,11 @@ class TripStepperViewModel with ChangeNotifier {
       "startTime": "7.00",
       "distance": "5 km",
       "duration": "1 hr",
+      "drivingDuration": 10,
     }
   ];
+
+  IconData _vehiclesSelected = Icons.directions_car_outlined;
 
   void go(int index) {
     if (index == -1 && _index <= 0) {
@@ -179,6 +182,7 @@ class TripStepperViewModel with ChangeNotifier {
       element['isSelected'] = false;
     });
     vehicle['isSelected'] = true;
+    _vehiclesSelected = vehicle['icon'];
     notifyListeners();
   }
 
@@ -195,4 +199,5 @@ class TripStepperViewModel with ChangeNotifier {
   int get index => _index;
   List get vehicles => _vehicles;
   List get items => _items;
+  IconData get vehiclesSelected => _vehiclesSelected;
 }
