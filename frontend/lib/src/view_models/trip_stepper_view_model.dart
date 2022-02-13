@@ -59,19 +59,19 @@ class TripStepperViewModel with ChangeNotifier {
       "locationName": "วัดม่วง",
       "imageUrl":
           "https://cms.dmpcdn.com/travel/2020/05/26/fafac540-9f50-11ea-81a6-432b2bbc8436_original.jpg",
-      "startTime": "7.00",
+      "startTime": null,
       "distance": "จุดเริ่มต้น",
-      "duration": "1 hr",
-      "drivingDuration": null,
+      "duration": 15,
+      "drivingDuration": 0,
     },
     {
       "locationId": 2,
       "locationName": "บ้านหุ่นเหล็ก",
       "imageUrl":
           "https://storage.googleapis.com/swapgap-bucket/post/5190314163699712-babbd605-e3ed-407f-bdc8-dba57e81c76e",
-      "startTime": "7.00",
+      "startTime": null,
       "distance": "5 km",
-      "duration": "1 hr",
+      "duration": 15,
       "drivingDuration": 10,
     },
     {
@@ -79,9 +79,9 @@ class TripStepperViewModel with ChangeNotifier {
       "locationName": "วัดขุนอินทประมูล",
       "imageUrl":
           "https://tiewpakklang.com/wp-content/uploads/2018/09/33716.jpg",
-      "startTime": "7.00",
+      "startTime": null,
       "distance": "5 km",
-      "duration": "1 hr",
+      "duration": 15,
       "drivingDuration": 10,
     },
     {
@@ -89,9 +89,9 @@ class TripStepperViewModel with ChangeNotifier {
       "locationName": "ทะเลอ่างทอง",
       "imageUrl":
           "https://cf.bstatic.com/xdata/images/hotel/max1024x768/223087771.jpg?k=ef100bbbc40124f71134caaad8504c038caf28f281cf01b419ac191630ce1e01&o=&hp=1",
-      "startTime": "7.00",
+      "startTime": null,
       "distance": "5 km",
-      "duration": "1 hr",
+      "duration": 15,
       "drivingDuration": 10,
     },
     {
@@ -99,18 +99,18 @@ class TripStepperViewModel with ChangeNotifier {
       "locationName": "พระตำหนักคำหยาด",
       "imageUrl":
           "https://woodychannel.com/wp-content/uploads/2015/09/kam-yard-750x500.jpg",
-      "startTime": "7.00",
+      "startTime": null,
       "distance": "5 km",
-      "duration": "1 hr",
+      "duration": 30,
       "drivingDuration": 10,
     },
     {
       "locationId": 6,
       "locationName": "ตลาดศาลเจ้าโรงทอง",
       "imageUrl": "https://i.ytimg.com/vi/lZSah_8XQB8/maxresdefault.jpg",
-      "startTime": "7.00",
+      "startTime": null,
       "distance": "5 km",
-      "duration": "1 hr",
+      "duration": 45,
       "drivingDuration": 10,
     },
     {
@@ -118,9 +118,9 @@ class TripStepperViewModel with ChangeNotifier {
       "locationName": "ศูนย์ตุ๊กตาชาววังบ้านบางเสด็จ",
       "imageUrl":
           "https://www.m-culture.go.th/angthong/images/article/news464/n20170324142021_1734.jpg",
-      "startTime": "7.00",
+      "startTime": null,
       "distance": "5 km",
-      "duration": "1 hr",
+      "duration": 5,
       "drivingDuration": 10,
     },
     {
@@ -128,9 +128,9 @@ class TripStepperViewModel with ChangeNotifier {
       "locationName": "วัดท่าสุทธาวาส",
       "imageUrl":
           "https://tatapi.tourismthailand.org/tatfs/Image/CustomPOI/Picture/P03013541_1.jpeg",
-      "startTime": "7.00",
+      "startTime": null,
       "distance": "5 km",
-      "duration": "1 hr",
+      "duration": 10,
       "drivingDuration": 10,
     },
     {
@@ -138,9 +138,9 @@ class TripStepperViewModel with ChangeNotifier {
       "locationName": "วัดป่าโมกวรวิหาร",
       "imageUrl":
           "https://www.paiduaykan.com/province/central/angthong/pic/watpampke.jpg",
-      "startTime": "7.00",
+      "startTime": null,
       "distance": "5 km",
-      "duration": "1 hr",
+      "duration": 9,
       "drivingDuration": 10,
     },
     {
@@ -148,9 +148,9 @@ class TripStepperViewModel with ChangeNotifier {
       "locationName": "หมู่บ้านทำกลองเอกราช",
       "imageUrl":
           "https://www.museumsiam.org/upload/MUSEUM_211/2016_01/1451733871_734.jpg",
-      "startTime": "7.00",
+      "startTime": null,
       "distance": "5 km",
-      "duration": "1 hr",
+      "duration": 25,
       "drivingDuration": 10,
     }
   ];
@@ -192,7 +192,25 @@ class TripStepperViewModel with ChangeNotifier {
     }
     final item = _items.removeAt(oldIndex);
     _items.insert(newIndex, item);
+    if (item['startTime'] != null) calculateStartTimeForTripItem();
+    if (newIndex == 0) {
+      item['distance'] = 'จุดเริ่มต้น';
+      item['drivingDuration'] = 0;
+    }
     notifyListeners();
+  }
+
+  void setUpStartTime(DateTime time, tripItem) {
+    tripItem['startTime'] = time;
+    calculateStartTimeForTripItem();
+    notifyListeners();
+  }
+
+  void calculateStartTimeForTripItem() {
+    for (int i = 1; i < _items.length; i++) {
+      _items[i]['startTime'] = _items[i - 1]['startTime'].add(Duration(
+          minutes: _items[i - 1]['duration'] + _items[i]['drivingDuration']));
+    }
   }
 
   List get steps => _steps;

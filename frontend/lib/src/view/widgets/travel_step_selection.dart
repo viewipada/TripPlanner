@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
+import 'package:intl/intl.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
@@ -74,7 +77,7 @@ class TravelStepSelection extends StatelessWidget {
             scrollController: ScrollController(),
             itemCount: tripStepperViewModel.items.length,
             itemBuilder: (context, index) =>
-                buildTripItem(index, tripStepperViewModel),
+                buildTripItem(index, tripStepperViewModel, context),
             proxyDecorator:
                 (Widget child, int index, Animation<double> animation) {
               return Material(
@@ -105,12 +108,13 @@ class TravelStepSelection extends StatelessWidget {
   }
 }
 
-Widget buildTripItem(int index, TripStepperViewModel tripStepperViewModel) {
+Widget buildTripItem(int index, TripStepperViewModel tripStepperViewModel,
+    BuildContext context) {
   return Column(
     key: Key('$index'),
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      tripStepperViewModel.items[index]['drivingDuration'] == null
+      tripStepperViewModel.items[index]['drivingDuration'] == 0
           ? SizedBox()
           : Padding(
               padding: EdgeInsets.symmetric(
@@ -196,7 +200,13 @@ Widget buildTripItem(int index, TripStepperViewModel tripStepperViewModel) {
                             size: 18,
                           ),
                           label: Text(
-                            '${tripStepperViewModel.items[index]['startTime']}',
+                            tripStepperViewModel.items[index]['startTime'] ==
+                                    null
+                                ? 'ยังไม่ได้ตั้ง'
+                                : DateFormat("HH:mm")
+                                    .format(tripStepperViewModel.items[index]
+                                        ['startTime'])
+                                    .toString(),
                             style: FontAssets.hintText,
                           ),
                           style: ButtonStyle(
@@ -205,7 +215,43 @@ Widget buildTripItem(int index, TripStepperViewModel tripStepperViewModel) {
                             padding: MaterialStateProperty.all(EdgeInsets.zero),
                             alignment: Alignment.bottomLeft,
                           ),
-                          onPressed: () => print('time'),
+                          onPressed: () => tripStepperViewModel.items[index]
+                                      ['distance'] ==
+                                  'จุดเริ่มต้น'
+                              ? showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    content: Stack(
+                                      children: [
+                                        hourMinute24H(tripStepperViewModel,
+                                            tripStepperViewModel.items[index]),
+                                        SizedBox(
+                                          height:
+                                              getProportionateScreenHeight(118),
+                                          child: Center(
+                                            child: Text(
+                                              ':',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: Palette.PrimaryColor,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical:
+                                            getProportionateScreenHeight(5)),
+                                  ),
+                                )
+                              : null,
                         ),
                         TextButton.icon(
                           icon: Icon(
@@ -253,5 +299,23 @@ Widget buildTripItem(int index, TripStepperViewModel tripStepperViewModel) {
         ),
       ),
     ],
+  );
+}
+
+Widget hourMinute24H(TripStepperViewModel tripStepperViewModel, tripItem) {
+  // DateTime _dateTime = DateTime.now();
+  return new TimePickerSpinner(
+    time: DateTime(2022, 1, 1, 9, 0),
+    isForce2Digits: true,
+    normalTextStyle: FontAssets.hintText,
+    highlightedTextStyle: TextStyle(
+      fontSize: 16,
+      color: Palette.PrimaryColor,
+      fontWeight: FontWeight.bold,
+    ),
+    // spacing: 50,
+    itemHeight: getProportionateScreenHeight(40),
+    alignment: Alignment.center,
+    onTimeChange: (time) => tripStepperViewModel.setUpStartTime(time, tripItem),
   );
 }

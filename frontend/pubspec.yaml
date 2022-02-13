@@ -47,6 +47,7 @@ dependencies:
   map_picker: ^0.0.3
   intro_slider: ^3.0.2
   enhance_stepper: ^0.0.9
+  flutter_time_picker_spinner: ^2.0.0
   # geocoding: ^2.0.1
 
 dev_dependencies:
