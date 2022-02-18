@@ -48,6 +48,8 @@ dependencies:
   intro_slider: ^3.0.2
   enhance_stepper: ^0.0.9
   flutter_time_picker_spinner: ^2.0.0
+  sqflite: ^2.0.2
+  path_provider: ^2.0.9
   # geocoding: ^2.0.1
 
 dev_dependencies:
