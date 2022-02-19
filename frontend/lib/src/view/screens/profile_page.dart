@@ -252,7 +252,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                                       'คุณยังไม่เคยสร้างทริป'),
                                                 );
                                         } else {
-                                          return loadingTripCard('');
+                                          return Column(
+                                            children: [
+                                              ShimmerTripCard(),
+                                              ShimmerTripCard(),
+                                              ShimmerTripCard(),
+                                            ],
+                                          );
                                         }
                                       },
                                     ),

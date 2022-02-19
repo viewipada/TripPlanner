@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trip_planner/src/models/trip.dart';
+import 'package:trip_planner/src/models/trip_item.dart';
+import 'package:trip_planner/src/repository/trip_item_operations.dart';
 import 'package:trip_planner/src/repository/trips_operations.dart';
 
 class TripStepperViewModel with ChangeNotifier {
@@ -55,110 +57,9 @@ class TripStepperViewModel with ChangeNotifier {
       'title': 'เดินเท้า'
     },
   ];
-  List _items = [
-    {
-      "locationId": 1,
-      "locationName": "วัดม่วง",
-      "imageUrl":
-          "https://cms.dmpcdn.com/travel/2020/05/26/fafac540-9f50-11ea-81a6-432b2bbc8436_original.jpg",
-      "startTime": null,
-      "distance": "จุดเริ่มต้น",
-      "duration": 15,
-      "drivingDuration": 0,
-    },
-    {
-      "locationId": 2,
-      "locationName": "บ้านหุ่นเหล็ก",
-      "imageUrl":
-          "https://storage.googleapis.com/swapgap-bucket/post/5190314163699712-babbd605-e3ed-407f-bdc8-dba57e81c76e",
-      "startTime": null,
-      "distance": "5 km",
-      "duration": 15,
-      "drivingDuration": 10,
-    },
-    {
-      "locationId": 3,
-      "locationName": "วัดขุนอินทประมูล",
-      "imageUrl":
-          "https://tiewpakklang.com/wp-content/uploads/2018/09/33716.jpg",
-      "startTime": null,
-      "distance": "5 km",
-      "duration": 15,
-      "drivingDuration": 10,
-    },
-    {
-      "locationId": 4,
-      "locationName": "ทะเลอ่างทอง",
-      "imageUrl":
-          "https://cf.bstatic.com/xdata/images/hotel/max1024x768/223087771.jpg?k=ef100bbbc40124f71134caaad8504c038caf28f281cf01b419ac191630ce1e01&o=&hp=1",
-      "startTime": null,
-      "distance": "5 km",
-      "duration": 15,
-      "drivingDuration": 10,
-    },
-    {
-      "locationId": 5,
-      "locationName": "พระตำหนักคำหยาด",
-      "imageUrl":
-          "https://woodychannel.com/wp-content/uploads/2015/09/kam-yard-750x500.jpg",
-      "startTime": null,
-      "distance": "5 km",
-      "duration": 30,
-      "drivingDuration": 10,
-    },
-    {
-      "locationId": 6,
-      "locationName": "ตลาดศาลเจ้าโรงทอง",
-      "imageUrl": "https://i.ytimg.com/vi/lZSah_8XQB8/maxresdefault.jpg",
-      "startTime": null,
-      "distance": "5 km",
-      "duration": 45,
-      "drivingDuration": 10,
-    },
-    {
-      "locationId": 7,
-      "locationName": "ศูนย์ตุ๊กตาชาววังบ้านบางเสด็จ",
-      "imageUrl":
-          "https://www.m-culture.go.th/angthong/images/article/news464/n20170324142021_1734.jpg",
-      "startTime": null,
-      "distance": "5 km",
-      "duration": 5,
-      "drivingDuration": 10,
-    },
-    {
-      "locationId ": 8,
-      "locationName": "วัดท่าสุทธาวาส",
-      "imageUrl":
-          "https://tatapi.tourismthailand.org/tatfs/Image/CustomPOI/Picture/P03013541_1.jpeg",
-      "startTime": null,
-      "distance": "5 km",
-      "duration": 10,
-      "drivingDuration": 10,
-    },
-    {
-      "locationId": 9,
-      "locationName": "วัดป่าโมกวรวิหาร",
-      "imageUrl":
-          "https://www.paiduaykan.com/province/central/angthong/pic/watpampke.jpg",
-      "startTime": null,
-      "distance": "5 km",
-      "duration": 9,
-      "drivingDuration": 10,
-    },
-    {
-      "locationId": 10,
-      "locationName": "หมู่บ้านทำกลองเอกราช",
-      "imageUrl":
-          "https://www.museumsiam.org/upload/MUSEUM_211/2016_01/1451733871_734.jpg",
-      "startTime": null,
-      "distance": "5 km",
-      "duration": 25,
-      "drivingDuration": 10,
-    }
-  ];
-
   IconData _vehiclesSelected = Icons.directions_car_outlined;
   TripsOperations _tripsOperations = TripsOperations();
+  TripItemOperations _tripItemOperations = TripItemOperations();
 
   void go(int index) {
     if (index == -1 && _index <= 0) {
@@ -193,35 +94,56 @@ class TripStepperViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void onReorder(int oldIndex, int newIndex) {
+  Future<void> onReorder(
+      int oldIndex, int newIndex, List<TripItem> tripItems, Trip trip) async {
     if (oldIndex < newIndex) {
       newIndex -= 1;
     }
-    final item = _items.removeAt(oldIndex);
-    _items.insert(newIndex, item);
-    if (item['startTime'] != null) calculateStartTimeForTripItem();
-    if (newIndex == 0) {
-      item['distance'] = 'จุดเริ่มต้น';
-      item['drivingDuration'] = 0;
-    }
+
+    final item = tripItems.removeAt(oldIndex);
+    tripItems.insert(newIndex, item);
+
+    await reOrderColumnNo(tripItems, 0);
+    trip.firstLocation = tripItems[0].locationName;
+    trip.lastLocation = tripItems[tripItems.length - 1].locationName;
+    _tripsOperations.updateTrip(trip);
+    if (item.startTime != null) calculateStartTimeForTripItem(tripItems);
+    // if (newIndex == 0) {
+    //   item['distance'] = 'จุดเริ่มต้น';
+    //   item['drivingDuration'] = 0;
+    // }
     notifyListeners();
   }
 
-  void setUpStartTime(DateTime time, tripItem) {
-    tripItem['startTime'] = time;
-    calculateStartTimeForTripItem();
+  Future<void> reOrderColumnNo(List<TripItem> tripItems, int index) async {
+    for (int i = 0; i < tripItems.length; i++) {
+      tripItems[i].no = i;
+      await _tripItemOperations.updateTripItem(tripItems[i]);
+    }
+  }
+
+  void setUpStartTime(DateTime time, List<TripItem> tripItems) async {
+    tripItems[0].startTime = await time.toIso8601String();
+    await calculateStartTimeForTripItem(tripItems);
     notifyListeners();
   }
 
-  void calculateStartTimeForTripItem() {
-    for (int i = 1; i < _items.length; i++) {
-      _items[i]['startTime'] = _items[i - 1]['startTime'].add(Duration(
-          minutes: _items[i - 1]['duration'] + _items[i]['drivingDuration']));
+  Future<void> calculateStartTimeForTripItem(List<TripItem> tripItems) async {
+    for (int i = 1; i < tripItems.length; i++) {
+      tripItems[i].startTime = await DateTime.parse(tripItems[i - 1].startTime!)
+          .add(Duration(
+              minutes: tripItems[i - 1].duration +
+                  (tripItems[i].drivingDuration == null
+                      ? 0
+                      : tripItems[i].drivingDuration!)))
+          .toIso8601String();
     }
+    tripItems.forEach((item) async {
+      await _tripItemOperations.updateTripItem(item);
+    });
   }
 
   Future<List> getVehicleSelection(Trip trip) async {
-    print('vehicle => ${trip}');
     if (trip.vehicle == null) {
       _vehicles.forEach((element) async {
         element['isSelected'] = await false;
@@ -245,6 +167,5 @@ class TripStepperViewModel with ChangeNotifier {
   List get steps => _steps;
   int get index => _index;
   List get vehicles => _vehicles;
-  List get items => _items;
   IconData get vehiclesSelected => _vehiclesSelected;
 }

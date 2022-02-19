@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -7,12 +9,33 @@ import 'package:intl/intl.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
+import 'package:trip_planner/src/models/trip.dart';
+import 'package:trip_planner/src/models/trip_item.dart';
 import 'package:trip_planner/src/view_models/trip_stepper_view_model.dart';
 
-class TravelStepSelection extends StatelessWidget {
-  TravelStepSelection({required this.tripStepperViewModel});
+class TravelStepSelection extends StatefulWidget {
+  TravelStepSelection({
+    required this.tripStepperViewModel,
+    required this.tripItems,
+    required this.trip,
+  });
 
   final TripStepperViewModel tripStepperViewModel;
+  final List<TripItem> tripItems;
+  final Trip trip;
+
+  @override
+  _TravelStepSelectionState createState() => _TravelStepSelectionState(
+      this.tripStepperViewModel, this.tripItems, this.trip);
+}
+
+class _TravelStepSelectionState extends State<TravelStepSelection> {
+  final TripStepperViewModel tripStepperViewModel;
+  final List<TripItem> tripItems;
+  final Trip trip;
+
+  _TravelStepSelectionState(
+      this.tripStepperViewModel, this.tripItems, this.trip);
 
   @override
   Widget build(BuildContext context) {
@@ -75,9 +98,9 @@ class TravelStepSelection extends StatelessWidget {
             clipBehavior: Clip.antiAlias,
             shrinkWrap: true,
             scrollController: ScrollController(),
-            itemCount: tripStepperViewModel.items.length,
-            itemBuilder: (context, index) =>
-                buildTripItem(index, tripStepperViewModel, context),
+            itemCount: tripItems.length,
+            itemBuilder: (context, index) => buildTripItem(index,
+                tripStepperViewModel, context, tripItems[index], tripItems),
             proxyDecorator:
                 (Widget child, int index, Animation<double> animation) {
               return Material(
@@ -99,7 +122,8 @@ class TravelStepSelection extends StatelessWidget {
               );
             },
             onReorder: (int oldIndex, int newIndex) {
-              tripStepperViewModel.onReorder(oldIndex, newIndex);
+              tripStepperViewModel.onReorder(
+                  oldIndex, newIndex, tripItems, trip);
             },
           ),
         ),
@@ -109,12 +133,12 @@ class TravelStepSelection extends StatelessWidget {
 }
 
 Widget buildTripItem(int index, TripStepperViewModel tripStepperViewModel,
-    BuildContext context) {
+    BuildContext context, TripItem item, List<TripItem> tripItems) {
   return Column(
     key: Key('$index'),
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      tripStepperViewModel.items[index]['drivingDuration'] == 0
+      item.drivingDuration == 0
           ? SizedBox()
           : Padding(
               padding: EdgeInsets.symmetric(
@@ -130,7 +154,7 @@ Widget buildTripItem(int index, TripStepperViewModel tripStepperViewModel,
                     size: 18,
                   ),
                   Text(
-                    '  ${tripStepperViewModel.items[index]['drivingDuration']} min',
+                    '  ${item.drivingDuration} min',
                     style: FontAssets.hintText,
                   ),
                 ],
@@ -159,12 +183,19 @@ Widget buildTripItem(int index, TripStepperViewModel tripStepperViewModel,
                 topLeft: Radius.circular(10.0),
                 bottomLeft: Radius.circular(10.0),
               )),
-              child: Image.network(
-                tripStepperViewModel.items[index]['imageUrl'],
-                fit: BoxFit.cover,
-                height: getProportionateScreenHeight(80),
-                width: getProportionateScreenHeight(80),
-              ),
+              child: item.imageUrl == ""
+                  ? Image.asset(
+                      ImageAssets.noPreview,
+                      fit: BoxFit.cover,
+                      height: getProportionateScreenHeight(80),
+                      width: getProportionateScreenHeight(80),
+                    )
+                  : Image.network(
+                      item.imageUrl,
+                      fit: BoxFit.cover,
+                      height: getProportionateScreenHeight(80),
+                      width: getProportionateScreenHeight(80),
+                    ),
               clipBehavior: Clip.antiAlias,
             ),
             Expanded(
@@ -180,7 +211,7 @@ Widget buildTripItem(int index, TripStepperViewModel tripStepperViewModel,
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '${tripStepperViewModel.items.indexOf(tripStepperViewModel.items[index]) + 1}. ${tripStepperViewModel.items[index]['locationName']}',
+                      '${item.no + 1}. ${item.locationName}',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: TextStyle(
@@ -189,107 +220,113 @@ Widget buildTripItem(int index, TripStepperViewModel tripStepperViewModel,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton.icon(
-                          icon: Icon(
-                            Icons.access_time_rounded,
-                            color: Palette.LightSecondary,
-                            size: 18,
-                          ),
-                          label: Text(
-                            tripStepperViewModel.items[index]['startTime'] ==
-                                    null
-                                ? 'ยังไม่ได้ตั้ง'
-                                : DateFormat("HH:mm")
-                                    .format(tripStepperViewModel.items[index]
-                                        ['startTime'])
-                                    .toString(),
-                            style: FontAssets.hintText,
-                          ),
-                          style: ButtonStyle(
-                            overlayColor:
-                                MaterialStateProperty.all(Colors.transparent),
-                            padding: MaterialStateProperty.all(EdgeInsets.zero),
-                            alignment: Alignment.bottomLeft,
-                          ),
-                          onPressed: () => tripStepperViewModel.items[index]
-                                      ['distance'] ==
-                                  'จุดเริ่มต้น'
-                              ? showDialog<String>(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      AlertDialog(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    content: Stack(
-                                      children: [
-                                        hourMinute24H(tripStepperViewModel,
-                                            tripStepperViewModel.items[index]),
-                                        SizedBox(
-                                          height:
-                                              getProportionateScreenHeight(118),
-                                          child: Center(
-                                            child: Text(
-                                              ':',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: Palette.PrimaryColor,
-                                                fontWeight: FontWeight.bold,
+                    Padding(
+                      padding: EdgeInsets.only(
+                          right: getProportionateScreenWidth(15)),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton.icon(
+                            icon: Icon(
+                              Icons.access_time_rounded,
+                              color: Palette.LightSecondary,
+                              size: 18,
+                            ),
+                            label: Text(
+                              item.startTime == null
+                                  ? 'ยังไม่ได้ตั้ง'
+                                  : DateFormat("HH:mm")
+                                      .format(DateTime.parse(item.startTime!))
+                                      .toString(),
+                              style: FontAssets.hintText,
+                            ),
+                            style: ButtonStyle(
+                              overlayColor:
+                                  MaterialStateProperty.all(Colors.transparent),
+                              padding:
+                                  MaterialStateProperty.all(EdgeInsets.zero),
+                              alignment: Alignment.bottomLeft,
+                            ),
+                            onPressed: () => item.distance == null
+                                ? showDialog<String>(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      content: Stack(
+                                        children: [
+                                          hourMinute24H(
+                                              tripStepperViewModel, tripItems),
+                                          SizedBox(
+                                            height:
+                                                getProportionateScreenHeight(
+                                                    118),
+                                            child: Center(
+                                              child: Text(
+                                                ':',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Palette.PrimaryColor,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical:
+                                              getProportionateScreenHeight(5)),
                                     ),
-                                    contentPadding: EdgeInsets.symmetric(
-                                        vertical:
-                                            getProportionateScreenHeight(5)),
-                                  ),
-                                )
-                              : null,
-                        ),
-                        TextButton.icon(
-                          icon: Icon(
-                            Icons.place_outlined,
-                            color: Palette.PrimaryColor,
-                            size: 18,
+                                  )
+                                : null,
                           ),
-                          label: Text(
-                            '${tripStepperViewModel.items[index]['distance']}',
-                            style: FontAssets.hintText,
+                          TextButton.icon(
+                            icon: Icon(
+                              Icons.place_outlined,
+                              color: Palette.PrimaryColor,
+                              size: 18,
+                            ),
+                            label: Text(
+                              item.distance == null
+                                  ? 'จุดเริ่มต้น'
+                                  : '${item.distance}',
+                              style: FontAssets.hintText,
+                            ),
+                            style: ButtonStyle(
+                              overlayColor:
+                                  MaterialStateProperty.all(Colors.transparent),
+                              padding:
+                                  MaterialStateProperty.all(EdgeInsets.zero),
+                              alignment: Alignment.bottomLeft,
+                            ),
+                            onPressed: () => null,
                           ),
-                          style: ButtonStyle(
-                            overlayColor:
-                                MaterialStateProperty.all(Colors.transparent),
-                            padding: MaterialStateProperty.all(EdgeInsets.zero),
-                            alignment: Alignment.bottomLeft,
+                          TextButton.icon(
+                            icon: Icon(
+                              Icons.hourglass_empty_rounded,
+                              color: Palette.SecondaryColor,
+                              size: 18,
+                            ),
+                            label: Text(
+                              '${item.duration} min',
+                              style: FontAssets.hintText,
+                            ),
+                            style: ButtonStyle(
+                              overlayColor:
+                                  MaterialStateProperty.all(Colors.transparent),
+                              padding:
+                                  MaterialStateProperty.all(EdgeInsets.zero),
+                              alignment: Alignment.bottomLeft,
+                            ),
+                            onPressed: () => null,
                           ),
-                          onPressed: () => null,
-                        ),
-                        TextButton.icon(
-                          icon: Icon(
-                            Icons.hourglass_empty_rounded,
-                            color: Palette.SecondaryColor,
-                            size: 18,
-                          ),
-                          label: Text(
-                            '${tripStepperViewModel.items[index]['duration']}',
-                            style: FontAssets.hintText,
-                          ),
-                          style: ButtonStyle(
-                            overlayColor:
-                                MaterialStateProperty.all(Colors.transparent),
-                            padding: MaterialStateProperty.all(EdgeInsets.zero),
-                            alignment: Alignment.bottomLeft,
-                          ),
-                          onPressed: () => null,
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -302,10 +339,13 @@ Widget buildTripItem(int index, TripStepperViewModel tripStepperViewModel,
   );
 }
 
-Widget hourMinute24H(TripStepperViewModel tripStepperViewModel, tripItem) {
+Widget hourMinute24H(
+    TripStepperViewModel tripStepperViewModel, List<TripItem> tripItems) {
   // DateTime _dateTime = DateTime.now();
   return new TimePickerSpinner(
-    time: DateTime(2022, 1, 1, 9, 0),
+    time: tripItems[0].startTime == null
+        ? DateTime(2022, 1, 1, 9, 0)
+        : DateTime.parse(tripItems[0].startTime!),
     isForce2Digits: true,
     normalTextStyle: FontAssets.hintText,
     highlightedTextStyle: TextStyle(
@@ -316,6 +356,7 @@ Widget hourMinute24H(TripStepperViewModel tripStepperViewModel, tripItem) {
     // spacing: 50,
     itemHeight: getProportionateScreenHeight(40),
     alignment: Alignment.center,
-    onTimeChange: (time) => tripStepperViewModel.setUpStartTime(time, tripItem),
+    onTimeChange: (time) =>
+        tripStepperViewModel.setUpStartTime(time, tripItems),
   );
 }

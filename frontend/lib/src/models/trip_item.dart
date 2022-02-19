@@ -8,7 +8,7 @@ class TripItem {
   String imageUrl;
   double latitude;
   double longitude;
-  DateTime? startTime;
+  String? startTime;
   int? distance;
   int duration;
   int? drivingDuration;

@@ -8,7 +8,7 @@ class Trip {
   int totalPeople;
   int totalDay;
   int totalTripItem;
-  DateTime? startDate;
+  String? startDate;
   Trip({
     this.tripId,
     required this.tripName,
