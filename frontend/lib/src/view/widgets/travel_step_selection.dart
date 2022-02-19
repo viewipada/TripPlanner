@@ -192,7 +192,7 @@ Widget buildTripItem(int index, TripStepperViewModel tripStepperViewModel,
       );
 
   return Column(
-    key: Key('$index'),
+    key: UniqueKey(),
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       item.drivingDuration == 0

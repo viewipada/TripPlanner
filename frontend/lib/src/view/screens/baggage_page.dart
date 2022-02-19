@@ -164,7 +164,7 @@ class _BaggagePageState extends State<BaggagePage> {
                   ),
                   children: baggageViewModel.baggageList.map((item) {
                     return Slidable.builder(
-                      key: Key(item.locationName),
+                      key: UniqueKey(),
                       controller: slidableController,
                       actionPane: SlidableDrawerActionPane(),
                       actionExtentRatio: 0.25,
