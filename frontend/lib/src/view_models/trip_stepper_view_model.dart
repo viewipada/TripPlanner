@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:trip_planner/src/models/trip.dart';
+import 'package:trip_planner/src/repository/trips_operations.dart';
 
 class TripStepperViewModel with ChangeNotifier {
   int _index = 0;
@@ -156,6 +158,7 @@ class TripStepperViewModel with ChangeNotifier {
   ];
 
   IconData _vehiclesSelected = Icons.directions_car_outlined;
+  TripsOperations _tripsOperations = TripsOperations();
 
   void go(int index) {
     if (index == -1 && _index <= 0) {
@@ -177,12 +180,16 @@ class TripStepperViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void selectedVehicle(vehicle) {
+  void selectedVehicle(vehicle, Trip trip) {
     vehicles.forEach((element) {
       element['isSelected'] = false;
     });
     vehicle['isSelected'] = true;
     _vehiclesSelected = vehicle['icon'];
+
+    trip.vehicle = vehicle['title'];
+    _tripsOperations.updateTrip(trip);
+
     notifyListeners();
   }
 
@@ -211,6 +218,28 @@ class TripStepperViewModel with ChangeNotifier {
       _items[i]['startTime'] = _items[i - 1]['startTime'].add(Duration(
           minutes: _items[i - 1]['duration'] + _items[i]['drivingDuration']));
     }
+  }
+
+  Future<List> getVehicleSelection(Trip trip) async {
+    print('vehicle => ${trip}');
+    if (trip.vehicle == null) {
+      _vehicles.forEach((element) async {
+        element['isSelected'] = await false;
+      });
+      _vehicles[0]['isSelected'] = await true;
+      _vehiclesSelected = await _vehicles[0]['icon'];
+      trip.vehicle = await _vehicles[0]['title'];
+      await _tripsOperations.updateTrip(trip);
+    } else {
+      _vehicles.forEach((element) async {
+        element['isSelected'] = await false;
+        if (element['title'] == trip.vehicle) {
+          element['isSelected'] = await true;
+          _vehiclesSelected = await element['icon'];
+        }
+      });
+    }
+    return _vehicles;
   }
 
   List get steps => _steps;

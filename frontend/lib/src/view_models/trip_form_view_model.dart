@@ -108,7 +108,7 @@ class TripFormViewModel with ChangeNotifier {
 
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => TripStepperPage()),
+      MaterialPageRoute(builder: (context) => TripStepperPage(tripId: tripId)),
     );
   }
 

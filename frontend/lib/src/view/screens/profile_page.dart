@@ -17,6 +17,7 @@ import 'package:trip_planner/src/models/trip_item.dart';
 import 'package:trip_planner/src/repository/trip_item_operations.dart';
 import 'package:trip_planner/src/repository/trips_operations.dart';
 import 'package:trip_planner/src/view/screens/home_page.dart';
+import 'package:trip_planner/src/view/screens/trip_stepper_page.dart';
 import 'package:trip_planner/src/view/widgets/loading.dart';
 import 'package:trip_planner/src/view_models/profile_view_model.dart';
 
@@ -253,24 +254,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                         } else {
                                           return loadingTripCard('');
                                         }
-                                        // if (snapshot.hasError) print('error');
-                                        // var data = snapshot.data;
-                                        // print(data);
-                                        // return snapshot.hasData
-                                        //     ? ListView(
-                                        //         shrinkWrap: true,
-                                        //         physics:
-                                        //             NeverScrollableScrollPhysics(),
-                                        //         children: (data as List<Trip>)
-                                        //             .map((trip) {
-                                        //           return buildTripList(
-                                        //               profileViewModel, trip);
-                                        //         }).toList(),
-                                        //       )
-                                        //     : Center(
-                                        //         child: Text(
-                                        //             'คุณยังไม่เคยสร้างทริป'),
-                                        //       );
                                       },
                                     ),
                                     Padding(
@@ -314,7 +297,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   );
                 } else {
-                  return Loading();
+                  return loadingProfileTab();
                 }
               },
             ),
@@ -447,39 +430,8 @@ Widget buildGridReviewPicture(BuildContext context, MyReviewResponse review) {
 
 Widget buildTripList(
     ProfileViewModel profileViewModel, Trip trip, BuildContext context) {
-  TripItemOperations tripItemOperations = TripItemOperations();
   return InkWell(
-    onTap: () {
-      print('click on trip ${trip.tripId}');
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => Container(
-                  child: FutureBuilder(
-                    future: tripItemOperations.getAllTripItemsByTripId(trip),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        var data = snapshot.data as List<TripItem>;
-                        return data.isNotEmpty
-                            ? ListView(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                children: data.map((item) {
-                                  return Text(item.locationName);
-                                }).toList(),
-                              )
-                            : Center(
-                                child: Text('คุณยังไม่เคยสร้างทริป'),
-                              );
-                      } else {
-                        return Loading();
-                      }
-                    },
-                  ),
-                )),
-      );
-      // print(tripItemOperations.getAllTripItemsByTripId(trip));
-    },
+    onTap: () => profileViewModel.goToTripStepperPage(context, trip.tripId!),
     child: Container(
       padding: EdgeInsets.symmetric(
         horizontal: getProportionateScreenWidth(15),
@@ -547,6 +499,142 @@ Widget buildTripList(
           ),
         ],
       ),
+    ),
+  );
+}
+
+Widget loadingProfileTab() {
+  return Container(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(
+            vertical: getProportionateScreenHeight(20),
+            horizontal: getProportionateScreenWidth(15),
+          ),
+          color: Colors.white,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Palette.AdditionText,
+                    radius: 30,
+                  ),
+                ],
+              ),
+              IconButton(
+                onPressed: () => null,
+                icon: Icon(Icons.menu_rounded),
+                color: Palette.AdditionText,
+                iconSize: 30,
+                padding: EdgeInsets.zero,
+              ),
+            ],
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border(
+              bottom: BorderSide(
+                color: Colors.black54,
+              ),
+            ),
+          ),
+          child: TabBar(
+            labelColor: Palette.BodyText,
+            indicatorColor: Palette.SecondaryColor,
+            labelStyle: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Sukhumvit',
+            ),
+            unselectedLabelStyle: TextStyle(
+              fontSize: 16,
+              color: Palette.AdditionText,
+              fontFamily: 'Sukhumvit',
+            ),
+            tabs: [
+              Tab(
+                child: GestureDetector(
+                  child: Text('ทริปและรูปภาพ'),
+                  onTap: () => null,
+                ),
+                // text: ,
+              ),
+              Tab(
+                child: GestureDetector(
+                  child: Text('สถานที่'),
+                  onTap: () => null,
+                ),
+                // text: ,
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: TabBarView(
+            children: <Widget>[
+              SingleChildScrollView(
+                padding: EdgeInsets.only(top: getProportionateScreenHeight(10)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: getProportionateScreenWidth(15),
+                        vertical: getProportionateScreenHeight(5),
+                      ),
+                      child: Text(
+                        'ทริปของฉัน',
+                        style: FontAssets.titleText,
+                      ),
+                    ),
+                    ShimmerTripCard(),
+                    ShimmerTripCard(),
+                    ShimmerTripCard(),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        getProportionateScreenWidth(15),
+                        getProportionateScreenHeight(15),
+                        getProportionateScreenWidth(15),
+                        getProportionateScreenHeight(5),
+                      ),
+                      child: Text(
+                        'รูปภาพ',
+                        style: FontAssets.titleText,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: getProportionateScreenWidth(15)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ShimmerLocationCard(),
+                          ShimmerLocationCard(),
+                          ShimmerLocationCard(),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                children: [
+                  ShimmerTripCard(),
+                  ShimmerTripCard(),
+                  ShimmerTripCard(),
+                ],
+              )
+            ],
+          ),
+        ),
+      ],
     ),
   );
 }
