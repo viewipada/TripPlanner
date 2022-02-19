@@ -6,6 +6,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:intl/intl.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
@@ -134,6 +135,62 @@ class _TravelStepSelectionState extends State<TravelStepSelection> {
 
 Widget buildTripItem(int index, TripStepperViewModel tripStepperViewModel,
     BuildContext context, TripItem item, List<TripItem> tripItems) {
+  _showDurationSelectionAlert(
+          BuildContext context,
+          TripStepperViewModel tripStepperViewModel,
+          int index,
+          List<TripItem> tripItems) =>
+      showDialog(
+        context: context,
+        builder: (context) => StatefulBuilder(
+          builder: (context, setState) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            contentPadding: EdgeInsets.zero,
+            content: Stack(
+              alignment: Alignment.center,
+              children: [
+                NumberPicker(
+                    value: tripItems[index].duration,
+                    minValue: 30,
+                    maxValue: 180,
+                    step: 30,
+                    haptics: true,
+                    itemHeight: getProportionateScreenHeight(40),
+                    textStyle: FontAssets.hintText,
+                    selectedTextStyle: TextStyle(
+                      fontSize: 16,
+                      color: Palette.PrimaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        tripStepperViewModel.updateDurationOfTripItem(
+                            tripItems, index, value);
+                      });
+                    }),
+                SizedBox(
+                  height: getProportionateScreenHeight(118),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          right: getProportionateScreenWidth(60)),
+                      child: Text(
+                        'min.',
+                        textAlign: TextAlign.center,
+                        style: FontAssets.bodyText,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
   return Column(
     key: Key('$index'),
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -323,7 +380,11 @@ Widget buildTripItem(int index, TripStepperViewModel tripStepperViewModel,
                                   MaterialStateProperty.all(EdgeInsets.zero),
                               alignment: Alignment.bottomLeft,
                             ),
-                            onPressed: () => null,
+                            onPressed: () => _showDurationSelectionAlert(
+                                context,
+                                tripStepperViewModel,
+                                item.no,
+                                tripItems),
                           ),
                         ],
                       ),

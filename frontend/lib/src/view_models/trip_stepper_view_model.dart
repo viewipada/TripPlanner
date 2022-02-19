@@ -128,6 +128,23 @@ class TripStepperViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateDurationOfTripItem(
+      List<TripItem> tripItems, int index, value) async {
+    tripItems[index].duration = await value;
+    await _tripItemOperations.updateTripItem(tripItems[index]);
+    for (int i = index + 1; i < tripItems.length; i++) {
+      tripItems[i].startTime = await DateTime.parse(tripItems[i - 1].startTime!)
+          .add(Duration(
+              minutes: tripItems[i - 1].duration +
+                  (tripItems[i].drivingDuration == null
+                      ? 0
+                      : tripItems[i].drivingDuration!)))
+          .toIso8601String();
+      await _tripItemOperations.updateTripItem(tripItems[i]);
+    }
+    notifyListeners();
+  }
+
   Future<void> calculateStartTimeForTripItem(List<TripItem> tripItems) async {
     for (int i = 1; i < tripItems.length; i++) {
       tripItems[i].startTime = await DateTime.parse(tripItems[i - 1].startTime!)
