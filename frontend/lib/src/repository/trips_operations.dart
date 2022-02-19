@@ -8,8 +8,8 @@ class TripsOperations {
 
   Future<int> createTrip(Trip trip) async {
     final db = await dbProvider.database;
-    final tripId = db!.insert('trips', trip.toMap()).then((value) => value);
-    return Future.value(tripId);
+    final tripId = db!.insert('trips', trip.toMap());
+    return tripId;
   }
 
   updateTrip(Trip trip) async {
@@ -23,11 +23,30 @@ class TripsOperations {
     await db!.delete('trips', where: 'tripId=?', whereArgs: [trip.tripId]);
   }
 
+  // Future<Trip?> getTripById(int tripId) async {
+  //   final db = await dbProvider.database;
+  //   List<Map<String, dynamic>> row =
+  //       await db!.query('trips', where: "tripId=?", whereArgs: [tripId]);
+  //   if (row.length > 0) {
+  //     Trip trip = row.map((trip) => Trip.fromMap(trip)).first;
+  //     return trip;
+  //   }
+  //   return null;
+  // }
+
+  Future<Trip> getTripById(int tripId) async {
+    final db = await dbProvider.database;
+    List<Map<String, dynamic>> row =
+        await db!.query('trips', where: "tripId=?", whereArgs: [tripId]);
+    Trip trip = row.map((trip) => Trip.fromMap(trip)).first;
+    return trip;
+  }
+
   Future<List<Trip>> getAllTrips() async {
     final db = await dbProvider.database;
     List<Map<String, dynamic>> allRows = await db!.query('trips');
     List<Trip> trips = allRows.map((trip) => Trip.fromMap(trip)).toList();
-    print(trips);
+    // print(trips);
     return trips;
   }
 }
