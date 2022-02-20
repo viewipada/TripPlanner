@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:trip_planner/src/models/response/profile_details_response.dart';
 import 'package:trip_planner/src/models/response/profile_response.dart';
+import 'package:trip_planner/src/models/trip.dart';
+import 'package:trip_planner/src/repository/trips_operations.dart';
 import 'package:trip_planner/src/services/profile_service.dart';
 import 'package:trip_planner/src/view/screens/create_location.dart';
 import 'package:trip_planner/src/view/screens/edit_profile_page.dart';
@@ -14,6 +16,7 @@ import 'package:trip_planner/src/view/screens/trip_stepper_page.dart';
 class ProfileViewModel with ChangeNotifier {
   late ProfileResponse _profileResponse;
   ProfileDetailsResponse? _profileDetailsResponse;
+  TripsOperations _tripsOperations = TripsOperations();
   String? _gender;
   String _username = '';
   String _birthdate = '';
@@ -102,12 +105,16 @@ class ProfileViewModel with ChangeNotifier {
     );
   }
 
-  void  goToTripStepperPage(BuildContext context, int tripId) {
+  void goToTripStepperPage(BuildContext context, int tripId) {
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => TripStepperPage(tripId: tripId)),
-      );
+      context,
+      MaterialPageRoute(builder: (context) => TripStepperPage(tripId: tripId)),
+    );
+  }
+
+  Future<void> deleteTrip(Trip trip) async {
+    await _tripsOperations.deleteTrip(trip);
+    notifyListeners();
   }
 
   ProfileResponse get profileResponse => _profileResponse;
