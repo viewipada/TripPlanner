@@ -60,6 +60,9 @@ print(user_final_ratings.iloc[1].sort_values(ascending = False)[0:10])
 
 print(user_final_ratings.iloc[136].sort_values(ascending = False)[0:10].keys().to_list())
 
+from joblib import dump
+dump(user_final_ratings, 'collaborative_rating.joblib')
+
 #//Evaluation
 
 # test_user_features = x_test.pivot(index = 'userID', columns = 'placeID', values = 'rating').fillna(0)
