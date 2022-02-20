@@ -6,6 +6,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
@@ -32,6 +33,8 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+
+    final SlidableController slidableController = SlidableController();
     final profileViewModel = Provider.of<ProfileViewModel>(context);
     return DefaultTabController(
       initialIndex: 0,
@@ -142,13 +145,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                           ),
                                           ListTile(
                                             title: Text(
-                                              'ตั้งเวลาที่ใช้ในสถานที่',
-                                              style: FontAssets.bodyText,
-                                            ),
-                                            onTap: () {},
-                                          ),
-                                          ListTile(
-                                            title: Text(
                                               'ตั้งค่าความสนใจ',
                                               style: FontAssets.bodyText,
                                             ),
@@ -241,15 +237,45 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   physics:
                                                       NeverScrollableScrollPhysics(),
                                                   children: data.map((trip) {
-                                                    return buildTripList(
-                                                        profileViewModel,
-                                                        trip,
-                                                        context);
+                                                    return Slidable(
+                                                        key: Key(
+                                                            '${trip.tripId}'),
+                                                        controller:
+                                                            slidableController,
+                                                        actionPane:
+                                                            SlidableDrawerActionPane(),
+                                                        actionExtentRatio: 0.25,
+                                                        movementDuration:
+                                                            Duration(
+                                                                milliseconds:
+                                                                    500),
+                                                        secondaryActions: [
+                                                          IconSlideAction(
+                                                            caption: 'ลบรายการ',
+                                                            color: Palette
+                                                                .DeleteColor,
+                                                            icon: Icons.delete,
+                                                            onTap: () {
+                                                              profileViewModel
+                                                                  .deleteTrip(
+                                                                      trip);
+                                                              Slidable.of(
+                                                                      context)
+                                                                  ?.close();
+                                                            },
+                                                          )
+                                                        ],
+                                                        child: buildTripList(
+                                                            profileViewModel,
+                                                            trip,
+                                                            context));
                                                   }).toList(),
                                                 )
                                               : Center(
                                                   child: Text(
-                                                      'คุณยังไม่เคยสร้างทริป'),
+                                                    'คุณยังไม่เคยสร้างทริป',
+                                                    style: FontAssets.bodyText,
+                                                  ),
                                                 );
                                         } else {
                                           return Column(
@@ -274,11 +300,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                         style: FontAssets.titleText,
                                       ),
                                     ),
-                                    profileViewModel.profileResponse.reviews ==
-                                            []
+                                    profileViewModel
+                                            .profileResponse.reviews.isEmpty
                                         ? Center(
                                             child: Text(
-                                                'คุณยังไม่เคยรีวิวสถานที่'),
+                                              'คุณยังไม่เคยรีวิวสถานที่',
+                                              style: FontAssets.bodyText,
+                                            ),
                                           )
                                         : ListView(
                                             shrinkWrap: true,
@@ -481,13 +509,15 @@ Widget buildTripList(
                       ),
                     ),
                     Text(
-                      'จาก ${trip.firstLocation} ไปยัง ${trip.lastLocation}',
+                      trip.totalPeople > 1
+                          ? 'จาก ${trip.firstLocation} ไปยัง ${trip.lastLocation}'
+                          : 'เริ่มต้นที่ ${trip.firstLocation}',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: FontAssets.bodyText,
                     ),
                     Text(
-                      '${trip.totalTripItem} ที่เที่ยว',
+                      '${trip.totalTripItem} สถานที่',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: FontAssets.bodyText,

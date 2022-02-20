@@ -44,7 +44,8 @@ class TripsOperations {
 
   Future<List<Trip>> getAllTrips() async {
     final db = await dbProvider.database;
-    List<Map<String, dynamic>> allRows = await db!.query('trips');
+    List<Map<String, dynamic>> allRows =
+        await db!.query('trips', orderBy: "tripId DESC");
     List<Trip> trips = allRows.map((trip) => Trip.fromMap(trip)).toList();
     // print(trips);
     return trips;

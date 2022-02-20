@@ -113,7 +113,7 @@ class TripCard extends StatelessWidget {
                                   ),
                                   Text(
                                     trip.sumOfLocation.toString() +
-                                        ' ที่เที่ยว',
+                                        ' สถานที่',
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                     style: FontAssets.bodyText,
