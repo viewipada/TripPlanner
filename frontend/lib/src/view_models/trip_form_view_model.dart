@@ -100,7 +100,7 @@ class TripFormViewModel with ChangeNotifier {
         imageUrl: item.imageUrl,
         latitude: item.latitude,
         longitude: item.longitude,
-        duration: 60,
+        duration: item.locationName == "ตำแหน่งของฉัน" ? 0 : 60,
         tripId: tripId,
       );
       _tripItemOperations.createTripItem(tripItem);
