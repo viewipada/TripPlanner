@@ -274,7 +274,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                         style: FontAssets.titleText,
                                       ),
                                     ),
-                                    profileViewModel.profileResponse.reviews.isEmpty
+                                    profileViewModel
+                                            .profileResponse.reviews.isEmpty
                                         ? Center(
                                             child: Text(
                                                 'คุณยังไม่เคยรีวิวสถานที่'),
@@ -480,13 +481,15 @@ Widget buildTripList(
                       ),
                     ),
                     Text(
-                      'จาก ${trip.firstLocation} ไปยัง ${trip.lastLocation}',
+                      trip.totalPeople > 1
+                          ? 'จาก ${trip.firstLocation} ไปยัง ${trip.lastLocation}'
+                          : 'เริ่มต้นที่ ${trip.firstLocation}',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: FontAssets.bodyText,
                     ),
                     Text(
-                      '${trip.totalTripItem} ที่เที่ยว',
+                      '${trip.totalTripItem} สถานที่',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: FontAssets.bodyText,
