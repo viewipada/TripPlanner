@@ -60,63 +60,38 @@ exports.register = async (req, res) => {
   }
 };
 
-exports.login = (req, res) => {
-  const { username, password } = req.body;
-  if (!(username && password)) {
-    res.status(400).json({
-      status: 400,
-      msg: "All input is required",
-      success: false,
-      data: {},
-    });
-  }
+exports.login = async (req, res) => {
+  try {
+    const { username, password } = req.body;
 
-  User.findOne({ where: { username: username } })
-    .then((data) => {
-      if (data) {
-        bcrypt.compare(password, data.password).then((same) => {
-          if (same) {
-            const token = jwt.sign(
-              { user_id: data.id, username: username, role: data.role },
-              process.env.TOKEN_KEY,
-              {
-                expiresIn: "10h",
-              }
-            );
-            const result = {
-              id: data.id,
-              username: data.username,
-              password: data.password,
-              role: data.role,
-              token: token,
-            };
-            res.status(200).json(result);
-          } else {
-            res.status(400).json({
-              status: 400,
-              msg: "INVALID PASSWORD",
-              success: false,
-              data: {},
-            });
-          }
-        });
-      } else {
-        res.status(400).json({
-          status: 400,
-          msg: "INVALID USERNAME OR PASSWORD",
-          success: false,
-          data: {},
-        });
-      }
-    })
-    .catch((err) => {
-      return res.status(500).json({
-        status: 500,
-        msg: err.message,
-        success: false,
-        data: {},
-      });
-    });
+    if (!(username && password)) {
+      res.status(400).send("All input is required");
+    }
+
+    const user = await User.findOne({ where: { username }, raw: true });
+
+    console.log(user);
+
+    if (user && (await bcrypt.compare(password, user.password))) {
+      const token = jwt.sign(
+        {
+          user_id: user.id,
+          username: username,
+          role: user.role,
+        },
+        process.env.TOKEN_KEY,
+        { expiresIn: "4h" }
+      );
+
+      user.token = token;
+
+      res.status(200).json(user);
+    }
+
+    res.status(400).send("Invalid Credentials");
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 exports.changePassword = (req, res) => {
