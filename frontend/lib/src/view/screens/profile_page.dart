@@ -145,13 +145,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                           ),
                                           ListTile(
                                             title: Text(
-                                              'ตั้งเวลาที่ใช้ในสถานที่',
-                                              style: FontAssets.bodyText,
-                                            ),
-                                            onTap: () {},
-                                          ),
-                                          ListTile(
-                                            title: Text(
                                               'ตั้งค่าความสนใจ',
                                               style: FontAssets.bodyText,
                                             ),
@@ -280,7 +273,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 )
                                               : Center(
                                                   child: Text(
-                                                      'คุณยังไม่เคยสร้างทริป'),
+                                                    'คุณยังไม่เคยสร้างทริป',
+                                                    style: FontAssets.bodyText,
+                                                  ),
                                                 );
                                         } else {
                                           return Column(
@@ -309,7 +304,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                             .profileResponse.reviews.isEmpty
                                         ? Center(
                                             child: Text(
-                                                'คุณยังไม่เคยรีวิวสถานที่'),
+                                              'คุณยังไม่เคยรีวิวสถานที่',
+                                              style: FontAssets.bodyText,
+                                            ),
                                           )
                                         : ListView(
                                             shrinkWrap: true,
