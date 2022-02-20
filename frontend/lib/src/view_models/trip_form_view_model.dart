@@ -1,6 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
+import 'package:trip_planner/src/models/trip.dart';
+import 'package:trip_planner/src/models/trip_item.dart';
+import 'package:trip_planner/src/repository/trip_item_operations.dart';
+import 'package:trip_planner/src/repository/trips_operations.dart';
 import 'package:trip_planner/src/view/screens/search_start_point_page.dart';
 import 'package:trip_planner/src/view/screens/trip_stepper_page.dart';
 
@@ -12,6 +16,9 @@ class TripFormViewModel with ChangeNotifier {
   int _totalTravelingDay = 1;
   Map<String, String>? _startPointFromGoogle;
   BaggageResponse? _startPointFromBaggage;
+
+  TripsOperations _tripsOperations = TripsOperations();
+  TripItemOperations _tripItemOperations = TripItemOperations();
 
   Future pickDate(BuildContext context) async {
     final newDate = await showDatePicker(
@@ -48,11 +55,11 @@ class TripFormViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void goToCreateTrip(
+  Future<void> goToCreateTrip(
       BuildContext context,
       List<BaggageResponse> startPointList,
       BaggageResponse? startPointFromBaggage,
-      Map<String, String>? startPointFromGoogle) {
+      Map<String, String>? startPointFromGoogle) async {
     if (startPointFromBaggage != null &&
         startPointList.contains(startPointFromBaggage)) {
       startPointList.remove(startPointFromBaggage);
@@ -65,14 +72,43 @@ class TripFormViewModel with ChangeNotifier {
         BaggageResponse(
             locationId: 0,
             locationName: startPointFromGoogle['locationName']!,
+            latitude: double.parse(startPointFromGoogle['lat']!),
+            longitude: double.parse(startPointFromGoogle['lng']!),
             imageUrl: '',
             category: '',
             description: startPointFromGoogle['description']!),
       );
     }
+
+    final trip = Trip(
+      tripName: _tripName,
+      firstLocation: startPointList[0].locationName,
+      lastLocation: startPointList[startPointList.length - 1].locationName,
+      totalPeople: _totalPeople,
+      totalDay: _totalTravelingDay,
+      totalTripItem: startPointList.length,
+    );
+    int tripId = await _tripsOperations.createTrip(trip);
+
+    startPointList.forEach((item) {
+      final tripItem = TripItem(
+        day: 1,
+        no: startPointList.indexOf(item),
+        locationId: item.locationId,
+        locationCategory: item.category,
+        locationName: item.locationName,
+        imageUrl: item.imageUrl,
+        latitude: item.latitude,
+        longitude: item.longitude,
+        duration: 60,
+        tripId: tripId,
+      );
+      _tripItemOperations.createTripItem(tripItem);
+    });
+
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => TripStepperPage()),
+      MaterialPageRoute(builder: (context) => TripStepperPage(tripId: tripId)),
     );
   }
 

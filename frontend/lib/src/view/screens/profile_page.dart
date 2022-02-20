@@ -12,6 +12,12 @@ import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/my_review_response.dart';
 import 'package:trip_planner/src/models/response/trip_card_response.dart';
+import 'package:trip_planner/src/models/trip.dart';
+import 'package:trip_planner/src/models/trip_item.dart';
+import 'package:trip_planner/src/repository/trip_item_operations.dart';
+import 'package:trip_planner/src/repository/trips_operations.dart';
+import 'package:trip_planner/src/view/screens/home_page.dart';
+import 'package:trip_planner/src/view/screens/trip_stepper_page.dart';
 import 'package:trip_planner/src/view/widgets/loading.dart';
 import 'package:trip_planner/src/view_models/profile_view_model.dart';
 
@@ -21,6 +27,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  TripsOperations tripsOperations = TripsOperations();
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -221,15 +229,38 @@ class _ProfilePageState extends State<ProfilePage> {
                                         style: FontAssets.titleText,
                                       ),
                                     ),
-                                    ListView(
-                                      shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      children: profileViewModel
-                                          .profileResponse.trips
-                                          .map((trip) {
-                                        return buildTripList(
-                                            profileViewModel, trip);
-                                      }).toList(),
+                                    FutureBuilder(
+                                      future: tripsOperations.getAllTrips(),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          var data =
+                                              snapshot.data as List<Trip>;
+                                          return data.isNotEmpty
+                                              ? ListView(
+                                                  shrinkWrap: true,
+                                                  physics:
+                                                      NeverScrollableScrollPhysics(),
+                                                  children: data.map((trip) {
+                                                    return buildTripList(
+                                                        profileViewModel,
+                                                        trip,
+                                                        context);
+                                                  }).toList(),
+                                                )
+                                              : Center(
+                                                  child: Text(
+                                                      'คุณยังไม่เคยสร้างทริป'),
+                                                );
+                                        } else {
+                                          return Column(
+                                            children: [
+                                              ShimmerTripCard(),
+                                              ShimmerTripCard(),
+                                              ShimmerTripCard(),
+                                            ],
+                                          );
+                                        }
+                                      },
                                     ),
                                     Padding(
                                       padding: EdgeInsets.fromLTRB(
@@ -243,16 +274,23 @@ class _ProfilePageState extends State<ProfilePage> {
                                         style: FontAssets.titleText,
                                       ),
                                     ),
-                                    ListView(
-                                      shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      children: profileViewModel
-                                          .profileResponse.reviews
-                                          .map((review) {
-                                        return buildGridReviewPicture(
-                                            context, review);
-                                      }).toList(),
-                                    ),
+                                    profileViewModel.profileResponse.reviews ==
+                                            []
+                                        ? Center(
+                                            child: Text(
+                                                'คุณยังไม่เคยรีวิวสถานที่'),
+                                          )
+                                        : ListView(
+                                            shrinkWrap: true,
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            children: profileViewModel
+                                                .profileResponse.reviews
+                                                .map((review) {
+                                              return buildGridReviewPicture(
+                                                  context, review);
+                                            }).toList(),
+                                          ),
                                     // SizedBox(height: getProportionateScreenHeight(5)),
                                   ],
                                 ),
@@ -265,7 +303,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   );
                 } else {
-                  return Loading();
+                  return loadingProfileTab();
                 }
               },
             ),
@@ -396,11 +434,10 @@ Widget buildGridReviewPicture(BuildContext context, MyReviewResponse review) {
   );
 }
 
-Widget buildTripList(ProfileViewModel profileViewModel, TripCardResponse trip) {
+Widget buildTripList(
+    ProfileViewModel profileViewModel, Trip trip, BuildContext context) {
   return InkWell(
-    onTap: () {
-      print('click on trip ');
-    },
+    onTap: () => profileViewModel.goToTripStepperPage(context, trip.tripId!),
     child: Container(
       padding: EdgeInsets.symmetric(
         horizontal: getProportionateScreenWidth(15),
@@ -411,12 +448,14 @@ Widget buildTripList(ProfileViewModel profileViewModel, TripCardResponse trip) {
           Card(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10.0))),
-            child: Image.network(
-              trip.imageUrl,
-              fit: BoxFit.cover,
-              height: getProportionateScreenHeight(100),
-              width: getProportionateScreenHeight(100),
-            ),
+            child: trip.trumbnail == null
+                ? Image.asset(ImageAssets.noPreview)
+                : Image.network(
+                    trip.trumbnail!,
+                    fit: BoxFit.cover,
+                    height: getProportionateScreenHeight(100),
+                    width: getProportionateScreenHeight(100),
+                  ),
             clipBehavior: Clip.antiAlias,
           ),
           Expanded(
@@ -442,19 +481,19 @@ Widget buildTripList(ProfileViewModel profileViewModel, TripCardResponse trip) {
                       ),
                     ),
                     Text(
-                      'จาก ${trip.startedPoint} ไปยัง ${trip.endedPoint}',
+                      'จาก ${trip.firstLocation} ไปยัง ${trip.lastLocation}',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: FontAssets.bodyText,
                     ),
                     Text(
-                      '${trip.sumOfLocation} ที่เที่ยว',
+                      '${trip.totalTripItem} ที่เที่ยว',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: FontAssets.bodyText,
                     ),
                     Text(
-                      profileViewModel.showTravelingDay(trip.travelingDay),
+                      profileViewModel.showTravelingDay(trip.totalDay),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: FontAssets.bodyText,
@@ -466,6 +505,142 @@ Widget buildTripList(ProfileViewModel profileViewModel, TripCardResponse trip) {
           ),
         ],
       ),
+    ),
+  );
+}
+
+Widget loadingProfileTab() {
+  return Container(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(
+            vertical: getProportionateScreenHeight(20),
+            horizontal: getProportionateScreenWidth(15),
+          ),
+          color: Colors.white,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Palette.AdditionText,
+                    radius: 30,
+                  ),
+                ],
+              ),
+              IconButton(
+                onPressed: () => null,
+                icon: Icon(Icons.menu_rounded),
+                color: Palette.AdditionText,
+                iconSize: 30,
+                padding: EdgeInsets.zero,
+              ),
+            ],
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border(
+              bottom: BorderSide(
+                color: Colors.black54,
+              ),
+            ),
+          ),
+          child: TabBar(
+            labelColor: Palette.BodyText,
+            indicatorColor: Palette.SecondaryColor,
+            labelStyle: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Sukhumvit',
+            ),
+            unselectedLabelStyle: TextStyle(
+              fontSize: 16,
+              color: Palette.AdditionText,
+              fontFamily: 'Sukhumvit',
+            ),
+            tabs: [
+              Tab(
+                child: GestureDetector(
+                  child: Text('ทริปและรูปภาพ'),
+                  onTap: () => null,
+                ),
+                // text: ,
+              ),
+              Tab(
+                child: GestureDetector(
+                  child: Text('สถานที่'),
+                  onTap: () => null,
+                ),
+                // text: ,
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: TabBarView(
+            children: <Widget>[
+              SingleChildScrollView(
+                padding: EdgeInsets.only(top: getProportionateScreenHeight(10)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: getProportionateScreenWidth(15),
+                        vertical: getProportionateScreenHeight(5),
+                      ),
+                      child: Text(
+                        'ทริปของฉัน',
+                        style: FontAssets.titleText,
+                      ),
+                    ),
+                    ShimmerTripCard(),
+                    ShimmerTripCard(),
+                    ShimmerTripCard(),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        getProportionateScreenWidth(15),
+                        getProportionateScreenHeight(15),
+                        getProportionateScreenWidth(15),
+                        getProportionateScreenHeight(5),
+                      ),
+                      child: Text(
+                        'รูปภาพ',
+                        style: FontAssets.titleText,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: getProportionateScreenWidth(15)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ShimmerLocationCard(),
+                          ShimmerLocationCard(),
+                          ShimmerLocationCard(),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                children: [
+                  ShimmerTripCard(),
+                  ShimmerTripCard(),
+                  ShimmerTripCard(),
+                ],
+              )
+            ],
+          ),
+        ),
+      ],
     ),
   );
 }

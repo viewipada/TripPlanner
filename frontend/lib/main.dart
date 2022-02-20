@@ -82,8 +82,8 @@ class MyApp extends StatelessWidget {
           ),
           home:
               // LoginPage()
-              TripStepperPage()
-          // NavigationBar(),
+              // TripStepperPage()
+          NavigationBar(),
           // PdpaPage()
           ),
     );

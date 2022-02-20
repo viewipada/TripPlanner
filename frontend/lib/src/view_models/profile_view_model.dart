@@ -9,6 +9,7 @@ import 'package:trip_planner/src/models/response/profile_response.dart';
 import 'package:trip_planner/src/services/profile_service.dart';
 import 'package:trip_planner/src/view/screens/create_location.dart';
 import 'package:trip_planner/src/view/screens/edit_profile_page.dart';
+import 'package:trip_planner/src/view/screens/trip_stepper_page.dart';
 
 class ProfileViewModel with ChangeNotifier {
   late ProfileResponse _profileResponse;
@@ -99,6 +100,14 @@ class ProfileViewModel with ChangeNotifier {
         builder: (context) => EditProfilePage(),
       ),
     );
+  }
+
+  void  goToTripStepperPage(BuildContext context, int tripId) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => TripStepperPage(tripId: tripId)),
+      );
   }
 
   ProfileResponse get profileResponse => _profileResponse;
