@@ -212,6 +212,7 @@ Widget buildTripItem(
     actionPane: SlidableDrawerActionPane(),
     actionExtentRatio: 0.25,
     movementDuration: Duration(milliseconds: 500),
+    enabled: tripItems.length > 1 ? true : false,
     secondaryActions: [
       InkWell(
         onTap: () {
