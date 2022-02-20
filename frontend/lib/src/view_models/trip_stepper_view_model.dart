@@ -103,7 +103,7 @@ class TripStepperViewModel with ChangeNotifier {
     final item = tripItems.removeAt(oldIndex);
     tripItems.insert(newIndex, item);
 
-    await reOrderColumnNo(tripItems, 0);
+    await reOrderColumnNo(tripItems);
     trip.firstLocation = tripItems[0].locationName;
     trip.lastLocation = tripItems[tripItems.length - 1].locationName;
     _tripsOperations.updateTrip(trip);
@@ -115,7 +115,7 @@ class TripStepperViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> reOrderColumnNo(List<TripItem> tripItems, int index) async {
+  Future<void> reOrderColumnNo(List<TripItem> tripItems) async {
     for (int i = 0; i < tripItems.length; i++) {
       tripItems[i].no = i;
       await _tripItemOperations.updateTripItem(tripItems[i]);
@@ -179,6 +179,21 @@ class TripStepperViewModel with ChangeNotifier {
       });
     }
     return _vehicles;
+  }
+
+  Future<void> deleteTripItem(
+      Trip trip, List<TripItem> tripItems, TripItem item) async {
+    await tripItems.remove(item);
+    for (int i = 0; i < tripItems.length; i++) {
+      tripItems[i].no = await i;
+    }
+    trip.firstLocation = await tripItems[0].locationName;
+    trip.lastLocation = await tripItems[tripItems.length - 1].locationName;
+    trip.totalTripItem = await tripItems.length;
+    await _tripsOperations.updateTrip(trip);
+    await _tripItemOperations.deleteTripItem(item);
+    await calculateStartTimeForTripItem(tripItems);
+    notifyListeners();
   }
 
   List get steps => _steps;

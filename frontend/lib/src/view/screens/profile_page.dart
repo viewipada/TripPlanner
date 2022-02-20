@@ -274,8 +274,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         style: FontAssets.titleText,
                                       ),
                                     ),
-                                    profileViewModel.profileResponse.reviews ==
-                                            []
+                                    profileViewModel.profileResponse.reviews.isEmpty
                                         ? Center(
                                             child: Text(
                                                 'คุณยังไม่เคยรีวิวสถานที่'),
