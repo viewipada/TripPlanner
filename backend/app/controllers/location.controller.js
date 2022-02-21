@@ -6,34 +6,58 @@ const User = db.users;
 const Duration = db.settingDurations;
 const OpeningDayHour = db.locationOpeningDayHours;
 
-exports.create = (req, res) => {
-  // Validate request
-  if (!req.body.locationName) {
-    res.status(400).send({
-      message: "locationName can not be empty!",
+exports.create = async (req, res) => {
+  try {
+    const location = req.body;
+
+    if (!(location.locationName && location.latitude && location.longitude)) {
+      res.status(400).send("locationName and lat-long can not be empty ! ! ");
+    }
+
+    //create new location
+    const newLocation = await Location.create(location);
+
+    // set opening day hour in LocationOpeningDayhour Table
+    const setOpeningDay = await OpeningDayHour.create({
+      locationId: newLocation.locationId,
+      openingDayHour: location.openingDayHour,
     });
-    return;
+
+    //save opening day hour list
+    newLocation.OpeningDayHour = setOpeningDay.openingDayHour;
+
+    res.status(201).send(newLocation);
+  } catch (err) {
+    res.status(400).send("Someting wrong while crating Location");
+    console.log(err);
   }
+  // // Validate request
+  // if (!req.body.locationName) {
+  //   res.status(400).send({
+  //     message: "locationName can not be empty!",
+  //   });
+  //   return;
+  // }
 
-  // Create a Location
-  const location = req.body;
+  // // Create a Location
+  // const location = req.body;
 
-  // Save Location in the database
-  Location.create(location)
-    .then((data) => {
-      res.status(201).send(data);
+  // // Save Location in the database
+  // Location.create(location)
+  //   .then((data) => {
+  //     res.status(201).send(data);
 
-      const openingDayHourData = {
-        location: data.locationId,
-        openingDayHour: req.body.openingDayHour,
-      };
-      OpeningDayHour.create(openingDayHourData);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while creating the Location.",
-      });
-    });
+  //     const openingDayHourData = {
+  //       location: data.locationId,
+  //       openingDayHour: req.body.openingDayHour,
+  //     };
+  //     OpeningDayHour.create(openingDayHourData);
+  //   })
+  //   .catch((err) => {
+  //     res.status(500).send({
+  //       message: err.message || "Some error occurred while creating the Location.",
+  //     });
+  //   });
 };
 
 // Retrieve all objects in Locations Table
