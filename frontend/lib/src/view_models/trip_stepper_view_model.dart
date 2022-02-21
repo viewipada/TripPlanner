@@ -60,6 +60,7 @@ class TripStepperViewModel with ChangeNotifier {
   IconData _vehiclesSelected = Icons.directions_car_outlined;
   TripsOperations _tripsOperations = TripsOperations();
   TripItemOperations _tripItemOperations = TripItemOperations();
+  List<int> _mealsIndex = [];
 
   void go(int index) {
     if (index == -1 && _index <= 0) {
@@ -102,9 +103,10 @@ class TripStepperViewModel with ChangeNotifier {
 
     final item = tripItems.removeAt(oldIndex);
     tripItems.insert(newIndex, item);
-
     await reOrderColumnNo(tripItems);
-    trip.firstLocation = tripItems[0].locationName;
+    trip.firstLocation = await tripItems[0].no == 0
+        ? tripItems[0].locationName
+        : tripItems[1].locationName;
     trip.lastLocation = tripItems[tripItems.length - 1].locationName;
     _tripsOperations.updateTrip(trip);
     if (item.startTime != null) {
@@ -118,14 +120,19 @@ class TripStepperViewModel with ChangeNotifier {
   }
 
   Future<void> reOrderColumnNo(List<TripItem> tripItems) async {
-    for (int i = 0; i < tripItems.length; i++) {
-      tripItems[i].no = i;
-      await _tripItemOperations.updateTripItem(tripItems[i]);
+    int index = 0, loop = 0;
+    while (loop < tripItems.length) {
+      if (tripItems[loop].no >= 0) {
+        tripItems[loop].no = index;
+        await _tripItemOperations.updateTripItem(tripItems[loop]);
+        index++;
+      }
+      loop++;
     }
   }
 
-  void setUpStartTime(DateTime time, List<TripItem> tripItems) async {
-    tripItems[0].startTime = await time.toIso8601String();
+  void setUpStartTime(DateTime time, List<TripItem> tripItems,int index) async {
+    tripItems[index].startTime = await time.toIso8601String();
     await calculateStartTimeForTripItem(tripItems);
     notifyListeners();
   }
@@ -135,37 +142,32 @@ class TripStepperViewModel with ChangeNotifier {
     tripItems[index].duration = await value;
     await _tripItemOperations.updateTripItem(tripItems[index]);
     if (tripItems[index].startTime != null) {
-      for (int i = index + 1; i < tripItems.length; i++) {
-        tripItems[i].startTime =
-            await DateTime.parse(tripItems[i - 1].startTime!)
-                .add(Duration(
-                    minutes: tripItems[i - 1].duration +
-                        (tripItems[i].drivingDuration == null
-                            ? 0
-                            : tripItems[i].drivingDuration!)))
-                .toIso8601String();
-        await _tripItemOperations.updateTripItem(tripItems[i]);
-      }
+      await calculateStartTimeForTripItem(tripItems);
     }
     notifyListeners();
   }
 
   Future<void> calculateStartTimeForTripItem(List<TripItem> tripItems) async {
-    if (tripItems[0].startTime != null) {
-      for (int i = 1; i < tripItems.length; i++) {
-        tripItems[i].startTime =
-            await DateTime.parse(tripItems[i - 1].startTime!)
+    if (tripItems[0].startTime != null && tripItems[0].no >= 0 ||
+        tripItems[0].no < 0 && tripItems[1].startTime != null) {
+      List<int> realIndex = [];
+      var indexWithoutMeals =
+          await tripItems.where((element) => element.no >= 0);
+      indexWithoutMeals.forEach((element) {
+        realIndex.add(tripItems.indexOf(element));
+      });
+      for (int i = 1; i < realIndex.length; i++) {
+        tripItems[realIndex[i]].startTime =
+            await DateTime.parse(tripItems[realIndex[i - 1]].startTime!)
                 .add(Duration(
-                    minutes: tripItems[i - 1].duration +
-                        (tripItems[i].drivingDuration == null
+                    minutes: tripItems[realIndex[i - 1]].duration +
+                        (tripItems[realIndex[i]].drivingDuration == null
                             ? 0
-                            : tripItems[i].drivingDuration!)))
+                            : tripItems[realIndex[i]].drivingDuration!)))
                 .toIso8601String();
-        print(tripItems[i].startTime);
       }
-
       tripItems.forEach((item) async {
-        await _tripItemOperations.updateTripItem(item);
+        if (item.no >= 0) await _tripItemOperations.updateTripItem(item);
       });
     }
   }
@@ -195,7 +197,9 @@ class TripStepperViewModel with ChangeNotifier {
       Trip trip, List<TripItem> tripItems, TripItem item) async {
     await tripItems.remove(item);
     await reOrderColumnNo(tripItems);
-    trip.firstLocation = await tripItems[0].locationName;
+    trip.firstLocation = await tripItems[0].no == 0
+        ? tripItems[0].locationName
+        : tripItems[1].locationName;
     trip.lastLocation = await tripItems[tripItems.length - 1].locationName;
     trip.totalTripItem = await tripItems.length;
     await _tripsOperations.updateTrip(trip);
@@ -207,7 +211,6 @@ class TripStepperViewModel with ChangeNotifier {
   }
 
   Future<List<int>> recommendMeal(List<TripItem> tripItems) async {
-    List<int> _mealsIndex = [];
     if (tripItems[0].startTime != null) {
       _mealsIndex = [0, 0, 0];
       _mealsIndex[0] = await tripItems.indexWhere(
@@ -223,12 +226,45 @@ class TripStepperViewModel with ChangeNotifier {
     return _mealsIndex;
   }
 
-  void cancelToAddRestaurant(int index){
-    
+  Future<List<TripItem>> getMeals(List<TripItem> tripItems, int tripId) async {
+    final mealItem = TripItem(
+        day: 1,
+        no: -1,
+        locationId: -1,
+        locationCategory: '',
+        locationName: '',
+        imageUrl: '',
+        latitude: 0,
+        longitude: 0,
+        duration: 0,
+        tripId: tripId);
+    if (tripItems[0].startTime != null) {
+      _mealsIndex = [0, 0, 0];
+      _mealsIndex[0] = await tripItems.indexWhere(
+        (element) => DateTime.parse(element.startTime!).hour >= 9,
+      );
+      _mealsIndex[1] = await tripItems.indexWhere(
+        (element) => DateTime.parse(element.startTime!).hour >= 12,
+      );
+      _mealsIndex[2] = await tripItems.indexWhere(
+        (element) => DateTime.parse(element.startTime!).hour >= 18,
+      );
+      final _mealsUniqueIndex = _mealsIndex.toSet().toList();
+
+      for (int i = _mealsUniqueIndex.length - 1; i >= 0; i--) {
+        if (_mealsUniqueIndex[i] != -1) {
+          tripItems.insert(_mealsUniqueIndex[i], mealItem);
+        }
+      }
+      // tripItems.forEach((e) => print(e.locationName));
+    }
+    return tripItems;
+    // notifyListeners();
   }
 
   List get steps => _steps;
   int get index => _index;
   List get vehicles => _vehicles;
   IconData get vehiclesSelected => _vehiclesSelected;
+  List<int> get mealsIndex => _mealsIndex;
 }

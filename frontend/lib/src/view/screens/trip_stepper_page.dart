@@ -9,6 +9,7 @@ import 'package:trip_planner/src/models/trip.dart';
 import 'package:trip_planner/src/models/trip_item.dart';
 import 'package:trip_planner/src/repository/trip_item_operations.dart';
 import 'package:trip_planner/src/repository/trips_operations.dart';
+import 'package:trip_planner/src/view/widgets/food_step_selection.dart';
 import 'package:trip_planner/src/view/widgets/loading.dart';
 import 'package:trip_planner/src/view/widgets/travel_step_selection.dart';
 import 'package:trip_planner/src/view/widgets/vehicle_selection.dart';
@@ -99,28 +100,41 @@ class _TripStepperPageState extends State<TripStepperPage> {
                             ? VehicleSelection(
                                 tripStepperViewModel: tripStepperViewModel,
                                 trip: data)
-                            : FutureBuilder(
-                                future: tripItemOperations
-                                    .getAllTripItemsByTripId(tripId),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    var dataList = snapshot.data as List<TripItem>;
-                                    return e['title'] == 'ที่เที่ยว' ||
-                                            e['title'] == 'ที่กิน' ||
-                                            e['title'] == 'ที่พัก'
-                                        ? TravelStepSelection(
+                            : tripStepperViewModel.index == 1
+                                ? FutureBuilder(
+                                    future: tripItemOperations
+                                        .getAllTripItemsByTripId(tripId),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        var dataList =
+                                            snapshot.data as List<TripItem>;
+                                        return TravelStepSelection(
                                             tripStepperViewModel:
                                                 tripStepperViewModel,
-                                            tripItems: dataList,trip:data)
-                                        : Container(
-                                            height: 800,
-                                            color: Colors.green,
-                                          );
-                                  } else {
-                                    return Loading();
-                                  }
-                                },
-                              ),
+                                            tripItems: dataList,
+                                            trip: data);
+                                      } else {
+                                        return Loading();
+                                      }
+                                    },
+                                  )
+                                : FutureBuilder(
+                                    future: tripItemOperations
+                                        .getAllTripItemsByTripId(tripId),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        var dataList =
+                                            snapshot.data as List<TripItem>;
+                                        return FoodStepSelection(
+                                            tripStepperViewModel:
+                                                tripStepperViewModel,
+                                            tripItems: dataList,
+                                            trip: data);
+                                      } else {
+                                        return Loading();
+                                      }
+                                    },
+                                  ),
                       ),
                     )
                     .toList(),

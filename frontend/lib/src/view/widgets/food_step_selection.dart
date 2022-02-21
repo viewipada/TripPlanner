@@ -16,8 +16,8 @@ import 'package:trip_planner/src/models/trip.dart';
 import 'package:trip_planner/src/models/trip_item.dart';
 import 'package:trip_planner/src/view_models/trip_stepper_view_model.dart';
 
-class TravelStepSelection extends StatefulWidget {
-  TravelStepSelection({
+class FoodStepSelection extends StatefulWidget {
+  FoodStepSelection({
     required this.tripStepperViewModel,
     required this.tripItems,
     required this.trip,
@@ -28,18 +28,26 @@ class TravelStepSelection extends StatefulWidget {
   final Trip trip;
 
   @override
-  _TravelStepSelectionState createState() => _TravelStepSelectionState(
+  _FoodStepSelectionState createState() => _FoodStepSelectionState(
       this.tripStepperViewModel, this.tripItems, this.trip);
 }
 
-class _TravelStepSelectionState extends State<TravelStepSelection> {
+class _FoodStepSelectionState extends State<FoodStepSelection> {
   final SlidableController slidableController = SlidableController();
   final TripStepperViewModel tripStepperViewModel;
-  final List<TripItem> tripItems;
+  List<TripItem> tripItems;
   final Trip trip;
 
-  _TravelStepSelectionState(
-      this.tripStepperViewModel, this.tripItems, this.trip);
+  _FoodStepSelectionState(this.tripStepperViewModel, this.tripItems, this.trip);
+
+  @override
+  void initState() {
+    Provider.of<TripStepperViewModel>(context, listen: false)
+        .getMeals(tripItems, trip.tripId!)
+        .then((value) => tripItems = value);
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,8 +113,10 @@ class _TravelStepSelectionState extends State<TravelStepSelection> {
                 .asMap()
                 .map((index, item) => MapEntry(
                     index,
-                    buildTripItem(index, tripStepperViewModel, context, item,
-                        tripItems, trip, slidableController)))
+                    item.locationName == ""
+                        ? addMeal()
+                        : buildTripItem(index, tripStepperViewModel, context,
+                            item, tripItems, trip, slidableController)))
                 .values
                 .toList(),
             proxyDecorator:
@@ -281,45 +291,6 @@ Widget buildTripItem(
                       ],
                     ),
                   ),
-                  FutureBuilder(
-                    future: tripStepperViewModel.recommendMeal(tripItems),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        var mealsIndex = snapshot.data as List<int>;
-                        return mealsIndex.isNotEmpty && mealsIndex[2] == index
-                            ? recommendMeals(
-                                'มื้อเย็น',
-                                Icon(
-                                  Icons.nights_stay_rounded,
-                                  color: Palette.LightSecondary,
-                                  size: 18,
-                                ),
-                              )
-                            : mealsIndex.isNotEmpty && mealsIndex[1] == index
-                                ? recommendMeals(
-                                    'มื้อเที่ยง',
-                                    Icon(
-                                      Icons.wb_sunny_rounded,
-                                      color: Palette.LightSecondary,
-                                      size: 20,
-                                    ),
-                                  )
-                                : mealsIndex.isNotEmpty &&
-                                        mealsIndex[0] == index
-                                    ? recommendMeals(
-                                        'มื้อเช้า',
-                                        Icon(
-                                          Icons.wb_twilight_rounded,
-                                          color: Palette.LightSecondary,
-                                          size: 18,
-                                        ),
-                                      )
-                                    : SizedBox();
-                      } else {
-                        return Text('${snapshot.error}');
-                      }
-                    },
-                  ),
                 ],
               ),
         Container(
@@ -423,7 +394,7 @@ Widget buildTripItem(
                                         content: Stack(
                                           children: [
                                             hourMinute24H(tripStepperViewModel,
-                                                tripItems,index),
+                                                tripItems, index),
                                             SizedBox(
                                               height:
                                                   getProportionateScreenHeight(
@@ -491,7 +462,7 @@ Widget buildTripItem(
                               onPressed: () => _showDurationSelectionAlert(
                                   context,
                                   tripStepperViewModel,
-                                  item.no,
+                                  index,
                                   tripItems),
                             ),
                           ],
@@ -509,36 +480,59 @@ Widget buildTripItem(
   );
 }
 
-Widget recommendMeals(String meal, Icon icon) {
-  return Container(
-    padding: EdgeInsets.symmetric(
-      vertical: getProportionateScreenHeight(10),
-      horizontal: getProportionateScreenWidth(10),
-    ),
-    margin: EdgeInsets.only(
-      bottom: getProportionateScreenHeight(5),
-    ),
-    decoration: BoxDecoration(
-      color: Palette.BaseMeal,
-      borderRadius: BorderRadius.all(Radius.circular(5.0)),
-      border: Border.all(color: Palette.LightSecondary),
-    ),
+Widget addMeal() {
+  return Padding(
+    key: UniqueKey(),
+    padding: EdgeInsets.only(top: getProportionateScreenHeight(5)),
     child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        icon,
-        Text(
-          ' อย่าลืมเผื่อเวลาสำหรับ ${meal} ของคุณ',
-          style: FontAssets.mealsRecommendText,
+        Expanded(
+          flex: 2,
+          child: ElevatedButton.icon(
+            onPressed: () {},
+            icon: Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+            label: Text(
+              'เลือกร้าน',
+              style: FontAssets.addRestaurantText,
+            ),
+            style: ElevatedButton.styleFrom(
+              primary: Palette.LightSecondary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          width: getProportionateScreenWidth(5),
+        ),
+        Expanded(
+          child: TextButton.icon(
+            onPressed: () => {},
+            icon: Icon(
+              Icons.cancel_outlined,
+              color: Palette.Outline,
+            ),
+            label: Text(
+              'ไม่ต้องการ',
+              style: FontAssets.bodyText,
+            ),
+            style: TextButton.styleFrom(
+              primary: Palette.BackgroundColor,
+            ),
+          ),
         ),
       ],
     ),
   );
 }
 
-Widget hourMinute24H(
-    TripStepperViewModel tripStepperViewModel, List<TripItem> tripItems,int index) {
-  // DateTime _dateTime = DateTime.now();
+Widget hourMinute24H(TripStepperViewModel tripStepperViewModel,
+    List<TripItem> tripItems, int index) {
+  print(index);
   return new TimePickerSpinner(
     time: tripItems[index].startTime == null
         ? DateTime(2022, 1, 1, 9, 0)
@@ -554,6 +548,6 @@ Widget hourMinute24H(
     itemHeight: getProportionateScreenHeight(40),
     alignment: Alignment.center,
     onTimeChange: (time) =>
-        tripStepperViewModel.setUpStartTime(time, tripItems,index),
+        tripStepperViewModel.setUpStartTime(time, tripItems, index),
   );
 }
