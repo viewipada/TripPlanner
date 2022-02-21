@@ -509,7 +509,7 @@ Widget buildTripList(
                       ),
                     ),
                     Text(
-                      trip.totalPeople > 1
+                      trip.totalTripItem > 1
                           ? 'จาก ${trip.firstLocation} ไปยัง ${trip.lastLocation}'
                           : 'เริ่มต้นที่ ${trip.firstLocation}',
                       overflow: TextOverflow.ellipsis,

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:trip_planner/palette.dart';
 
 class ImageAssets {
@@ -41,6 +42,8 @@ class FontAssets {
       TextStyle(color: Palette.AdditionText, fontSize: 12);
   static const TextStyle requiredField = TextStyle(
       color: Palette.SecondaryColor, fontWeight: FontWeight.bold, fontSize: 16);
+  static const TextStyle mealsRecommendText = TextStyle(
+      color: Palette.LightSecondary, fontWeight: FontWeight.bold, fontSize: 12);
 }
 
 class GoogleAssets {
