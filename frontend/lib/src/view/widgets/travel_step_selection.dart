@@ -8,6 +8,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:intl/intl.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
@@ -39,6 +40,13 @@ class _TravelStepSelectionState extends State<TravelStepSelection> {
 
   _TravelStepSelectionState(
       this.tripStepperViewModel, this.tripItems, this.trip);
+
+  // @override
+  // void initState() {
+  //   Provider.of<TripStepperViewModel>(context, listen: false)
+  //       .recommendMeal(tripItems);
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -262,25 +270,69 @@ Widget buildTripItem(
       children: [
         item.drivingDuration == 0
             ? SizedBox()
-            : Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: getProportionateScreenHeight(5),
-                  horizontal: getProportionateScreenWidth(10),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(
-                      tripStepperViewModel.vehiclesSelected,
-                      color: Palette.InfoText,
-                      size: 18,
+            : Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: getProportionateScreenHeight(5),
+                      horizontal: getProportionateScreenWidth(10),
                     ),
-                    Text(
-                      '  ${item.drivingDuration} min',
-                      style: FontAssets.hintText,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          tripStepperViewModel.vehiclesSelected,
+                          color: Palette.InfoText,
+                          size: 18,
+                        ),
+                        Text(
+                          '  ${item.drivingDuration} min',
+                          style: FontAssets.hintText,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  FutureBuilder(
+                    future: tripStepperViewModel.recommendMeal(tripItems),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        var mealsIndex = snapshot.data as List<int>;
+                        print(mealsIndex);
+                        return mealsIndex.isNotEmpty && mealsIndex[2] == index
+                            ? recommendMeals(
+                                'มื้อเย็น',
+                                Icon(
+                                  Icons.nights_stay_rounded,
+                                  color: Palette.LightSecondary,
+                                  size: 18,
+                                ),
+                              )
+                            : mealsIndex.isNotEmpty && mealsIndex[1] == index
+                                ? recommendMeals(
+                                    'มื้อเที่ยง',
+                                    Icon(
+                                      Icons.wb_sunny_rounded,
+                                      color: Palette.LightSecondary,
+                                      size: 20,
+                                    ),
+                                  )
+                                : mealsIndex.isNotEmpty &&
+                                        mealsIndex[0] == index
+                                    ? recommendMeals(
+                                        'มื้อเช้า',
+                                        Icon(
+                                          Icons.wb_twilight_rounded,
+                                          color: Palette.LightSecondary,
+                                          size: 18,
+                                        ),
+                                      )
+                                    : SizedBox();
+                      } else {
+                        return Text('${snapshot.error}');
+                      }
+                    },
+                  ),
+                ],
               ),
         Container(
           // height: getProportionateScreenHeight(90),
@@ -463,6 +515,33 @@ Widget buildTripItem(
               ),
             ],
           ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget recommendMeals(String meal, Icon icon) {
+  return Container(
+    padding: EdgeInsets.symmetric(
+      vertical: getProportionateScreenHeight(10),
+      horizontal: getProportionateScreenWidth(10),
+    ),
+    margin: EdgeInsets.only(
+      bottom: getProportionateScreenHeight(5),
+    ),
+    decoration: BoxDecoration(
+      color: Palette.BaseMeal,
+      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+      border: Border.all(color: Palette.LightSecondary),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        icon,
+        Text(
+          ' อย่าลืมเผื่อเวลาสำหรับ ${meal} ของคุณ',
+          style: FontAssets.mealsRecommendText,
         ),
       ],
     ),

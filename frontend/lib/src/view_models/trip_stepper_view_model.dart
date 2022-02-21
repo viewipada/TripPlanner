@@ -107,7 +107,9 @@ class TripStepperViewModel with ChangeNotifier {
     trip.firstLocation = tripItems[0].locationName;
     trip.lastLocation = tripItems[tripItems.length - 1].locationName;
     _tripsOperations.updateTrip(trip);
-    if (item.startTime != null) calculateStartTimeForTripItem(tripItems);
+    if (item.startTime != null) {
+      calculateStartTimeForTripItem(tripItems);
+    }
     // if (newIndex == 0) {
     //   item['distance'] = 'จุดเริ่มต้น';
     //   item['drivingDuration'] = 0;
@@ -132,32 +134,40 @@ class TripStepperViewModel with ChangeNotifier {
       List<TripItem> tripItems, int index, value) async {
     tripItems[index].duration = await value;
     await _tripItemOperations.updateTripItem(tripItems[index]);
-    for (int i = index + 1; i < tripItems.length; i++) {
-      tripItems[i].startTime = await DateTime.parse(tripItems[i - 1].startTime!)
-          .add(Duration(
-              minutes: tripItems[i - 1].duration +
-                  (tripItems[i].drivingDuration == null
-                      ? 0
-                      : tripItems[i].drivingDuration!)))
-          .toIso8601String();
-      await _tripItemOperations.updateTripItem(tripItems[i]);
+    if (tripItems[index].startTime != null) {
+      for (int i = index + 1; i < tripItems.length; i++) {
+        tripItems[i].startTime =
+            await DateTime.parse(tripItems[i - 1].startTime!)
+                .add(Duration(
+                    minutes: tripItems[i - 1].duration +
+                        (tripItems[i].drivingDuration == null
+                            ? 0
+                            : tripItems[i].drivingDuration!)))
+                .toIso8601String();
+        await _tripItemOperations.updateTripItem(tripItems[i]);
+      }
     }
     notifyListeners();
   }
 
   Future<void> calculateStartTimeForTripItem(List<TripItem> tripItems) async {
-    for (int i = 1; i < tripItems.length; i++) {
-      tripItems[i].startTime = await DateTime.parse(tripItems[i - 1].startTime!)
-          .add(Duration(
-              minutes: tripItems[i - 1].duration +
-                  (tripItems[i].drivingDuration == null
-                      ? 0
-                      : tripItems[i].drivingDuration!)))
-          .toIso8601String();
+    if (tripItems[0].startTime != null) {
+      for (int i = 1; i < tripItems.length; i++) {
+        tripItems[i].startTime =
+            await DateTime.parse(tripItems[i - 1].startTime!)
+                .add(Duration(
+                    minutes: tripItems[i - 1].duration +
+                        (tripItems[i].drivingDuration == null
+                            ? 0
+                            : tripItems[i].drivingDuration!)))
+                .toIso8601String();
+        print(tripItems[i].startTime);
+      }
+
+      tripItems.forEach((item) async {
+        await _tripItemOperations.updateTripItem(item);
+      });
     }
-    tripItems.forEach((item) async {
-      await _tripItemOperations.updateTripItem(item);
-    });
   }
 
   Future<List> getVehicleSelection(Trip trip) async {
@@ -184,16 +194,33 @@ class TripStepperViewModel with ChangeNotifier {
   Future<void> deleteTripItem(
       Trip trip, List<TripItem> tripItems, TripItem item) async {
     await tripItems.remove(item);
-    for (int i = 0; i < tripItems.length; i++) {
-      tripItems[i].no = await i;
-    }
+    await reOrderColumnNo(tripItems);
     trip.firstLocation = await tripItems[0].locationName;
     trip.lastLocation = await tripItems[tripItems.length - 1].locationName;
     trip.totalTripItem = await tripItems.length;
     await _tripsOperations.updateTrip(trip);
     await _tripItemOperations.deleteTripItem(item);
-    await calculateStartTimeForTripItem(tripItems);
+    if (item.startTime != null) {
+      await calculateStartTimeForTripItem(tripItems);
+    }
     notifyListeners();
+  }
+
+  Future<List<int>> recommendMeal(List<TripItem> tripItems) async {
+    List<int> _mealsIndex = [];
+    if (tripItems[0].startTime != null) {
+      _mealsIndex = [0, 0, 0];
+      _mealsIndex[0] = await tripItems.indexWhere(
+        (element) => DateTime.parse(element.startTime!).hour >= 9,
+      );
+      _mealsIndex[1] = await tripItems.indexWhere(
+        (element) => DateTime.parse(element.startTime!).hour >= 12,
+      );
+      _mealsIndex[2] = await tripItems.indexWhere(
+        (element) => DateTime.parse(element.startTime!).hour >= 18,
+      );
+    }
+    return _mealsIndex;
   }
 
   List get steps => _steps;
