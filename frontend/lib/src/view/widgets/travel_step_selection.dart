@@ -41,13 +41,6 @@ class _TravelStepSelectionState extends State<TravelStepSelection> {
   _TravelStepSelectionState(
       this.tripStepperViewModel, this.tripItems, this.trip);
 
-  // @override
-  // void initState() {
-  //   Provider.of<TripStepperViewModel>(context, listen: false)
-  //       .recommendMeal(tripItems);
-  //   super.initState();
-  // }
-
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -213,7 +206,6 @@ Widget buildTripItem(
           ),
         ),
       );
-
   return Slidable(
     key: Key('${item.itemId}'),
     controller: slidableController,
@@ -297,36 +289,89 @@ Widget buildTripItem(
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         var mealsIndex = snapshot.data as List<int>;
-                        print(mealsIndex);
-                        return mealsIndex.isNotEmpty && mealsIndex[2] == index
-                            ? recommendMeals(
-                                'มื้อเย็น',
-                                Icon(
-                                  Icons.nights_stay_rounded,
-                                  color: Palette.LightSecondary,
-                                  size: 18,
-                                ),
-                              )
-                            : mealsIndex.isNotEmpty && mealsIndex[1] == index
-                                ? recommendMeals(
-                                    'มื้อเที่ยง',
-                                    Icon(
-                                      Icons.wb_sunny_rounded,
-                                      color: Palette.LightSecondary,
-                                      size: 20,
-                                    ),
-                                  )
-                                : mealsIndex.isNotEmpty &&
-                                        mealsIndex[0] == index
-                                    ? recommendMeals(
-                                        'มื้อเช้า',
-                                        Icon(
-                                          Icons.wb_twilight_rounded,
-                                          color: Palette.LightSecondary,
-                                          size: 18,
+                        if (tripStepperViewModel.index == 1) {
+                          return mealsIndex.isNotEmpty && mealsIndex[2] == index
+                              ? recommendMeals(
+                                  'มื้อเย็น',
+                                  Icon(
+                                    Icons.nights_stay_rounded,
+                                    color: Palette.LightSecondary,
+                                    size: 18,
+                                  ),
+                                )
+                              : mealsIndex.isNotEmpty && mealsIndex[1] == index
+                                  ? recommendMeals(
+                                      'มื้อเที่ยง',
+                                      Icon(
+                                        Icons.wb_sunny_rounded,
+                                        color: Palette.LightSecondary,
+                                        size: 20,
+                                      ),
+                                    )
+                                  : mealsIndex.isNotEmpty &&
+                                          mealsIndex[0] == index
+                                      ? recommendMeals(
+                                          'มื้อเช้า',
+                                          Icon(
+                                            Icons.wb_twilight_rounded,
+                                            color: Palette.LightSecondary,
+                                            size: 18,
+                                          ),
+                                        )
+                                      : SizedBox();
+                        } else {
+                          return mealsIndex.isNotEmpty &&
+                                      mealsIndex[2] == index ||
+                                  mealsIndex.isNotEmpty &&
+                                      mealsIndex[1] == index ||
+                                  mealsIndex.isNotEmpty &&
+                                      mealsIndex[0] == index
+                              ? Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: ElevatedButton.icon(
+                                        onPressed: () {},
+                                        icon: Icon(
+                                          Icons.add,
+                                          color: Colors.white,
                                         ),
-                                      )
-                                    : SizedBox();
+                                        label: Text(
+                                          'เลือกร้าน',
+                                          style: FontAssets.addRestaurantText,
+                                        ),
+                                        style: ElevatedButton.styleFrom(
+                                          primary: Palette.LightSecondary,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: getProportionateScreenWidth(5),
+                                    ),
+                                    Expanded(
+                                      child: TextButton.icon(
+                                        onPressed: () => tripStepperViewModel.cancelToAddRestaurant(index),
+                                        icon: Icon(
+                                          Icons.cancel_outlined,
+                                          color: Palette.Outline,
+                                        ),
+                                        label: Text(
+                                          'ไม่ต้องการ',
+                                          style: FontAssets.bodyText,
+                                        ),
+                                        style: TextButton.styleFrom(
+                                          primary: Palette.BackgroundColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : SizedBox();
+                        }
                       } else {
                         return Text('${snapshot.error}');
                       }

@@ -223,6 +223,10 @@ class TripStepperViewModel with ChangeNotifier {
     return _mealsIndex;
   }
 
+  void cancelToAddRestaurant(int index){
+    
+  }
+
   List get steps => _steps;
   int get index => _index;
   List get vehicles => _vehicles;

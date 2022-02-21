@@ -44,6 +44,8 @@ class FontAssets {
       color: Palette.SecondaryColor, fontWeight: FontWeight.bold, fontSize: 16);
   static const TextStyle mealsRecommendText = TextStyle(
       color: Palette.LightSecondary, fontWeight: FontWeight.bold, fontSize: 12);
+  static const TextStyle addRestaurantText =
+      TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14);
 }
 
 class GoogleAssets {
