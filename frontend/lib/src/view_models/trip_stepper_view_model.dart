@@ -107,7 +107,9 @@ class TripStepperViewModel with ChangeNotifier {
     trip.firstLocation = await tripItems[0].no == 0
         ? tripItems[0].locationName
         : tripItems[1].locationName;
-    trip.lastLocation = tripItems[tripItems.length - 1].locationName;
+    trip.lastLocation = await tripItems[tripItems.length - 1].no < 0
+        ? tripItems[tripItems.length - 2].locationName
+        : tripItems[tripItems.length - 1].locationName;
     _tripsOperations.updateTrip(trip);
     if (item.startTime != null) {
       calculateStartTimeForTripItem(tripItems);
@@ -131,7 +133,8 @@ class TripStepperViewModel with ChangeNotifier {
     }
   }
 
-  void setUpStartTime(DateTime time, List<TripItem> tripItems,int index) async {
+  void setUpStartTime(
+      DateTime time, List<TripItem> tripItems, int index) async {
     tripItems[index].startTime = await time.toIso8601String();
     await calculateStartTimeForTripItem(tripItems);
     notifyListeners();
@@ -200,7 +203,9 @@ class TripStepperViewModel with ChangeNotifier {
     trip.firstLocation = await tripItems[0].no == 0
         ? tripItems[0].locationName
         : tripItems[1].locationName;
-    trip.lastLocation = await tripItems[tripItems.length - 1].locationName;
+    trip.lastLocation = await tripItems[tripItems.length - 1].no < 0
+        ? tripItems[tripItems.length - 2].locationName
+        : tripItems[tripItems.length - 1].locationName;
     trip.totalTripItem = await tripItems.length;
     await _tripsOperations.updateTrip(trip);
     await _tripItemOperations.deleteTripItem(item);
