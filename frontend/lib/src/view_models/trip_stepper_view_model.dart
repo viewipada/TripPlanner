@@ -277,6 +277,11 @@ class TripStepperViewModel with ChangeNotifier {
     // notifyListeners();
   }
 
+  void deleteAddMealButton(int index, List<TripItem> tripItems) async {
+    await tripItems.removeAt(index);
+    notifyListeners();
+  }
+
   List get steps => _steps;
   int get index => _index;
   List get vehicles => _vehicles;

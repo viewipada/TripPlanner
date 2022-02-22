@@ -118,7 +118,7 @@ class _FoodStepSelectionState extends State<FoodStepSelection> {
                 .map((index, item) => MapEntry(
                     index,
                     item.locationName == ""
-                        ? addMeal()
+                        ? addMeal(tripStepperViewModel, index, tripItems)
                         : buildTripItem(
                             index,
                             tripStepperViewModel,
@@ -492,7 +492,8 @@ Widget buildTripItem(
   );
 }
 
-Widget addMeal() {
+Widget addMeal(TripStepperViewModel tripStepperViewModel, int index,
+    List<TripItem> tripItems) {
   return Padding(
     key: UniqueKey(),
     padding: EdgeInsets.only(top: getProportionateScreenHeight(5)),
@@ -523,7 +524,8 @@ Widget addMeal() {
         ),
         Expanded(
           child: TextButton.icon(
-            onPressed: () => {},
+            onPressed: () =>
+                tripStepperViewModel.deleteAddMealButton(index, tripItems),
             icon: Icon(
               Icons.cancel_outlined,
               color: Palette.Outline,
