@@ -129,7 +129,8 @@ class _TripStepperPageState extends State<TripStepperPage> {
                                             tripStepperViewModel:
                                                 tripStepperViewModel,
                                             tripItems: dataList,
-                                            trip: data);
+                                            trip: data,
+                                            realLength: dataList.length);
                                       } else {
                                         return Loading();
                                       }

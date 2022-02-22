@@ -21,15 +21,17 @@ class FoodStepSelection extends StatefulWidget {
     required this.tripStepperViewModel,
     required this.tripItems,
     required this.trip,
+    required this.realLength,
   });
 
   final TripStepperViewModel tripStepperViewModel;
   final List<TripItem> tripItems;
   final Trip trip;
+  final int realLength;
 
   @override
   _FoodStepSelectionState createState() => _FoodStepSelectionState(
-      this.tripStepperViewModel, this.tripItems, this.trip);
+      this.tripStepperViewModel, this.tripItems, this.trip, this.realLength);
 }
 
 class _FoodStepSelectionState extends State<FoodStepSelection> {
@@ -37,8 +39,10 @@ class _FoodStepSelectionState extends State<FoodStepSelection> {
   final TripStepperViewModel tripStepperViewModel;
   List<TripItem> tripItems;
   final Trip trip;
+  final int realLength;
 
-  _FoodStepSelectionState(this.tripStepperViewModel, this.tripItems, this.trip);
+  _FoodStepSelectionState(
+      this.tripStepperViewModel, this.tripItems, this.trip, this.realLength);
 
   @override
   void initState() {
@@ -115,8 +119,15 @@ class _FoodStepSelectionState extends State<FoodStepSelection> {
                     index,
                     item.locationName == ""
                         ? addMeal()
-                        : buildTripItem(index, tripStepperViewModel, context,
-                            item, tripItems, trip, slidableController)))
+                        : buildTripItem(
+                            index,
+                            tripStepperViewModel,
+                            context,
+                            item,
+                            tripItems,
+                            trip,
+                            slidableController,
+                            realLength)))
                 .values
                 .toList(),
             proxyDecorator:
@@ -157,7 +168,8 @@ Widget buildTripItem(
     TripItem item,
     List<TripItem> tripItems,
     Trip trip,
-    SlidableController slidableController) {
+    SlidableController slidableController,
+    int realLength) {
   _showDurationSelectionAlert(
           BuildContext context,
           TripStepperViewModel tripStepperViewModel,
@@ -215,12 +227,12 @@ Widget buildTripItem(
         ),
       );
   return Slidable(
-    key: Key('${item.itemId}'),
+    key: UniqueKey(),
     controller: slidableController,
     actionPane: SlidableDrawerActionPane(),
     actionExtentRatio: 0.25,
     movementDuration: Duration(milliseconds: 500),
-    enabled: tripItems.length > 1 ? true : false,
+    enabled: realLength > 1 && item.no >= 0 ? true : false,
     secondaryActions: [
       InkWell(
         onTap: () {
