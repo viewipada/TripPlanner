@@ -104,12 +104,16 @@ class TripStepperViewModel with ChangeNotifier {
     final item = tripItems.removeAt(oldIndex);
     tripItems.insert(newIndex, item);
     await reOrderColumnNo(tripItems);
-    trip.firstLocation = await tripItems[0].no == 0
-        ? tripItems[0].locationName
-        : tripItems[1].locationName;
-    trip.lastLocation = await tripItems[tripItems.length - 1].no < 0
-        ? tripItems[tripItems.length - 2].locationName
-        : tripItems[tripItems.length - 1].locationName;
+    List<int> realIndex = [];
+    var indexWithoutMeals = await tripItems.where((element) => element.no >= 0);
+    indexWithoutMeals.forEach((element) {
+      realIndex.add(tripItems.indexOf(element));
+    });
+
+    trip.firstLocation = await tripItems[realIndex[0]].locationName;
+    trip.lastLocation =
+        await tripItems[realIndex[realIndex.length - 1]].locationName;
+    // trip.totalTripItem = await realIndex.length;
     _tripsOperations.updateTrip(trip);
     if (item.startTime != null) {
       calculateStartTimeForTripItem(tripItems);
@@ -200,13 +204,18 @@ class TripStepperViewModel with ChangeNotifier {
       Trip trip, List<TripItem> tripItems, TripItem item) async {
     await tripItems.remove(item);
     await reOrderColumnNo(tripItems);
-    trip.firstLocation = await tripItems[0].no == 0
-        ? tripItems[0].locationName
-        : tripItems[1].locationName;
-    trip.lastLocation = await tripItems[tripItems.length - 1].no < 0
-        ? tripItems[tripItems.length - 2].locationName
-        : tripItems[tripItems.length - 1].locationName;
-    trip.totalTripItem = await tripItems.length;
+
+    List<int> realIndex = [];
+    var indexWithoutMeals = await tripItems.where((element) => element.no >= 0);
+    indexWithoutMeals.forEach((element) {
+      realIndex.add(tripItems.indexOf(element));
+    });
+
+    trip.firstLocation = await tripItems[realIndex[0]].locationName;
+    trip.lastLocation =
+        await tripItems[realIndex[realIndex.length - 1]].locationName;
+    trip.totalTripItem = await realIndex.length;
+
     await _tripsOperations.updateTrip(trip);
     await _tripItemOperations.deleteTripItem(item);
     if (item.startTime != null) {
