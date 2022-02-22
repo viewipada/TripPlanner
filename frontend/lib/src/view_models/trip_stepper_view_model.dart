@@ -224,16 +224,17 @@ class TripStepperViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<int>> recommendMeal(List<TripItem> tripItems) async {
+  List<int> recommendMeal(List<TripItem> tripItems) {
+    _mealsIndex = [];
     if (tripItems[0].startTime != null) {
       _mealsIndex = [0, 0, 0];
-      _mealsIndex[0] = await tripItems.indexWhere(
+      _mealsIndex[0] = tripItems.indexWhere(
         (element) => DateTime.parse(element.startTime!).hour >= 9,
       );
-      _mealsIndex[1] = await tripItems.indexWhere(
+      _mealsIndex[1] = tripItems.indexWhere(
         (element) => DateTime.parse(element.startTime!).hour >= 12,
       );
-      _mealsIndex[2] = await tripItems.indexWhere(
+      _mealsIndex[2] = tripItems.indexWhere(
         (element) => DateTime.parse(element.startTime!).hour >= 18,
       );
     }

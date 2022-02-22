@@ -205,7 +205,7 @@ Widget buildTripItem(
         ),
       );
   return Slidable(
-    key: Key('${item.itemId}'),
+    key: UniqueKey(),
     controller: slidableController,
     actionPane: SlidableDrawerActionPane(),
     actionExtentRatio: 0.25,
@@ -281,45 +281,77 @@ Widget buildTripItem(
                       ],
                     ),
                   ),
-                  FutureBuilder(
-                    future: tripStepperViewModel.recommendMeal(tripItems),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        var mealsIndex = snapshot.data as List<int>;
-                        return mealsIndex.isNotEmpty && mealsIndex[2] == index
+                  // FutureBuilder(
+                  //   future: tripStepperViewModel.recommendMeal(tripItems),
+                  //   builder: (context, snapshot) {
+                  //     if (snapshot.hasData) {
+                  //       var mealsIndex = snapshot.data as List<int>;
+                  //       return mealsIndex.isNotEmpty && mealsIndex[2] == index
+                  //           ? recommendMeals(
+                  //               'มื้อเย็น',
+                  //               Icon(
+                  //                 Icons.nights_stay_rounded,
+                  //                 color: Palette.LightSecondary,
+                  //                 size: 18,
+                  //               ),
+                  //             )
+                  //           : mealsIndex.isNotEmpty && mealsIndex[1] == index
+                  //               ? recommendMeals(
+                  //                   'มื้อเที่ยง',
+                  //                   Icon(
+                  //                     Icons.wb_sunny_rounded,
+                  //                     color: Palette.LightSecondary,
+                  //                     size: 20,
+                  //                   ),
+                  //                 )
+                  //               : mealsIndex.isNotEmpty &&
+                  //                       mealsIndex[0] == index
+                  //                   ? recommendMeals(
+                  //                       'มื้อเช้า',
+                  //                       Icon(
+                  //                         Icons.wb_twilight_rounded,
+                  //                         color: Palette.LightSecondary,
+                  //                         size: 18,
+                  //                       ),
+                  //                     )
+                  //                   : SizedBox();
+                  //     } else {
+                  //       return Container(color: Colors.green, height: 10);
+                  //     }
+                  //   },
+                  // ),
+                  if (tripStepperViewModel.recommendMeal(tripItems).isNotEmpty)
+                    tripStepperViewModel.recommendMeal(tripItems)[2] == index
+                        ? recommendMeals(
+                            'มื้อเย็น',
+                            Icon(
+                              Icons.nights_stay_rounded,
+                              color: Palette.LightSecondary,
+                              size: 18,
+                            ),
+                          )
+                        : tripStepperViewModel.recommendMeal(tripItems)[1] ==
+                                index
                             ? recommendMeals(
-                                'มื้อเย็น',
+                                'มื้อเที่ยง',
                                 Icon(
-                                  Icons.nights_stay_rounded,
+                                  Icons.wb_sunny_rounded,
                                   color: Palette.LightSecondary,
-                                  size: 18,
+                                  size: 20,
                                 ),
                               )
-                            : mealsIndex.isNotEmpty && mealsIndex[1] == index
+                            : tripStepperViewModel
+                                        .recommendMeal(tripItems)[0] ==
+                                    index
                                 ? recommendMeals(
-                                    'มื้อเที่ยง',
+                                    'มื้อเช้า',
                                     Icon(
-                                      Icons.wb_sunny_rounded,
+                                      Icons.wb_twilight_rounded,
                                       color: Palette.LightSecondary,
-                                      size: 20,
+                                      size: 18,
                                     ),
                                   )
-                                : mealsIndex.isNotEmpty &&
-                                        mealsIndex[0] == index
-                                    ? recommendMeals(
-                                        'มื้อเช้า',
-                                        Icon(
-                                          Icons.wb_twilight_rounded,
-                                          color: Palette.LightSecondary,
-                                          size: 18,
-                                        ),
-                                      )
-                                    : SizedBox();
-                      } else {
-                        return Text('${snapshot.error}');
-                      }
-                    },
-                  ),
+                                : SizedBox()
                 ],
               ),
         Container(
@@ -423,7 +455,7 @@ Widget buildTripItem(
                                         content: Stack(
                                           children: [
                                             hourMinute24H(tripStepperViewModel,
-                                                tripItems,index),
+                                                tripItems, index),
                                             SizedBox(
                                               height:
                                                   getProportionateScreenHeight(
@@ -536,8 +568,8 @@ Widget recommendMeals(String meal, Icon icon) {
   );
 }
 
-Widget hourMinute24H(
-    TripStepperViewModel tripStepperViewModel, List<TripItem> tripItems,int index) {
+Widget hourMinute24H(TripStepperViewModel tripStepperViewModel,
+    List<TripItem> tripItems, int index) {
   // DateTime _dateTime = DateTime.now();
   return new TimePickerSpinner(
     time: tripItems[index].startTime == null
@@ -554,6 +586,6 @@ Widget hourMinute24H(
     itemHeight: getProportionateScreenHeight(40),
     alignment: Alignment.center,
     onTimeChange: (time) =>
-        tripStepperViewModel.setUpStartTime(time, tripItems,index),
+        tripStepperViewModel.setUpStartTime(time, tripItems, index),
   );
 }
