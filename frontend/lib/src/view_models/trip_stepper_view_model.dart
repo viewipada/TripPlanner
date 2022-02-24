@@ -61,6 +61,7 @@ class TripStepperViewModel with ChangeNotifier {
   TripsOperations _tripsOperations = TripsOperations();
   TripItemOperations _tripItemOperations = TripItemOperations();
   List<int> _mealsIndex = [];
+  bool _startTimeIsValid = true;
 
   void go(int index) {
     if (index == -1 && _index <= 0) {
@@ -73,12 +74,13 @@ class TripStepperViewModel with ChangeNotifier {
       return;
     }
 
-    _index += index;
+    if (_startTimeIsValid) _index += index;
+
     notifyListeners();
   }
 
   void setStepOnTapped(int index) {
-    _index = index;
+    if (_startTimeIsValid && index <= _index || index == 0) _index = index;
     notifyListeners();
   }
 
@@ -282,9 +284,17 @@ class TripStepperViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  void isStartTimeValid(startTime) {
+    if (startTime == null && _index == 1)
+      _startTimeIsValid = false;
+    else
+      _startTimeIsValid = true;
+  }
+
   List get steps => _steps;
   int get index => _index;
   List get vehicles => _vehicles;
   IconData get vehiclesSelected => _vehiclesSelected;
   List<int> get mealsIndex => _mealsIndex;
+  bool get startTimeIsValid => _startTimeIsValid;
 }

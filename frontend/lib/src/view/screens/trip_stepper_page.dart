@@ -108,6 +108,8 @@ class _TripStepperPageState extends State<TripStepperPage> {
                                       if (snapshot.hasData) {
                                         var dataList =
                                             snapshot.data as List<TripItem>;
+                                        tripStepperViewModel.isStartTimeValid(
+                                            dataList[0].startTime);
                                         return TravelStepSelection(
                                             tripStepperViewModel:
                                                 tripStepperViewModel,
@@ -143,11 +145,14 @@ class _TripStepperPageState extends State<TripStepperPage> {
                   tripStepperViewModel.go(-1);
                 },
                 onStepContinue: () {
-                  tripStepperViewModel.go(1);
+                  tripStepperViewModel.startTimeIsValid
+                      ? tripStepperViewModel.go(1)
+                      : alertDialog(context,
+                          'ตั้งเวลา ณ จุดเริ่มต้น\nเราจะช่วยคุณจัดสรรเวลาให้ง่ายขึ้น');
                 },
                 onStepTapped: (index) {
                   tripStepperViewModel.setStepOnTapped(index);
-                  print(index);
+                  // print(index);
                 },
                 controlsBuilder: (BuildContext context,
                     {VoidCallback? onStepContinue,
@@ -193,4 +198,40 @@ class _TripStepperPageState extends State<TripStepperPage> {
       ],
     );
   }
+}
+
+alertDialog(BuildContext context, String title) {
+  return showDialog<String>(
+    context: context,
+    builder: (BuildContext _context) => AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      title: Text(
+        title,
+        style: TextStyle(
+          color: Palette.BodyText,
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+        ),
+        textAlign: TextAlign.center,
+      ),
+      contentPadding: EdgeInsets.zero,
+      actionsAlignment: MainAxisAlignment.center,
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(
+            _context,
+          ),
+          child: const Text(
+            'โอเค!',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }
