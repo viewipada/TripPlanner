@@ -1,6 +1,7 @@
 import 'package:trip_planner/src/models/response/review_response.dart';
 
 class LocationDetailResponse {
+  final int locationId;
   final double latitude;
   final double longitude;
   final String locationName;
@@ -17,6 +18,7 @@ class LocationDetailResponse {
   final List<ReviewResponse> reviews;
 
   LocationDetailResponse({
+    required this.locationId,
     required this.latitude,
     required this.longitude,
     required this.locationName,
@@ -37,6 +39,7 @@ class LocationDetailResponse {
     var reviewList = json['reviewers'] as List;
 
     return LocationDetailResponse(
+      locationId: json['locationId'],
       latitude: json['latitude'],
       longitude: json['longitude'],
       locationName: json['locationName'],
@@ -56,6 +59,7 @@ class LocationDetailResponse {
 
   // Map<String, dynamic> toJson() {
   //   final Map<String, dynamic> data = new Map<String, dynamic>();
+  //   data['locationId] = this.locationId;
   //   data['latitude'] = this.latitude;
   //   data['longitude'] = this.longitude;
   //   data['imageUrl'] = this.imageUrl;

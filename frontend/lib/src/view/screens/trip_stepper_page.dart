@@ -168,7 +168,7 @@ class _TripStepperPageState extends State<TripStepperPage> {
                   tripStepperViewModel.startTimeIsValid
                       ? tripStepperViewModel.go(1)
                       : alertDialog(context,
-                          'ตั้งเวลา ณ จุดเริ่มต้น\nเราจะช่วยคุณจัดสรรเวลาให้ง่ายขึ้น');
+                          'ตั้งเวลา ณ จุดเริ่มต้น\nเราจะช่วยให้คุณจัดสรรเวลาได้ง่ายขึ้น');
                 },
                 onStepTapped: (index) {
                   tripStepperViewModel.setStepOnTapped(index);
