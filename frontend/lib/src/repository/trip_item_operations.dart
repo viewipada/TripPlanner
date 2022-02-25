@@ -9,10 +9,10 @@ class TripItemOperations {
 
   final dbProvider = DatabaseRepository.instance;
 
-  createTripItem(TripItem item) async {
+  Future<int> createTripItem(TripItem item) async {
     final db = await dbProvider.database;
-    db!.insert('tripitem', item.toMap());
     print('item inserted');
+    return db!.insert('tripitem', item.toMap());
   }
 
   updateTripItem(TripItem item) async {

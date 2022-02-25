@@ -452,7 +452,7 @@ Widget buildTripItem(
                               label: Text(
                                 item.distance == null
                                     ? 'จุดเริ่มต้น'
-                                    : '${item.distance}',
+                                    : '${item.distance} m',
                                 style: FontAssets.hintText,
                               ),
                               style: ButtonStyle(

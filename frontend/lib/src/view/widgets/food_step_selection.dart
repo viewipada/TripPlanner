@@ -118,7 +118,8 @@ class _FoodStepSelectionState extends State<FoodStepSelection> {
                 .map((index, item) => MapEntry(
                     index,
                     item.locationName == ""
-                        ? addMeal(tripStepperViewModel, index, tripItems)
+                        ? addMeal(context, tripStepperViewModel, index,
+                            tripItems, trip)
                         : buildTripItem(
                             index,
                             tripStepperViewModel,
@@ -442,7 +443,7 @@ Widget buildTripItem(
                               label: Text(
                                 item.distance == null
                                     ? 'จุดเริ่มต้น'
-                                    : '${item.distance}',
+                                    : '${item.distance} m',
                                 style: FontAssets.hintText,
                               ),
                               style: ButtonStyle(
@@ -492,8 +493,8 @@ Widget buildTripItem(
   );
 }
 
-Widget addMeal(TripStepperViewModel tripStepperViewModel, int index,
-    List<TripItem> tripItems) {
+Widget addMeal(BuildContext context, TripStepperViewModel tripStepperViewModel,
+    int index, List<TripItem> tripItems, Trip trip) {
   return Padding(
     key: UniqueKey(),
     padding: EdgeInsets.only(top: getProportionateScreenHeight(5)),
@@ -502,7 +503,8 @@ Widget addMeal(TripStepperViewModel tripStepperViewModel, int index,
         Expanded(
           flex: 2,
           child: ElevatedButton.icon(
-            onPressed: () {},
+            onPressed: () => tripStepperViewModel.goToLocationRecommendPage(
+                context, tripItems, index, trip),
             icon: Icon(
               Icons.add,
               color: Colors.white,
