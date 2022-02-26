@@ -311,7 +311,9 @@ Widget buildTripItem(
           margin:
               EdgeInsets.symmetric(vertical: getProportionateScreenHeight(5)),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: item.locationCategory == 'ที่กิน'
+                ? Palette.BaseMeal
+                : Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
             boxShadow: [
               BoxShadow(
