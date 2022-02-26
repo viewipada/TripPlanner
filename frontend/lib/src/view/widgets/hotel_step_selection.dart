@@ -483,11 +483,10 @@ Widget buildTripItem(
                                     MaterialStateProperty.all(EdgeInsets.zero),
                                 alignment: Alignment.bottomLeft,
                               ),
-                              onPressed: () => _showDurationSelectionAlert(
-                                  context,
-                                  tripStepperViewModel,
-                                  item.no,
-                                  tripItems),
+                              onPressed: () => item.duration < 30
+                                  ? null
+                                  : _showDurationSelectionAlert(context,
+                                      tripStepperViewModel, item.no, tripItems),
                             ),
                           ],
                         ),
