@@ -111,6 +111,8 @@ class _LocationRecommendPageState extends State<LocationRecommendPage> {
                   Expanded(
                     child: ListView(
                       shrinkWrap: true,
+                      padding: EdgeInsets.only(
+                          bottom: getProportionateScreenHeight(15)),
                       children: locationList
                           .map(
                             (location) => InkWell(

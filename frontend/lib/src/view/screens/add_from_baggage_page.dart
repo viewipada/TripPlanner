@@ -96,6 +96,8 @@ class _AddFromBaggagePageState extends State<AddFromBaggagePage> {
                   Expanded(
                     child: ListView(
                       shrinkWrap: true,
+                      padding: EdgeInsets.only(
+                          bottom: getProportionateScreenHeight(15)),
                       children: locationList
                           .map(
                             (location) => InkWell(
