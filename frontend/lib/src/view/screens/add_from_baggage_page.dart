@@ -1,36 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
-import 'package:trip_planner/src/models/response/location_recommend_response.dart';
+import 'package:trip_planner/src/models/response/baggage_response.dart';
 import 'package:trip_planner/src/view/widgets/loading.dart';
+import 'package:trip_planner/src/view/widgets/tag_category.dart';
 import 'package:trip_planner/src/view_models/search_start_point_view_model.dart';
 import 'package:trip_planner/src/view_models/trip_stepper_view_model.dart';
 
-class LocationRecommendPage extends StatefulWidget {
-  LocationRecommendPage({
-    required this.locationCategory,
-  });
-  final String locationCategory;
+class AddFromBaggagePage extends StatefulWidget {
+  AddFromBaggagePage();
 
   @override
-  _LocationRecommendPageState createState() =>
-      _LocationRecommendPageState(this.locationCategory);
+  _AddFromBaggagePageState createState() => _AddFromBaggagePageState();
 }
 
-class _LocationRecommendPageState extends State<LocationRecommendPage> {
-  final String locationCategory;
-  _LocationRecommendPageState(this.locationCategory);
-
-  // @override
-  // void initState() {
-  //   Provider.of<TripStepperViewModel>(context, listen: false)
-  //       .getLocationRecommend();
-  //   super.initState();
-  // }
-
+class _AddFromBaggagePageState extends State<AddFromBaggagePage> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -48,7 +34,7 @@ class _LocationRecommendPageState extends State<LocationRecommendPage> {
           },
         ),
         title: Text(
-          locationCategory,
+          'กระเป๋าเดินทาง',
           style: FontAssets.headingText,
         ),
         centerTitle: true,
@@ -56,11 +42,10 @@ class _LocationRecommendPageState extends State<LocationRecommendPage> {
       ),
       body: SafeArea(
         child: FutureBuilder(
-          future: tripStepperViewModel.getLocationRecommend(),
+          future: tripStepperViewModel.getBaggageList(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
-              var locationList =
-                  snapshot.data as List<LocationRecommendResponse>;
+              var locationList = snapshot.data as List<BaggageResponse>;
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,7 +89,7 @@ class _LocationRecommendPageState extends State<LocationRecommendPage> {
                       vertical: getProportionateScreenHeight(10),
                     ),
                     child: Text(
-                      'แนะนำจากเส้นทางระหว่างสถานที่',
+                      'สถานที่ในกระเป๋าเดินทางของคุณ',
                       style: FontAssets.bodyText,
                     ),
                   ),
@@ -172,40 +157,16 @@ class _LocationRecommendPageState extends State<LocationRecommendPage> {
                                                     style:
                                                         FontAssets.subtitleText,
                                                   ),
-                                                  // Text(
-                                                  //   'เปิดกี่โมง',
-                                                  //   overflow: TextOverflow.ellipsis,
-                                                  //   maxLines: 2,
-                                                  //   style: FontAssets.bodyText,
-                                                  // ),
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        '${location.rating} ',
-                                                        style:
-                                                            FontAssets.bodyText,
-                                                      ),
-                                                      RatingBarIndicator(
-                                                        unratedColor:
-                                                            Palette.Outline,
-                                                        rating: location.rating,
-                                                        itemBuilder:
-                                                            (context, index) =>
-                                                                Icon(
-                                                          Icons.star_rounded,
-                                                          color: Palette
-                                                              .CautionColor,
-                                                        ),
-                                                        itemCount: 5,
-                                                        itemSize: 20,
-                                                      ),
-                                                    ],
+                                                  Text(
+                                                    location.description,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                    style: FontAssets.bodyText,
                                                   ),
                                                   Spacer(),
-                                                  Text(
-                                                    '${location.distance} m จากจุดก่อนหน้า',
-                                                    style: FontAssets
-                                                        .mealsRecommendText,
+                                                  TagCategory(
+                                                    category: location.category,
                                                   ),
                                                 ],
                                               ),
@@ -218,7 +179,7 @@ class _LocationRecommendPageState extends State<LocationRecommendPage> {
                                       alignment: Alignment.bottomRight,
                                       child: ElevatedButton(
                                         onPressed: () => tripStepperViewModel
-                                            .selectedLocation(
+                                            .selectedLocationFromBaggage(
                                                 context, location),
                                         child: Icon(Icons.add,
                                             color: Colors.white),

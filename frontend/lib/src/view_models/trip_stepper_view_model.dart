@@ -1,11 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:trip_planner/src/models/response/baggage_response.dart';
 import 'package:trip_planner/src/models/response/location_recommend_response.dart';
 import 'package:trip_planner/src/models/trip.dart';
 import 'package:trip_planner/src/models/trip_item.dart';
 import 'package:trip_planner/src/repository/trip_item_operations.dart';
 import 'package:trip_planner/src/repository/trips_operations.dart';
+import 'package:trip_planner/src/services/baggage_service.dart';
 import 'package:trip_planner/src/services/location_service.dart';
+import 'package:trip_planner/src/view/screens/add_from_baggage_page.dart';
 import 'package:trip_planner/src/view/screens/location_detail_page.dart';
 import 'package:trip_planner/src/view/screens/location_recommend_page.dart';
 
@@ -297,12 +300,12 @@ class TripStepperViewModel with ChangeNotifier {
   }
 
   void goToLocationRecommendPage(BuildContext context, List<TripItem> tripItems,
-      int index, Trip trip) async {
+      int index, Trip trip, String locationCategory) async {
     final LocationRecommendResponse? result = await Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) =>
-              LocationRecommendPage(locationCategory: 'ที่กิน')),
+              LocationRecommendPage(locationCategory: locationCategory)),
     );
 
     if (result != null && trip.tripId != null) {
@@ -320,7 +323,10 @@ class TripStepperViewModel with ChangeNotifier {
 
       item.distance = result.distance;
 
-      tripItems.replaceRange(index, index + 1, [item]);
+      if (index == tripItems.length)
+        tripItems.add(item);
+      else
+        tripItems.replaceRange(index, index + 1, [item]);
 
       int tripItemId = await _tripItemOperations.createTripItem(item);
       item.itemId = tripItemId;
@@ -337,15 +343,64 @@ class TripStepperViewModel with ChangeNotifier {
       trip.lastLocation =
           await tripItems[realIndex[realIndex.length - 1]].locationName;
       trip.totalTripItem = await realIndex.length;
+
+      _tripsOperations.updateTrip(trip);
     }
     notifyListeners();
   }
 
+  void goToAddFromBaggagePage(BuildContext context, List<TripItem> tripItems,
+      int index, Trip trip) async {
+    final BaggageResponse? result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddFromBaggagePage()),
+    );
+
+    if (result != null && trip.tripId != null) {
+      var item = TripItem(
+          day: 1,
+          no: index,
+          locationId: result.locationId,
+          locationCategory: result.category,
+          locationName: result.locationName,
+          imageUrl: result.imageUrl,
+          latitude: result.latitude,
+          longitude: result.longitude,
+          duration: 60,
+          tripId: trip.tripId!);
+
+      // item.distance = result.distance;
+
+      tripItems.add(item);
+
+      int tripItemId = await _tripItemOperations.createTripItem(item);
+      item.itemId = tripItemId;
+      await reOrderColumnNo(tripItems);
+      await calculateStartTimeForTripItem(tripItems);
+
+      List<int> realIndex = [];
+      var indexWithoutMeals =
+          await tripItems.where((element) => element.no >= 0);
+      indexWithoutMeals.forEach((element) {
+        realIndex.add(tripItems.indexOf(element));
+      });
+      trip.firstLocation = await tripItems[realIndex[0]].locationName;
+      trip.lastLocation =
+          await tripItems[realIndex[realIndex.length - 1]].locationName;
+      trip.totalTripItem = await realIndex.length;
+
+      _tripsOperations.updateTrip(trip);
+    }
+    notifyListeners();
+  }
+
+  Future<List<BaggageResponse>> getBaggageList() async {
+    return await BaggageService().getBaggageList();
+  }
+
   Future<List<LocationRecommendResponse>> getLocationRecommend() async {
     _locationRecommend = await LocationService().getLocationRecommend();
-    // print(_locationRecommend);
     return _locationRecommend;
-    // notifyListeners();
   }
 
   void goToLocationDetail(BuildContext context, int locationId) {
@@ -359,6 +414,11 @@ class TripStepperViewModel with ChangeNotifier {
 
   void selectedLocation(
       BuildContext context, LocationRecommendResponse location) {
+    Navigator.pop(context, location);
+  }
+
+  void selectedLocationFromBaggage(
+      BuildContext context, BaggageResponse location) {
     Navigator.pop(context, location);
   }
 

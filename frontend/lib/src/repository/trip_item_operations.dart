@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:trip_planner/src/models/trip.dart';
 import 'package:trip_planner/src/models/trip_item.dart';
 import 'package:trip_planner/src/repository/database.dart';
 

@@ -1,5 +1,5 @@
 import 'package:trip_planner/src/models/response/my_review_response.dart';
-import 'package:trip_planner/src/models/response/trip_card_response.dart';
+// import 'package:trip_planner/src/models/response/trip_card_response.dart';
 
 class ProfileResponse {
   final String userImage;

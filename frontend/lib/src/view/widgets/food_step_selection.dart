@@ -505,7 +505,7 @@ Widget addMeal(BuildContext context, TripStepperViewModel tripStepperViewModel,
           flex: 2,
           child: ElevatedButton.icon(
             onPressed: () => tripStepperViewModel.goToLocationRecommendPage(
-                context, tripItems, index, trip),
+                context, tripItems, index, trip,"ที่กิน"),
             icon: Icon(
               Icons.add,
               color: Colors.white,

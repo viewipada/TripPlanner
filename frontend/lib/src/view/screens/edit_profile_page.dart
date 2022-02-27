@@ -1,4 +1,3 @@
-import 'package:cool_dropdown/cool_dropdown.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -11,7 +10,6 @@ import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/view/widgets/loading.dart';
-import 'package:trip_planner/src/view_models/create_location_view_model.dart';
 import 'package:trip_planner/src/view_models/profile_view_model.dart';
 
 class EditProfilePage extends StatefulWidget {
