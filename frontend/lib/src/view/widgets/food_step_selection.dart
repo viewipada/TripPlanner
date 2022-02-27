@@ -21,17 +21,15 @@ class FoodStepSelection extends StatefulWidget {
     required this.tripStepperViewModel,
     required this.tripItems,
     required this.trip,
-    required this.realLength,
   });
 
   final TripStepperViewModel tripStepperViewModel;
   final List<TripItem> tripItems;
   final Trip trip;
-  final int realLength;
 
   @override
   _FoodStepSelectionState createState() => _FoodStepSelectionState(
-      this.tripStepperViewModel, this.tripItems, this.trip, this.realLength);
+      this.tripStepperViewModel, this.tripItems, this.trip);
 }
 
 class _FoodStepSelectionState extends State<FoodStepSelection> {
@@ -39,10 +37,8 @@ class _FoodStepSelectionState extends State<FoodStepSelection> {
   final TripStepperViewModel tripStepperViewModel;
   List<TripItem> tripItems;
   final Trip trip;
-  final int realLength;
 
-  _FoodStepSelectionState(
-      this.tripStepperViewModel, this.tripItems, this.trip, this.realLength);
+  _FoodStepSelectionState(this.tripStepperViewModel, this.tripItems, this.trip);
 
   @override
   void initState() {
@@ -128,7 +124,7 @@ class _FoodStepSelectionState extends State<FoodStepSelection> {
                             tripItems,
                             trip,
                             slidableController,
-                            realLength)))
+                          )))
                 .values
                 .toList(),
             proxyDecorator:
@@ -163,14 +159,14 @@ class _FoodStepSelectionState extends State<FoodStepSelection> {
 }
 
 Widget buildTripItem(
-    int index,
-    TripStepperViewModel tripStepperViewModel,
-    BuildContext context,
-    TripItem item,
-    List<TripItem> tripItems,
-    Trip trip,
-    SlidableController slidableController,
-    int realLength) {
+  int index,
+  TripStepperViewModel tripStepperViewModel,
+  BuildContext context,
+  TripItem item,
+  List<TripItem> tripItems,
+  Trip trip,
+  SlidableController slidableController,
+) {
   _showDurationSelectionAlert(
           BuildContext context,
           TripStepperViewModel tripStepperViewModel,
@@ -233,7 +229,7 @@ Widget buildTripItem(
     actionPane: SlidableDrawerActionPane(),
     actionExtentRatio: 0.25,
     movementDuration: Duration(milliseconds: 500),
-    enabled: realLength > 1 && item.no >= 0 ? true : false,
+    enabled: trip.totalTripItem > 1 && item.no >= 0 ? true : false,
     secondaryActions: [
       InkWell(
         onTap: () {
@@ -505,7 +501,7 @@ Widget addMeal(BuildContext context, TripStepperViewModel tripStepperViewModel,
           flex: 2,
           child: ElevatedButton.icon(
             onPressed: () => tripStepperViewModel.goToLocationRecommendPage(
-                context, tripItems, index, trip,"ที่กิน"),
+                context, tripItems, index, trip, "ที่กิน"),
             icon: Icon(
               Icons.add,
               color: Colors.white,
