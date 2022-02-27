@@ -135,11 +135,11 @@ class _TripStepperPageState extends State<TripStepperPage> {
                                                 snapshot.data as List<TripItem>;
                                             _tripItems = dataList;
                                             return FoodStepSelection(
-                                                tripStepperViewModel:
-                                                    tripStepperViewModel,
-                                                tripItems: dataList,
-                                                trip: data,
-                                                realLength: dataList.length);
+                                              tripStepperViewModel:
+                                                  tripStepperViewModel,
+                                              tripItems: dataList,
+                                              trip: data,
+                                            );
                                           } else {
                                             return Loading();
                                           }
