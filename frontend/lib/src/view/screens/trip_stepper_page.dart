@@ -31,29 +31,47 @@ class _TripStepperPageState extends State<TripStepperPage> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    final tripStepperViewModel = Provider.of<TripStepperViewModel>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "สร้างทริป",
-          style: FontAssets.headingText,
+    return WillPopScope(
+      child: Scaffold(
+        appBar: AppBar(
+          leading: TextButton(
+            onPressed: () => tripStepperViewModel.goBack(context),
+            child: Text("ยกเลิก"),
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.symmetric(
+                horizontal: getProportionateScreenWidth(15),
+              ),
+              alignment: Alignment.centerLeft,
+            ),
+          ),
+          leadingWidth: getProportionateScreenWidth(70),
+          title: Text(
+            "สร้างทริป",
+            style: FontAssets.headingText,
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          elevation: 0,
         ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
+        body: buildStepperCustom(context, tripStepperViewModel),
       ),
-      body: buildStepperCustom(context),
+      onWillPop: () async {
+        tripStepperViewModel.goBack(context);
+        return true;
+      },
     );
   }
 
-  Widget buildStepperCustom(BuildContext context) {
-    final tripStepperViewModel = Provider.of<TripStepperViewModel>(context);
+  Widget buildStepperCustom(
+      BuildContext context, TripStepperViewModel tripStepperViewModel) {
     late VoidCallback _onStepContinue;
     late VoidCallback _onStepCancel;
     TripsOperations tripsOperations = TripsOperations();
     TripItemOperations tripItemOperations = TripItemOperations();
-    Trip? _trip;
-    List<TripItem> _tripItems = [];
+    // Trip? _trip;
+    // List<TripItem> _tripItems = [];
 
     return Stack(
       children: [
@@ -62,7 +80,7 @@ class _TripStepperPageState extends State<TripStepperPage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               var data = snapshot.data as Trip;
-              _trip = data;
+              // _trip = data;
               return EnhanceStepper(
                 stepIconSize: 30,
                 type: StepperType.horizontal,
@@ -112,7 +130,7 @@ class _TripStepperPageState extends State<TripStepperPage> {
                                       if (snapshot.hasData) {
                                         var dataList =
                                             snapshot.data as List<TripItem>;
-                                        _tripItems = dataList;
+                                        // _tripItems = dataList;
                                         tripStepperViewModel.isStartTimeValid(
                                             dataList[0].startTime);
                                         return TravelStepSelection(
@@ -133,7 +151,7 @@ class _TripStepperPageState extends State<TripStepperPage> {
                                           if (snapshot.hasData) {
                                             var dataList =
                                                 snapshot.data as List<TripItem>;
-                                            _tripItems = dataList;
+                                            // _tripItems = dataList;
                                             return FoodStepSelection(
                                               tripStepperViewModel:
                                                   tripStepperViewModel,
@@ -152,7 +170,7 @@ class _TripStepperPageState extends State<TripStepperPage> {
                                           if (snapshot.hasData) {
                                             var dataList =
                                                 snapshot.data as List<TripItem>;
-                                            _tripItems = dataList;
+                                            // _tripItems = dataList;
                                             return HotelStepSelection(
                                               tripStepperViewModel:
                                                   tripStepperViewModel,
@@ -221,84 +239,84 @@ class _TripStepperPageState extends State<TripStepperPage> {
             // ),
           ),
         ),
-        Visibility(
-          visible: tripStepperViewModel.index != 0,
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: getProportionateScreenWidth(15),
-                vertical: getProportionateScreenHeight(70),
-              ),
-              child: PopupMenuButton(
-                elevation: 5,
-                color: Palette.PrimaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                offset: Offset(0, -getProportionateScreenHeight(125)),
-                child: CircleAvatar(
-                  backgroundColor: Palette.PrimaryColor,
-                  foregroundColor: Colors.white,
-                  child: Icon(Icons.add),
-                ),
-                onSelected: (value) {
-                  if (value == 1)
-                    tripStepperViewModel.goToAddFromBaggagePage(
-                      context,
-                      _tripItems,
-                      _tripItems.length,
-                      _trip!,
-                    );
-                  else
-                    tripStepperViewModel.goToLocationRecommendPage(
-                        context,
-                        _tripItems,
-                        _tripItems.length,
-                        _trip!,
-                        tripStepperViewModel.index == 1
-                            ? "ที่เที่ยว"
-                            : tripStepperViewModel.index == 2
-                                ? "ที่กิน"
-                                : "ที่พัก");
-                },
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    child: Row(
-                      children: [
-                        ImageIcon(
-                          AssetImage(IconAssets.baggage),
-                          color: Colors.white,
-                          size: 22,
-                        ),
-                        Text(
-                          "   เพิ่มจากกระเป๋าเดินทาง",
-                          style: FontAssets.addRestaurantText,
-                        ),
-                      ],
-                    ),
-                    value: 1,
-                  ),
-                  PopupMenuItem(
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.add_location_alt_outlined,
-                          color: Colors.white,
-                        ),
-                        Text(
-                          "   เพิ่มจากสถานที่แนะนำ",
-                          style: FontAssets.addRestaurantText,
-                        ),
-                      ],
-                    ),
-                    value: 2,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
+        // Visibility(
+        //   visible: tripStepperViewModel.index != 0,
+        //   child: Align(
+        //     alignment: Alignment.bottomRight,
+        //     child: Padding(
+        //       padding: EdgeInsets.symmetric(
+        //         horizontal: getProportionateScreenWidth(15),
+        //         vertical: getProportionateScreenHeight(70),
+        //       ),
+        //       child: PopupMenuButton(
+        //         elevation: 5,
+        //         color: Palette.PrimaryColor,
+        //         shape: RoundedRectangleBorder(
+        //           borderRadius: BorderRadius.circular(10),
+        //         ),
+        //         offset: Offset(0, -getProportionateScreenHeight(125)),
+        //         child: CircleAvatar(
+        //           backgroundColor: Palette.PrimaryColor,
+        //           foregroundColor: Colors.white,
+        //           child: Icon(Icons.add),
+        //         ),
+        //         onSelected: (value) {
+        //           if (value == 1)
+        //             tripStepperViewModel.goToAddFromBaggagePage(
+        //               context,
+        //               _tripItems,
+        //               _tripItems.length,
+        //               _trip!,
+        //             );
+        //           else
+        //             tripStepperViewModel.goToLocationRecommendPage(
+        //                 context,
+        //                 _tripItems,
+        //                 _tripItems.length,
+        //                 _trip!,
+        //                 tripStepperViewModel.index == 1
+        //                     ? "ที่เที่ยว"
+        //                     : tripStepperViewModel.index == 2
+        //                         ? "ที่กิน"
+        //                         : "ที่พัก");
+        //         },
+        //         itemBuilder: (context) => [
+        //           PopupMenuItem(
+        //             child: Row(
+        //               children: [
+        //                 ImageIcon(
+        //                   AssetImage(IconAssets.baggage),
+        //                   color: Colors.white,
+        //                   size: 22,
+        //                 ),
+        //                 Text(
+        //                   "   เพิ่มจากกระเป๋าเดินทาง",
+        //                   style: FontAssets.addRestaurantText,
+        //                 ),
+        //               ],
+        //             ),
+        //             value: 1,
+        //           ),
+        //           PopupMenuItem(
+        //             child: Row(
+        //               children: [
+        //                 Icon(
+        //                   Icons.add_location_alt_outlined,
+        //                   color: Colors.white,
+        //                 ),
+        //                 Text(
+        //                   "   เพิ่มจากสถานที่แนะนำ",
+        //                   style: FontAssets.addRestaurantText,
+        //                 ),
+        //               ],
+        //             ),
+        //             value: 2,
+        //           ),
+        //         ],
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }

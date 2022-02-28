@@ -426,6 +426,11 @@ class TripStepperViewModel with ChangeNotifier {
     Navigator.pop(context, location);
   }
 
+  void goBack(BuildContext context) {
+    _index = 0;
+    Navigator.pop(context);
+  }
+
   List get steps => _steps;
   int get index => _index;
   List get vehicles => _vehicles;
