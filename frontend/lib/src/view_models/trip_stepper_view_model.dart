@@ -330,8 +330,6 @@ class TripStepperViewModel with ChangeNotifier {
 
       int tripItemId = await _tripItemOperations.createTripItem(item);
       item.itemId = tripItemId;
-      await reOrderColumnNo(tripItems);
-      await calculateStartTimeForTripItem(tripItems);
 
       List<int> realIndex = [];
       var indexWithoutMeals =
@@ -345,6 +343,10 @@ class TripStepperViewModel with ChangeNotifier {
       trip.totalTripItem = await realIndex.length;
 
       _tripsOperations.updateTrip(trip);
+
+      await reOrderColumnNo(tripItems);
+      if (tripItems[realIndex[0]].startTime != null)
+        await calculateStartTimeForTripItem(tripItems);
     }
     notifyListeners();
   }
@@ -375,8 +377,6 @@ class TripStepperViewModel with ChangeNotifier {
 
       int tripItemId = await _tripItemOperations.createTripItem(item);
       item.itemId = tripItemId;
-      await reOrderColumnNo(tripItems);
-      await calculateStartTimeForTripItem(tripItems);
 
       List<int> realIndex = [];
       var indexWithoutMeals =
@@ -390,6 +390,10 @@ class TripStepperViewModel with ChangeNotifier {
       trip.totalTripItem = await realIndex.length;
 
       _tripsOperations.updateTrip(trip);
+
+      await reOrderColumnNo(tripItems);
+      if (tripItems[realIndex[0]].startTime != null)
+        await calculateStartTimeForTripItem(tripItems);
     }
     notifyListeners();
   }
