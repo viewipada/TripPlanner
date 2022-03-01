@@ -135,55 +135,48 @@ class _HotelStepSelectionState extends State<HotelStepSelection> {
             },
           ),
         ),
-        Divider(),
-        Container(
-          child: ListTile(
-            dense: true,
-            trailing: Icon(
-              Icons.add_circle,
-              color: Palette.PrimaryColor,
-            ),
-            title: Text(
-              "   เพิ่มจากกระเป๋าเดินทาง",
-              style: TextStyle(
-                  color: Palette.PrimaryColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14),
-            ),
-            onTap: () => tripStepperViewModel.goToAddFromBaggagePage(
-                context, tripItems, tripItems.length, trip),
+        ListTile(
+          dense: true,
+          contentPadding: EdgeInsets.zero,
+          trailing: Icon(
+            Icons.add_circle,
+            color: Palette.PrimaryColor,
           ),
-          color: Colors.white,
-        ),
-        Divider(),
-        Container(
-          child: ListTile(
-            dense: true,
-            trailing: Icon(
-              Icons.add_circle,
-              color: Palette.PrimaryColor,
-            ),
-            title: Text(
-              "   เพิ่มจากสถานที่แนะนำในเส้นทาง",
-              style: TextStyle(
-                  color: Palette.PrimaryColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14),
-            ),
-            onTap: () => tripStepperViewModel.goToLocationRecommendPage(
-                context,
-                tripItems,
-                tripItems.length,
-                trip,
-                tripStepperViewModel.index == 1
-                    ? "ที่เที่ยว"
-                    : tripStepperViewModel.index == 2
-                        ? "ที่กิน"
-                        : "ที่พัก"),
+          title: Text(
+            "   เพิ่มจากกระเป๋าเดินทาง",
+            style: TextStyle(
+                color: Palette.PrimaryColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 14),
           ),
-          color: Colors.white,
+          onTap: () => tripStepperViewModel.goToAddFromBaggagePage(
+              context, tripItems, tripItems.length, trip),
         ),
-        Divider(),
+        ListTile(
+          dense: true,
+          contentPadding: EdgeInsets.zero,
+          trailing: Icon(
+            Icons.add_circle,
+            color: Palette.PrimaryColor,
+          ),
+          title: Text(
+            "   เพิ่มจากสถานที่แนะนำในเส้นทาง",
+            style: TextStyle(
+                color: Palette.PrimaryColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 14),
+          ),
+          onTap: () => tripStepperViewModel.goToLocationRecommendPage(
+              context,
+              tripItems,
+              tripItems.length,
+              trip,
+              tripStepperViewModel.index == 1
+                  ? "ที่เที่ยว"
+                  : tripStepperViewModel.index == 2
+                      ? "ที่กิน"
+                      : "ที่พัก"),
+        ),
         SizedBox(
           height: getProportionateScreenHeight(55),
         ),
