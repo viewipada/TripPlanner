@@ -23,11 +23,22 @@ class TripItemOperations {
     await db!.delete('tripitem', where: 'itemId=?', whereArgs: [item.itemId]);
   }
 
+  Future<List<TripItem>> getAllTripItemsByTripIdAndDay(int tripId, int day) async {
+    final db = await dbProvider.database;
+    List<Map<String, dynamic>> allRows = await db!.rawQuery('''
+    SELECT * FROM tripitem 
+    WHERE tripitem.FK_tripItem_trip = ${tripId} and day = ${day} ORDER BY no ASC
+    ''');
+    List<TripItem> items =
+        allRows.map((item) => TripItem.fromMap(item)).toList();
+    return items;
+  }
+
   Future<List<TripItem>> getAllTripItemsByTripId(int tripId) async {
     final db = await dbProvider.database;
     List<Map<String, dynamic>> allRows = await db!.rawQuery('''
     SELECT * FROM tripitem 
-    WHERE tripitem.FK_tripItem_trip = ${tripId} ORDER BY no ASC
+    WHERE tripitem.FK_tripItem_trip = ${tripId} ORDER BY day ASC, no ASC
     ''');
     List<TripItem> items =
         allRows.map((item) => TripItem.fromMap(item)).toList();

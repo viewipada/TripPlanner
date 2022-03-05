@@ -27,7 +27,7 @@ class _VehicleSelectionState extends State<VehicleSelection> {
   @override
   void initState() {
     Provider.of<TripStepperViewModel>(context, listen: false)
-        .isStartTimeValid(null);
+        .isStartTimeValid([], []);
     super.initState();
   }
 

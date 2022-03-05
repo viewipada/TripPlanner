@@ -69,9 +69,6 @@ class _TripStepperPageState extends State<TripStepperPage> {
     late VoidCallback _onStepContinue;
     late VoidCallback _onStepCancel;
     TripsOperations tripsOperations = TripsOperations();
-    TripItemOperations tripItemOperations = TripItemOperations();
-    // Trip? _trip;
-    // List<TripItem> _tripItems = [];
 
     return Stack(
       children: [
@@ -80,7 +77,8 @@ class _TripStepperPageState extends State<TripStepperPage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               var data = snapshot.data as Trip;
-              // _trip = data;
+              List<int> days =
+                  List<int>.generate(data.totalDay, (int index) => index + 1);
               return EnhanceStepper(
                 stepIconSize: 30,
                 type: StepperType.horizontal,
@@ -123,64 +121,36 @@ class _TripStepperPageState extends State<TripStepperPage> {
                                 tripStepperViewModel: tripStepperViewModel,
                                 trip: data)
                             : tripStepperViewModel.index == 1
-                                ? FutureBuilder(
-                                    future: tripItemOperations
-                                        .getAllTripItemsByTripId(tripId),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasData) {
-                                        var dataList =
-                                            snapshot.data as List<TripItem>;
-                                        // _tripItems = dataList;
-                                        tripStepperViewModel.isStartTimeValid(
-                                            dataList[0].startTime);
-                                        return TravelStepSelection(
-                                            tripStepperViewModel:
-                                                tripStepperViewModel,
-                                            tripItems: dataList,
-                                            trip: data);
-                                      } else {
-                                        return Loading();
-                                      }
-                                    },
+                                ? TravelStepSelection(
+                                    tripStepperViewModel: tripStepperViewModel,
+                                    trip: data,
+                                    days: days,
                                   )
                                 : tripStepperViewModel.index == 2
                                     ? FutureBuilder(
-                                        future: tripItemOperations
+                                        future: tripStepperViewModel
                                             .getAllTripItemsByTripId(tripId),
                                         builder: (context, snapshot) {
                                           if (snapshot.hasData) {
                                             var dataList =
                                                 snapshot.data as List<TripItem>;
-                                            // _tripItems = dataList;
                                             return FoodStepSelection(
                                               tripStepperViewModel:
                                                   tripStepperViewModel,
                                               tripItems: dataList,
                                               trip: data,
+                                              days: days,
                                             );
                                           } else {
                                             return Loading();
                                           }
                                         },
                                       )
-                                    : FutureBuilder(
-                                        future: tripItemOperations
-                                            .getAllTripItemsByTripId(tripId),
-                                        builder: (context, snapshot) {
-                                          if (snapshot.hasData) {
-                                            var dataList =
-                                                snapshot.data as List<TripItem>;
-                                            // _tripItems = dataList;
-                                            return HotelStepSelection(
-                                              tripStepperViewModel:
-                                                  tripStepperViewModel,
-                                              tripItems: dataList,
-                                              trip: data,
-                                            );
-                                          } else {
-                                            return Loading();
-                                          }
-                                        },
+                                    : HotelStepSelection(
+                                        tripStepperViewModel:
+                                            tripStepperViewModel,
+                                        trip: data,
+                                        days: days,
                                       ),
                       ),
                     )

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:intl/intl.dart';
@@ -13,32 +14,33 @@ import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/trip.dart';
 import 'package:trip_planner/src/models/trip_item.dart';
+import 'package:trip_planner/src/view/widgets/loading.dart';
 import 'package:trip_planner/src/view_models/trip_stepper_view_model.dart';
 
 class TravelStepSelection extends StatefulWidget {
   TravelStepSelection({
     required this.tripStepperViewModel,
-    required this.tripItems,
     required this.trip,
+    required this.days,
   });
 
   final TripStepperViewModel tripStepperViewModel;
-  final List<TripItem> tripItems;
   final Trip trip;
+  final List<int> days;
 
   @override
   _TravelStepSelectionState createState() => _TravelStepSelectionState(
-      this.tripStepperViewModel, this.tripItems, this.trip);
+      this.tripStepperViewModel, this.trip, this.days);
 }
 
 class _TravelStepSelectionState extends State<TravelStepSelection> {
   final SlidableController slidableController = SlidableController();
   final TripStepperViewModel tripStepperViewModel;
-  final List<TripItem> tripItems;
+  List<TripItem> tripItems = [];
   final Trip trip;
+  List<int> days;
 
-  _TravelStepSelectionState(
-      this.tripStepperViewModel, this.tripItems, this.trip);
+  _TravelStepSelectionState(this.tripStepperViewModel, this.trip, this.days);
 
   @override
   Widget build(BuildContext context) {
@@ -91,46 +93,89 @@ class _TravelStepSelectionState extends State<TravelStepSelection> {
             ),
           ],
         ),
+        Container(
+          width: double.infinity,
+          margin: EdgeInsets.only(top: getProportionateScreenHeight(5)),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: days
+                      .map((day) => buildDayButton(day, tripStepperViewModel))
+                      .toList(),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.add_circle,
+                    color: Palette.LightSecondary,
+                    size: 30,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+        Divider(),
         Padding(
           padding: EdgeInsets.only(
             top: getProportionateScreenHeight(10),
             bottom: getProportionateScreenHeight(15),
           ),
-          child: ReorderableListView(
-            clipBehavior: Clip.antiAlias,
-            shrinkWrap: true,
-            scrollController: ScrollController(),
-            children: tripItems
-                .asMap()
-                .map((index, item) => MapEntry(
-                    index,
-                    buildTripItem(index, tripStepperViewModel, context, item,
-                        tripItems, trip, slidableController)))
-                .values
-                .toList(),
-            proxyDecorator:
-                (Widget child, int index, Animation<double> animation) {
-              return Material(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Palette.BackgroundColor,
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 0,
-                        blurRadius: 3,
-                        offset: Offset(2, 4), // changes position of shadow
+          child: FutureBuilder(
+            future: tripStepperViewModel
+                .getAllTripItemsByTripIdAndDay(trip.tripId!),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                var _tripItems = snapshot.data as List<TripItem>;
+                tripItems = _tripItems;
+                
+                tripStepperViewModel
+                    .getAllTripItemsByTripId(trip.tripId!)
+                    .then((value) => tripStepperViewModel.isStartTimeValid(value,days));
+
+                return ReorderableListView(
+                  clipBehavior: Clip.antiAlias,
+                  shrinkWrap: true,
+                  scrollController: ScrollController(),
+                  children: tripItems
+                      .asMap()
+                      .map((index, item) => MapEntry(
+                          index,
+                          buildTripItem(index, tripStepperViewModel, context,
+                              item, tripItems, trip, slidableController)))
+                      .values
+                      .toList(),
+                  proxyDecorator:
+                      (Widget child, int index, Animation<double> animation) {
+                    return Material(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Palette.BackgroundColor,
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 0,
+                              blurRadius: 3,
+                              offset: Offset(2, 4),
+                            ),
+                          ],
+                        ),
+                        child: child,
                       ),
-                    ],
-                  ),
-                  child: child,
-                ),
-              );
-            },
-            onReorder: (int oldIndex, int newIndex) {
-              tripStepperViewModel.onReorder(
-                  oldIndex, newIndex, tripItems, trip);
+                    );
+                  },
+                  onReorder: (int oldIndex, int newIndex) {
+                    tripStepperViewModel.onReorder(
+                        oldIndex, newIndex, tripItems, trip);
+                  },
+                );
+              } else {
+                return Loading();
+              }
             },
           ),
         ),
@@ -254,7 +299,7 @@ Widget buildTripItem(
     actionPane: SlidableDrawerActionPane(),
     actionExtentRatio: 0.25,
     movementDuration: Duration(milliseconds: 500),
-    enabled: trip.totalTripItem > 1 ? true : false,
+    enabled: tripItems.length > 1 ? true : false,
     secondaryActions: [
       InkWell(
         onTap: () {
@@ -583,6 +628,38 @@ Widget buildTripItem(
         ),
       ],
     ),
+  );
+}
+
+Widget buildDayButton(int day, TripStepperViewModel tripStepperViewModel) {
+  return Column(
+    children: [
+      SizedBox(
+        width: getProportionateScreenWidth(70),
+        child: TextButton(
+          onPressed: () => tripStepperViewModel.onDayTapped(day),
+          child: Text(
+            'วันที่ ${day}',
+            style: TextStyle(
+              color: Palette.AdditionText,
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          style: TextButton.styleFrom(
+            primary: Palette.LightOrangeColor,
+          ),
+        ),
+      ),
+      Visibility(
+        visible: tripStepperViewModel.day == day,
+        child: Container(
+          height: 3,
+          width: getProportionateScreenWidth(70),
+          color: Palette.SecondaryColor,
+        ),
+      ),
+    ],
   );
 }
 

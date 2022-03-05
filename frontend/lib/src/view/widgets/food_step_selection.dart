@@ -21,30 +21,35 @@ class FoodStepSelection extends StatefulWidget {
     required this.tripStepperViewModel,
     required this.tripItems,
     required this.trip,
+    required this.days,
   });
 
   final TripStepperViewModel tripStepperViewModel;
   final List<TripItem> tripItems;
   final Trip trip;
+  final List<int> days;
 
   @override
   _FoodStepSelectionState createState() => _FoodStepSelectionState(
-      this.tripStepperViewModel, this.tripItems, this.trip);
+      this.tripStepperViewModel, this.tripItems, this.trip, this.days);
 }
 
 class _FoodStepSelectionState extends State<FoodStepSelection> {
   final SlidableController slidableController = SlidableController();
   final TripStepperViewModel tripStepperViewModel;
-  List<TripItem> tripItems;
+  List<TripItem> tripItems = [];
   final Trip trip;
+  List<int> days;
 
-  _FoodStepSelectionState(this.tripStepperViewModel, this.tripItems, this.trip);
+  _FoodStepSelectionState(
+      this.tripStepperViewModel, this.tripItems, this.trip, this.days);
 
   @override
   void initState() {
-    Provider.of<TripStepperViewModel>(context, listen: false)
-        .getMeals(tripItems, trip.tripId!)
-        .then((value) => tripItems = value);
+    if (tripItems.isNotEmpty)
+      Provider.of<TripStepperViewModel>(context, listen: false)
+          .getMeals(tripItems, trip.tripId!, trip.totalDay)
+          .then((value) => tripItems = value);
 
     super.initState();
   }
@@ -100,6 +105,32 @@ class _FoodStepSelectionState extends State<FoodStepSelection> {
             ),
           ],
         ),
+        Container(
+          width: double.infinity,
+          margin: EdgeInsets.only(top: getProportionateScreenHeight(5)),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: days
+                      .map((day) => buildDayButton(day, tripStepperViewModel))
+                      .toList(),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.add_circle,
+                    color: Palette.LightSecondary,
+                    size: 30,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+        Divider(),
         Padding(
           padding: EdgeInsets.only(
             top: getProportionateScreenHeight(10),
@@ -111,20 +142,28 @@ class _FoodStepSelectionState extends State<FoodStepSelection> {
             scrollController: ScrollController(),
             children: tripItems
                 .asMap()
-                .map((index, item) => MapEntry(
+                .map(
+                  (index, item) => MapEntry(
                     index,
-                    item.locationName == ""
+                    item.locationName == "" &&
+                            item.day == tripStepperViewModel.day
                         ? addMeal(context, tripStepperViewModel, index,
                             tripItems, trip)
-                        : buildTripItem(
-                            index,
-                            tripStepperViewModel,
-                            context,
-                            item,
-                            tripItems,
-                            trip,
-                            slidableController,
-                          )))
+                        : item.day == tripStepperViewModel.day
+                            ? buildTripItem(
+                                index,
+                                tripStepperViewModel,
+                                context,
+                                item,
+                                tripItems,
+                                trip,
+                                slidableController,
+                              )
+                            : SizedBox(
+                                key: UniqueKey(),
+                              ),
+                  ),
+                )
                 .values
                 .toList(),
             proxyDecorator:
@@ -274,7 +313,7 @@ Widget buildTripItem(
     actionPane: SlidableDrawerActionPane(),
     actionExtentRatio: 0.25,
     movementDuration: Duration(milliseconds: 500),
-    enabled: trip.totalTripItem > 1 && item.no >= 0 ? true : false,
+    enabled: tripItems.length > 1 && item.no >= 0 ? true : false,
     secondaryActions: [
       InkWell(
         onTap: () {
@@ -535,6 +574,38 @@ Widget buildTripItem(
   );
 }
 
+Widget buildDayButton(int day, TripStepperViewModel tripStepperViewModel) {
+  return Column(
+    children: [
+      SizedBox(
+        width: getProportionateScreenWidth(70),
+        child: TextButton(
+          onPressed: () => tripStepperViewModel.onDayTapped(day),
+          child: Text(
+            'วันที่ ${day}',
+            style: TextStyle(
+              color: Palette.AdditionText,
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          style: TextButton.styleFrom(
+            primary: Palette.LightOrangeColor,
+          ),
+        ),
+      ),
+      Visibility(
+        visible: tripStepperViewModel.day == day,
+        child: Container(
+          height: 3,
+          width: getProportionateScreenWidth(70),
+          color: Palette.SecondaryColor,
+        ),
+      ),
+    ],
+  );
+}
+
 Widget addMeal(BuildContext context, TripStepperViewModel tripStepperViewModel,
     int index, List<TripItem> tripItems, Trip trip) {
   return Padding(
@@ -552,7 +623,7 @@ Widget addMeal(BuildContext context, TripStepperViewModel tripStepperViewModel,
               color: Colors.white,
             ),
             label: Text(
-              'เลือกร้าน',
+              'เลือกร้านอาหาร',
               style: FontAssets.addRestaurantText,
             ),
             style: ElevatedButton.styleFrom(
