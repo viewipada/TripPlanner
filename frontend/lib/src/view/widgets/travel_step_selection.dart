@@ -107,7 +107,7 @@ class _TravelStepSelectionState extends State<TravelStepSelection> {
                       .toList(),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () => tripStepperViewModel.addDay(days, trip),
                   icon: Icon(
                     Icons.add_circle,
                     color: Palette.LightSecondary,
@@ -131,10 +131,10 @@ class _TravelStepSelectionState extends State<TravelStepSelection> {
               if (snapshot.hasData) {
                 var _tripItems = snapshot.data as List<TripItem>;
                 tripItems = _tripItems;
-                
-                tripStepperViewModel
-                    .getAllTripItemsByTripId(trip.tripId!)
-                    .then((value) => tripStepperViewModel.isStartTimeValid(value,days));
+
+                tripStepperViewModel.getAllTripItemsByTripId(trip.tripId!).then(
+                    (value) =>
+                        tripStepperViewModel.isStartTimeValid(value, days));
 
                 return ReorderableListView(
                   clipBehavior: Clip.antiAlias,

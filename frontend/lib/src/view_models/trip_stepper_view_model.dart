@@ -463,6 +463,13 @@ class TripStepperViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  void addDay(List<int> days, Trip trip) {
+    days.add(days.length + 1);
+    trip.totalDay++;
+    _tripsOperations.updateTrip(trip);
+    notifyListeners();
+  }
+
   void goBack(BuildContext context) {
     _index = 0;
     _day = 1;

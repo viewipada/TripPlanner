@@ -119,7 +119,7 @@ class _FoodStepSelectionState extends State<FoodStepSelection> {
                       .toList(),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () => tripStepperViewModel.addDay(days, trip),
                   icon: Icon(
                     Icons.add_circle,
                     color: Palette.LightSecondary,
