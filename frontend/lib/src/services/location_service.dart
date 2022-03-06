@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:trip_planner/src/models/response/location_detail_response.dart';
 import 'package:trip_planner/src/models/response/location_recommend_response.dart';
+import 'package:trip_planner/src/models/response/shop_response.dart';
 
 class LocationService {
   Future<LocationDetailResponse> getLocationDetailById(int locationId) async {
@@ -28,6 +29,21 @@ class LocationService {
           .map((i) => LocationRecommendResponse.fromJson(i))
           .toList();
       return locationRecommendList;
+    } else {
+      throw Exception('Failed to load campaigns');
+    }
+  }
+
+  Future<List<ShopResponse>> getAllShop() async {
+    final response = await http.get(Uri.parse(
+        'https://run.mocky.io/v3/772fe852-5955-4cf4-9dd3-3901a3675adb'));
+
+    if (response.statusCode == 200) {
+      List<ShopResponse> shopList;
+      shopList = (json.decode(response.body) as List)
+          .map((i) => ShopResponse.fromJson(i))
+          .toList();
+      return shopList;
     } else {
       throw Exception('Failed to load campaigns');
     }

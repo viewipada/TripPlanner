@@ -175,48 +175,53 @@ class _HotelStepSelectionState extends State<HotelStepSelection> {
             },
           ),
         ),
-        ListTile(
-          dense: true,
-          contentPadding: EdgeInsets.zero,
-          trailing: Icon(
-            Icons.add_circle,
-            color: Palette.PrimaryColor,
-          ),
-          title: Text(
-            "   เพิ่มจากกระเป๋าเดินทาง",
-            style: TextStyle(
-                color: Palette.PrimaryColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 14),
-          ),
-          onTap: () => tripStepperViewModel.goToAddFromBaggagePage(
-              context, tripItems, tripItems.length, trip),
-        ),
-        ListTile(
-          dense: true,
-          contentPadding: EdgeInsets.zero,
-          trailing: Icon(
-            Icons.add_circle,
-            color: Palette.PrimaryColor,
-          ),
-          title: Text(
-            "   เพิ่มจากสถานที่แนะนำในเส้นทาง",
-            style: TextStyle(
-                color: Palette.PrimaryColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 14),
-          ),
-          onTap: () => tripStepperViewModel.goToLocationRecommendPage(
-              context,
-              tripItems,
-              tripItems.length,
-              trip,
-              tripStepperViewModel.index == 1
-                  ? "ที่เที่ยว"
-                  : tripStepperViewModel.index == 2
-                      ? "ที่กิน"
-                      : "ที่พัก"),
-        ),
+        tripStepperViewModel.day != trip.totalDay ? instruction() : SizedBox(),
+        tripStepperViewModel.day != trip.totalDay
+            ? ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                trailing: Icon(
+                  Icons.add_circle,
+                  color: Palette.PrimaryColor,
+                ),
+                title: Text(
+                  "   เพิ่มจากกระเป๋าเดินทาง",
+                  style: TextStyle(
+                      color: Palette.PrimaryColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14),
+                ),
+                onTap: () => tripStepperViewModel.goToAddFromBaggagePage(
+                    context, tripItems, tripItems.length, trip),
+              )
+            : SizedBox(),
+        tripStepperViewModel.day != trip.totalDay
+            ? ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                trailing: Icon(
+                  Icons.add_circle,
+                  color: Palette.PrimaryColor,
+                ),
+                title: Text(
+                  "   เพิ่มจากสถานที่แนะนำในเส้นทาง",
+                  style: TextStyle(
+                      color: Palette.PrimaryColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14),
+                ),
+                onTap: () => tripStepperViewModel.goToLocationRecommendPage(
+                    context,
+                    tripItems,
+                    tripItems.length,
+                    trip,
+                    tripStepperViewModel.index == 1
+                        ? "ที่เที่ยว"
+                        : tripStepperViewModel.index == 2
+                            ? "ที่กิน"
+                            : "ที่พัก"),
+              )
+            : SizedBox(),
         SizedBox(
           height: getProportionateScreenHeight(55),
         ),
@@ -344,61 +349,25 @@ Widget buildTripItem(
       children: [
         item.drivingDuration == 0
             ? SizedBox()
-            : Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: getProportionateScreenHeight(5),
-                      horizontal: getProportionateScreenWidth(10),
+            : Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: getProportionateScreenHeight(5),
+                  horizontal: getProportionateScreenWidth(10),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(
+                      tripStepperViewModel.vehiclesSelected,
+                      color: Palette.InfoText,
+                      size: 18,
                     ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(
-                          tripStepperViewModel.vehiclesSelected,
-                          color: Palette.InfoText,
-                          size: 18,
-                        ),
-                        Text(
-                          '  ${item.drivingDuration} min',
-                          style: FontAssets.hintText,
-                        ),
-                      ],
+                    Text(
+                      '  ${item.drivingDuration} min',
+                      style: FontAssets.hintText,
                     ),
-                  ),
-                  // if (tripStepperViewModel.recommendMeal(tripItems).isNotEmpty)
-                  //   tripStepperViewModel.recommendMeal(tripItems)[2] == index
-                  //       ? recommendMeals(
-                  //           'มื้อเย็น',
-                  //           Icon(
-                  //             Icons.nights_stay_rounded,
-                  //             color: Palette.LightSecondary,
-                  //             size: 18,
-                  //           ),
-                  //         )
-                  //       : tripStepperViewModel.recommendMeal(tripItems)[1] ==
-                  //               index
-                  //           ? recommendMeals(
-                  //               'มื้อเที่ยง',
-                  //               Icon(
-                  //                 Icons.wb_sunny_rounded,
-                  //                 color: Palette.LightSecondary,
-                  //                 size: 20,
-                  //               ),
-                  //             )
-                  //           : tripStepperViewModel
-                  //                       .recommendMeal(tripItems)[0] ==
-                  //                   index
-                  //               ? recommendMeals(
-                  //                   'มื้อเช้า',
-                  //                   Icon(
-                  //                     Icons.wb_twilight_rounded,
-                  //                     color: Palette.LightSecondary,
-                  //                     size: 18,
-                  //                   ),
-                  //                 )
-                  //               : SizedBox()
-                ],
+                  ],
+                ),
               ),
         Container(
           // height: getProportionateScreenHeight(90),
@@ -617,6 +586,40 @@ Widget buildDayButton(int day, TripStepperViewModel tripStepperViewModel) {
         ),
       ),
     ],
+  );
+}
+
+Widget instruction() {
+  return Container(
+    padding: EdgeInsets.symmetric(
+      vertical: getProportionateScreenHeight(10),
+      horizontal: getProportionateScreenWidth(10),
+    ),
+    margin: EdgeInsets.only(
+      bottom: getProportionateScreenHeight(5),
+    ),
+    decoration: BoxDecoration(
+      color: Color(0xffFEFFE1),
+      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+      border: Border.all(color: Palette.LightOrangeColor),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.lightbulb_outline_rounded,
+          color: Palette.LightOrangeColor,
+          size: 20,
+        ),
+        Text(
+          ' เลือก ที่พัก จากสถานที่แนะนำในเส้นทางสิ',
+          style: TextStyle(
+              color: Palette.LightOrangeColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 12),
+        ),
+      ],
+    ),
   );
 }
 

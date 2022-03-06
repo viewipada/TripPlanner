@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
 import 'package:trip_planner/src/models/response/location_recommend_response.dart';
+import 'package:trip_planner/src/models/response/shop_response.dart';
 import 'package:trip_planner/src/models/trip.dart';
 import 'package:trip_planner/src/models/trip_item.dart';
 import 'package:trip_planner/src/repository/trip_item_operations.dart';
@@ -71,6 +72,7 @@ class TripStepperViewModel with ChangeNotifier {
   bool _startTimeIsValid = true;
   List<LocationRecommendResponse> _locationRecommend = [];
   int _day = 1;
+  ShopResponse? _shop;
 
   void go(int index) {
     if (index == -1 && _index <= 0) {
@@ -256,6 +258,20 @@ class TripStepperViewModel with ChangeNotifier {
     return _mealsIndex;
   }
 
+  int recommendToStop(List<TripItem> tripItems) {
+    int index = -1;
+    if (tripItems[0].startTime != null && tripItems.isNotEmpty) {
+      index = tripItems.indexWhere(
+        (element) =>
+            DateTime.parse(element.startTime!)
+                .add(Duration(minutes: element.duration))
+                .hour >=
+            19,
+      );
+    }
+    return index;
+  }
+
   Future<List<TripItem>> getMeals(
       List<TripItem> tripItems, int tripId, int totalDay) async {
     List<int> _mealsItemIndex = [];
@@ -439,6 +455,10 @@ class TripStepperViewModel with ChangeNotifier {
     return _locationRecommend;
   }
 
+  Future<List<ShopResponse>> getAllShop() async {
+    return await LocationService().getAllShop();
+  }
+
   void goToLocationDetail(BuildContext context, int locationId) {
     Navigator.push(
       context,
@@ -458,6 +478,19 @@ class TripStepperViewModel with ChangeNotifier {
     Navigator.pop(context, location);
   }
 
+  void selectShop(ShopResponse shop) {
+    if (_shop == null)
+      _shop = shop;
+    else {
+      if (_shop!.locationId != shop.locationId)
+        _shop = shop;
+      else
+        _shop = null;
+    }
+
+    notifyListeners();
+  }
+
   void onDayTapped(int day) {
     _day = day;
     notifyListeners();
@@ -473,6 +506,7 @@ class TripStepperViewModel with ChangeNotifier {
   void goBack(BuildContext context) {
     _index = 0;
     _day = 1;
+    _shop = null;
     Navigator.pop(context);
   }
 
@@ -493,4 +527,5 @@ class TripStepperViewModel with ChangeNotifier {
   bool get startTimeIsValid => _startTimeIsValid;
   List<LocationRecommendResponse> get locationRecommend => _locationRecommend;
   int get day => _day;
+  ShopResponse? get shop => _shop;
 }

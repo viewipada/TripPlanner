@@ -12,6 +12,7 @@ import 'package:trip_planner/src/repository/trips_operations.dart';
 import 'package:trip_planner/src/view/widgets/food_step_selection.dart';
 import 'package:trip_planner/src/view/widgets/hotel_step_selection.dart';
 import 'package:trip_planner/src/view/widgets/loading.dart';
+import 'package:trip_planner/src/view/widgets/shopping_step_selection.dart';
 import 'package:trip_planner/src/view/widgets/travel_step_selection.dart';
 import 'package:trip_planner/src/view/widgets/vehicle_selection.dart';
 import 'package:trip_planner/src/view_models/trip_stepper_view_model.dart';
@@ -146,12 +147,18 @@ class _TripStepperPageState extends State<TripStepperPage> {
                                           }
                                         },
                                       )
-                                    : HotelStepSelection(
-                                        tripStepperViewModel:
-                                            tripStepperViewModel,
-                                        trip: data,
-                                        days: days,
-                                      ),
+                                    : tripStepperViewModel.index == 3
+                                        ? HotelStepSelection(
+                                            tripStepperViewModel:
+                                                tripStepperViewModel,
+                                            trip: data,
+                                            days: days,
+                                          )
+                                        : ShoppingStepSelection(
+                                            tripStepperViewModel:
+                                                tripStepperViewModel,
+                                            trip: data,
+                                          ),
                       ),
                     )
                     .toList(),

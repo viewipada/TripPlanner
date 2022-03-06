@@ -626,6 +626,10 @@ Widget buildTripItem(
             ],
           ),
         ),
+        if (tripStepperViewModel.recommendToStop(tripItems) != -1)
+          tripStepperViewModel.recommendToStop(tripItems) == index
+              ? recommendToStop()
+              : SizedBox()
       ],
     ),
   );
@@ -684,6 +688,48 @@ Widget recommendMeals(String meal, Icon icon) {
         Text(
           ' อย่าลืมเผื่อเวลาสำหรับ ${meal} ของคุณ',
           style: FontAssets.mealsRecommendText,
+        ),
+      ],
+    ),
+  );
+}
+
+Widget recommendToStop() {
+  return Container(
+    width: double.infinity,
+    padding: EdgeInsets.symmetric(
+      vertical: getProportionateScreenHeight(10),
+      horizontal: getProportionateScreenWidth(10),
+    ),
+    margin: EdgeInsets.only(
+      top: getProportionateScreenHeight(5),
+    ),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      border: Border(top: BorderSide(color: Palette.PrimaryColor, width: 2)),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.5),
+          spreadRadius: 0,
+          blurRadius: 3,
+          offset: Offset(2, 4),
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'เที่ยวหนัก พักหน่อย',
+          style: TextStyle(
+              color: Palette.AdditionText,
+              fontSize: 14,
+              fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: getProportionateScreenHeight(5)),
+        Text(
+          'เก็บที่เที่ยวเอาไว้เพิ่มวันถัดไปเถอะ',
+          style: TextStyle(color: Palette.AdditionText, fontSize: 12),
         ),
       ],
     ),
