@@ -247,7 +247,7 @@ class TripStepperViewModel with ChangeNotifier {
     if (tripItems[0].startTime != null && tripItems.isNotEmpty) {
       _mealsIndex = [0, 0, 0];
       _mealsIndex[0] = tripItems.indexWhere(
-        (element) => DateTime.parse(element.startTime!).hour >= 9,
+        (element) => DateTime.parse(element.startTime!).hour >= 8,
       );
       _mealsIndex[1] = tripItems.indexWhere(
         (element) => DateTime.parse(element.startTime!).hour >= 12,
@@ -297,7 +297,7 @@ class TripStepperViewModel with ChangeNotifier {
 
         _mealsIndex.add(await tripItems.indexWhere(
           (element) =>
-              DateTime.parse(element.startTime!).hour >= 9 && element.day == i,
+              DateTime.parse(element.startTime!).hour >= 8 && element.day == i,
         ));
         _mealsIndex.add(await tripItems.indexWhere(
           (element) =>
@@ -347,7 +347,7 @@ class TripStepperViewModel with ChangeNotifier {
       _startTimeIsValid = false;
     else
       _startTimeIsValid = true;
-    print(checkLocationForEachDay);
+
     if (checkLocationForEachDay.contains(-1) && _index == 1)
       _startPointIsValid = false;
     else
