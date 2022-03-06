@@ -313,7 +313,16 @@ Widget buildTripItem(
     actionPane: SlidableDrawerActionPane(),
     actionExtentRatio: 0.25,
     movementDuration: Duration(milliseconds: 500),
-    enabled: tripItems.length > 1 && item.no >= 0 ? true : false,
+    enabled: tripItems
+                    .where((element) =>
+                        element.day == tripStepperViewModel.day &&
+                        element.no >= 0)
+                    .toList()
+                    .length >
+                1 &&
+            item.no >= 0
+        ? true
+        : false,
     secondaryActions: [
       InkWell(
         onTap: () {
@@ -664,7 +673,7 @@ Widget hourMinute24H(TripStepperViewModel tripStepperViewModel,
   print(index);
   return new TimePickerSpinner(
     time: tripItems[index].startTime == null
-        ? DateTime(2022, 1, 1, 9, 0)
+        ? DateTime(2022, 1, 1, 8, 0)
         : DateTime.parse(tripItems[index].startTime!),
     isForce2Digits: true,
     normalTextStyle: FontAssets.hintText,

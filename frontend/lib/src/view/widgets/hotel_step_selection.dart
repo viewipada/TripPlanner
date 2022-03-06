@@ -628,7 +628,7 @@ Widget hourMinute24H(TripStepperViewModel tripStepperViewModel,
   // DateTime _dateTime = DateTime.now();
   return new TimePickerSpinner(
     time: tripItems[index].startTime == null
-        ? DateTime(2022, 1, 1, 9, 0)
+        ? DateTime(2022, 1, 1, 8, 0)
         : DateTime.parse(tripItems[index].startTime!),
     isForce2Digits: true,
     normalTextStyle: FontAssets.hintText,
