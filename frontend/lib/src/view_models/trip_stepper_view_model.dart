@@ -70,6 +70,7 @@ class TripStepperViewModel with ChangeNotifier {
   TripItemOperations _tripItemOperations = TripItemOperations();
   List<int> _mealsIndex = [];
   bool _startTimeIsValid = true;
+  bool _startPointIsValid = true;
   List<LocationRecommendResponse> _locationRecommend = [];
   int _day = 1;
   ShopResponse? _shop;
@@ -332,17 +333,25 @@ class TripStepperViewModel with ChangeNotifier {
 
   void isStartTimeValid(List<TripItem> tripItems, List<int> days) {
     var firstLocationOfADay = [];
+    var checkLocationForEachDay = [];
 
     if (tripItems.isNotEmpty)
       days.forEach((day) {
         firstLocationOfADay.add(tripItems.indexWhere(
             (element) => element.day == day && element.startTime != null));
+        checkLocationForEachDay
+            .add(tripItems.indexWhere((element) => element.day == day));
       });
 
     if (firstLocationOfADay.contains(-1) && _index == 1)
       _startTimeIsValid = false;
     else
       _startTimeIsValid = true;
+    print(checkLocationForEachDay);
+    if (checkLocationForEachDay.contains(-1) && _index == 1)
+      _startPointIsValid = false;
+    else
+      _startPointIsValid = true;
   }
 
   void goToLocationRecommendPage(BuildContext context, List<TripItem> tripItems,
@@ -525,6 +534,7 @@ class TripStepperViewModel with ChangeNotifier {
   IconData get vehiclesSelected => _vehiclesSelected;
   List<int> get mealsIndex => _mealsIndex;
   bool get startTimeIsValid => _startTimeIsValid;
+  bool get startPointIsValid => _startPointIsValid;
   List<LocationRecommendResponse> get locationRecommend => _locationRecommend;
   int get day => _day;
   ShopResponse? get shop => _shop;
