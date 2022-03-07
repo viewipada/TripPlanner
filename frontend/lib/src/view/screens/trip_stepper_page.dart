@@ -70,6 +70,7 @@ class _TripStepperPageState extends State<TripStepperPage> {
     late VoidCallback _onStepContinue;
     late VoidCallback _onStepCancel;
     TripsOperations tripsOperations = TripsOperations();
+    Trip trip;
 
     return Stack(
       children: [
@@ -78,6 +79,7 @@ class _TripStepperPageState extends State<TripStepperPage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               var data = snapshot.data as Trip;
+              trip = data;
               List<int> days =
                   List<int>.generate(data.totalDay, (int index) => index + 1);
               return EnhanceStepper(
@@ -163,11 +165,11 @@ class _TripStepperPageState extends State<TripStepperPage> {
                     )
                     .toList(),
                 onStepCancel: () {
-                  tripStepperViewModel.go(-1);
+                  tripStepperViewModel.go(-1, context, trip);
                 },
                 onStepContinue: () {
                   tripStepperViewModel.startTimeIsValid
-                      ? tripStepperViewModel.go(1)
+                      ? tripStepperViewModel.go(1, context, trip)
                       : tripStepperViewModel.startPointIsValid
                           ? alertDialog(context,
                               'ตั้งเวลา ณ จุดเริ่มต้น\nเราจะช่วยให้คุณจัดสรรเวลาได้ง่ายขึ้น')
@@ -202,7 +204,13 @@ class _TripStepperPageState extends State<TripStepperPage> {
             height: getProportionateScreenHeight(48),
             child: ElevatedButton(
               onPressed: () => _onStepContinue(),
-              child: Text("ถัดไป"),
+              child: Text(
+                "ถัดไป",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
             ),
             //     Row(
             //   mainAxisAlignment: MainAxisAlignment.spaceBetween,

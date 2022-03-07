@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
 import 'package:trip_planner/src/models/response/location_recommend_response.dart';
 import 'package:trip_planner/src/models/response/shop_response.dart';
@@ -10,6 +11,7 @@ import 'package:trip_planner/src/repository/trips_operations.dart';
 import 'package:trip_planner/src/services/baggage_service.dart';
 import 'package:trip_planner/src/services/location_service.dart';
 import 'package:trip_planner/src/view/screens/add_from_baggage_page.dart';
+import 'package:trip_planner/src/view/screens/confirm_trip_page.dart';
 import 'package:trip_planner/src/view/screens/location_detail_page.dart';
 import 'package:trip_planner/src/view/screens/location_recommend_page.dart';
 
@@ -74,8 +76,9 @@ class TripStepperViewModel with ChangeNotifier {
   List<LocationRecommendResponse> _locationRecommend = [];
   int _day = 1;
   ShopResponse? _shop;
+  String? _trumbnail;
 
-  void go(int index) {
+  void go(int index, BuildContext context, Trip trip) async {
     if (index == -1 && _index <= 0) {
       print("it's first Step!");
       return;
@@ -83,6 +86,35 @@ class TripStepperViewModel with ChangeNotifier {
 
     if (index == 1 && _index >= _steps.length - 1) {
       print("it's last Step!");
+
+      if (_shop != null) {
+        await _tripItemOperations
+            .getAllTripItemsByTripIdAndDay(trip.tripId!, trip.totalDay)
+            .then(
+              (value) => _tripItemOperations.createTripItem(
+                TripItem(
+                    day: trip.totalDay,
+                    no: value.length,
+                    locationId: _shop!.locationId,
+                    locationCategory: 'ของฝาก',
+                    locationName: _shop!.locationName,
+                    imageUrl: _shop!.imageUrl,
+                    latitude: _shop!.latitude,
+                    longitude: _shop!.longitude,
+                    duration: _shop!.duration,
+                    tripId: trip.tripId!),
+              ),
+            );
+        trip.lastLocation = _shop!.locationName;
+        trip.totalTripItem += 1;
+        await _tripsOperations.updateTrip(trip);
+      }
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ConfirmTripPage(trip: trip)),
+      );
+
       return;
     }
 
@@ -455,6 +487,25 @@ class TripStepperViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  Future pickDate(BuildContext context, Trip trip) async {
+    final newDate = await showDatePicker(
+      context: context,
+      initialDate: trip.startDate == null
+          ? DateTime.now()
+          : DateTime.parse(DateFormat('yyyy-MM-dd')
+              .format(DateFormat('dd/MM/yyyy').parse(trip.startDate!))),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(DateTime.now().year + 10),
+    );
+
+    if (newDate == null) {
+      notifyListeners();
+      return;
+    }
+    trip.startDate = '${newDate.day}/${newDate.month}/${newDate.year}';
+    notifyListeners();
+  }
+
   Future<List<BaggageResponse>> getBaggageList() async {
     return await BaggageService().getBaggageList();
   }
@@ -500,6 +551,11 @@ class TripStepperViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  void selectTrumbnail(String imageUrl) {
+    _trumbnail = imageUrl;
+    notifyListeners();
+  }
+
   void onDayTapped(int day) {
     _day = day;
     notifyListeners();
@@ -517,6 +573,23 @@ class TripStepperViewModel with ChangeNotifier {
     _day = 1;
     _shop = null;
     Navigator.pop(context);
+  }
+
+  void clearConfirmPage(BuildContext context) {
+    _trumbnail = null;
+    Navigator.pop(context);
+  }
+
+  void confirmTrip(Trip trip, BuildContext context) {
+    trip.trumbnail = _trumbnail;
+    _tripsOperations.updateTrip(trip);
+
+    Navigator.pop(context);
+    Navigator.pop(context);
+    _index = 0;
+    _day = 1;
+    _shop = null;
+    _trumbnail = null;
   }
 
   Future<List<TripItem>> getAllTripItemsByTripIdAndDay(int tripId) async {
@@ -538,4 +611,7 @@ class TripStepperViewModel with ChangeNotifier {
   List<LocationRecommendResponse> get locationRecommend => _locationRecommend;
   int get day => _day;
   ShopResponse? get shop => _shop;
+  String? get trumbnail => _trumbnail;
+  // DateTime? get date => _date;
+  // String get startDate => _startDate;
 }

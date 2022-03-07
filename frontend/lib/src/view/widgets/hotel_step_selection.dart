@@ -175,7 +175,9 @@ class _HotelStepSelectionState extends State<HotelStepSelection> {
             },
           ),
         ),
-        tripStepperViewModel.day != trip.totalDay ? instruction() : SizedBox(),
+        tripStepperViewModel.day != trip.totalDay
+            ? instruction(' เลือก ที่พัก จากสถานที่แนะนำในเส้นทางสิ')
+            : instruction(' คุณไม่จำเป็นต้องหาที่พัก สำหรับวันสุดท้ายของทริป'),
         tripStepperViewModel.day != trip.totalDay
             ? ListTile(
                 dense: true,
@@ -589,7 +591,7 @@ Widget buildDayButton(int day, TripStepperViewModel tripStepperViewModel) {
   );
 }
 
-Widget instruction() {
+Widget instruction(String text) {
   return Container(
     padding: EdgeInsets.symmetric(
       vertical: getProportionateScreenHeight(10),
@@ -612,7 +614,7 @@ Widget instruction() {
           size: 20,
         ),
         Text(
-          ' เลือก ที่พัก จากสถานที่แนะนำในเส้นทางสิ',
+         text ,
           style: TextStyle(
               color: Palette.LightOrangeColor,
               fontWeight: FontWeight.bold,
