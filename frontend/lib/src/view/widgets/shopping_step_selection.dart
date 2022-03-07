@@ -61,7 +61,8 @@ class _ShoppingStepSelectionState extends State<ShoppingStepSelection> {
               var dataList = snapshot.data as List<ShopResponse>;
               return Column(
                 children: dataList
-                    .map((item) => buildShopCard(tripStepperViewModel, item))
+                    .map((item) =>
+                        buildShopCard(tripStepperViewModel, item, context))
                     .toList(),
               );
             } else {
@@ -77,8 +78,8 @@ class _ShoppingStepSelectionState extends State<ShoppingStepSelection> {
   }
 }
 
-Widget buildShopCard(
-    TripStepperViewModel tripStepperViewModel, ShopResponse item) {
+Widget buildShopCard(TripStepperViewModel tripStepperViewModel,
+    ShopResponse item, BuildContext context) {
   return Container(
     // height: getProportionateScreenHeight(90),
     margin: EdgeInsets.symmetric(vertical: getProportionateScreenHeight(5)),
@@ -99,26 +100,32 @@ Widget buildShopCard(
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10.0),
-                bottomLeft: Radius.circular(10.0),
-              )),
-              child: item.imageUrl == ""
-                  ? Image.asset(
-                      ImageAssets.noPreview,
-                      fit: BoxFit.cover,
-                      height: getProportionateScreenHeight(80),
-                      width: getProportionateScreenHeight(80),
-                    )
-                  : Image.network(
-                      item.imageUrl,
-                      fit: BoxFit.cover,
-                      height: getProportionateScreenHeight(80),
-                      width: getProportionateScreenHeight(80),
-                    ),
-              clipBehavior: Clip.antiAlias,
+            GestureDetector(
+              onTap: () => item.imageUrl == ""
+                  ? null
+                  : tripStepperViewModel.goToLocationDetail(
+                      context, item.locationId),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10.0),
+                  bottomLeft: Radius.circular(10.0),
+                )),
+                child: item.imageUrl == ""
+                    ? Image.asset(
+                        ImageAssets.noPreview,
+                        fit: BoxFit.cover,
+                        height: getProportionateScreenHeight(80),
+                        width: getProportionateScreenHeight(80),
+                      )
+                    : Image.network(
+                        item.imageUrl,
+                        fit: BoxFit.cover,
+                        height: getProportionateScreenHeight(80),
+                        width: getProportionateScreenHeight(80),
+                      ),
+                clipBehavior: Clip.antiAlias,
+              ),
             ),
             Expanded(
               child: Padding(

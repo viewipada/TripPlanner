@@ -391,26 +391,32 @@ Widget buildTripItem(
           ),
           child: Row(
             children: [
-              Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10.0),
-                  bottomLeft: Radius.circular(10.0),
-                )),
-                child: item.imageUrl == ""
-                    ? Image.asset(
-                        ImageAssets.noPreview,
-                        fit: BoxFit.cover,
-                        height: getProportionateScreenHeight(80),
-                        width: getProportionateScreenHeight(80),
-                      )
-                    : Image.network(
-                        item.imageUrl,
-                        fit: BoxFit.cover,
-                        height: getProportionateScreenHeight(80),
-                        width: getProportionateScreenHeight(80),
-                      ),
-                clipBehavior: Clip.antiAlias,
+              GestureDetector(
+                onTap: () => item.imageUrl == ""
+                    ? null
+                    : tripStepperViewModel.goToLocationDetail(
+                        context, item.locationId),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10.0),
+                    bottomLeft: Radius.circular(10.0),
+                  )),
+                  child: item.imageUrl == ""
+                      ? Image.asset(
+                          ImageAssets.noPreview,
+                          fit: BoxFit.cover,
+                          height: getProportionateScreenHeight(80),
+                          width: getProportionateScreenHeight(80),
+                        )
+                      : Image.network(
+                          item.imageUrl,
+                          fit: BoxFit.cover,
+                          height: getProportionateScreenHeight(80),
+                          width: getProportionateScreenHeight(80),
+                        ),
+                  clipBehavior: Clip.antiAlias,
+                ),
               ),
               Expanded(
                 child: Padding(
@@ -614,7 +620,7 @@ Widget instruction(String text) {
           size: 20,
         ),
         Text(
-         text ,
+          text,
           style: TextStyle(
               color: Palette.LightOrangeColor,
               fontWeight: FontWeight.bold,
