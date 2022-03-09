@@ -567,6 +567,38 @@ class TripStepperViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> deleteDay(List<int> days, Trip trip) async {
+    await getAllTripItemsByTripId(trip.tripId!)
+        .then((_locations) => _locations.forEach((element) {
+              if (element.day == _day) {
+                _tripItemOperations.deleteTripItem(element);
+              }
+              if (element.day > _day) {
+                element.day--;
+                _tripItemOperations.updateTripItem(element);
+              }
+            }));
+
+    trip.firstLocation = await getAllTripItemsByTripId(trip.tripId!)
+        .then((locations) => locations[0].locationName);
+    trip.lastLocation = await getAllTripItemsByTripId(trip.tripId!)
+        .then((locations) => locations[locations.length - 1].locationName);
+    trip.totalTripItem = await getAllTripItemsByTripId(trip.tripId!)
+        .then((locations) => locations.length);
+
+    trip.totalDay--;
+    _tripsOperations.updateTrip(trip);
+
+    await days.remove(_day);
+    for (int i = 1; i <= trip.totalDay; i++) {
+      days[i - 1] = i;
+    }
+
+    if (_day > trip.totalDay) _day--;
+
+    notifyListeners();
+  }
+
   void goBack(BuildContext context) {
     _index = 0;
     _day = 1;

@@ -221,6 +221,70 @@ class _TravelStepSelectionState extends State<TravelStepSelection> {
                       ? "ที่กิน"
                       : "ที่พัก"),
         ),
+        trip.totalDay > 1 ? Divider() : SizedBox(),
+        trip.totalDay > 1
+            ? TextButton(
+                child: Text(
+                  "   ลบวันที่ ${tripStepperViewModel.day}",
+                  style: TextStyle(
+                      color: Palette.DeleteColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14),
+                ),
+                style: TextButton.styleFrom(primary: Palette.DeleteColor),
+                onPressed: () => showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    title: Text(
+                      'ต้องการลบวันที่ ${tripStepperViewModel.day} หรือไม่',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: Palette.BodyText,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    content: const Text(
+                      'หากคุณยืนยัน ข้อมูลทริปในวันดังกล่าวจะถูกลบ',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Palette.AdditionText,
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, 'ยกเลิก'),
+                        child: const Text(
+                          'ยกเลิก',
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context, 'ยืนยัน');
+                          tripStepperViewModel.deleteDay(days, trip);
+                        },
+                        child: const Text(
+                          'ยืนยัน',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
+                        ),
+                        style: TextButton.styleFrom(
+                          backgroundColor: Palette.NotificationColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            : SizedBox(),
         SizedBox(
           height: getProportionateScreenHeight(55),
         ),
@@ -734,7 +798,7 @@ Widget recommendToStop() {
         ),
         SizedBox(height: getProportionateScreenHeight(5)),
         Text(
-          'เก็บที่เที่ยวเอาไว้เพิ่มวันถัดไปเถอะ',
+          'เก็บที่เที่ยวเอาไว้เพิ่มวันถัดไปดีกว่า',
           style: TextStyle(color: Palette.AdditionText, fontSize: 12),
         ),
       ],
