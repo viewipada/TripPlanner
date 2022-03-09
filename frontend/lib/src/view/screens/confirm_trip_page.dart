@@ -36,7 +36,7 @@ class _ConfirmTripPageState extends State<ConfirmTripPage> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back_rounded),
             color: Palette.BackIconColor,
-            onPressed: () => tripStepperViewModel.clearConfirmPage(context),
+            onPressed: () => Navigator.pop(context),
           ),
           title: Text(
             "ยืนยันการสร้างทริป",
@@ -117,7 +117,7 @@ class _ConfirmTripPageState extends State<ConfirmTripPage> {
                         Text(
                           trip.tripName,
                           // 'อ่างทองไม่เหงา มีเรา 2 3 4 5 คน',
-                          style: FontAssets.subtitleText,
+                          style: FontAssets.titleText,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -224,7 +224,7 @@ class _ConfirmTripPageState extends State<ConfirmTripPage> {
                 width: double.infinity,
                 height: getProportionateScreenHeight(48),
                 child: ElevatedButton(
-                  onPressed: () => tripStepperViewModel.trumbnail == null
+                  onPressed: () => trip.trumbnail == null
                       ? alertDialog(context, 'กรุณาเลือกภาพปกทริปของคุณ')
                       : trip.startDate == null
                           ? alertDialog(context, 'กรุณาระบุวันเริ่มเดินทาง')
@@ -243,7 +243,7 @@ class _ConfirmTripPageState extends State<ConfirmTripPage> {
         ),
       ),
       onWillPop: () async {
-        tripStepperViewModel.clearConfirmPage(context);
+        Navigator.pop(context);
         return true;
       },
     );
@@ -274,7 +274,7 @@ Widget buildTrumbnailSelection(
                             children: [
                               InkWell(
                                 onTap: () => tripStepperViewModel
-                                    .selectTrumbnail(item.imageUrl),
+                                    .selectTrumbnail(trip, item.imageUrl),
                                 child: Card(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
@@ -289,8 +289,7 @@ Widget buildTrumbnailSelection(
                                 ),
                               ),
                               Visibility(
-                                visible: item.imageUrl ==
-                                    tripStepperViewModel.trumbnail,
+                                visible: item.imageUrl == trip.trumbnail,
                                 child: Card(
                                   color: Color.fromRGBO(0, 0, 0, 0.4),
                                   shape: RoundedRectangleBorder(

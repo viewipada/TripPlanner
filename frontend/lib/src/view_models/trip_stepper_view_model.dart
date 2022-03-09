@@ -76,7 +76,6 @@ class TripStepperViewModel with ChangeNotifier {
   List<LocationRecommendResponse> _locationRecommend = [];
   int _day = 1;
   ShopResponse? _shop;
-  String? _trumbnail;
 
   void go(int index, BuildContext context, Trip trip) async {
     if (index == -1 && _index <= 0) {
@@ -551,8 +550,8 @@ class TripStepperViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void selectTrumbnail(String imageUrl) {
-    _trumbnail = imageUrl;
+  void selectTrumbnail(Trip trip, String imageUrl) {
+    trip.trumbnail = imageUrl;
     notifyListeners();
   }
 
@@ -575,13 +574,7 @@ class TripStepperViewModel with ChangeNotifier {
     Navigator.pop(context);
   }
 
-  void clearConfirmPage(BuildContext context) {
-    _trumbnail = null;
-    Navigator.pop(context);
-  }
-
   void confirmTrip(Trip trip, BuildContext context) {
-    trip.trumbnail = _trumbnail;
     _tripsOperations.updateTrip(trip);
 
     Navigator.pop(context);
@@ -589,7 +582,6 @@ class TripStepperViewModel with ChangeNotifier {
     _index = 0;
     _day = 1;
     _shop = null;
-    _trumbnail = null;
   }
 
   Future<List<TripItem>> getAllTripItemsByTripIdAndDay(int tripId) async {
@@ -611,7 +603,4 @@ class TripStepperViewModel with ChangeNotifier {
   List<LocationRecommendResponse> get locationRecommend => _locationRecommend;
   int get day => _day;
   ShopResponse? get shop => _shop;
-  String? get trumbnail => _trumbnail;
-  // DateTime? get date => _date;
-  // String get startDate => _startDate;
 }
