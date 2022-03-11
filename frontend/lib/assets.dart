@@ -13,6 +13,7 @@ class ImageAssets {
   static const String boarding_2 = 'assets/images/boarding_2.png';
   static const String boarding_3 = 'assets/images/boarding_3.png';
   static const String boarding_4 = 'assets/images/boarding_4.png';
+  static const String tripBanner = 'assets/images/trip_banner.jpg';
 }
 
 class IconAssets {
