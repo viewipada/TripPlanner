@@ -24,12 +24,12 @@ class _VehicleSelectionState extends State<VehicleSelection> {
   final Trip trip;
   _VehicleSelectionState(this.tripStepperViewModel, this.trip);
 
-  // @override
-  // void initState() {
-  //   Provider.of<TripStepperViewModel>(context, listen: false)
-  //       .getVehicleSelection(trip);
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    Provider.of<TripStepperViewModel>(context, listen: false)
+        .isStartTimeValid([], []);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

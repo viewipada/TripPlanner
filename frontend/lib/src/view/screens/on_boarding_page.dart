@@ -4,7 +4,6 @@ import 'package:intro_slider/slide_object.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
-import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/view_models/login_view_model.dart';
 
 class OnBoardingPage extends StatefulWidget {

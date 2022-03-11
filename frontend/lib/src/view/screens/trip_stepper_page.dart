@@ -9,7 +9,10 @@ import 'package:trip_planner/src/models/trip.dart';
 import 'package:trip_planner/src/models/trip_item.dart';
 import 'package:trip_planner/src/repository/trip_item_operations.dart';
 import 'package:trip_planner/src/repository/trips_operations.dart';
+import 'package:trip_planner/src/view/widgets/food_step_selection.dart';
+import 'package:trip_planner/src/view/widgets/hotel_step_selection.dart';
 import 'package:trip_planner/src/view/widgets/loading.dart';
+import 'package:trip_planner/src/view/widgets/shopping_step_selection.dart';
 import 'package:trip_planner/src/view/widgets/travel_step_selection.dart';
 import 'package:trip_planner/src/view/widgets/vehicle_selection.dart';
 import 'package:trip_planner/src/view_models/trip_stepper_view_model.dart';
@@ -29,27 +32,45 @@ class _TripStepperPageState extends State<TripStepperPage> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    final tripStepperViewModel = Provider.of<TripStepperViewModel>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "สร้างทริป",
-          style: FontAssets.headingText,
+    return WillPopScope(
+      child: Scaffold(
+        appBar: AppBar(
+          leading: TextButton(
+            onPressed: () => tripStepperViewModel.goBack(context),
+            child: Text("ยกเลิก"),
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.symmetric(
+                horizontal: getProportionateScreenWidth(15),
+              ),
+              alignment: Alignment.centerLeft,
+            ),
+          ),
+          leadingWidth: getProportionateScreenWidth(70),
+          title: Text(
+            "สร้างทริป",
+            style: FontAssets.headingText,
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          elevation: 0,
         ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
+        body: buildStepperCustom(context, tripStepperViewModel),
       ),
-      body: buildStepperCustom(context),
+      onWillPop: () async {
+        tripStepperViewModel.goBack(context);
+        return true;
+      },
     );
   }
 
-  Widget buildStepperCustom(BuildContext context) {
-    final tripStepperViewModel = Provider.of<TripStepperViewModel>(context);
+  Widget buildStepperCustom(
+      BuildContext context, TripStepperViewModel tripStepperViewModel) {
     late VoidCallback _onStepContinue;
     late VoidCallback _onStepCancel;
     TripsOperations tripsOperations = TripsOperations();
-    TripItemOperations tripItemOperations = TripItemOperations();
+    Trip trip;
 
     return Stack(
       children: [
@@ -58,6 +79,9 @@ class _TripStepperPageState extends State<TripStepperPage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               var data = snapshot.data as Trip;
+              trip = data;
+              List<int> days =
+                  List<int>.generate(data.totalDay, (int index) => index + 1);
               return EnhanceStepper(
                 stepIconSize: 30,
                 type: StepperType.horizontal,
@@ -99,40 +123,62 @@ class _TripStepperPageState extends State<TripStepperPage> {
                             ? VehicleSelection(
                                 tripStepperViewModel: tripStepperViewModel,
                                 trip: data)
-                            : FutureBuilder(
-                                future: tripItemOperations
-                                    .getAllTripItemsByTripId(tripId),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    var dataList = snapshot.data as List<TripItem>;
-                                    return e['title'] == 'ที่เที่ยว' ||
-                                            e['title'] == 'ที่กิน' ||
-                                            e['title'] == 'ที่พัก'
-                                        ? TravelStepSelection(
+                            : tripStepperViewModel.index == 1
+                                ? TravelStepSelection(
+                                    tripStepperViewModel: tripStepperViewModel,
+                                    trip: data,
+                                    days: days,
+                                  )
+                                : tripStepperViewModel.index == 2
+                                    ? FutureBuilder(
+                                        future: tripStepperViewModel
+                                            .getAllTripItemsByTripId(tripId),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            var dataList =
+                                                snapshot.data as List<TripItem>;
+                                            return FoodStepSelection(
+                                              tripStepperViewModel:
+                                                  tripStepperViewModel,
+                                              tripItems: dataList,
+                                              trip: data,
+                                              days: days,
+                                            );
+                                          } else {
+                                            return Loading();
+                                          }
+                                        },
+                                      )
+                                    : tripStepperViewModel.index == 3
+                                        ? HotelStepSelection(
                                             tripStepperViewModel:
                                                 tripStepperViewModel,
-                                            tripItems: dataList,trip:data)
-                                        : Container(
-                                            height: 800,
-                                            color: Colors.green,
-                                          );
-                                  } else {
-                                    return Loading();
-                                  }
-                                },
-                              ),
+                                            trip: data,
+                                            days: days,
+                                          )
+                                        : ShoppingStepSelection(
+                                            tripStepperViewModel:
+                                                tripStepperViewModel,
+                                            trip: data,
+                                          ),
                       ),
                     )
                     .toList(),
                 onStepCancel: () {
-                  tripStepperViewModel.go(-1);
+                  tripStepperViewModel.go(-1, context, trip);
                 },
                 onStepContinue: () {
-                  tripStepperViewModel.go(1);
+                  tripStepperViewModel.startTimeIsValid
+                      ? tripStepperViewModel.go(1, context, trip)
+                      : tripStepperViewModel.startPointIsValid
+                          ? alertDialog(context,
+                              'ตั้งเวลา ณ จุดเริ่มต้น\nเราจะช่วยให้คุณจัดสรรเวลาได้ง่ายขึ้น')
+                          : alertDialog(context,
+                              'กรุณาเพิ่มที่เที่ยวในแต่ละวัน\nอย่างน้อย 1 ที่เที่ยว');
                 },
                 onStepTapped: (index) {
                   tripStepperViewModel.setStepOnTapped(index);
-                  print(index);
+                  // print(index);
                 },
                 controlsBuilder: (BuildContext context,
                     {VoidCallback? onStepContinue,
@@ -158,7 +204,13 @@ class _TripStepperPageState extends State<TripStepperPage> {
             height: getProportionateScreenHeight(48),
             child: ElevatedButton(
               onPressed: () => _onStepContinue(),
-              child: Text("ถัดไป"),
+              child: Text(
+                "ถัดไป",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
             ),
             //     Row(
             //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -178,4 +230,40 @@ class _TripStepperPageState extends State<TripStepperPage> {
       ],
     );
   }
+}
+
+alertDialog(BuildContext context, String title) {
+  return showDialog<String>(
+    context: context,
+    builder: (BuildContext _context) => AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      title: Text(
+        title,
+        style: TextStyle(
+          color: Palette.BodyText,
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+        ),
+        textAlign: TextAlign.center,
+      ),
+      contentPadding: EdgeInsets.zero,
+      actionsAlignment: MainAxisAlignment.center,
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(
+            _context,
+          ),
+          child: const Text(
+            'โอเค!',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }

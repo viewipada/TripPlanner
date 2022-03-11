@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:trip_planner/src/models/trip.dart';
 import 'package:trip_planner/src/models/trip_item.dart';
 import 'package:trip_planner/src/repository/database.dart';
 
@@ -9,10 +6,10 @@ class TripItemOperations {
 
   final dbProvider = DatabaseRepository.instance;
 
-  createTripItem(TripItem item) async {
+  Future<int> createTripItem(TripItem item) async {
     final db = await dbProvider.database;
-    db!.insert('tripitem', item.toMap());
     print('item inserted');
+    return db!.insert('tripitem', item.toMap());
   }
 
   updateTripItem(TripItem item) async {
@@ -26,11 +23,22 @@ class TripItemOperations {
     await db!.delete('tripitem', where: 'itemId=?', whereArgs: [item.itemId]);
   }
 
+  Future<List<TripItem>> getAllTripItemsByTripIdAndDay(int tripId, int day) async {
+    final db = await dbProvider.database;
+    List<Map<String, dynamic>> allRows = await db!.rawQuery('''
+    SELECT * FROM tripitem 
+    WHERE tripitem.FK_tripItem_trip = ${tripId} and day = ${day} ORDER BY no ASC
+    ''');
+    List<TripItem> items =
+        allRows.map((item) => TripItem.fromMap(item)).toList();
+    return items;
+  }
+
   Future<List<TripItem>> getAllTripItemsByTripId(int tripId) async {
     final db = await dbProvider.database;
     List<Map<String, dynamic>> allRows = await db!.rawQuery('''
     SELECT * FROM tripitem 
-    WHERE tripitem.FK_tripItem_trip = ${tripId} ORDER BY no ASC
+    WHERE tripitem.FK_tripItem_trip = ${tripId} ORDER BY day ASC, no ASC
     ''');
     List<TripItem> items =
         allRows.map((item) => TripItem.fromMap(item)).toList();

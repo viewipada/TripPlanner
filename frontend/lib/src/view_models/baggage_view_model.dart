@@ -73,6 +73,7 @@ class BaggageViewModel with ChangeNotifier {
 
   void goToCreateTripForm(
       BuildContext context, List<BaggageResponse> selectedList) {
+    Navigator.of(context).pop();
     Navigator.push(
       context,
       MaterialPageRoute(

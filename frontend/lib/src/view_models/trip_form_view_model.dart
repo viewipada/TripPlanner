@@ -106,6 +106,7 @@ class TripFormViewModel with ChangeNotifier {
       _tripItemOperations.createTripItem(tripItem);
     });
 
+    Navigator.of(context).pop();
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => TripStepperPage(tripId: tripId)),

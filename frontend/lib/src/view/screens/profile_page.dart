@@ -12,13 +12,8 @@ import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/my_review_response.dart';
-import 'package:trip_planner/src/models/response/trip_card_response.dart';
 import 'package:trip_planner/src/models/trip.dart';
-import 'package:trip_planner/src/models/trip_item.dart';
-import 'package:trip_planner/src/repository/trip_item_operations.dart';
 import 'package:trip_planner/src/repository/trips_operations.dart';
-import 'package:trip_planner/src/view/screens/home_page.dart';
-import 'package:trip_planner/src/view/screens/trip_stepper_page.dart';
 import 'package:trip_planner/src/view/widgets/loading.dart';
 import 'package:trip_planner/src/view_models/profile_view_model.dart';
 
@@ -509,7 +504,7 @@ Widget buildTripList(
                       ),
                     ),
                     Text(
-                      trip.totalPeople > 1
+                      trip.totalTripItem > 1
                           ? 'จาก ${trip.firstLocation} ไปยัง ${trip.lastLocation}'
                           : 'เริ่มต้นที่ ${trip.firstLocation}',
                       overflow: TextOverflow.ellipsis,
