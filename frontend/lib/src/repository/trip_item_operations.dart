@@ -23,6 +23,11 @@ class TripItemOperations {
     await db!.delete('tripitem', where: 'itemId=?', whereArgs: [item.itemId]);
   }
 
+  deleteTripItemById(int itemId) async {
+    final db = await dbProvider.database;
+    await db!.delete('tripitem', where: 'itemId=?', whereArgs: [itemId]);
+  }
+
   Future<List<TripItem>> getAllTripItemsByTripIdAndDay(int tripId, int day) async {
     final db = await dbProvider.database;
     List<Map<String, dynamic>> allRows = await db!.rawQuery('''
