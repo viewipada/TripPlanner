@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_spinbox/flutter_spinbox.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
@@ -30,216 +32,292 @@ class _ConfirmTripPageState extends State<ConfirmTripPage> {
     List<int> days =
         List<int>.generate(trip.totalDay, (int index) => index + 1);
 
-    return WillPopScope(
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_rounded),
-            color: Palette.BackIconColor,
-            onPressed: () => Navigator.pop(context),
-          ),
-          title: Text(
-            "ยืนยันการสร้างทริป",
-            style: FontAssets.headingText,
-          ),
-          centerTitle: true,
-          backgroundColor: Colors.white,
-        ),
-        body: Stack(
-          children: [
-            SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    _showPeopleCountAlert(BuildContext context,
+            TripStepperViewModel tripStepperViewModel, Trip trip) =>
+        showDialog(
+          context: context,
+          builder: (context) => StatefulBuilder(
+            builder: (context, setState) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              // contentPadding: EdgeInsets.zero,
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
+                  Text(
+                    'จำนวนคน',
+                    style: FontAssets.subtitleText,
+                  ),
                   SizedBox(
                     height: getProportionateScreenHeight(10),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(
-                      vertical: getProportionateScreenHeight(5),
-                      horizontal: getProportionateScreenWidth(15),
-                    ),
-                    child: Text(
-                      'เลือกภาพปกทริปของคุณ',
-                      style: FontAssets.bodyText,
-                    ),
-                  ),
-                  buildTrumbnailSelection(tripStepperViewModel, trip),
-                  Center(
-                    child: OutlinedButton(
-                      onPressed: () {},
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: getProportionateScreenHeight(10)),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.map_outlined),
-                            Text(
-                              ' ดูทริปของคุณบนแผนที่',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        primary: Palette.SecondaryColor,
-                        alignment: Alignment.center,
-                        side: BorderSide(color: Palette.SecondaryColor),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: getProportionateScreenHeight(8),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      vertical: getProportionateScreenHeight(15),
-                      horizontal: getProportionateScreenWidth(15),
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border(
-                        top: BorderSide(
+                        horizontal: getProportionateScreenWidth(25)),
+                    child: SpinBox(
+                        min: 1,
+                        max: 25,
+                        value: trip.totalPeople.toDouble(),
+                        direction: Axis.horizontal,
+                        textStyle:
+                            TextStyle(fontSize: 14, color: Palette.BodyText),
+                        incrementIcon: Icon(
+                          Icons.add,
+                          size: 20,
                           color: Palette.PrimaryColor,
-                          width: 2,
                         ),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          trip.tripName,
-                          // 'อ่างทองไม่เหงา มีเรา 2 3 4 5 คน',
-                          style: FontAssets.titleText,
+                        decrementIcon: Icon(
+                          Icons.remove,
+                          size: 20,
+                          color: Palette.PrimaryColor,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'มี ${trip.totalTripItem} สถานที่ในทริปนี้',
-                              style: FontAssets.bodyText,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: const Color(0xffEBECED),
                             ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  trip.startDate != null
-                                      ? '${trip.startDate}'
-                                      : 'วันเริ่มต้นทริป',
-                                  style: FontAssets.bodyText,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    left: getProportionateScreenWidth(15),
-                                    // vertical: getProportionateScreenHeight(10),
-                                  ),
-                                  child: IconButton(
-                                    onPressed: () {
-                                      tripStepperViewModel.pickDate(
-                                          context, trip);
-                                    },
-                                    padding: EdgeInsets.zero,
-                                    constraints: BoxConstraints(),
-                                    icon: Icon(
-                                      Icons.calendar_today_rounded,
-                                      color: Palette.PrimaryColor,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                          ),
+                          contentPadding: EdgeInsets.zero,
+                          filled: true,
+                          fillColor: Colors.white,
                         ),
-                      ],
-                    ),
-                  ),
-                  Divider(),
-                  Container(
-                    color: Colors.white,
-                    width: double.infinity,
-                    margin:
-                        EdgeInsets.only(top: getProportionateScreenHeight(8)),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: days
-                            .map((day) =>
-                                buildDayButton(day, tripStepperViewModel))
-                            .toList(),
-                      ),
-                    ),
-                  ),
-                  Divider(),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      top: getProportionateScreenHeight(10),
-                      bottom: getProportionateScreenHeight(15),
-                    ),
-                    child: FutureBuilder(
-                      future: tripStepperViewModel
-                          .getAllTripItemsByTripId(trip.tripId!),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          var _tripItems = snapshot.data as List<TripItem>;
-
-                          return Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: getProportionateScreenWidth(15)),
-                            child: Column(
-                              children: _tripItems
-                                  .map((item) =>
-                                      item.day == tripStepperViewModel.day
-                                          ? buildTripItem(
-                                              item, tripStepperViewModel)
-                                          : SizedBox())
-                                  .toList(),
-                            ),
-                          );
-                        } else {
-                          return Loading();
-                        }
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    height: getProportionateScreenHeight(60),
+                        onChanged: (value) {
+                          setState(() {
+                            trip.totalPeople = value.toInt();
+                          });
+                          tripStepperViewModel.updateNumberOfPeopleValue(
+                              trip, value.toInt());
+                        }),
                   ),
                 ],
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                margin: EdgeInsets.symmetric(
-                  horizontal: getProportionateScreenWidth(15),
-                  vertical: getProportionateScreenHeight(15),
+          ),
+        );
+
+    return WillPopScope(
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back_rounded),
+              color: Palette.BackIconColor,
+              onPressed: () => tripStepperViewModel.backToShoppingStep(
+                context,
+              ),
+            ),
+            title: Text(
+              "สรุปข้อมูลทริป",
+              style: FontAssets.headingText,
+            ),
+            centerTitle: true,
+            backgroundColor: Colors.white,
+          ),
+          body: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: getProportionateScreenHeight(10),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: getProportionateScreenHeight(5),
+                        horizontal: getProportionateScreenWidth(15),
+                      ),
+                      child: Text(
+                        'เลือกภาพปกทริปของคุณ',
+                        style: FontAssets.bodyText,
+                      ),
+                    ),
+                    buildTrumbnailSelection(tripStepperViewModel, trip),
+                    Center(
+                      child: OutlinedButton(
+                        onPressed: () {},
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: getProportionateScreenHeight(10)),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.map_outlined),
+                              Text(
+                                ' ดูทริปของคุณบนแผนที่',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          primary: Palette.SecondaryColor,
+                          alignment: Alignment.center,
+                          side: BorderSide(color: Palette.SecondaryColor),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(8),
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: getProportionateScreenHeight(15),
+                        horizontal: getProportionateScreenWidth(15),
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border(
+                          top: BorderSide(
+                            color: Palette.PrimaryColor,
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            child: TextFormField(
+                                initialValue: trip.tripName,
+                                maxLength: 30,
+                                onChanged: (value) => tripStepperViewModel),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'มี ${trip.totalTripItem} สถานที่ในทริปนี้',
+                                style: FontAssets.bodyText,
+                              ),
+                              TextButton.icon(
+                                icon: Icon(
+                                  Icons.people_alt_outlined,
+                                  color: Palette.InfoText,
+                                ),
+                                label: Text(
+                                  '${trip.totalPeople} คน',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                onPressed: () => _showPeopleCountAlert(
+                                    context, tripStepperViewModel, trip),
+                              ),
+                              TextButton.icon(
+                                icon: Icon(
+                                  Icons.calendar_today_rounded,
+                                  size: 22,
+                                  color: Palette.InfoText,
+                                ),
+                                label: Text(
+                                  trip.startDate != null
+                                      ? '${trip.startDate}'
+                                      : 'วันเริ่มต้นทริป',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  tripStepperViewModel.pickDate(context, trip);
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(),
+                    Container(
+                      color: Colors.white,
+                      width: double.infinity,
+                      margin:
+                          EdgeInsets.only(top: getProportionateScreenHeight(8)),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: days
+                              .map((day) =>
+                                  buildDayButton(day, tripStepperViewModel))
+                              .toList(),
+                        ),
+                      ),
+                    ),
+                    Divider(),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: getProportionateScreenHeight(10),
+                        bottom: getProportionateScreenHeight(15),
+                      ),
+                      child: FutureBuilder(
+                        future: tripStepperViewModel
+                            .getAllTripItemsByTripId(trip.tripId!),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            var _tripItems = snapshot.data as List<TripItem>;
+
+                            return Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: getProportionateScreenWidth(15)),
+                              child: Column(
+                                children: _tripItems
+                                    .map((item) =>
+                                        item.day == tripStepperViewModel.day
+                                            ? buildTripItem(
+                                                item, tripStepperViewModel)
+                                            : SizedBox())
+                                    .toList(),
+                              ),
+                            );
+                          } else {
+                            return Loading();
+                          }
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(60),
+                    ),
+                  ],
                 ),
-                width: double.infinity,
-                height: getProportionateScreenHeight(48),
-                child: ElevatedButton(
-                  onPressed: () => trip.trumbnail == null
-                      ? alertDialog(context, 'กรุณาเลือกภาพปกทริปของคุณ')
-                      : trip.startDate == null
-                          ? alertDialog(context, 'กรุณาระบุวันเริ่มเดินทาง')
-                          : tripStepperViewModel.confirmTrip(trip, context),
-                  child: Text(
-                    "ยืนยันสร้างทริป",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  margin: EdgeInsets.symmetric(
+                    horizontal: getProportionateScreenWidth(15),
+                    vertical: getProportionateScreenHeight(15),
+                  ),
+                  width: double.infinity,
+                  height: getProportionateScreenHeight(48),
+                  child: ElevatedButton(
+                    onPressed: () => trip.trumbnail == null
+                        ? alertDialog(context, 'กรุณาเลือกภาพปกทริปของคุณ')
+                        : trip.startDate == null
+                            ? alertDialog(context, 'กรุณาระบุวันเริ่มเดินทาง')
+                            : tripStepperViewModel.confirmTrip(trip, context),
+                    child: Text(
+                      "บันทึก",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       onWillPop: () async {

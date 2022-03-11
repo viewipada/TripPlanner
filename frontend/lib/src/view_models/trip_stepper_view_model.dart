@@ -14,6 +14,7 @@ import 'package:trip_planner/src/view/screens/add_from_baggage_page.dart';
 import 'package:trip_planner/src/view/screens/confirm_trip_page.dart';
 import 'package:trip_planner/src/view/screens/location_detail_page.dart';
 import 'package:trip_planner/src/view/screens/location_recommend_page.dart';
+import 'package:trip_planner/src/view/screens/trip_stepper_page.dart';
 
 class TripStepperViewModel with ChangeNotifier {
   int _index = 0;
@@ -76,6 +77,7 @@ class TripStepperViewModel with ChangeNotifier {
   List<LocationRecommendResponse> _locationRecommend = [];
   int _day = 1;
   ShopResponse? _shop;
+  int? _shopId;
 
   void go(int index, BuildContext context, Trip trip) async {
     if (index == -1 && _index <= 0) {
@@ -90,19 +92,21 @@ class TripStepperViewModel with ChangeNotifier {
         await _tripItemOperations
             .getAllTripItemsByTripIdAndDay(trip.tripId!, trip.totalDay)
             .then(
-              (value) => _tripItemOperations.createTripItem(
-                TripItem(
-                    day: trip.totalDay,
-                    no: value.length,
-                    locationId: _shop!.locationId,
-                    locationCategory: 'ของฝาก',
-                    locationName: _shop!.locationName,
-                    imageUrl: _shop!.imageUrl,
-                    latitude: _shop!.latitude,
-                    longitude: _shop!.longitude,
-                    duration: _shop!.duration,
-                    tripId: trip.tripId!),
-              ),
+              (value) => _tripItemOperations
+                  .createTripItem(
+                    TripItem(
+                        day: trip.totalDay,
+                        no: value.length,
+                        locationId: _shop!.locationId,
+                        locationCategory: 'ของฝาก',
+                        locationName: _shop!.locationName,
+                        imageUrl: _shop!.imageUrl,
+                        latitude: _shop!.latitude,
+                        longitude: _shop!.longitude,
+                        duration: _shop!.duration,
+                        tripId: trip.tripId!),
+                  )
+                  .then((value) => _shopId = value),
             );
         trip.lastLocation = _shop!.locationName;
         trip.totalTripItem += 1;
@@ -493,7 +497,13 @@ class TripStepperViewModel with ChangeNotifier {
           ? DateTime.now()
           : DateTime.parse(DateFormat('yyyy-MM-dd')
               .format(DateFormat('dd/MM/yyyy').parse(trip.startDate!))),
-      firstDate: DateTime.now(),
+      firstDate: trip.startDate != null &&
+              DateTime.parse(DateFormat('yyyy-MM-dd')
+                      .format(DateFormat('dd/MM/yyyy').parse(trip.startDate!)))
+                  .isBefore(DateTime.now())
+          ? DateTime.parse(DateFormat('yyyy-MM-dd')
+              .format(DateFormat('dd/MM/yyyy').parse(trip.startDate!)))
+          : DateTime.now(),
       lastDate: DateTime(DateTime.now().year + 10),
     );
 
@@ -516,6 +526,13 @@ class TripStepperViewModel with ChangeNotifier {
 
   Future<List<ShopResponse>> getAllShop() async {
     return await LocationService().getAllShop();
+  }
+
+  void goToTripStepperPage(BuildContext context, int tripId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => TripStepperPage(tripId: tripId)),
+    );
   }
 
   void goToLocationDetail(BuildContext context, int locationId) {
@@ -552,6 +569,16 @@ class TripStepperViewModel with ChangeNotifier {
 
   void selectTrumbnail(Trip trip, String imageUrl) {
     trip.trumbnail = imageUrl;
+    notifyListeners();
+  }
+
+  void updateTripNameValue(Trip trip, String tripName) {
+    trip.tripName = tripName;
+    notifyListeners();
+  }
+
+  void updateNumberOfPeopleValue(Trip trip, int people) {
+    trip.totalPeople = people;
     notifyListeners();
   }
 
@@ -606,6 +633,11 @@ class TripStepperViewModel with ChangeNotifier {
     Navigator.pop(context);
   }
 
+  void backToShoppingStep(BuildContext context) {
+    if (_shopId != null) _tripItemOperations.deleteTripItemById(_shopId!);
+    Navigator.pop(context);
+  }
+
   void confirmTrip(Trip trip, BuildContext context) {
     _tripsOperations.updateTrip(trip);
 
@@ -625,6 +657,10 @@ class TripStepperViewModel with ChangeNotifier {
     return await _tripItemOperations.getAllTripItemsByTripId(tripId);
   }
 
+  Future<Trip> getTripById(int tripId) async {
+    return await _tripsOperations.getTripById(tripId);
+  }
+
   List get steps => _steps;
   int get index => _index;
   List get vehicles => _vehicles;
@@ -635,4 +671,5 @@ class TripStepperViewModel with ChangeNotifier {
   List<LocationRecommendResponse> get locationRecommend => _locationRecommend;
   int get day => _day;
   ShopResponse? get shop => _shop;
+  int? get shopId => _shopId;
 }
