@@ -11,7 +11,7 @@ import 'package:trip_planner/src/repository/trips_operations.dart';
 import 'package:trip_planner/src/services/profile_service.dart';
 import 'package:trip_planner/src/view/screens/create_location.dart';
 import 'package:trip_planner/src/view/screens/edit_profile_page.dart';
-import 'package:trip_planner/src/view/screens/trip_stepper_page.dart';
+import 'package:trip_planner/src/view/screens/trip_detail_page.dart';
 
 class ProfileViewModel with ChangeNotifier {
   late ProfileResponse _profileResponse;
@@ -105,10 +105,10 @@ class ProfileViewModel with ChangeNotifier {
     );
   }
 
-  void goToTripStepperPage(BuildContext context, int tripId) {
+  void goToTripDetailPage(BuildContext context, Trip trip) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => TripStepperPage(tripId: tripId)),
+      MaterialPageRoute(builder: (context) => TripDetailPage(trip: trip)),
     );
   }
 

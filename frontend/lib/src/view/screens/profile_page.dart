@@ -460,7 +460,7 @@ Widget buildGridReviewPicture(BuildContext context, MyReviewResponse review) {
 Widget buildTripList(
     ProfileViewModel profileViewModel, Trip trip, BuildContext context) {
   return InkWell(
-    onTap: () => profileViewModel.goToTripStepperPage(context, trip.tripId!),
+    onTap: () => profileViewModel.goToTripDetailPage(context, trip),
     child: Container(
       padding: EdgeInsets.symmetric(
         horizontal: getProportionateScreenWidth(15),
