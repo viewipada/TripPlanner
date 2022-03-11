@@ -39,7 +39,7 @@ class _TripStepperPageState extends State<TripStepperPage> {
         appBar: AppBar(
           leading: TextButton(
             onPressed: () => tripStepperViewModel.goBack(context),
-            child: Text("ยกเลิก"),
+            child: Text("บันทึก"),
             style: TextButton.styleFrom(
               padding: EdgeInsets.symmetric(
                 horizontal: getProportionateScreenWidth(15),
@@ -59,8 +59,8 @@ class _TripStepperPageState extends State<TripStepperPage> {
         body: buildStepperCustom(context, tripStepperViewModel),
       ),
       onWillPop: () async {
-        tripStepperViewModel.goBack(context);
-        return true;
+        // tripStepperViewModel.goBack(context);
+        return false;
       },
     );
   }
