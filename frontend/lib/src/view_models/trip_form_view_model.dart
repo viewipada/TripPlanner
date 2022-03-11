@@ -100,7 +100,7 @@ class TripFormViewModel with ChangeNotifier {
         imageUrl: item.imageUrl,
         latitude: item.latitude,
         longitude: item.longitude,
-        duration: item.locationName == "ตำแหน่งของฉัน" ? 0 : 60,
+        duration: item.imageUrl == "" ? 0 : 60,
         tripId: tripId,
       );
       _tripItemOperations.createTripItem(tripItem);
@@ -111,6 +111,13 @@ class TripFormViewModel with ChangeNotifier {
       context,
       MaterialPageRoute(builder: (context) => TripStepperPage(tripId: tripId)),
     );
+    _date = null;
+    _startDate = 'วันเริ่มต้นทริป';
+    _tripName = '';
+    _totalPeople = 1;
+    _totalTravelingDay = 1;
+    _startPointFromGoogle = null;
+    _startPointFromBaggage = null;
   }
 
   void updateTripNameValue(String tripName) {
