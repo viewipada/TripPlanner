@@ -3,27 +3,44 @@ module.exports = (sequelize, Sequelize) => {
     tripId: {
       type: Sequelize.INTEGER,
     },
+    day: {
+      type: Sequelize.INTEGER,
+    },
+    order: {
+      type: Sequelize.INTEGER,
+    },
     locationId: {
       type: Sequelize.INTEGER,
     },
-    travelDay: {
+    locationName: {
+      type: Sequelize.STRING,
+    },
+    imageUrl: {
+      type: Sequelize.STRING,
+    },
+    lat: {
+      type: Sequelize.DOUBLE,
+    },
+    lng: {
+      type: Sequelize.DOUBLE,
+    },
+    locationCategory: {
       type: Sequelize.INTEGER,
-      defaultValue: 1,
     },
     startTime: {
-      type: Sequelize.TIME,
+      type: Sequelize.DATE,
     },
-    locationDuration: {
+    distance: {
       type: Sequelize.INTEGER,
     },
-    distanceFromStart: {
+    duration: {
       type: Sequelize.INTEGER,
     },
     drivingDuration: {
       type: Sequelize.INTEGER,
     },
-    locationNote: {
-      type: Sequelize.STRING(300),
+    note: {
+      type: Sequelize.STRING,
     },
   });
   return TripItem;

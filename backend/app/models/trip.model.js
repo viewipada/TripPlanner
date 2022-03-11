@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
   const Trip = sequelize.define("trip", {
-    tripId: {
+    id: {
       type: Sequelize.INTEGER,
       autoIncrement: true,
       primaryKey: true,
@@ -8,26 +8,26 @@ module.exports = (sequelize, Sequelize) => {
     userId: {
       type: Sequelize.INTEGER,
     },
-    tripName: {
+    name: {
       type: Sequelize.STRING(30),
     },
-    numberPerson: {
+    totalPeople: {
       type: Sequelize.INTEGER,
     },
-    numberTravellingDay: {
+    totalDay: {
       type: Sequelize.INTEGER,
     },
-    trevelStartDate: {
+    startDate: {
       type: Sequelize.DATE,
       defaultValue: Sequelize.NOW,
     },
-    startLat: {
-      type: Sequelize.DOUBLE,
+    firstLocation: {
+      type: Sequelize.INTEGER,
     },
-    startLong: {
-      type: Sequelize.DOUBLE,
+    lastLocation: {
+      type: Sequelize.INTEGER,
     },
-    tripProfileImg: {
+    thumnail: {
       type: Sequelize.STRING,
     },
     status: {
