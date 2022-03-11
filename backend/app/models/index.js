@@ -56,7 +56,7 @@ db.locations.hasMany(db.locationOpeningDayHours, {
 
 //db.tripItems.hasOne(db.locations, { foreignKey: "locationId", sourceKey: "locationId" });
 
-db.trips.hasMany(db.tripItems, { foreignKey: "tripId", sourceKey: "tripId" });
+//db.trips.hasMany(db.tripItems, { foreignKey: "tripId", sourceKey: "tripId" });
 
 //db.baggage.hasMany(db.locations, { foreignKey: "locationId", sourceKey: "locationId" });
 

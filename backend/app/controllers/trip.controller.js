@@ -1,36 +1,36 @@
 const db = require("../models");
 const Location = db.locations;
 const User = db.users;
+const Trip = db.trips;
+const TripItem = db.tripItems;
 
-exports.create = (req, res) => {
-  // Validate request
-  if (!req.body.userId) {
-    res.status(400).send({
-      message: "userId can not be empty!",
+exports.create = async (req, res) => {
+  try {
+    const trip = req.body;
+    const tripItemObj = req.body.tripItem;
+
+    const { tripItem, ...newObjTrip } = trip;
+
+    if (!trip.name) {
+      res.status(400).send("trip name is required! !");
+    }
+
+    const newTrip = await Trip.create(newObjTrip);
+
+    tripItemObj.forEach((item) => {
+      item.tripId = newTrip.id;
     });
-    return;
+
+    const dataTripItem = await TripItem.bulkCreate(tripItemObj);
+
+    console.log(dataTripItem);
+
+    return res.status(201).json({
+      newTrip,
+    });
+    //
+  } catch (err) {
+    res.status(400).send("Something wrong while creating new Trip!!");
+    console.log(err);
   }
-
-  // Create a Location
-  const review = ({
-    tripId,
-    userId,
-    tripName,
-    numberPerson,
-    numberTravellingDay,
-    reviewImg2,
-    reviewImg3,
-  } = req.body);
-
-  // Save Location in the database
-  Trip.create(review)
-    .then((data) => {
-      res.status(201).send(data);
-    })
-
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while creating the Location.",
-      });
-    });
 };
