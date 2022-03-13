@@ -66,7 +66,8 @@ class _TripDetailPageState extends State<TripDetailPage> {
                     children: [
                       Center(
                         child: OutlinedButton(
-                          onPressed: () {},
+                          onPressed: () => tripStepperViewModel
+                              .goToRouteOnMapPage(context, trip.tripId!, days),
                           child: Padding(
                             padding: EdgeInsets.symmetric(
                                 vertical: getProportionateScreenHeight(10)),
@@ -188,7 +189,8 @@ class _TripDetailPageState extends State<TripDetailPage> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           TextButton(
-                            onPressed: () => tripStepperViewModel.goToTripStepperPage(context, trip.tripId!),
+                            onPressed: () => tripStepperViewModel
+                                .goToTripStepperPage(context, trip.tripId!),
                             child: Text(
                               'แก้ไขข้อมูลทริป',
                               style: TextStyle(

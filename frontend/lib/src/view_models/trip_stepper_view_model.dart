@@ -1,6 +1,13 @@
+import 'dart:async';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
 import 'package:trip_planner/src/models/response/location_recommend_response.dart';
 import 'package:trip_planner/src/models/response/shop_response.dart';
@@ -14,6 +21,7 @@ import 'package:trip_planner/src/view/screens/add_from_baggage_page.dart';
 import 'package:trip_planner/src/view/screens/confirm_trip_page.dart';
 import 'package:trip_planner/src/view/screens/location_detail_page.dart';
 import 'package:trip_planner/src/view/screens/location_recommend_page.dart';
+import 'package:trip_planner/src/view/screens/route_on_map_page.dart';
 import 'package:trip_planner/src/view/screens/trip_stepper_page.dart';
 
 class TripStepperViewModel with ChangeNotifier {
@@ -78,6 +86,11 @@ class TripStepperViewModel with ChangeNotifier {
   int _day = 1;
   ShopResponse? _shop;
   int? _shopId;
+
+  Map<PolylineId, Polyline> _polylines = {};
+  List<LatLng> _polylineCoordinates = [];
+  PolylinePoints _polylinePoints = PolylinePoints();
+  String googleAPiKey = GoogleAssets.googleAPI;
 
   void go(int index, BuildContext context, Trip trip) async {
     if (index == -1 && _index <= 0) {
@@ -253,6 +266,7 @@ class TripStepperViewModel with ChangeNotifier {
   Future<void> deleteTripItem(
       Trip trip, List<TripItem> tripItems, TripItem item) async {
     await tripItems.remove(item);
+    await _tripItemOperations.deleteTripItem(item);
     await reOrderColumnNo(tripItems);
 
     List<int> realIndex = [];
@@ -270,7 +284,7 @@ class TripStepperViewModel with ChangeNotifier {
         .then((locations) => locations.length);
 
     await _tripsOperations.updateTrip(trip);
-    await _tripItemOperations.deleteTripItem(item);
+
     if (item.startTime != null) {
       await calculateStartTimeForTripItem(tripItems);
     }
@@ -544,6 +558,18 @@ class TripStepperViewModel with ChangeNotifier {
     );
   }
 
+  void goToRouteOnMapPage(BuildContext context, int tripId, List<int> days) {
+    _tripItemOperations
+        .getAllTripItemsByTripId(tripId)
+        .then((value) => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RouteOnMapPage(
+                    tripId: tripId, days: days, tripItems: value),
+              ),
+            ));
+  }
+
   void selectedLocation(
       BuildContext context, LocationRecommendResponse location) {
     Navigator.pop(context, location);
@@ -661,6 +687,101 @@ class TripStepperViewModel with ChangeNotifier {
     return await _tripsOperations.getTripById(tripId);
   }
 
+  Future<Set<Marker>> getMarkers(List<TripItem> _tripItems) async {
+    // List<LocationNearbyResponse> locationPinCard = [];
+    Set<Marker> _markers = Set();
+    await Future.forEach(_tripItems, (item) async {
+      final location = item as TripItem;
+      if (item.day == _day) {
+        final _markerId = MarkerId('${item.locationId}');
+        await _markers.add(
+          Marker(
+              markerId: _markerId,
+              position: LatLng(location.latitude, location.longitude),
+              infoWindow: InfoWindow(
+                title: location.locationName,
+              ),
+              icon: await BitmapDescriptor.fromBytes(
+                await getBytesFromAsset(
+                  location.locationCategory == 'ที่เที่ยว'
+                      ? IconAssets.travelMarker
+                      : location.locationCategory == 'ที่กิน'
+                          ? IconAssets.foodMarker
+                          : IconAssets.hotelMarker,
+                  100,
+                ),
+              ),
+              onTap: () {
+                // scrollToPinCard(int.parse(_markerId.value));
+              }),
+        );
+      }
+
+      // print(markers);
+    });
+    return _markers;
+  }
+
+  void addPolyLine() {
+    PolylineId id = PolylineId("poly");
+    Polyline polyline = Polyline(
+      polylineId: id,
+      color: Colors.red,
+      points: _polylineCoordinates,
+      width: 10,
+    );
+    _polylines[id] = polyline;
+    notifyListeners();
+    // setState(() {});
+  }
+
+  Future<void> getPolyline(List<TripItem> tripItems) async {
+    List<TripItem> route =
+        await tripItems.where((element) => element.day == _day).toList();
+    List<PolylineWayPoint> wayPoints = [];
+    _polylineCoordinates = [];
+
+    for (int i = 1; i < route.length - 1; i++) {
+      wayPoints.add(PolylineWayPoint(
+          location: "${route[i].latitude},${route[i].longitude}"));
+    }
+
+    PolylineResult result = await _polylinePoints.getRouteBetweenCoordinates(
+      googleAPiKey,
+      PointLatLng(route.first.latitude, route.first.longitude),
+      PointLatLng(route.last.latitude, route.last.longitude),
+      travelMode: TravelMode.driving,
+      wayPoints: wayPoints,
+    );
+
+    if (result.points.isNotEmpty) {
+      result.points.forEach((PointLatLng point) {
+        _polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+    }
+    addPolyLine();
+  }
+
+  Future<Uint8List> getBytesFromAsset(String path, int width) async {
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+        targetWidth: width);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+        .buffer
+        .asUint8List();
+  }
+
+  Future<void> updateMapView(Completer<GoogleMapController> _controller,
+      List<TripItem> tripItems) async {
+    var initItem = tripItems.firstWhere((element) => element.day == _day);
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+      target: LatLng(initItem.latitude, initItem.longitude),
+      zoom: 11,
+    )));
+  }
+
   List get steps => _steps;
   int get index => _index;
   List get vehicles => _vehicles;
@@ -672,4 +793,8 @@ class TripStepperViewModel with ChangeNotifier {
   int get day => _day;
   ShopResponse? get shop => _shop;
   int? get shopId => _shopId;
+
+  Map<PolylineId, Polyline> get polylines => _polylines;
+  List<LatLng> get polylineCoordinates => _polylineCoordinates;
+  PolylinePoints get polylinePoints => _polylinePoints;
 }
