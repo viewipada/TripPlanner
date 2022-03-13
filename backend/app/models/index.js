@@ -33,24 +33,22 @@ db.checkIns = require("./checkIn.model.js")(sequelize, Sequelize);
 db.files = require("./file.model.js")(sequelize, Sequelize);
 db.locations = require("./location.model.js")(sequelize, Sequelize);
 db.locationCategories = require("./locationCategory.model.js")(sequelize, Sequelize);
-db.locationOpeningDayHours = require("./locationOpeningDayHour.model.js")(sequelize, Sequelize);
 db.locationTypes = require("./locationType.model.js")(sequelize, Sequelize);
 db.reviews = require("./review.model.js")(sequelize, Sequelize);
-db.settingDurations = require("./settingDuration.model.js")(sequelize, Sequelize);
 db.tripItems = require("./tripItem.model.js")(sequelize, Sequelize);
 db.trips = require("./trip.model.js")(sequelize, Sequelize);
 db.users = require("./user.model.js")(sequelize, Sequelize);
 db.userInterested = require("./userInterested.model.js")(sequelize, Sequelize);
 
 // Set Relation
-db.locations.hasMany(db.reviews, { foreignKey: "locationId", sourceKey: "locationId" });
+//db.locations.hasMany(db.reviews, { foreignKey: "locationId", sourceKey: "locationId" });
 
-db.locations.hasMany(db.checkIns, { foreignKey: "locationId", sourceKey: "locationId" });
+//db.locations.hasMany(db.checkIns, { foreignKey: "locationId", sourceKey: "locationId" });
 
-db.locations.hasMany(db.locationOpeningDayHours, {
-  foreignKey: "locationId",
-  sourceKey: "locationId",
-});
+//db.locations.hasMany(db.locationOpeningDayHours, {
+//   foreignKey: "locationId",
+//   sourceKey: "locationId",
+// });
 
 //db.locations.hasMany(db.activities, { foreignKey: "locationId", sourceKey: "locationId" });
 

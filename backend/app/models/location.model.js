@@ -20,6 +20,12 @@ module.exports = (sequelize, Sequelize) => {
     website: {
       type: Sequelize.STRING,
     },
+    duration: {
+      type: Sequelize.INTEGER,
+    },
+    type: {
+      type: Sequelize.STRING,
+    },
     imageUrl: {
       type: Sequelize.STRING(500),
     },
@@ -53,3 +59,6 @@ module.exports = (sequelize, Sequelize) => {
 
   return Location;
 };
+
+// delete table openingDay
+// add column duration and type in table location
