@@ -592,15 +592,12 @@ class TripStepperViewModel with ChangeNotifier {
   }
 
   void goToRouteOnMapPage(BuildContext context, int tripId, List<int> days) {
-    _tripItemOperations
-        .getAllTripItemsByTripId(tripId)
-        .then((value) => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    RouteOnMapPage(days: days, tripItems: value),
-              ),
-            ));
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RouteOnMapPage(days: days, tripId: tripId),
+      ),
+    );
   }
 
   void selectedLocation(

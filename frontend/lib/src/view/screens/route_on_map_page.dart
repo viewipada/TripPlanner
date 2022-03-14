@@ -15,23 +15,24 @@ import 'package:trip_planner/src/view_models/trip_stepper_view_model.dart';
 
 class RouteOnMapPage extends StatefulWidget {
   final List<int> days;
-  final List<TripItem> tripItems;
+  final int tripId;
 
   RouteOnMapPage({
     required this.days,
-    required this.tripItems,
+    required this.tripId,
   });
 
   @override
   _RouteOnMapPageState createState() =>
-      _RouteOnMapPageState(this.days, this.tripItems);
+      _RouteOnMapPageState(this.days, this.tripId);
 }
 
 class _RouteOnMapPageState extends State<RouteOnMapPage> {
   final List<int> days;
-  List<TripItem> tripItems;
+  final int tripId;
+  List<TripItem> tripItems = [];
 
-  _RouteOnMapPageState(this.days, this.tripItems);
+  _RouteOnMapPageState(this.days, this.tripId);
 
   Completer<GoogleMapController> _controller = Completer();
 
@@ -39,6 +40,13 @@ class _RouteOnMapPageState extends State<RouteOnMapPage> {
   void initState() {
     super.initState();
     Provider.of<TripStepperViewModel>(context, listen: false).getMapStyle();
+    Provider.of<TripStepperViewModel>(context, listen: false)
+        .getAllTripItemsByTripId(tripId)
+        .then((value) {
+      setState(() {
+        tripItems = value;
+      });
+    });
     // Provider.of<TripStepperViewModel>(context, listen: false)
     //     .getPolyline(tripItems);
   }
@@ -66,83 +74,90 @@ class _RouteOnMapPageState extends State<RouteOnMapPage> {
         elevation: 0,
       ),
       body: SafeArea(
-        child: Stack(
-          children: [
-            FutureBuilder(
-              future: tripStepperViewModel.getMarkers(tripItems),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
-                  return buildGoogleMap(_controller, tripStepperViewModel,
-                      snapshot.data as Set<Marker>);
-                } else {
-                  return Loading();
-                }
-              },
-            ),
-            Align(
-              alignment: Alignment.topCenter,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+        child: tripItems.isEmpty
+            ? Loading()
+            : Stack(
                 children: [
-                  Container(
-                    width: double.infinity,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: days
-                            .map((day) => buildDayButton(day,
-                                tripStepperViewModel, _controller, tripItems))
-                            .toList(),
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                            color: Colors.black54,
-                            blurRadius: 10,
-                            offset: Offset(0.0, 0.75))
+                  FutureBuilder(
+                    future: tripStepperViewModel.getMarkers(tripItems),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasData) {
+                        return buildGoogleMap(_controller, tripStepperViewModel,
+                            snapshot.data as Set<Marker>);
+                      } else {
+                        return Loading();
+                      }
+                    },
+                  ),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: days
+                                  .map((day) => buildDayButton(
+                                      day,
+                                      tripStepperViewModel,
+                                      _controller,
+                                      tripItems))
+                                  .toList(),
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                  color: Colors.black54,
+                                  blurRadius: 10,
+                                  offset: Offset(0.0, 0.75))
+                            ],
+                            color: Colors.white,
+                          ),
+                        ),
                       ],
-                      color: Colors.white,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Container(
+                      margin: EdgeInsets.only(
+                        bottom: getProportionateScreenHeight(15),
+                      ),
+                      height: getProportionateScreenHeight(110),
+                      child: FutureBuilder(
+                        future: tripStepperViewModel.getPinCard(tripItems),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.hasData) {
+                            return ScrollablePositionedList.builder(
+                              padding: EdgeInsets.only(
+                                  left: getProportionateScreenWidth(15)),
+                              scrollDirection: Axis.horizontal,
+                              physics: ClampingScrollPhysics(),
+                              initialScrollIndex: 0,
+                              itemScrollController:
+                                  tripStepperViewModel.itemScrollController,
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (context, index) => InkWell(
+                                  onTap: () =>
+                                      tripStepperViewModel.goToLocationDetail(
+                                          context,
+                                          snapshot.data[index].locationId),
+                                  child: pinCard(snapshot.data[index])),
+                            );
+                          } else {
+                            return SizedBox();
+                          }
+                        },
+                      ),
                     ),
                   ),
                 ],
               ),
-            ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Container(
-                margin: EdgeInsets.only(
-                  bottom: getProportionateScreenHeight(15),
-                ),
-                height: getProportionateScreenHeight(110),
-                child: FutureBuilder(
-                  future: tripStepperViewModel.getPinCard(tripItems),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (snapshot.hasData) {
-                      return ScrollablePositionedList.builder(
-                        padding: EdgeInsets.only(
-                            left: getProportionateScreenWidth(15)),
-                        scrollDirection: Axis.horizontal,
-                        physics: ClampingScrollPhysics(),
-                        initialScrollIndex: 0,
-                        itemScrollController:
-                            tripStepperViewModel.itemScrollController,
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) => InkWell(
-                            onTap: () =>
-                                tripStepperViewModel.goToLocationDetail(
-                                    context, snapshot.data[index].locationId),
-                            child: pinCard(snapshot.data[index])),
-                      );
-                    } else {
-                      return Loading();
-                    }
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -200,7 +215,7 @@ Widget buildGoogleMap(Completer<GoogleMapController> _controller,
       markers: markers,
       polylines: Set<Polyline>.of(tripStepperViewModel.polylines.values),
       onMapCreated: (GoogleMapController controller) {
-        // Future.delayed(Duration(seconds: 1));
+        Future.delayed(Duration(seconds: 1));
         controller.setMapStyle(tripStepperViewModel.mapStyle);
         _controller.complete(controller);
       },
