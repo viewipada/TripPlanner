@@ -51,7 +51,8 @@ class _TravelStepSelectionState extends State<TravelStepSelection> {
           children: [
             Center(
               child: OutlinedButton(
-                onPressed: () {},
+                onPressed: () => tripStepperViewModel.goToRouteOnMapPage(
+                    context, trip.tripId!, days),
                 child: Padding(
                   padding: EdgeInsets.symmetric(
                       vertical: getProportionateScreenHeight(10)),
