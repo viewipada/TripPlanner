@@ -7,7 +7,6 @@ import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/trip.dart';
 import 'package:trip_planner/src/models/trip_item.dart';
-import 'package:trip_planner/src/repository/trip_item_operations.dart';
 import 'package:trip_planner/src/repository/trips_operations.dart';
 import 'package:trip_planner/src/view/widgets/food_step_selection.dart';
 import 'package:trip_planner/src/view/widgets/hotel_step_selection.dart';

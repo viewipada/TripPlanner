@@ -21,9 +21,11 @@ import 'package:trip_planner/src/repository/trips_operations.dart';
 import 'package:trip_planner/src/services/baggage_service.dart';
 import 'package:trip_planner/src/services/location_service.dart';
 import 'package:trip_planner/src/view/screens/add_from_baggage_page.dart';
+import 'package:trip_planner/src/view/screens/baggage_location_on_route_page.dart';
 import 'package:trip_planner/src/view/screens/confirm_trip_page.dart';
 import 'package:trip_planner/src/view/screens/location_detail_page.dart';
 import 'package:trip_planner/src/view/screens/location_recommend_page.dart';
+import 'package:trip_planner/src/view/screens/recommend_on_route_page.dart';
 import 'package:trip_planner/src/view/screens/route_on_map_page.dart';
 import 'package:trip_planner/src/view/screens/trip_stepper_page.dart';
 
@@ -414,8 +416,8 @@ class TripStepperViewModel with ChangeNotifier {
     final LocationRecommendResponse? result = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) =>
-              LocationRecommendPage(locationCategory: locationCategory)),
+          builder: (context) => LocationRecommendPage(
+              locationCategory: locationCategory, tripItems: tripItems)),
     );
 
     if (result != null && trip.tripId != null) {
@@ -466,7 +468,8 @@ class TripStepperViewModel with ChangeNotifier {
       int index, Trip trip) async {
     final BaggageResponse? result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddFromBaggagePage()),
+      MaterialPageRoute(
+          builder: (context) => AddFromBaggagePage(tripItems: tripItems)),
     );
 
     if (result != null && trip.tripId != null) {
@@ -508,6 +511,30 @@ class TripStepperViewModel with ChangeNotifier {
         await calculateStartTimeForTripItem(tripItems);
     }
     notifyListeners();
+  }
+
+  Future<void> goToRecommendOnRoutePage(
+      BuildContext context,
+      List<TripItem> tripItems,
+      List<LocationRecommendResponse> locationList) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => RecommendOnRoutePage(
+                tripItems: tripItems,
+                locationList: locationList,
+              )),
+    );
+  }
+
+  Future<void> goToBaggageLocationOnRoutePage(BuildContext context,
+      List<TripItem> tripItems, List<BaggageResponse> locationList) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => BaggageLocationOnRoutePage(
+              tripItems: tripItems, locationList: locationList)),
+    );
   }
 
   Future pickDate(BuildContext context, Trip trip) async {
@@ -570,8 +597,8 @@ class TripStepperViewModel with ChangeNotifier {
         .then((value) => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => RouteOnMapPage(
-                    tripId: tripId, days: days, tripItems: value),
+                builder: (context) =>
+                    RouteOnMapPage(days: days, tripItems: value),
               ),
             ));
   }
@@ -707,14 +734,6 @@ class TripStepperViewModel with ChangeNotifier {
                 title: location.locationName,
               ),
               icon: await BitmapDescriptor.fromBytes(
-                // await getBytesFromAsset(
-                //   location.locationCategory == 'ที่เที่ยว'
-                //       ? IconAssets.travelMarker
-                //       : location.locationCategory == 'ที่กิน'
-                //           ? IconAssets.foodMarker
-                //           : IconAssets.hotelMarker,
-                //   100,
-                // ),
                 await getBytesFromCanvas(
                   item.no + 1,
                   80,
@@ -732,6 +751,128 @@ class TripStepperViewModel with ChangeNotifier {
         );
       }
     });
+    return _markers;
+  }
+
+  Future<Set<Marker>> getMarkersRecommend(List<TripItem> _tripItems,
+      List<LocationRecommendResponse> locationList) async {
+    Set<Marker> _markers = Set();
+    await Future.forEach(_tripItems, (item) async {
+      final location = item as TripItem;
+      if (item.day == _day) {
+        final _markerId = MarkerId('${item.locationId}');
+        await _markers.add(
+          Marker(
+              markerId: _markerId,
+              position: LatLng(location.latitude, location.longitude),
+              infoWindow: InfoWindow(
+                title: location.locationName,
+              ),
+              icon: await BitmapDescriptor.fromBytes(
+                await getBytesFromCanvas(
+                  item.no + 1,
+                  80,
+                  80,
+                  location.locationCategory == 'ที่เที่ยว'
+                      ? Palette.LightGreenColor
+                      : location.locationCategory == 'ที่กิน'
+                          ? Palette.PeachColor
+                          : Palette.LightOrangeColor,
+                ),
+              ),
+              onTap: () {
+                // scrollToPinCard(item.no);
+              }),
+        );
+      }
+    });
+    await Future.forEach(locationList, (item) async {
+      final location = item as LocationRecommendResponse;
+
+      final _markerId = MarkerId('${item.locationId}');
+      await _markers.add(
+        Marker(
+            markerId: _markerId,
+            position: LatLng(location.latitude, location.longitude),
+            infoWindow: InfoWindow(
+              title: location.locationName,
+            ),
+            icon: await BitmapDescriptor.fromBytes(
+              await getBytesFromAsset(
+                location.category == 'ที่เที่ยว'
+                    ? IconAssets.travelMarker
+                    : location.category == 'ที่กิน'
+                        ? IconAssets.foodMarker
+                        : IconAssets.hotelMarker,
+                100,
+              ),
+            ),
+            onTap: () {
+              scrollToPinCard(locationList.indexOf(item));
+            }),
+      );
+    });
+    return _markers;
+  }
+
+  Future<Set<Marker>> getBaggageMarkers(
+      List<TripItem> _tripItems, List<BaggageResponse> locationList) async {
+    Set<Marker> _markers = Set();
+    await Future.forEach(_tripItems, (item) async {
+      final location = item as TripItem;
+      if (item.day == _day) {
+        final _markerId = MarkerId('${item.locationId}');
+        await _markers.add(
+          Marker(
+              markerId: _markerId,
+              position: LatLng(location.latitude, location.longitude),
+              infoWindow: InfoWindow(
+                title: location.locationName,
+              ),
+              icon: await BitmapDescriptor.fromBytes(
+                await getBytesFromCanvas(
+                  item.no + 1,
+                  80,
+                  80,
+                  location.locationCategory == 'ที่เที่ยว'
+                      ? Palette.LightGreenColor
+                      : location.locationCategory == 'ที่กิน'
+                          ? Palette.PeachColor
+                          : Palette.LightOrangeColor,
+                ),
+              ),
+              onTap: () {
+                // scrollToPinCard(item.no);
+              }),
+        );
+      }
+    }).then((value) => Future.forEach(locationList, (item) async {
+          final location = item as BaggageResponse;
+
+          final _markerId = MarkerId('${item.locationId}');
+          await _markers.add(
+            Marker(
+                markerId: _markerId,
+                position: LatLng(location.latitude, location.longitude),
+                infoWindow: InfoWindow(
+                  title: location.locationName,
+                ),
+                icon: await BitmapDescriptor.fromBytes(
+                  await getBytesFromAsset(
+                    location.category == 'ที่เที่ยว'
+                        ? IconAssets.travelMarker
+                        : location.category == 'ที่กิน'
+                            ? IconAssets.foodMarker
+                            : IconAssets.hotelMarker,
+                    100,
+                  ),
+                ),
+                onTap: () {
+                  scrollToPinCard(locationList.indexOf(item));
+                }),
+          );
+        }));
+
     return _markers;
   }
 

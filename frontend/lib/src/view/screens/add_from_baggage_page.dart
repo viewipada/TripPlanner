@@ -4,19 +4,25 @@ import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
+import 'package:trip_planner/src/models/trip_item.dart';
 import 'package:trip_planner/src/view/widgets/loading.dart';
 import 'package:trip_planner/src/view/widgets/tag_category.dart';
 import 'package:trip_planner/src/view_models/search_start_point_view_model.dart';
 import 'package:trip_planner/src/view_models/trip_stepper_view_model.dart';
 
 class AddFromBaggagePage extends StatefulWidget {
-  AddFromBaggagePage();
+  final List<TripItem> tripItems;
+  AddFromBaggagePage({required this.tripItems});
 
   @override
-  _AddFromBaggagePageState createState() => _AddFromBaggagePageState();
+  _AddFromBaggagePageState createState() =>
+      _AddFromBaggagePageState(this.tripItems);
 }
 
 class _AddFromBaggagePageState extends State<AddFromBaggagePage> {
+  final List<TripItem> tripItems;
+  _AddFromBaggagePageState(this.tripItems);
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -56,7 +62,9 @@ class _AddFromBaggagePageState extends State<AddFromBaggagePage> {
                       top: getProportionateScreenHeight(20),
                     ),
                     child: OutlinedButton(
-                      onPressed: () {},
+                      onPressed: () =>
+                          tripStepperViewModel.goToBaggageLocationOnRoutePage(
+                              context, tripItems, locationList),
                       child: Padding(
                         padding: EdgeInsets.symmetric(
                             vertical: getProportionateScreenHeight(10)),

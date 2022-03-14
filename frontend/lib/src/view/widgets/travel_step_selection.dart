@@ -188,23 +188,6 @@ class _TravelStepSelectionState extends State<TravelStepSelection> {
             color: Palette.PrimaryColor,
           ),
           title: Text(
-            "   เพิ่มจากกระเป๋าเดินทาง",
-            style: TextStyle(
-                color: Palette.PrimaryColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 14),
-          ),
-          onTap: () => tripStepperViewModel.goToAddFromBaggagePage(
-              context, tripItems, tripItems.length, trip),
-        ),
-        ListTile(
-          dense: true,
-          contentPadding: EdgeInsets.zero,
-          trailing: Icon(
-            Icons.add_circle,
-            color: Palette.PrimaryColor,
-          ),
-          title: Text(
             "   เพิ่มจากสถานที่แนะนำในเส้นทาง",
             style: TextStyle(
                 color: Palette.PrimaryColor,
@@ -221,6 +204,23 @@ class _TravelStepSelectionState extends State<TravelStepSelection> {
                   : tripStepperViewModel.index == 2
                       ? "ที่กิน"
                       : "ที่พัก"),
+        ),
+        ListTile(
+          dense: true,
+          contentPadding: EdgeInsets.zero,
+          trailing: Icon(
+            Icons.add_circle,
+            color: Palette.PrimaryColor,
+          ),
+          title: Text(
+            "   เพิ่มจากกระเป๋าเดินทาง",
+            style: TextStyle(
+                color: Palette.PrimaryColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 14),
+          ),
+          onTap: () => tripStepperViewModel.goToAddFromBaggagePage(
+              context, tripItems, tripItems.length, trip),
         ),
         trip.totalDay > 1 ? Divider() : SizedBox(),
         trip.totalDay > 1

@@ -5,24 +5,26 @@ import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/location_recommend_response.dart';
+import 'package:trip_planner/src/models/trip_item.dart';
 import 'package:trip_planner/src/view/widgets/loading.dart';
-import 'package:trip_planner/src/view_models/search_start_point_view_model.dart';
 import 'package:trip_planner/src/view_models/trip_stepper_view_model.dart';
 
 class LocationRecommendPage extends StatefulWidget {
-  LocationRecommendPage({
-    required this.locationCategory,
-  });
+  LocationRecommendPage(
+      {required this.locationCategory, required this.tripItems});
   final String locationCategory;
+  final List<TripItem> tripItems;
 
   @override
   _LocationRecommendPageState createState() =>
-      _LocationRecommendPageState(this.locationCategory);
+      _LocationRecommendPageState(this.locationCategory, this.tripItems);
 }
 
 class _LocationRecommendPageState extends State<LocationRecommendPage> {
   final String locationCategory;
-  _LocationRecommendPageState(this.locationCategory);
+  final List<TripItem> tripItems;
+
+  _LocationRecommendPageState(this.locationCategory, this.tripItems);
 
   // @override
   // void initState() {
@@ -34,8 +36,7 @@ class _LocationRecommendPageState extends State<LocationRecommendPage> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    final searchStartPointViewModel =
-        Provider.of<SearchStartPointViewModel>(context);
+
     final tripStepperViewModel = Provider.of<TripStepperViewModel>(context);
 
     return Scaffold(
@@ -44,7 +45,7 @@ class _LocationRecommendPageState extends State<LocationRecommendPage> {
           icon: Icon(Icons.arrow_back_rounded),
           color: Palette.BackIconColor,
           onPressed: () {
-            searchStartPointViewModel.goBack(context);
+            Navigator.pop(context);
           },
         ),
         title: Text(
@@ -71,7 +72,9 @@ class _LocationRecommendPageState extends State<LocationRecommendPage> {
                       top: getProportionateScreenHeight(20),
                     ),
                     child: OutlinedButton(
-                      onPressed: () {},
+                      onPressed: () =>
+                          tripStepperViewModel.goToRecommendOnRoutePage(
+                              context, tripItems, locationList),
                       child: Padding(
                         padding: EdgeInsets.symmetric(
                             vertical: getProportionateScreenHeight(10)),
@@ -205,7 +208,7 @@ class _LocationRecommendPageState extends State<LocationRecommendPage> {
                                                   ),
                                                   Spacer(),
                                                   Text(
-                                                    '${location.distance} m จากจุดก่อนหน้า',
+                                                    '${location.distance} km จากจุดก่อนหน้า',
                                                     style: FontAssets
                                                         .mealsRecommendText,
                                                   ),
