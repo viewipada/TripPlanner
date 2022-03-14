@@ -17,15 +17,6 @@ exports.create = async (req, res) => {
     //create new location
     const newLocation = await Location.create(location);
 
-    // set opening day hour in LocationOpeningDayhour Table
-    const setOpeningDay = await OpeningDayHour.create({
-      locationId: newLocation.locationId,
-      openingDayHour: location.openingDayHour,
-    });
-
-    //save opening day hour list
-    newLocation.OpeningDayHour = setOpeningDay.openingDayHour;
-
     res.status(201).send(newLocation);
   } catch (err) {
     res.status(400).send("Someting wrong while crating Location");
@@ -87,16 +78,6 @@ exports.findOne = async (req, res) => {
   console.log("reviewData : " + reviewData);
 
   console.log("category : " + locationData.category);
-
-  let durationData = await Promise.all(
-    Duration.findOne({
-      where: {
-        category: locationData.category,
-      },
-      raw: true,
-    })
-  ).catch(() => {});
-  console.log("duration : " + durationData);
 
   if (reviewData.length == 0) locationData.reviewers = [];
   else {

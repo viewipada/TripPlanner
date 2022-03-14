@@ -42,9 +42,12 @@ exports.findOne = async (req, res) => {
     BaggageData.map(async ({ locationId }) => {
       let {
         locationName,
+        latitude,
+        longitude,
         imageUrl,
         description,
         category: locationCategoryId,
+        duration,
       } = await Location.findOne({
         where: {
           locationId,
@@ -58,7 +61,16 @@ exports.findOne = async (req, res) => {
         },
         raw: true,
       });
-      return { locationId, locationName, imageUrl, description, category };
+      return {
+        locationId,
+        locationName,
+        latitude,
+        longitude,
+        imageUrl,
+        description,
+        category,
+        duration,
+      };
     })
   );
 

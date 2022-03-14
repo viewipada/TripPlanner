@@ -23,7 +23,7 @@
     "nodemon": "^2.0.13",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.11.0"
+    "sequelize": "^6.17.0"
   },
   "devDependencies": {
     "eslint": "^8.1.0",
