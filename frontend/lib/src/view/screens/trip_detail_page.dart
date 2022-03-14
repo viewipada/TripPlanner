@@ -35,7 +35,7 @@ class _TripDetailPageState extends State<TripDetailPage> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: getProportionateScreenHeight(220),
+            expandedHeight: getProportionateScreenHeight(170),
             flexibleSpace: FlexibleSpaceBar(
               background: Image.asset(
                 ImageAssets.tripBanner,
