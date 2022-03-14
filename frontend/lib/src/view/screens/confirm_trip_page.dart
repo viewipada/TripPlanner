@@ -189,7 +189,8 @@ class _ConfirmTripPageState extends State<ConfirmTripPage> {
                             child: TextFormField(
                                 initialValue: trip.tripName,
                                 maxLength: 30,
-                                onChanged: (value) => tripStepperViewModel),
+                                onChanged: (value) => tripStepperViewModel
+                                    .updateTripNameValue(trip, value)),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
