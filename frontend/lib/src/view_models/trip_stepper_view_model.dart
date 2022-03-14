@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:trip_planner/assets.dart';
+import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
 import 'package:trip_planner/src/models/response/location_recommend_response.dart';
 import 'package:trip_planner/src/models/response/shop_response.dart';
@@ -91,6 +94,9 @@ class TripStepperViewModel with ChangeNotifier {
   List<LatLng> _polylineCoordinates = [];
   PolylinePoints _polylinePoints = PolylinePoints();
   String googleAPiKey = GoogleAssets.googleAPI;
+  String _mapStyle = '';
+
+  ItemScrollController _itemScrollController = ItemScrollController();
 
   void go(int index, BuildContext context, Trip trip) async {
     if (index == -1 && _index <= 0) {
@@ -688,7 +694,6 @@ class TripStepperViewModel with ChangeNotifier {
   }
 
   Future<Set<Marker>> getMarkers(List<TripItem> _tripItems) async {
-    // List<LocationNearbyResponse> locationPinCard = [];
     Set<Marker> _markers = Set();
     await Future.forEach(_tripItems, (item) async {
       final location = item as TripItem;
@@ -702,33 +707,45 @@ class TripStepperViewModel with ChangeNotifier {
                 title: location.locationName,
               ),
               icon: await BitmapDescriptor.fromBytes(
-                await getBytesFromAsset(
+                // await getBytesFromAsset(
+                //   location.locationCategory == 'ที่เที่ยว'
+                //       ? IconAssets.travelMarker
+                //       : location.locationCategory == 'ที่กิน'
+                //           ? IconAssets.foodMarker
+                //           : IconAssets.hotelMarker,
+                //   100,
+                // ),
+                await getBytesFromCanvas(
+                  item.no + 1,
+                  80,
+                  80,
                   location.locationCategory == 'ที่เที่ยว'
-                      ? IconAssets.travelMarker
+                      ? Palette.LightGreenColor
                       : location.locationCategory == 'ที่กิน'
-                          ? IconAssets.foodMarker
-                          : IconAssets.hotelMarker,
-                  100,
+                          ? Palette.PeachColor
+                          : Palette.LightOrangeColor,
                 ),
               ),
               onTap: () {
-                // scrollToPinCard(int.parse(_markerId.value));
+                scrollToPinCard(item.no);
               }),
         );
       }
-
-      // print(markers);
     });
     return _markers;
+  }
+
+  Future<List<TripItem>> getPinCard(List<TripItem> tripItems) async {
+    return await tripItems.where((element) => element.day == _day).toList();
   }
 
   void addPolyLine() {
     PolylineId id = PolylineId("poly");
     Polyline polyline = Polyline(
       polylineId: id,
-      color: Colors.red,
+      color: Palette.SecondaryColor,
       points: _polylineCoordinates,
-      width: 10,
+      width: 4,
     );
     _polylines[id] = polyline;
     notifyListeners();
@@ -772,6 +789,39 @@ class TripStepperViewModel with ChangeNotifier {
         .asUint8List();
   }
 
+  Future<Uint8List> getBytesFromCanvas(
+      int customNum, int width, int height, color) async {
+    final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
+    final Canvas canvas = Canvas(pictureRecorder);
+    final Paint paint = Paint()..color = color;
+    final Radius radius = Radius.circular(width / 2);
+    canvas.drawRRect(
+        RRect.fromRectAndCorners(
+          Rect.fromLTWH(0.0, 0.0, width.toDouble(), height.toDouble()),
+          topLeft: radius,
+          topRight: radius,
+          bottomLeft: radius,
+          bottomRight: radius,
+        ),
+        paint);
+
+    TextPainter painter = TextPainter(textDirection: ui.TextDirection.ltr);
+    painter.text = TextSpan(
+      text: customNum.toString(), // your custom number here
+      style: TextStyle(
+          fontSize: 36, color: Colors.white, fontWeight: FontWeight.bold),
+    );
+
+    painter.layout();
+    painter.paint(
+        canvas,
+        Offset((width * 0.5) - painter.width * 0.5,
+            (height * .5) - painter.height * 0.5));
+    final img = await pictureRecorder.endRecording().toImage(width, height);
+    final data = await img.toByteData(format: ui.ImageByteFormat.png);
+    return data!.buffer.asUint8List();
+  }
+
   Future<void> updateMapView(Completer<GoogleMapController> _controller,
       List<TripItem> tripItems) async {
     var initItem = tripItems.firstWhere((element) => element.day == _day);
@@ -780,6 +830,22 @@ class TripStepperViewModel with ChangeNotifier {
       target: LatLng(initItem.latitude, initItem.longitude),
       zoom: 11,
     )));
+  }
+
+  void getMapStyle() {
+    rootBundle.loadString('assets/map_style.txt').then((string) {
+      _mapStyle = string;
+      notifyListeners();
+    });
+  }
+
+  Future scrollToPinCard(int index) async {
+    if (_itemScrollController.isAttached) {
+      await _itemScrollController.scrollTo(
+        index: index,
+        duration: Duration(seconds: 1),
+      );
+    }
   }
 
   List get steps => _steps;
@@ -797,4 +863,7 @@ class TripStepperViewModel with ChangeNotifier {
   Map<PolylineId, Polyline> get polylines => _polylines;
   List<LatLng> get polylineCoordinates => _polylineCoordinates;
   PolylinePoints get polylinePoints => _polylinePoints;
+  String get mapStyle => _mapStyle;
+
+  ItemScrollController get itemScrollController => _itemScrollController;
 }

@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:provider/provider.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
@@ -37,37 +39,18 @@ class _RouteOnMapPageState extends State<RouteOnMapPage> {
 
   Completer<GoogleMapController> _controller = Completer();
 
-  // Set<Marker> markers = Set();
-  // Map<PolylineId, Polyline> polylines = {};
-  // List<LatLng> polylineCoordinates = [];
-  // PolylinePoints polylinePoints = PolylinePoints();
-  // String googleAPiKey = GoogleAssets.googleAPI;
-
   @override
   void initState() {
     super.initState();
+    Provider.of<TripStepperViewModel>(context, listen: false).getMapStyle();
     // Provider.of<TripStepperViewModel>(context, listen: false)
-    //     .getMarkers(tripItems);
-    // print(markers);
-    // print(tripItems);
-
-    /// origin marker
-    // _addMarker(LatLng(_originLatitude, _originLongitude), "origin",
-    //     BitmapDescriptor.defaultMarker);
-
-    // /// destination marker
-    // _addMarker(LatLng(_destLatitude, _destLongitude), "destination",
-    //     BitmapDescriptor.defaultMarkerWithHue(90));
-    Provider.of<TripStepperViewModel>(context, listen: false)
-        .getPolyline(tripItems);
-    // print(polylineCoordinates);
+    //     .getPolyline(tripItems);
   }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     final tripStepperViewModel = Provider.of<TripStepperViewModel>(context);
-    print('print');
 
     return Scaffold(
       appBar: AppBar(
@@ -93,7 +76,6 @@ class _RouteOnMapPageState extends State<RouteOnMapPage> {
               future: tripStepperViewModel.getMarkers(tripItems),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
-                  // _getPolyline(tripItems, tripStepperViewModel);
                   return buildGoogleMap(_controller, tripStepperViewModel,
                       snapshot.data as Set<Marker>);
                 } else {
@@ -127,36 +109,40 @@ class _RouteOnMapPageState extends State<RouteOnMapPage> {
                       color: Colors.white,
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(
-                      0,
-                      getProportionateScreenHeight(15),
-                      getProportionateScreenWidth(15),
-                      getProportionateScreenHeight(10),
-                    ),
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 20,
-                      child: IconButton(
-                          constraints: BoxConstraints(),
-                          padding: EdgeInsets.zero,
-                          icon: ImageIcon(
-                            AssetImage(IconAssets.locationListView),
-                          ),
-                          color: Palette.SecondaryColor,
-                          onPressed: () => {}
-                          //  showModalBottomSheet(
-                          //   isScrollControlled: true,
-                          //   backgroundColor: Colors.transparent,
-                          //   context: context,
-                          //   builder: (_context) => makeDismissible(
-                          //       locationListView(context, searchViewModel),
-                          //       _context),
-                          // ),
-                          ),
-                    ),
-                  ),
                 ],
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Container(
+                margin: EdgeInsets.only(
+                  bottom: getProportionateScreenHeight(15),
+                ),
+                height: getProportionateScreenHeight(110),
+                child: FutureBuilder(
+                  future: tripStepperViewModel.getPinCard(tripItems),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      return ScrollablePositionedList.builder(
+                        padding: EdgeInsets.only(
+                            left: getProportionateScreenWidth(15)),
+                        scrollDirection: Axis.horizontal,
+                        physics: ClampingScrollPhysics(),
+                        initialScrollIndex: 0,
+                        itemScrollController:
+                            tripStepperViewModel.itemScrollController,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) => InkWell(
+                            onTap: () =>
+                                tripStepperViewModel.goToLocationDetail(
+                                    context, snapshot.data[index].locationId),
+                            child: pinCard(snapshot.data[index])),
+                      );
+                    } else {
+                      return Loading();
+                    }
+                  },
+                ),
               ),
             ),
           ],
@@ -164,18 +150,6 @@ class _RouteOnMapPageState extends State<RouteOnMapPage> {
       ),
     );
   }
-
-  // void _onMapCreated(GoogleMapController controller) async {
-  //   mapController = controller;
-  // }
-
-  // _addMarker(LatLng position, String id, BitmapDescriptor descriptor) {
-  //   MarkerId markerId = MarkerId(id);
-  //   Marker marker =
-  //       Marker(markerId: markerId, icon: descriptor, position: position);
-  //   markers[markerId] = marker;
-  // }
-
 }
 
 Widget buildDayButton(int day, TripStepperViewModel tripStepperViewModel,
@@ -188,7 +162,7 @@ Widget buildDayButton(int day, TripStepperViewModel tripStepperViewModel,
           onPressed: () {
             tripStepperViewModel.onDayTapped(day);
             tripStepperViewModel.updateMapView(_controller, tripItems);
-            tripStepperViewModel.getPolyline(tripItems);
+            // tripStepperViewModel.getPolyline(tripItems);
           },
           child: Text(
             'วันที่ ${day}',
@@ -227,20 +201,91 @@ Widget buildGoogleMap(Completer<GoogleMapController> _controller,
       mapToolbarEnabled: false,
       myLocationButtonEnabled: false,
       mapType: MapType.normal,
-      // myLocationEnabled: true,
-      // tiltGesturesEnabled: true,
-      // compassEnabled: true,
-      // scrollGesturesEnabled: true,
-      // zoomGesturesEnabled: false,
-
       markers: markers,
       polylines: Set<Polyline>.of(tripStepperViewModel.polylines.values),
       onMapCreated: (GoogleMapController controller) {
         // Future.delayed(Duration(seconds: 1));
-
-        // controller.setMapStyle(searchViewModel.mapStyle);
+        controller.setMapStyle(tripStepperViewModel.mapStyle);
         _controller.complete(controller);
       },
+    ),
+  );
+}
+
+Widget pinCard(TripItem location) {
+  return Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(10),
+      color: Colors.white,
+      border: Border.all(color: Palette.Outline),
+    ),
+    width: SizeConfig.screenWidth - getProportionateScreenWidth(80),
+    height: double.infinity,
+    margin: EdgeInsets.only(
+      right: getProportionateScreenWidth(15),
+    ),
+    child: Row(
+      children: [
+        Padding(
+          padding:
+              EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(15)),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image(
+              width: getProportionateScreenHeight(80),
+              height: getProportionateScreenHeight(80),
+              fit: BoxFit.cover,
+              image: NetworkImage(location.imageUrl),
+            ),
+          ),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: SizeConfig.screenWidth - getProportionateScreenWidth(230),
+              padding: EdgeInsets.only(top: getProportionateScreenHeight(15)),
+              child: Text(
+                '${location.no + 1}. ${location.locationName}',
+                style: FontAssets.subtitleText,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: getProportionateScreenHeight(5)),
+              child: Text(
+                location.no == 0
+                    ? 'จุดเริ่มต้น'
+                    : 'ห่างจากจุดก่อนหน้า ${location.distance} km',
+                style: TextStyle(
+                  color: Palette.SecondaryColor,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ],
+        ),
+        // Expanded(
+        //   child: Align(
+        //     alignment: Alignment.bottomRight,
+        //     child: IconButton(
+        //       splashRadius: 1,
+        //       iconSize: 36,
+        //       onPressed: () {},
+        //       icon: Icon(
+        //         Icons.add_circle_outline_rounded,
+        //         color: Palette.SecondaryColor,
+        //       ),
+        //       alignment: Alignment.bottomRight,
+        //       padding: EdgeInsets.only(
+        //         right: getProportionateScreenWidth(15),
+        //         bottom: getProportionateScreenWidth(10),
+        //       ),
+        //     ),
+        //   ),
+        // ),
+      ],
     ),
   );
 }
