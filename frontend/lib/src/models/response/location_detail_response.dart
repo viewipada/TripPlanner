@@ -50,7 +50,7 @@ class LocationDetailResponse {
       contactNumber: json['contactNumber'],
       website: json['website'],
       duration: json['duration'],
-      averageRating: json['averageRating'],
+      averageRating: json['averageRating'].toDouble(),
       totalReview: json['totalReview'],
       totalCheckin: json['totalCheckin'],
       reviews: reviewList.map((i) => ReviewResponse.fromJson(i)).toList(),
