@@ -11,7 +11,7 @@ class LocationDetailResponse {
   // final String openingHour;
   final String contactNumber;
   final String website;
-  // final int duration;
+  final int duration;
   final int averageRating;
   final int totalReview;
   final int totalCheckin;
@@ -28,7 +28,7 @@ class LocationDetailResponse {
     // required this.openingHour,
     required this.contactNumber,
     required this.website,
-    // required this.duration,
+    required this.duration,
     required this.averageRating,
     required this.totalReview,
     required this.totalCheckin,
@@ -49,7 +49,7 @@ class LocationDetailResponse {
       // openingHour: json['openingHour'],
       contactNumber: json['contactNumber'],
       website: json['website'],
-      // duration: json['duration'],
+      duration: json['duration'],
       averageRating: json['averageRating'],
       totalReview: json['totalReview'],
       totalCheckin: json['totalCheckin'],

@@ -294,8 +294,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                             size: 18,
                           ),
                           Text(
-                            // ' เวลาที่ใช้ ${locationDetailViewModel.locationDetail.duration}hr',
-                            ' เวลาที่ใช้ 1hr',
+                            ' เวลาที่ใช้ ${locationDetailViewModel.locationDetail.duration}hr',
                             style: FontAssets.bodyText,
                           ),
                         ],
