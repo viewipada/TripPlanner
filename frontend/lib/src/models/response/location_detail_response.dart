@@ -12,7 +12,7 @@ class LocationDetailResponse {
   final String contactNumber;
   final String website;
   final int duration;
-  final int averageRating;
+  final double averageRating;
   final int totalReview;
   final int totalCheckin;
   final List<ReviewResponse> reviews;

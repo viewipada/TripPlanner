@@ -70,13 +70,15 @@ class TripFormViewModel with ChangeNotifier {
       startPointList.insert(
         0,
         BaggageResponse(
-            locationId: 0,
-            locationName: startPointFromGoogle['locationName']!,
-            latitude: double.parse(startPointFromGoogle['lat']!),
-            longitude: double.parse(startPointFromGoogle['lng']!),
-            imageUrl: '',
-            category: '',
-            description: startPointFromGoogle['description']!),
+          locationId: 0,
+          locationName: startPointFromGoogle['locationName']!,
+          latitude: double.parse(startPointFromGoogle['lat']!),
+          longitude: double.parse(startPointFromGoogle['lng']!),
+          imageUrl: '',
+          category: '',
+          description: startPointFromGoogle['description']!,
+          duration: 1,
+        ),
       );
     }
 

@@ -6,6 +6,7 @@ class BaggageResponse {
   final String imageUrl;
   final String category;
   final String description;
+  final int duration;
 
   BaggageResponse({
     required this.locationId,
@@ -15,6 +16,7 @@ class BaggageResponse {
     required this.imageUrl,
     required this.category,
     required this.description,
+    required this.duration,
   });
 
   factory BaggageResponse.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class BaggageResponse {
       imageUrl: json['imageUrl'],
       category: json['category'],
       description: json['description'],
+      duration: json['duration'] ?? 0,
     );
   }
 
@@ -38,6 +41,7 @@ class BaggageResponse {
     data['imageUrl'] = this.imageUrl;
     data['category'] = this.category;
     data['description'] = this.description;
+    data['duration'] = this.duration;
     return data;
   }
 }
