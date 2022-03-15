@@ -53,15 +53,9 @@ class _BaggageLocationOnRoutePageState
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_rounded),
-          color: Palette.BackIconColor,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+       
         title: Text(
-          "สถานที่ในกระเป๋าเดินทาง",
+          "ตำแหน่งในเส้นทาง",
           style: FontAssets.headingText,
         ),
         centerTitle: true,
@@ -83,35 +77,44 @@ class _BaggageLocationOnRoutePageState
                 }
               },
             ),
-            // Align(
-            //   alignment: Alignment.topCenter,
-            //   child: Column(
-            //     crossAxisAlignment: CrossAxisAlignment.end,
-            //     children: [
-            //       Container(
-            //         width: double.infinity,
-            //         child: SingleChildScrollView(
-            //           scrollDirection: Axis.horizontal,
-            //           child: Row(
-            //             children: days
-            //                 .map((day) => buildDayButton(day,
-            //                     tripStepperViewModel, _controller, tripItems))
-            //                 .toList(),
-            //           ),
-            //         ),
-            //         decoration: BoxDecoration(
-            //           boxShadow: <BoxShadow>[
-            //             BoxShadow(
-            //                 color: Colors.black54,
-            //                 blurRadius: 10,
-            //                 offset: Offset(0.0, 0.75))
-            //           ],
-            //           color: Colors.white,
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                margin: EdgeInsets.only(
+                  top: getProportionateScreenHeight(20),
+                ),
+                child: OutlinedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical: getProportionateScreenHeight(10)),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ImageIcon(
+                          AssetImage(IconAssets.locationListView),
+                        ),
+                        Text(
+                          ' ดูรายการสถานที่',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    primary: Palette.SecondaryColor,
+                    alignment: Alignment.center,
+                    side: BorderSide(color: Palette.SecondaryColor),
+                  ),
+                ),
+              ),
+            
+            ),
             Align(
               alignment: Alignment.bottomLeft,
               child: Column(
@@ -123,7 +126,7 @@ class _BaggageLocationOnRoutePageState
                       vertical: getProportionateScreenHeight(5),
                     ),
                     child: instruction(
-                        ' สถานที่ในกระเป๋าเดินทางจะเพิ่มไปยังวันที่ ${tripStepperViewModel.day} ของทริป'),
+                        ' แสดงตำแหน่งบนเส้นทาง วันที่ ${tripStepperViewModel.day} ของทริป'),
                   ),
                   Container(
                     margin: EdgeInsets.only(
