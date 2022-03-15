@@ -23,9 +23,9 @@ class _BaggagePageState extends State<BaggagePage> {
   @override
   void initState() {
     Provider.of<BaggageViewModel>(context, listen: false).getBaggageList();
-    saveUserInfo();
-    getUserInfo();
-    saveLocationsInTrip();
+    // saveUserInfo();
+    // getUserInfo();
+    // saveLocationsInTrip();
     super.initState();
   }
 

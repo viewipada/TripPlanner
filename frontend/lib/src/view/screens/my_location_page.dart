@@ -171,23 +171,32 @@ class _MyLocationPageState extends State<MyLocationPage> {
                       getProportionateScreenWidth(15),
                       getProportionateScreenHeight(10),
                     ),
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 20,
-                      child: IconButton(
-                        constraints: BoxConstraints(),
-                        padding: EdgeInsets.zero,
-                        icon: ImageIcon(
-                          AssetImage(IconAssets.locationListView),
-                        ),
-                        color: Palette.SecondaryColor,
-                        onPressed: () => showModalBottomSheet(
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          context: context,
-                          builder: (_context) => makeDismissible(
-                              locationListView(context, searchViewModel),
-                              _context),
+                    child: Container(
+                      decoration:
+                          BoxDecoration(shape: BoxShape.circle, boxShadow: [
+                        BoxShadow(
+                            color: Colors.black54,
+                            blurRadius: 5,
+                            offset: Offset(0.75, 0.75)),
+                      ]),
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 20,
+                        child: IconButton(
+                          constraints: BoxConstraints(),
+                          padding: EdgeInsets.zero,
+                          icon: ImageIcon(
+                            AssetImage(IconAssets.locationListView),
+                          ),
+                          color: Palette.SecondaryColor,
+                          onPressed: () => showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            context: context,
+                            builder: (_context) => makeDismissible(
+                                locationListView(context, searchViewModel),
+                                _context),
+                          ),
                         ),
                       ),
                     ),
@@ -195,19 +204,28 @@ class _MyLocationPageState extends State<MyLocationPage> {
                   Padding(
                     padding:
                         EdgeInsets.only(right: getProportionateScreenWidth(15)),
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 20,
-                      child: IconButton(
-                        constraints: BoxConstraints(),
-                        padding: EdgeInsets.zero,
-                        icon: ImageIcon(
-                          AssetImage(IconAssets.radiusPin),
+                    child: Container(
+                      decoration:
+                          BoxDecoration(shape: BoxShape.circle, boxShadow: [
+                        BoxShadow(
+                            color: Colors.black54,
+                            blurRadius: 5,
+                            offset: Offset(0.75, 0.75)),
+                      ]),
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 20,
+                        child: IconButton(
+                          constraints: BoxConstraints(),
+                          padding: EdgeInsets.zero,
+                          icon: ImageIcon(
+                            AssetImage(IconAssets.radiusPin),
+                          ),
+                          color: Palette.SecondaryColor,
+                          onPressed: () {
+                            _showRadiusSelectionAlert(context, searchViewModel);
+                          },
                         ),
-                        color: Palette.SecondaryColor,
-                        onPressed: () {
-                          _showRadiusSelectionAlert(context, searchViewModel);
-                        },
                       ),
                     ),
                   ),

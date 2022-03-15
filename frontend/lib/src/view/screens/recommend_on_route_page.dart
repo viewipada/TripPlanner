@@ -75,38 +75,33 @@ class _RecommendOnRoutePageState extends State<RecommendOnRoutePage> {
               },
             ),
             Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                margin: EdgeInsets.only(
-                  top: getProportionateScreenHeight(20),
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                  0,
+                  getProportionateScreenHeight(15),
+                  getProportionateScreenWidth(15),
+                  getProportionateScreenHeight(10),
                 ),
-                child: OutlinedButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: getProportionateScreenHeight(10)),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ImageIcon(
-                          AssetImage(IconAssets.locationListView),
-                        ),
-                        Text(
-                          ' ดูรายการสถานที่',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  style: OutlinedButton.styleFrom(
+                child: Container(
+                  decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: [
+                    BoxShadow(
+                        color: Colors.black54,
+                        blurRadius: 5,
+                        offset: Offset(0.75, 0.75)),
+                  ]),
+                  child: CircleAvatar(
                     backgroundColor: Colors.white,
-                    primary: Palette.SecondaryColor,
-                    alignment: Alignment.center,
-                    side: BorderSide(color: Palette.SecondaryColor),
+                    radius: 20,
+                    child: IconButton(
+                      constraints: BoxConstraints(),
+                      padding: EdgeInsets.zero,
+                      icon: ImageIcon(
+                        AssetImage(IconAssets.locationListView),
+                      ),
+                      color: Palette.SecondaryColor,
+                      onPressed: () => Navigator.pop(context),
+                    ),
                   ),
                 ),
               ),
