@@ -124,6 +124,9 @@ class TripStepperViewModel with ChangeNotifier {
                         imageUrl: _shop!.imageUrl,
                         latitude: _shop!.latitude,
                         longitude: _shop!.longitude,
+                        startTime: DateTime.parse(value.last.startTime!)
+                            .add(Duration(minutes: value.last.duration))
+                            .toIso8601String(),
                         duration: _shop!.duration,
                         tripId: trip.tripId!),
                   )
