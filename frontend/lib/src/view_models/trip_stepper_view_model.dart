@@ -226,8 +226,12 @@ class TripStepperViewModel with ChangeNotifier {
   }
 
   Future<void> calculateStartTimeForTripItem(List<TripItem> tripItems) async {
-    if (tripItems[0].startTime != null && tripItems[0].no >= 0 ||
-        tripItems[0].no < 0 && tripItems[1].startTime != null) {
+    if ((tripItems.isNotEmpty &&
+            tripItems[0].startTime != null &&
+            tripItems[0].no >= 0) ||
+        (tripItems.isNotEmpty &&
+            tripItems[0].no < 0 &&
+            tripItems[1].startTime != null)) {
       List<int> realIndex = [];
       var indexWithoutMeals = await tripItems
           .where((element) => element.no >= 0 && element.day == _day);
@@ -318,13 +322,23 @@ class TripStepperViewModel with ChangeNotifier {
 
   int recommendToStop(List<TripItem> tripItems) {
     int index = -1;
-    if (tripItems[0].startTime != null && tripItems.isNotEmpty) {
+    var _tripItemsAtDay;
+    if (_index == 2)
+      _tripItemsAtDay = tripItems
+          .where((element) => element.day == _day && element.no >= 0)
+          .toList();
+    else
+      _tripItemsAtDay = tripItems;
+
+    if (_tripItemsAtDay.first.startTime != null && _tripItemsAtDay.isNotEmpty) {
       index = tripItems.indexWhere(
         (element) =>
+            element.no >= 0 &&
+            element.day == _day &&
             DateTime.parse(element.startTime!)
-                .add(Duration(minutes: element.duration))
-                .hour >=
-            19,
+                    .add(Duration(minutes: element.duration))
+                    .hour >=
+                19,
       );
     }
     return index;
@@ -678,6 +692,50 @@ class TripStepperViewModel with ChangeNotifier {
     }
 
     if (_day > trip.totalDay) _day--;
+
+    notifyListeners();
+  }
+
+  Future<void> moveTripItemTo(
+      int day, Trip trip, TripItem item, List<TripItem> tripItems) async {
+    tripItems.remove(item);
+    List<TripItem> _desTripItems = [];
+    _desTripItems = await _tripItemOperations.getAllTripItemsByTripIdAndDay(
+        trip.tripId!, day);
+
+    if (_desTripItems.isNotEmpty && _desTripItems.first.startTime != null) {
+      item.startTime = await DateTime.parse(_desTripItems.last.startTime!)
+          .add(Duration(
+              minutes: _desTripItems.last.duration +
+                  (item.drivingDuration == null ? 0 : item.drivingDuration!)))
+          .toIso8601String();
+    }
+    item.no = _desTripItems.length;
+    item.day = day;
+
+    int no = 0;
+    tripItems.forEach((element) {
+      if (element.no >= 0 && element.day == _day) {
+        //update no. oldTripItems
+        element.no = no;
+        no++;
+      }
+    });
+
+    await calculateStartTimeForTripItem(tripItems);
+
+    await _tripItemOperations.updateTripItem(item);
+
+    trip.firstLocation = await getAllTripItemsByTripId(trip.tripId!)
+        .then((locations) => locations[0].locationName);
+    trip.lastLocation = await getAllTripItemsByTripId(trip.tripId!)
+        .then((locations) => locations[locations.length - 1].locationName);
+    _tripsOperations.updateTrip(trip);
+
+    _day = day;
+    if (_index == 2)
+      tripItems.insert(
+          tripItems.lastIndexWhere((element) => element.day == day) + 1, item);
 
     notifyListeners();
   }

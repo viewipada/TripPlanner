@@ -146,7 +146,7 @@ class _TravelStepSelectionState extends State<TravelStepSelection> {
                       .map((index, item) => MapEntry(
                           index,
                           buildTripItem(index, tripStepperViewModel, context,
-                              item, tripItems, trip, slidableController)))
+                              item, tripItems, trip, slidableController, days)))
                       .values
                       .toList(),
                   proxyDecorator:
@@ -301,7 +301,82 @@ Widget buildTripItem(
     TripItem item,
     List<TripItem> tripItems,
     Trip trip,
-    SlidableController slidableController) {
+    SlidableController slidableController,
+    List<int> days) {
+  _showMoveToModal(
+          BuildContext context,
+          TripStepperViewModel tripStepperViewModel,
+          Trip trip,
+          List<int> days,
+          TripItem item) =>
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Text(
+            'ย้าย ${item.locationName} ไปยัง',
+            style: TextStyle(
+                color: Palette.BodyText,
+                fontSize: 14,
+                fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          titlePadding:
+              EdgeInsets.symmetric(vertical: getProportionateScreenHeight(20)),
+          contentPadding: EdgeInsets.zero,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: days
+                .map(
+                  (day) => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Divider(),
+                      ListTile(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: day == days[days.length - 1]
+                              ? BorderRadius.only(
+                                  topLeft: Radius.zero,
+                                  bottomLeft: Radius.circular(16),
+                                  topRight: Radius.zero,
+                                  bottomRight: Radius.circular(16),
+                                )
+                              : BorderRadius.zero,
+                        ),
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                        selected: day == tripStepperViewModel.day,
+                        selectedTileColor: Palette.SelectedListTileColor,
+                        onTap: () {
+                          if (day != tripStepperViewModel.day) {
+                            tripStepperViewModel.moveTripItemTo(
+                                day, trip, item, tripItems);
+                            Navigator.pop(context);
+                          }
+                        },
+                        title: Text(
+                          'วันที่ ${day}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: day == tripStepperViewModel.day
+                                ? Palette.PrimaryColor
+                                : Palette.BodyText,
+                            fontWeight: day == tripStepperViewModel.day
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+                .toList(),
+          ),
+        ),
+      );
   _showDurationSelectionAlert(
           BuildContext context,
           TripStepperViewModel tripStepperViewModel,
@@ -435,45 +510,6 @@ Widget buildTripItem(
                       ],
                     ),
                   ),
-                  // FutureBuilder(
-                  //   future: tripStepperViewModel.recommendMeal(tripItems),
-                  //   builder: (context, snapshot) {
-                  //     if (snapshot.hasData) {
-                  //       var mealsIndex = snapshot.data as List<int>;
-                  //       return mealsIndex.isNotEmpty && mealsIndex[2] == index
-                  //           ? recommendMeals(
-                  //               'มื้อเย็น',
-                  //               Icon(
-                  //                 Icons.nights_stay_rounded,
-                  //                 color: Palette.LightSecondary,
-                  //                 size: 18,
-                  //               ),
-                  //             )
-                  //           : mealsIndex.isNotEmpty && mealsIndex[1] == index
-                  //               ? recommendMeals(
-                  //                   'มื้อเที่ยง',
-                  //                   Icon(
-                  //                     Icons.wb_sunny_rounded,
-                  //                     color: Palette.LightSecondary,
-                  //                     size: 20,
-                  //                   ),
-                  //                 )
-                  //               : mealsIndex.isNotEmpty &&
-                  //                       mealsIndex[0] == index
-                  //                   ? recommendMeals(
-                  //                       'มื้อเช้า',
-                  //                       Icon(
-                  //                         Icons.wb_twilight_rounded,
-                  //                         color: Palette.LightSecondary,
-                  //                         size: 18,
-                  //                       ),
-                  //                     )
-                  //                   : SizedBox();
-                  //     } else {
-                  //       return Container(color: Colors.green, height: 10);
-                  //     }
-                  //   },
-                  // ),
                   if (tripStepperViewModel.recommendMeal(tripItems).isNotEmpty)
                     tripStepperViewModel.recommendMeal(tripItems)[2] == index
                         ? recommendMeals(
@@ -567,15 +603,36 @@ Widget buildTripItem(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '${item.no + 1}. ${item.locationName}',
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: TextStyle(
-                          color: Palette.AdditionText,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '${item.no + 1}. ${item.locationName}',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: TextStyle(
+                                color: Palette.AdditionText,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: getProportionateScreenWidth(15)),
+                            child: IconButton(
+                              onPressed: () => _showMoveToModal(context,
+                                  tripStepperViewModel, trip, days, item),
+                              icon: Icon(
+                                Icons.swap_horiz_rounded,
+                                color: Palette.InfoText,
+                              ),
+                              padding: EdgeInsets.zero,
+                              constraints: BoxConstraints(),
+                            ),
+                          ),
+                        ],
                       ),
                       Padding(
                         padding: EdgeInsets.only(
@@ -697,10 +754,9 @@ Widget buildTripItem(
             ],
           ),
         ),
-        if (tripStepperViewModel.recommendToStop(tripItems) != -1)
-          tripStepperViewModel.recommendToStop(tripItems) == index
-              ? recommendToStop()
-              : SizedBox()
+        tripStepperViewModel.recommendToStop(tripItems) == index
+            ? recommendToStop()
+            : SizedBox()
       ],
     ),
   );

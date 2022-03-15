@@ -142,7 +142,7 @@ class _HotelStepSelectionState extends State<HotelStepSelection> {
                       .map((index, item) => MapEntry(
                           index,
                           buildTripItem(index, tripStepperViewModel, context,
-                              item, tripItems, trip, slidableController)))
+                              item, tripItems, trip, slidableController, days)))
                       .values
                       .toList(),
                   proxyDecorator:
@@ -225,6 +225,70 @@ class _HotelStepSelectionState extends State<HotelStepSelection> {
                     context, tripItems, tripItems.length, trip),
               )
             : SizedBox(),
+        trip.totalDay > 1 ? Divider() : SizedBox(),
+        trip.totalDay > 1
+            ? TextButton(
+                child: Text(
+                  "   ลบวันที่ ${tripStepperViewModel.day}",
+                  style: TextStyle(
+                      color: Palette.DeleteColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14),
+                ),
+                style: TextButton.styleFrom(primary: Palette.DeleteColor),
+                onPressed: () => showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    title: Text(
+                      'ต้องการลบวันที่ ${tripStepperViewModel.day} หรือไม่',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: Palette.BodyText,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    content: const Text(
+                      'หากคุณยืนยัน ข้อมูลทริปในวันดังกล่าวจะถูกลบ',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Palette.AdditionText,
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, 'ยกเลิก'),
+                        child: const Text(
+                          'ยกเลิก',
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context, 'ยืนยัน');
+                          tripStepperViewModel.deleteDay(days, trip);
+                        },
+                        child: const Text(
+                          'ยืนยัน',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
+                        ),
+                        style: TextButton.styleFrom(
+                          backgroundColor: Palette.NotificationColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            : SizedBox(),
         SizedBox(
           height: getProportionateScreenHeight(55),
         ),
@@ -240,7 +304,82 @@ Widget buildTripItem(
     TripItem item,
     List<TripItem> tripItems,
     Trip trip,
-    SlidableController slidableController) {
+    SlidableController slidableController,
+    List<int> days) {
+  _showMoveToModal(
+          BuildContext context,
+          TripStepperViewModel tripStepperViewModel,
+          Trip trip,
+          List<int> days,
+          TripItem item) =>
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Text(
+            'ย้าย ${item.locationName} ไปยัง',
+            style: TextStyle(
+                color: Palette.BodyText,
+                fontSize: 14,
+                fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          titlePadding:
+              EdgeInsets.symmetric(vertical: getProportionateScreenHeight(20)),
+          contentPadding: EdgeInsets.zero,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: days
+                .map(
+                  (day) => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Divider(),
+                      ListTile(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: day == days[days.length - 1]
+                              ? BorderRadius.only(
+                                  topLeft: Radius.zero,
+                                  bottomLeft: Radius.circular(16),
+                                  topRight: Radius.zero,
+                                  bottomRight: Radius.circular(16),
+                                )
+                              : BorderRadius.zero,
+                        ),
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                        selected: day == tripStepperViewModel.day,
+                        selectedTileColor: Palette.SelectedListTileColor,
+                        onTap: () {
+                          if (day != tripStepperViewModel.day) {
+                            tripStepperViewModel.moveTripItemTo(
+                                day, trip, item, tripItems);
+                            Navigator.pop(context);
+                          }
+                        },
+                        title: Text(
+                          'วันที่ ${day}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: day == tripStepperViewModel.day
+                                ? Palette.PrimaryColor
+                                : Palette.BodyText,
+                            fontWeight: day == tripStepperViewModel.day
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+                .toList(),
+          ),
+        ),
+      );
   _showDurationSelectionAlert(
           BuildContext context,
           TripStepperViewModel tripStepperViewModel,
@@ -431,15 +570,36 @@ Widget buildTripItem(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '${item.no + 1}. ${item.locationName}',
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: TextStyle(
-                          color: Palette.AdditionText,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '${item.no + 1}. ${item.locationName}',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: TextStyle(
+                                color: Palette.AdditionText,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: getProportionateScreenWidth(15)),
+                            child: IconButton(
+                              onPressed: () => _showMoveToModal(context,
+                                  tripStepperViewModel, trip, days, item),
+                              icon: Icon(
+                                Icons.swap_horiz_rounded,
+                                color: Palette.InfoText,
+                              ),
+                              padding: EdgeInsets.zero,
+                              constraints: BoxConstraints(),
+                            ),
+                          ),
+                        ],
                       ),
                       Padding(
                         padding: EdgeInsets.only(
