@@ -11,6 +11,7 @@ import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/trip_item.dart';
 import 'package:trip_planner/src/view/widgets/loading.dart';
+import 'package:trip_planner/src/view/widgets/tag_category.dart';
 import 'package:trip_planner/src/view_models/trip_stepper_view_model.dart';
 
 class RouteOnMapPage extends StatefulWidget {
@@ -251,51 +252,42 @@ Widget pinCard(TripItem location) {
           ),
         ),
         Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: SizeConfig.screenWidth - getProportionateScreenWidth(230),
-              padding: EdgeInsets.only(top: getProportionateScreenHeight(15)),
-              child: Text(
-                '${location.no + 1}. ${location.locationName}',
-                style: FontAssets.subtitleText,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width:
+                      SizeConfig.screenWidth - getProportionateScreenWidth(230),
+                  padding:
+                      EdgeInsets.only(top: getProportionateScreenHeight(15)),
+                  child: Text(
+                    '${location.no + 1}. ${location.locationName}',
+                    style: FontAssets.subtitleText,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Text(
+                  location.no == 0
+                      ? 'จุดเริ่มต้น'
+                      : '${location.distance} km จากจุดก่อนหน้า',
+                  style: TextStyle(
+                    color: Palette.SecondaryColor,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
             ),
             Padding(
-              padding: EdgeInsets.only(top: getProportionateScreenHeight(5)),
-              child: Text(
-                location.no == 0
-                    ? 'จุดเริ่มต้น'
-                    : '${location.distance} km จากจุดก่อนหน้า',
-                style: TextStyle(
-                  color: Palette.SecondaryColor,
-                  fontSize: 14,
-                ),
-              ),
-            ),
+              padding:
+                  EdgeInsets.only(bottom: getProportionateScreenHeight(15)),
+              child: TagCategory(category: location.locationCategory),
+            )
           ],
         ),
-        // Expanded(
-        //   child: Align(
-        //     alignment: Alignment.bottomRight,
-        //     child: IconButton(
-        //       splashRadius: 1,
-        //       iconSize: 36,
-        //       onPressed: () {},
-        //       icon: Icon(
-        //         Icons.add_circle_outline_rounded,
-        //         color: Palette.SecondaryColor,
-        //       ),
-        //       alignment: Alignment.bottomRight,
-        //       padding: EdgeInsets.only(
-        //         right: getProportionateScreenWidth(15),
-        //         bottom: getProportionateScreenWidth(10),
-        //       ),
-        //     ),
-        //   ),
-        // ),
       ],
     ),
   );
