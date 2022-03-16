@@ -19,8 +19,8 @@ class ProfileResponse {
     // var tripList = json['trips'] as List;
 
     return ProfileResponse(
-      userImage: json['userImage'],
-      username: json['username'],
+      userImage: json['userImage'] as String,
+      username: json['username'] as String,
       // trips: tripList.map((i) => TripCardResponse.fromJson(i)).toList(),
       reviews: reviewList.map((i) => MyReviewResponse.fromJson(i)).toList(),
     );

@@ -17,12 +17,12 @@ class ReviewResponse {
 
   factory ReviewResponse.fromJson(Map<String, dynamic> json) {
     return ReviewResponse(
-      profileImage: json['profileImage'],
-      username: json['username'],
-      rating: json['rating'],
-      caption: json['caption'] ?? '',
+      profileImage: json['profileImage'] as String,
+      username: json['username'] as String,
+      rating: json['rating'] as int,
+      caption: json['caption'] as String,
       images: json['images'].cast<String>(),
-      createdDate: json['createdAt'],
+      createdDate: json['createdAt'] as String,
     );
   }
 

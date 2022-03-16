@@ -18,13 +18,13 @@ class TripCardResponse {
 
   factory TripCardResponse.fromJson(Map<String, dynamic> json) {
     return TripCardResponse(
-      tripId: json['tripId'],
-      tripName: json['tripName'],
-      imageUrl: json['imageUrl'],
-      startedPoint: json['startedPoint'],
-      endedPoint: json['endedPoint'],
-      sumOfLocation: json['sumOfLocation'],
-      travelingDay: json['travelingDay'],
+      tripId: json['tripId'] as int,
+      tripName: json['tripName'] as String,
+      imageUrl: json['imageUrl'] as String,
+      startedPoint: json['startedPoint'] as String,
+      endedPoint: json['endedPoint'] as String,
+      sumOfLocation: json['sumOfLocation'] as int,
+      travelingDay: json['travelingDay'] as int,
     );
   }
 

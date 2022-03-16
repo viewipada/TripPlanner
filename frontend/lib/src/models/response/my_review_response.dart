@@ -15,10 +15,10 @@ class MyReviewResponse {
 
   factory MyReviewResponse.fromJson(Map<String, dynamic> json) {
     return MyReviewResponse(
-        locationId: json['locationId'],
-        locationName: json['locationName'],
-        rating: json['rating'],
-        caption: json['caption'] ?? '',
+        locationId: json['locationId'] as int,
+        locationName: json['locationName'] as String,
+        rating: (json['rating'] as num).toDouble(),
+        caption: json['caption'] as String,
         images: json['images'].cast<String>());
   }
 

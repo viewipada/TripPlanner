@@ -24,14 +24,14 @@ class Trip {
   factory Trip.fromMap(Map<String, dynamic> json) {
     return Trip(
       tripId: json['tripId'] ?? 0,
-      tripName: json['tripName'],
+      tripName: json['tripName'] as String,
       trumbnail: json['trumbnail'],
       vehicle: json['vehicle'],
-      firstLocation: json['firstLocation'],
-      lastLocation: json['lastLocation'],
-      totalPeople: json['totalPeople'],
-      totalDay: json['totalDay'],
-      totalTripItem: json['totalTripItem'],
+      firstLocation: json['firstLocation'] as String,
+      lastLocation: json['lastLocation'] as String,
+      totalPeople: json['totalPeople'] as int,
+      totalDay: json['totalDay'] as int,
+      totalTripItem: json['totalTripItem'] as int,
       startDate: json['startDate'],
     );
   }

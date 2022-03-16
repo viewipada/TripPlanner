@@ -42,7 +42,7 @@ class DatabaseRepository {
             latitude DOUBLE NOT NULL,
             longitude DOUBLE NOT NULL,
             startTime DATETIME,
-            distance INT,
+            distance DOUBLE,
             duration INT NOT NULL,
             drivingDuration INT,
             note STRING,

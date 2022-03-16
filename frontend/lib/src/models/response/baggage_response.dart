@@ -21,14 +21,14 @@ class BaggageResponse {
 
   factory BaggageResponse.fromJson(Map<String, dynamic> json) {
     return BaggageResponse(
-      locationId: json['locationId'],
-      locationName: json['locationName'],
-      latitude: json['latitude'] ?? 0,
-      longitude: json['longitude'] ?? 0,
-      imageUrl: json['imageUrl'],
-      category: json['category'],
-      description: json['description'],
-      duration: json['duration'] ?? 0,
+      locationId: json['locationId'] as int,
+      locationName: json['locationName'] as String,
+      latitude: (json['latitude'] as num).toDouble(),
+      longitude: (json['longitude'] as num).toDouble(),
+      imageUrl: json['imageUrl'] as String,
+      category: json['category'] as String,
+      description: json['description'] as String,
+      duration: json['duration'] as int,
     );
   }
 

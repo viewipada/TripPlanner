@@ -39,20 +39,20 @@ class LocationDetailResponse {
     var reviewList = json['reviewers'] as List;
 
     return LocationDetailResponse(
-      locationId: json['locationId'],
-      latitude: json['latitude'],
-      longitude: json['longitude'],
-      locationName: json['locationName'],
-      imageUrl: json['imageUrl'],
-      category: json['category'],
-      description: json['description'],
+      locationId: json['locationId'] as int,
+      latitude: (json['latitude'] as num).toDouble(),
+      longitude: (json['longitude'] as num).toDouble(),
+      locationName: json['locationName'] as String,
+      imageUrl: json['imageUrl'] as String,
+      category: json['category'] as int,
+      description: json['description'] as String,
       // openingHour: json['openingHour'],
-      contactNumber: json['contactNumber'],
-      website: json['website'],
-      duration: json['duration'],
-      averageRating: json['averageRating'].toDouble(),
-      totalReview: json['totalReview'],
-      totalCheckin: json['totalCheckin'],
+      contactNumber: json['contactNumber'] as String,
+      website: json['website'] as String,
+      duration: json['duration'] as int,
+      averageRating: (json['averageRating'] as num).toDouble(),
+      totalReview: json['totalReview'] as int,
+      totalCheckin: json['totalCheckin'] as int,
       reviews: reviewList.map((i) => ReviewResponse.fromJson(i)).toList(),
     );
   }

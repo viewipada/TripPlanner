@@ -19,13 +19,13 @@ class ShopResponse {
 
   factory ShopResponse.fromJson(Map<String, dynamic> json) {
     return ShopResponse(
-      locationId: json['locationId'] ?? 0,
-      locationName: json['locationName'],
-      imageUrl: json['imageUrl'],
-      rating: json['rating'] ?? 0,
-      latitude: json['latitude'] ?? 0,
-      longitude: json['longitude'] ?? 0,
-      duration: json['duration'] ?? 0,
+      locationId: json['locationId'] as int,
+      locationName: json['locationName'] as String,
+      imageUrl: json['imageUrl'] as String,
+      rating: (json['rating'] as num).toDouble(),
+      latitude: (json['latitude'] as num).toDouble(),
+      longitude: (json['longitude'] as num).toDouble(),
+      duration: json['duration'] as int,
     );
   }
 

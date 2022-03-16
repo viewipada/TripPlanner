@@ -15,11 +15,11 @@ class ProfileDetailsResponse {
 
   factory ProfileDetailsResponse.fromJson(Map<String, dynamic> json) {
     return ProfileDetailsResponse(
-      userImage: json['userImage'],
-      username: json['username'],
-      gender: json['gender'],
-      birthdate: json['birthdate'],
-      rank: json['rank'],
+      userImage: json['userImage'] as String,
+      username: json['username'] as String,
+      gender: json['gender'] as String,
+      birthdate: json['birthdate'] as String,
+      rank: json['rank'] as String,
     );
   }
 

@@ -3,7 +3,7 @@ class LocationRecommendResponse {
   final String locationName;
   final String imageUrl;
   final double rating;
-  final int distance;
+  final double distance;
   final double latitude;
   final double longitude;
   final String category;
@@ -23,15 +23,15 @@ class LocationRecommendResponse {
 
   factory LocationRecommendResponse.fromJson(Map<String, dynamic> json) {
     return LocationRecommendResponse(
-      locationId: json['locationId'] ?? 0,
-      locationName: json['locationName'],
-      imageUrl: json['imageUrl'],
-      rating: json['rating'] ?? 0,
-      distance: json['distance'],
-      latitude: json['latitude'] ?? 0,
-      longitude: json['longitude'] ?? 0,
-      category: json['category'],
-      duration: json['duration'] ?? 0,
+      locationId: json['locationId'] as int,
+      locationName: json['locationName'] as String,
+      imageUrl: json['imageUrl'] as String,
+      rating: (json['rating'] as num).toDouble(),
+      distance: (json['distance'] as num).toDouble(),
+      latitude: (json['latitude'] as num).toDouble(),
+      longitude: (json['longitude'] as num).toDouble(),
+      category: json['category'] as String,
+      duration: json['duration'] as int,
     );
   }
 

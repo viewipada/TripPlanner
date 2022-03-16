@@ -11,9 +11,10 @@ class LocationCardResponse {
 
   factory LocationCardResponse.fromJson(Map<String, dynamic> json) {
     return LocationCardResponse(
-        locationId: json['locationId'] ?? 0,
-        locationName: json['locationName'],
-        imageUrl: json['imageUrl']);
+      locationId: json['locationId'] ?? 0,
+      locationName: json['locationName'] as String,
+      imageUrl: json['imageUrl'] as String,
+    );
   }
 
   Map<String, dynamic> toMap() {
