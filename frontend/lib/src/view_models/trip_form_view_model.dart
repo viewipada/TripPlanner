@@ -1,3 +1,4 @@
+import 'dart:math' show cos, sqrt, asin;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
@@ -102,7 +103,14 @@ class TripFormViewModel with ChangeNotifier {
         imageUrl: item.imageUrl,
         latitude: item.latitude,
         longitude: item.longitude,
-        duration: item.imageUrl == "" ? 0 : 60,
+        distance: startPointList.indexOf(item) == 0
+            ? null
+            : coordinateDistance(
+                startPointList[startPointList.indexOf(item) - 1].latitude,
+                startPointList[startPointList.indexOf(item) - 1].longitude,
+                item.latitude,
+                item.longitude),
+        duration: item.imageUrl == "" ? 0 : item.duration,
         tripId: tripId,
       );
       _tripItemOperations.createTripItem(tripItem);
@@ -120,6 +128,15 @@ class TripFormViewModel with ChangeNotifier {
     _totalTravelingDay = 1;
     _startPointFromGoogle = null;
     _startPointFromBaggage = null;
+  }
+
+  double coordinateDistance(lat1, lon1, lat2, lon2) {
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+        c((lat2 - lat1) * p) / 2 +
+        c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
+    return double.parse((12742 * asin(sqrt(a))).toStringAsFixed(2));
   }
 
   void updateTripNameValue(String tripName) {
