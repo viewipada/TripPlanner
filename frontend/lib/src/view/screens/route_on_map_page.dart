@@ -47,9 +47,10 @@ class _RouteOnMapPageState extends State<RouteOnMapPage> {
       setState(() {
         tripItems = value;
       });
+    }).then((value) {
+      // Provider.of<TripStepperViewModel>(context, listen: false)
+      //     .getPolyline(tripItems);
     });
-    // Provider.of<TripStepperViewModel>(context, listen: false)
-    //     .getPolyline(tripItems);
   }
 
   @override
@@ -144,8 +145,10 @@ class _RouteOnMapPageState extends State<RouteOnMapPage> {
                                   tripStepperViewModel.itemScrollController,
                               itemCount: snapshot.data.length,
                               itemBuilder: (context, index) => InkWell(
-                                  onTap: () =>
-                                      tripStepperViewModel.goToLocationDetail(
+                                  onTap: () => snapshot.data[index].imageUrl ==
+                                          ""
+                                      ? null
+                                      : tripStepperViewModel.goToLocationDetail(
                                           context,
                                           snapshot.data[index].locationId),
                                   child: pinCard(snapshot.data[index])),
@@ -241,15 +244,25 @@ Widget pinCard(TripItem location) {
         Padding(
           padding:
               EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(15)),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image(
-              width: getProportionateScreenHeight(80),
-              height: getProportionateScreenHeight(80),
-              fit: BoxFit.cover,
-              image: NetworkImage(location.imageUrl),
-            ),
-          ),
+          child: location.imageUrl == ""
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image(
+                    width: getProportionateScreenHeight(80),
+                    height: getProportionateScreenHeight(80),
+                    fit: BoxFit.cover,
+                    image: AssetImage(ImageAssets.noPreview),
+                  ),
+                )
+              : ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image(
+                    width: getProportionateScreenHeight(80),
+                    height: getProportionateScreenHeight(80),
+                    fit: BoxFit.cover,
+                    image: NetworkImage(location.imageUrl),
+                  ),
+                ),
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -281,11 +294,13 @@ Widget pinCard(TripItem location) {
                 ),
               ],
             ),
-            Padding(
-              padding:
-                  EdgeInsets.only(bottom: getProportionateScreenHeight(15)),
-              child: TagCategory(category: location.locationCategory),
-            )
+            location.imageUrl == ""
+                ? SizedBox()
+                : Padding(
+                    padding: EdgeInsets.only(
+                        bottom: getProportionateScreenHeight(15)),
+                    child: TagCategory(category: location.locationCategory),
+                  )
           ],
         ),
       ],
