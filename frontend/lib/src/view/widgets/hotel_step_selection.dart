@@ -668,26 +668,28 @@ Widget buildTripItem(
                                     )
                                   : null,
                             ),
-                            TextButton.icon(
-                              icon: Icon(
-                                Icons.place_outlined,
-                                color: Palette.PrimaryColor,
-                                size: 18,
+                            Expanded(
+                              child: TextButton.icon(
+                                icon: Icon(
+                                  Icons.place_outlined,
+                                  color: Palette.PrimaryColor,
+                                  size: 18,
+                                ),
+                                label: Text(
+                                  item.distance == null
+                                      ? 'จุดเริ่มต้น'
+                                      : '${item.distance} km',
+                                  style: FontAssets.hintText,
+                                ),
+                                style: ButtonStyle(
+                                  overlayColor: MaterialStateProperty.all(
+                                      Colors.transparent),
+                                  padding: MaterialStateProperty.all(
+                                      EdgeInsets.zero),
+                                  alignment: Alignment.bottomCenter,
+                                ),
+                                onPressed: () => null,
                               ),
-                              label: Text(
-                                item.distance == null
-                                    ? 'จุดเริ่มต้น'
-                                    : '${item.distance} km',
-                                style: FontAssets.hintText,
-                              ),
-                              style: ButtonStyle(
-                                overlayColor: MaterialStateProperty.all(
-                                    Colors.transparent),
-                                padding:
-                                    MaterialStateProperty.all(EdgeInsets.zero),
-                                alignment: Alignment.bottomLeft,
-                              ),
-                              onPressed: () => null,
                             ),
                             TextButton.icon(
                               icon: Icon(
