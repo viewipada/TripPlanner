@@ -41,7 +41,7 @@ class TripItem {
       locationId: json['locationId'] as int,
       locationCategory: json['locationCategory'] as String,
       locationName: json['locationName'] as String,
-      imageUrl: json['imageUrl'] as String,
+      imageUrl: json['imageUrl'],
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
       startTime: json['startTime'],
