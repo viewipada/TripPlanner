@@ -677,7 +677,7 @@ Widget buildTripItem(
                               label: Text(
                                 item.distance == null
                                     ? 'จุดเริ่มต้น'
-                                    : '${item.distance} m',
+                                    : '${item.distance} km',
                                 style: FontAssets.hintText,
                               ),
                               style: ButtonStyle(
