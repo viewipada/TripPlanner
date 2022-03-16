@@ -1,6 +1,9 @@
-import 'dart:math' show cos, sqrt, asin;
+// import 'dart:math' show cos, sqrt, asin;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+// import 'package:google_maps_flutter/google_maps_flutter.dart';
+// import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
 import 'package:trip_planner/src/models/trip.dart';
 import 'package:trip_planner/src/models/trip_item.dart';
@@ -17,6 +20,9 @@ class TripFormViewModel with ChangeNotifier {
   int _totalTravelingDay = 1;
   Map<String, String>? _startPointFromGoogle;
   BaggageResponse? _startPointFromBaggage;
+  // List<LatLng> _polylineCoordinates = [];
+  // PolylinePoints _polylinePoints = PolylinePoints();
+  // String googleAPiKey = GoogleAssets.googleAPI;
 
   TripsOperations _tripsOperations = TripsOperations();
   TripItemOperations _tripItemOperations = TripItemOperations();
@@ -93,7 +99,8 @@ class TripFormViewModel with ChangeNotifier {
     );
     int tripId = await _tripsOperations.createTrip(trip);
 
-    startPointList.forEach((item) {
+    // List<TripItem> tripItems = [];
+    Future.forEach(startPointList, (BaggageResponse item) async {
       final tripItem = TripItem(
         day: 1,
         no: startPointList.indexOf(item),
@@ -103,18 +110,17 @@ class TripFormViewModel with ChangeNotifier {
         imageUrl: item.imageUrl,
         latitude: item.latitude,
         longitude: item.longitude,
-        distance: startPointList.indexOf(item) == 0
-            ? null
-            : coordinateDistance(
-                startPointList[startPointList.indexOf(item) - 1].latitude,
-                startPointList[startPointList.indexOf(item) - 1].longitude,
-                item.latitude,
-                item.longitude),
         duration: item.imageUrl == "" ? 0 : item.duration,
         tripId: tripId,
       );
-      _tripItemOperations.createTripItem(tripItem);
+      await _tripItemOperations.createTripItem(tripItem);
+      // tripItems.add(tripItem);
     });
+    // await getPolyline(tripItems).then((polylineCoordinates) {
+    //   Future.forEach(polylineCoordinates, (LatLng element) {
+    //     if (polylineCoordinates.indexOf(element) != 0) {}
+    //   });
+    // });
 
     Navigator.of(context).pop();
     Navigator.push(
@@ -130,14 +136,34 @@ class TripFormViewModel with ChangeNotifier {
     _startPointFromBaggage = null;
   }
 
-  double coordinateDistance(lat1, lon1, lat2, lon2) {
-    var p = 0.017453292519943295;
-    var c = cos;
-    var a = 0.5 -
-        c((lat2 - lat1) * p) / 2 +
-        c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
-    return double.parse((12742 * asin(sqrt(a))).toStringAsFixed(2));
-  }
+  // Future<List<LatLng>> getPolylineBetweenTwoPoint(
+  //     TripItem originPoint, TripItem destPoint) async {
+  //   _polylineCoordinates = [];
+
+  //   PolylineResult result = await _polylinePoints.getRouteBetweenCoordinates(
+  //     googleAPiKey,
+  //     PointLatLng(originPoint.latitude, originPoint.longitude),
+  //     PointLatLng(destPoint.latitude, destPoint.longitude),
+  //     travelMode: TravelMode.driving,
+  //   );
+
+  //   if (result.points.isNotEmpty) {
+  //     result.points.forEach((PointLatLng point) {
+  //       _polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+  //     });
+  //   }
+  //   return _polylineCoordinates;
+  // }
+
+  // double coordinateDistance(lat1, lon1, lat2, lon2) {
+  //   var p = 0.017453292519943295;
+  //   var c = cos;
+  //   var a = 0.5 -
+  //       c((lat2 - lat1) * p) / 2 +
+  //       c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
+  //   // double.parse((12742 * asin(sqrt(a))).toStringAsFixed(2));
+  //   return 12742 * asin(sqrt(a));
+  // }
 
   void updateTripNameValue(String tripName) {
     _tripName = tripName;
@@ -185,4 +211,6 @@ class TripFormViewModel with ChangeNotifier {
   int get totalTravelingDay => _totalTravelingDay;
   Map<String, String>? get startPointFromGoogle => _startPointFromGoogle;
   BaggageResponse? get startPointFromBaggage => _startPointFromBaggage;
+  // List<LatLng> get polylineCoordinates => _polylineCoordinates;
+  // PolylinePoints get polylinePoints => _polylinePoints;
 }
