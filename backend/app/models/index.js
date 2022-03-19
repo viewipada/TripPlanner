@@ -41,6 +41,12 @@ db.users = require("./user.model.js")(sequelize, Sequelize);
 db.userInterested = require("./userInterested.model.js")(sequelize, Sequelize);
 
 // Set Relation
+
+db.reviews.belongsTo(db.users, { onDelete: "cascade", foreignKey: "userId" });
+db.reviews.belongsTo(db.locations, { onDelete: "cascade", foreignKey: "locationId" });
+db.users.hasMany(db.reviews, { foreignKey: "userId", sourceKey: "id" });
+db.locations.hasMany(db.reviews, { foreignKey: "locationId", sourceKey: "locationId" });
+
 //db.locations.hasMany(db.reviews, { foreignKey: "locationId", sourceKey: "locationId" });
 
 //db.locations.hasMany(db.checkIns, { foreignKey: "locationId", sourceKey: "locationId" });
