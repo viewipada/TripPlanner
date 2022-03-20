@@ -178,7 +178,15 @@ class _HotelStepSelectionState extends State<HotelStepSelection> {
         ),
         tripStepperViewModel.day != trip.totalDay
             ? instruction(' เลือก ที่พัก จากสถานที่แนะนำในเส้นทางสิ')
-            : instruction(' คุณไม่จำเป็นต้องหาที่พัก สำหรับวันสุดท้ายของทริป'),
+            : Column(
+                children: [
+                  instruction(
+                      ' คุณไม่จำเป็นต้องหาที่พัก สำหรับวันสุดท้ายของทริป'),
+                  SizedBox(
+                    height: getProportionateScreenHeight(15),
+                  )
+                ],
+              ),
         tripStepperViewModel.day != trip.totalDay
             ? ListTile(
                 dense: true,
