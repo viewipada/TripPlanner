@@ -718,11 +718,12 @@ class TripStepperViewModel with ChangeNotifier {
     item.day = day;
 
     int no = 0;
-    tripItems.forEach((element) {
+    tripItems.forEach((element) async {
       if (element.no >= 0 && element.day == _day) {
         //update no. oldTripItems
         element.no = no;
         no++;
+        await _tripItemOperations.updateTripItem(element);
       }
     });
 
