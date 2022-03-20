@@ -11,5 +11,7 @@ module.exports = (app) => {
 
   router.get("/:locationId", reviews.findAllReviewLocation);
 
+  router.delete("/:userId/:locationId", reviews.delete);
+
   app.use("/api/reviews", router);
 };

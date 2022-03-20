@@ -3,8 +3,9 @@ const db = require("../models");
 const Location = db.locations;
 const Review = db.reviews;
 const User = db.users;
-const Duration = db.settingDurations;
-const OpeningDayHour = db.locationOpeningDayHours;
+const Op = db.Sequelize.Op;
+const Sequelize = db.Sequelize;
+const sequelize = db.sequelize;
 
 exports.create = async (req, res) => {
   try {
@@ -52,7 +53,7 @@ exports.create = async (req, res) => {
 };
 
 // Retrieve all objects in Locations Table
-exports.findAll = async (req, res) => {
+exports.findAllCard = async (req, res) => {
   let locationData = await Location.findAll();
 
   const data = await Promise.all(
@@ -125,3 +126,74 @@ exports.findOne = async (req, res) => {
 
   return res.status(200).json(locationData);
 };
+
+exports.findAllData = async (req, res, next) => {
+  try {
+    let filters = await req.query;
+    //let filters = await req.query.filters;
+    // console.log(category);
+    //console.log(filters);
+
+    const data = await Location.findAll();
+
+    const filteredData = data.filter((location) => {
+      let isValid = true;
+      for (key in filters) {
+        console.log(key, location[key], filters[key]);
+        isValid = isValid && location[key] == filters[key];
+      }
+      return isValid;
+    });
+    // console.log("locationData : " + locationData);
+
+    //locationData = await locationData.orderBy(locationData, filter, "asc");
+
+    res.status(200).json(filteredData);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// try {
+//   let locationName = await req.query.locationName;
+//   let filter = await req.query.filter;
+//   console.log(locationName);
+//   console.log(filter);
+//   let newLocationName = await JSON.stringify(locationName)
+//   var condition = (await locationName)
+//     ? { locationName: { [Op.like]: `%${newLocationName}%` } }
+//     : null;
+
+//   let locationData = await Location.findAll({
+//     where: { condition },
+//     order: [filter, "ASC"],
+//     attributes: [
+//       "locationId",
+//       "locationName",
+//       "category",
+//       "description",
+//       "contactName",
+//       "website",
+//       "duration",
+//       "type",
+//       "imageUrl",
+//       "latitude",
+//       "longitude",
+//       "province",
+//       "averageRating",
+//       "totalReview",
+//       "totalCheckin",
+//       "createBy",
+//       "locationStatus",
+//       "createdAt",
+//       "updatedAt",
+//     ],
+//   });
+//   console.log("locationData : " + locationData);
+
+//   //locationData = await locationData.orderBy(locationData, filter, "asc");
+
+//   res.status(200).json(locationData);
+// } catch (err) {
+//   console.log(err);
+// }

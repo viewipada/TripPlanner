@@ -6,8 +6,11 @@ module.exports = (app) => {
   // Create a new Location
   router.post("/", locations.create);
 
-  // Retrieve all locations
-  router.get("/", locations.findAll);
+  // Retrieve all locations in card pattern
+  router.get("/card", locations.findAllCard);
+
+  // Retrieve all location data
+  router.get("/", locations.findAllData);
 
   // Retrieve one location by locationId
   router.get("/:locationId", locations.findOne);
