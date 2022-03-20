@@ -593,20 +593,23 @@ Widget buildTripItem(
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: getProportionateScreenWidth(15)),
-                            child: IconButton(
-                              onPressed: () => _showMoveToModal(context,
-                                  tripStepperViewModel, trip, days, item),
-                              icon: Icon(
-                                Icons.swap_horiz_rounded,
-                                color: Palette.InfoText,
-                              ),
-                              padding: EdgeInsets.zero,
-                              constraints: BoxConstraints(),
-                            ),
-                          ),
+                          days.length > 1
+                              ? Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          getProportionateScreenWidth(15)),
+                                  child: IconButton(
+                                    onPressed: () => _showMoveToModal(context,
+                                        tripStepperViewModel, trip, days, item),
+                                    icon: Icon(
+                                      Icons.swap_horiz_rounded,
+                                      color: Palette.InfoText,
+                                    ),
+                                    padding: EdgeInsets.zero,
+                                    constraints: BoxConstraints(),
+                                  ),
+                                )
+                              : SizedBox(),
                         ],
                       ),
                       Padding(

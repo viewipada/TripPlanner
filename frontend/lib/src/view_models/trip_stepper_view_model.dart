@@ -679,6 +679,7 @@ class TripStepperViewModel with ChangeNotifier {
     days.add(days.length + 1);
     trip.totalDay++;
     _tripsOperations.updateTrip(trip);
+    _day = days.length;
     notifyListeners();
   }
 
@@ -716,6 +717,7 @@ class TripStepperViewModel with ChangeNotifier {
 
   Future<void> moveTripItemTo(
       int day, Trip trip, TripItem item, List<TripItem> tripItems) async {
+    final oldNo = item.no;
     tripItems.remove(item);
     List<TripItem> _desTripItems = [];
     _desTripItems = await _tripItemOperations.getAllTripItemsByTripIdAndDay(
@@ -729,6 +731,14 @@ class TripStepperViewModel with ChangeNotifier {
           .toIso8601String();
     }
     item.no = _desTripItems.length;
+    if (_desTripItems.length == 0)
+      item.distance = null;
+    else
+      await getPolylineBetweenTwoPoint(_desTripItems.last, item)
+          .then((polyLines) async {
+        item.distance = await calculateDistance(polyLines);
+        _tripItemOperations.updateTripItem(item);
+      });
     item.day = day;
 
     int no = 0;
@@ -736,6 +746,7 @@ class TripStepperViewModel with ChangeNotifier {
       if (element.no >= 0 && element.day == _day) {
         //update no. oldTripItems
         element.no = no;
+        if (no == 0) element.distance = null;
         no++;
         await _tripItemOperations.updateTripItem(element);
       }
@@ -750,6 +761,17 @@ class TripStepperViewModel with ChangeNotifier {
     trip.lastLocation = await getAllTripItemsByTripId(trip.tripId!)
         .then((locations) => locations[locations.length - 1].locationName);
     _tripsOperations.updateTrip(trip);
+
+    for (int i = oldNo; i < tripItems.length; i++) {
+      //calulateDistance Old TripItems
+      if (tripItems[i].no > 0 && tripItems[i].day == _day) {
+        await getPolylineBetweenTwoPoint(tripItems[i - 1], tripItems[i])
+            .then((polyLines) async {
+          tripItems[i].distance = await calculateDistance(polyLines);
+          _tripItemOperations.updateTripItem(tripItems[i]);
+        });
+      }
+    }
 
     _day = day;
     if (_index == 2)
