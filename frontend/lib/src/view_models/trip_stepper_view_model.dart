@@ -193,10 +193,20 @@ class TripStepperViewModel with ChangeNotifier {
     if (item.startTime != null) {
       calculateStartTimeForTripItem(tripItems);
     }
-    // if (newIndex == 0) {
-    //   item['distance'] = 'จุดเริ่มต้น';
-    //   item['drivingDuration'] = 0;
-    // }
+    if (newIndex == 0) {
+      item.distance = null;
+      // item['drivingDuration'] = 0;
+    }
+    for (int i = newIndex < oldIndex ? newIndex : oldIndex;
+        i < tripItems.length;
+        i++) {
+      if (i > 0)
+        await getPolylineBetweenTwoPoint(tripItems[i - 1], tripItems[i])
+            .then((polyLines) async {
+          tripItems[i].distance = await calculateDistance(polyLines);
+          _tripItemOperations.updateTripItem(tripItems[i]);
+        });
+    }
     notifyListeners();
   }
 
@@ -451,15 +461,17 @@ class TripStepperViewModel with ChangeNotifier {
           duration: result.duration,
           tripId: trip.tripId!);
 
-      item.distance = result.distance;
-
       if (index == tripItems.length)
         tripItems.add(item);
       else
         tripItems.replaceRange(index, index + 1, [item]);
 
-      int tripItemId = await _tripItemOperations.createTripItem(item);
-      item.itemId = tripItemId;
+      await getPolylineBetweenTwoPoint(tripItems[index], item)
+          .then((polyLines) async {
+        item.distance = await calculateDistance(polyLines);
+        int tripItemId = await _tripItemOperations.createTripItem(item);
+        item.itemId = tripItemId;
+      });
 
       List<int> realIndex = [];
       var indexWithoutMeals = await tripItems
@@ -503,12 +515,14 @@ class TripStepperViewModel with ChangeNotifier {
           duration: 60,
           tripId: trip.tripId!);
 
-      // item.distance = result.distance;
+      await getPolylineBetweenTwoPoint(tripItems.last, item)
+          .then((polyLines) async {
+        item.distance = await calculateDistance(polyLines);
+        int tripItemId = await _tripItemOperations.createTripItem(item);
+        item.itemId = tripItemId;
+      });
 
       tripItems.add(item);
-
-      int tripItemId = await _tripItemOperations.createTripItem(item);
-      item.itemId = tripItemId;
 
       List<int> realIndex = [];
       var indexWithoutMeals = await tripItems
@@ -978,6 +992,47 @@ class TripStepperViewModel with ChangeNotifier {
       });
     }
     addPolyLine();
+  }
+
+  Future<List<LatLng>> getPolylineBetweenTwoPoint(
+      TripItem originPoint, TripItem destPoint) async {
+    _polylineCoordinates = [];
+
+    PolylineResult result = await _polylinePoints.getRouteBetweenCoordinates(
+      googleAPiKey,
+      PointLatLng(originPoint.latitude, originPoint.longitude),
+      PointLatLng(destPoint.latitude, destPoint.longitude),
+      travelMode: TravelMode.driving,
+    );
+
+    if (result.points.isNotEmpty) {
+      result.points.forEach((PointLatLng point) {
+        _polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+    }
+    return _polylineCoordinates;
+  }
+
+  double calculateDistance(List<LatLng> polyLines) {
+    double totalDistance = 0;
+    for (int i = 0; i < polyLines.length - 1; i++) {
+      totalDistance += coordinateDistance(
+        polyLines[i].latitude,
+        polyLines[i].longitude,
+        polyLines[i + 1].latitude,
+        polyLines[i + 1].longitude,
+      );
+    }
+    return double.parse(totalDistance.toStringAsFixed(2));
+  }
+
+  double coordinateDistance(lat1, lon1, lat2, lon2) {
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+        c((lat2 - lat1) * p) / 2 +
+        c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
+    return 12742 * asin(sqrt(a));
   }
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
