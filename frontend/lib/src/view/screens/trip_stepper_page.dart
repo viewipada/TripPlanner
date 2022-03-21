@@ -13,7 +13,6 @@ import 'package:trip_planner/src/view/widgets/hotel_step_selection.dart';
 import 'package:trip_planner/src/view/widgets/loading.dart';
 import 'package:trip_planner/src/view/widgets/shopping_step_selection.dart';
 import 'package:trip_planner/src/view/widgets/travel_step_selection.dart';
-import 'package:trip_planner/src/view/widgets/vehicle_selection.dart';
 import 'package:trip_planner/src/view_models/trip_stepper_view_model.dart';
 
 class TripStepperPage extends StatefulWidget {
@@ -118,48 +117,44 @@ class _TripStepperPageState extends State<TripStepperPage> {
                                   : FontAssets.bodyText
                               : FontAssets.bodyText,
                         ),
-                        content: e['title'] == 'พาหนะ'
-                            ? VehicleSelection(
+                        content: tripStepperViewModel.index == 0
+                            ? TravelStepSelection(
                                 tripStepperViewModel: tripStepperViewModel,
-                                trip: data)
+                                trip: data,
+                                days: days,
+                              )
                             : tripStepperViewModel.index == 1
-                                ? TravelStepSelection(
-                                    tripStepperViewModel: tripStepperViewModel,
-                                    trip: data,
-                                    days: days,
+                                ? FutureBuilder(
+                                    future: tripStepperViewModel
+                                        .getAllTripItemsByTripId(tripId),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        var dataList =
+                                            snapshot.data as List<TripItem>;
+                                        return FoodStepSelection(
+                                          tripStepperViewModel:
+                                              tripStepperViewModel,
+                                          tripItems: dataList,
+                                          trip: data,
+                                          days: days,
+                                        );
+                                      } else {
+                                        return Loading();
+                                      }
+                                    },
                                   )
                                 : tripStepperViewModel.index == 2
-                                    ? FutureBuilder(
-                                        future: tripStepperViewModel
-                                            .getAllTripItemsByTripId(tripId),
-                                        builder: (context, snapshot) {
-                                          if (snapshot.hasData) {
-                                            var dataList =
-                                                snapshot.data as List<TripItem>;
-                                            return FoodStepSelection(
-                                              tripStepperViewModel:
-                                                  tripStepperViewModel,
-                                              tripItems: dataList,
-                                              trip: data,
-                                              days: days,
-                                            );
-                                          } else {
-                                            return Loading();
-                                          }
-                                        },
+                                    ? HotelStepSelection(
+                                        tripStepperViewModel:
+                                            tripStepperViewModel,
+                                        trip: data,
+                                        days: days,
                                       )
-                                    : tripStepperViewModel.index == 3
-                                        ? HotelStepSelection(
-                                            tripStepperViewModel:
-                                                tripStepperViewModel,
-                                            trip: data,
-                                            days: days,
-                                          )
-                                        : ShoppingStepSelection(
-                                            tripStepperViewModel:
-                                                tripStepperViewModel,
-                                            trip: data,
-                                          ),
+                                    : ShoppingStepSelection(
+                                        tripStepperViewModel:
+                                            tripStepperViewModel,
+                                        trip: data,
+                                      ),
                       ),
                     )
                     .toList(),

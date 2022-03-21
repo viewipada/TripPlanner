@@ -34,11 +34,6 @@ class TripStepperViewModel with ChangeNotifier {
   int _index = 0;
   List _steps = [
     {
-      'icon': Icons.directions_car_outlined,
-      'iconActived': Icons.directions_car_rounded,
-      'title': 'พาหนะ'
-    },
-    {
       'icon': Icons.camera_alt_outlined,
       'iconActived': Icons.camera_alt_rounded,
       'title': 'ที่เที่ยว'
@@ -60,28 +55,6 @@ class TripStepperViewModel with ChangeNotifier {
     },
   ];
 
-  List _vehicles = [
-    {
-      'icon': Icons.directions_car_outlined,
-      'isSelected': true,
-      'title': 'รถยนต์ส่วนตัว'
-    },
-    {
-      'icon': Icons.directions_bike_outlined,
-      'isSelected': false,
-      'title': 'จักรยาน'
-    },
-    {
-      'icon': Icons.directions_bus_filled_outlined,
-      'isSelected': false,
-      'title': 'ขนส่งสาธารณะ'
-    },
-    {
-      'icon': Icons.directions_walk_outlined,
-      'isSelected': false,
-      'title': 'เดินเท้า'
-    },
-  ];
   IconData _vehiclesSelected = Icons.directions_car_outlined;
   TripsOperations _tripsOperations = TripsOperations();
   TripItemOperations _tripItemOperations = TripItemOperations();
@@ -153,19 +126,6 @@ class TripStepperViewModel with ChangeNotifier {
 
   void setStepOnTapped(int index) {
     if (_startTimeIsValid && index <= _index || index == 0) _index = index;
-    notifyListeners();
-  }
-
-  void selectedVehicle(vehicle, Trip trip) {
-    vehicles.forEach((element) {
-      element['isSelected'] = false;
-    });
-    vehicle['isSelected'] = true;
-    _vehiclesSelected = vehicle['icon'];
-
-    trip.vehicle = vehicle['title'];
-    _tripsOperations.updateTrip(trip);
-
     notifyListeners();
   }
 
@@ -270,27 +230,6 @@ class TripStepperViewModel with ChangeNotifier {
     }
   }
 
-  Future<List> getVehicleSelection(Trip trip) async {
-    if (trip.vehicle == null) {
-      _vehicles.forEach((element) async {
-        element['isSelected'] = await false;
-      });
-      _vehicles[0]['isSelected'] = await true;
-      _vehiclesSelected = await _vehicles[0]['icon'];
-      trip.vehicle = await _vehicles[0]['title'];
-      await _tripsOperations.updateTrip(trip);
-    } else {
-      _vehicles.forEach((element) async {
-        element['isSelected'] = await false;
-        if (element['title'] == trip.vehicle) {
-          element['isSelected'] = await true;
-          _vehiclesSelected = await element['icon'];
-        }
-      });
-    }
-    return _vehicles;
-  }
-
   Future<void> deleteTripItem(
       Trip trip, List<TripItem> tripItems, TripItem item) async {
     await tripItems.remove(item);
@@ -339,7 +278,7 @@ class TripStepperViewModel with ChangeNotifier {
   int recommendToStop(List<TripItem> tripItems) {
     int index = -1;
     var _tripItemsAtDay;
-    if (_index == 2)
+    if (_index == 1)
       _tripItemsAtDay = tripItems
           .where((element) => element.day == _day && element.no >= 0)
           .toList();
@@ -430,12 +369,12 @@ class TripStepperViewModel with ChangeNotifier {
             .add(tripItems.indexWhere((element) => element.day == day));
       });
 
-    if (firstLocationOfADay.contains(-1) && _index == 1)
+    if (firstLocationOfADay.contains(-1) && _index == 0)
       _startTimeIsValid = false;
     else
       _startTimeIsValid = true;
 
-    if (checkLocationForEachDay.contains(-1) && _index == 1)
+    if (checkLocationForEachDay.contains(-1) && _index == 0)
       _startPointIsValid = false;
     else
       _startPointIsValid = true;
@@ -776,7 +715,7 @@ class TripStepperViewModel with ChangeNotifier {
     }
 
     _day = day;
-    if (_index == 2)
+    if (_index == 1)
       tripItems.insert(
           tripItems.lastIndexWhere((element) => element.day == day) + 1, item);
 
@@ -1130,7 +1069,6 @@ class TripStepperViewModel with ChangeNotifier {
 
   List get steps => _steps;
   int get index => _index;
-  List get vehicles => _vehicles;
   IconData get vehiclesSelected => _vehiclesSelected;
   List<int> get mealsIndex => _mealsIndex;
   bool get startTimeIsValid => _startTimeIsValid;
