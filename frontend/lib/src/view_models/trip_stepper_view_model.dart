@@ -183,20 +183,22 @@ class TripStepperViewModel with ChangeNotifier {
     // indexWithoutMeals.forEach((element) {
     //   realIndex.add(tripItems.indexOf(element));
     // });
-
     trip.firstLocation = await getAllTripItemsByTripId(trip.tripId!)
         .then((locations) => locations[0].locationName);
     trip.lastLocation = await getAllTripItemsByTripId(trip.tripId!)
         .then((locations) => locations[locations.length - 1].locationName);
-    // trip.totalTripItem = await realIndex.length;
-    _tripsOperations.updateTrip(trip);
-    if (item.startTime != null) {
-      calculateStartTimeForTripItem(tripItems);
-    }
+    await _tripsOperations.updateTrip(trip);
+
     if (newIndex == 0) {
       item.distance = null;
       // item['drivingDuration'] = 0;
+      await _tripItemOperations.updateTripItem(item);
     }
+    if (item.startTime != null) {
+      await calculateStartTimeForTripItem(tripItems);
+    }
+    notifyListeners();
+
     for (int i = newIndex < oldIndex ? newIndex : oldIndex;
         i < tripItems.length;
         i++) {
@@ -204,10 +206,10 @@ class TripStepperViewModel with ChangeNotifier {
         await getPolylineBetweenTwoPoint(tripItems[i - 1], tripItems[i])
             .then((polyLines) async {
           tripItems[i].distance = await calculateDistance(polyLines);
-          _tripItemOperations.updateTripItem(tripItems[i]);
+          await _tripItemOperations.updateTripItem(tripItems[i]);
         });
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   Future<void> reOrderColumnNo(List<TripItem> tripItems) async {

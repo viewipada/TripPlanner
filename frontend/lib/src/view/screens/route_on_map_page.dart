@@ -48,8 +48,8 @@ class _RouteOnMapPageState extends State<RouteOnMapPage> {
         tripItems = value;
       });
     }).then((value) {
-      // Provider.of<TripStepperViewModel>(context, listen: false)
-      //     .getPolyline(tripItems);
+      Provider.of<TripStepperViewModel>(context, listen: false)
+          .getPolyline(tripItems);
     });
   }
 

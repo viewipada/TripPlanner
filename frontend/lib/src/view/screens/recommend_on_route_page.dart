@@ -41,8 +41,8 @@ class _RecommendOnRoutePageState extends State<RecommendOnRoutePage> {
   void initState() {
     super.initState();
     Provider.of<TripStepperViewModel>(context, listen: false).getMapStyle();
-    // Provider.of<TripStepperViewModel>(context, listen: false)
-    //     .getPolyline(tripItems);
+    Provider.of<TripStepperViewModel>(context, listen: false)
+        .getPolyline(tripItems);
   }
 
   @override
