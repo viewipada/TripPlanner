@@ -118,16 +118,20 @@ class TripFormViewModel with ChangeNotifier {
         await getPolylineBetweenTwoPoint(tripItems[i - 1], tripItems[i])
             .then((polyLines) async {
           tripItems[i].distance = await calculateDistance(polyLines);
-          _tripItemOperations.updateTripItem(tripItems[i]);
+          tripItems[i].drivingDuration =
+              await ((tripItems[i].distance! / 80) * 60).toInt();
+          await _tripItemOperations.updateTripItem(tripItems[i]);
         });
       }
+    }).then((value) {
+      Navigator.of(context).pop();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => TripStepperPage(tripId: tripId)),
+      );
     });
 
-    Navigator.of(context).pop();
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => TripStepperPage(tripId: tripId)),
-    );
     _date = null;
     _startDate = 'วันเริ่มต้นทริป';
     _tripName = '';

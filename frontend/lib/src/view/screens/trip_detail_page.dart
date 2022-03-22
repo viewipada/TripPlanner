@@ -338,7 +338,7 @@ Widget buildTripItem(TripItem item, TripStepperViewModel tripStepperViewModel) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      item.drivingDuration == 0
+      item.drivingDuration == null
           ? SizedBox()
           : Padding(
               padding: EdgeInsets.symmetric(

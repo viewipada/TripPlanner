@@ -486,11 +486,11 @@ Widget buildTripItem(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        item.drivingDuration == 0
-            ? SizedBox()
-            : Column(
-                children: [
-                  Padding(
+        Column(
+          children: [
+            item.drivingDuration == null
+                ? SizedBox()
+                : Padding(
                     padding: EdgeInsets.symmetric(
                       vertical: getProportionateScreenHeight(5),
                       horizontal: getProportionateScreenWidth(10),
@@ -510,40 +510,38 @@ Widget buildTripItem(
                       ],
                     ),
                   ),
-                  if (tripStepperViewModel.recommendMeal(tripItems).isNotEmpty)
-                    tripStepperViewModel.recommendMeal(tripItems)[2] == index
-                        ? recommendMeals(
-                            'มื้อเย็น',
-                            Icon(
-                              Icons.nights_stay_rounded,
-                              color: Palette.LightSecondary,
-                              size: 18,
-                            ),
-                          )
-                        : tripStepperViewModel.recommendMeal(tripItems)[1] ==
-                                index
-                            ? recommendMeals(
-                                'มื้อเที่ยง',
-                                Icon(
-                                  Icons.wb_sunny_rounded,
-                                  color: Palette.LightSecondary,
-                                  size: 20,
-                                ),
-                              )
-                            : tripStepperViewModel
-                                        .recommendMeal(tripItems)[0] ==
-                                    index
-                                ? recommendMeals(
-                                    'มื้อเช้า',
-                                    Icon(
-                                      Icons.wb_twilight_rounded,
-                                      color: Palette.LightSecondary,
-                                      size: 18,
-                                    ),
-                                  )
-                                : SizedBox()
-                ],
-              ),
+            if (tripStepperViewModel.recommendMeal(tripItems).isNotEmpty)
+              tripStepperViewModel.recommendMeal(tripItems)[2] == index
+                  ? recommendMeals(
+                      'มื้อเย็น',
+                      Icon(
+                        Icons.nights_stay_rounded,
+                        color: Palette.LightSecondary,
+                        size: 18,
+                      ),
+                    )
+                  : tripStepperViewModel.recommendMeal(tripItems)[1] == index
+                      ? recommendMeals(
+                          'มื้อเที่ยง',
+                          Icon(
+                            Icons.wb_sunny_rounded,
+                            color: Palette.LightSecondary,
+                            size: 20,
+                          ),
+                        )
+                      : tripStepperViewModel.recommendMeal(tripItems)[0] ==
+                              index
+                          ? recommendMeals(
+                              'มื้อเช้า',
+                              Icon(
+                                Icons.wb_twilight_rounded,
+                                color: Palette.LightSecondary,
+                                size: 18,
+                              ),
+                            )
+                          : SizedBox()
+          ],
+        ),
         Container(
           // height: getProportionateScreenHeight(90),
           margin:

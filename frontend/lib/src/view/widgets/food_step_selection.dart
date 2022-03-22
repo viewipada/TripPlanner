@@ -515,7 +515,7 @@ Widget buildTripItem(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        item.drivingDuration == 0
+        item.drivingDuration == null
             ? SizedBox()
             : Column(
                 children: [
