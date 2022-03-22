@@ -28,6 +28,7 @@ import 'package:trip_planner/src/view/screens/location_detail_page.dart';
 import 'package:trip_planner/src/view/screens/location_recommend_page.dart';
 import 'package:trip_planner/src/view/screens/recommend_on_route_page.dart';
 import 'package:trip_planner/src/view/screens/route_on_map_page.dart';
+import 'package:trip_planner/src/view/screens/shop_location_on_route_page.dart';
 import 'package:trip_planner/src/view/screens/trip_stepper_page.dart';
 
 class TripStepperViewModel with ChangeNotifier {
@@ -65,6 +66,7 @@ class TripStepperViewModel with ChangeNotifier {
   int _day = 1;
   ShopResponse? _shop;
   int? _shopId;
+  int _daySelected = 0;
 
   Map<PolylineId, Polyline> _polylines = {};
   List<LatLng> _polylineCoordinates = [];
@@ -85,28 +87,33 @@ class TripStepperViewModel with ChangeNotifier {
 
       if (_shop != null) {
         await _tripItemOperations
-            .getAllTripItemsByTripIdAndDay(trip.tripId!, trip.totalDay)
-            .then(
-              (value) => _tripItemOperations
-                  .createTripItem(
-                    TripItem(
-                        day: trip.totalDay,
-                        no: value.length,
-                        locationId: _shop!.locationId,
-                        locationCategory: 'ของฝาก',
-                        locationName: _shop!.locationName,
-                        imageUrl: _shop!.imageUrl,
-                        latitude: _shop!.latitude,
-                        longitude: _shop!.longitude,
-                        startTime: DateTime.parse(value.last.startTime!)
-                            .add(Duration(minutes: value.last.duration))
-                            .toIso8601String(),
-                        duration: _shop!.duration,
-                        tripId: trip.tripId!),
-                  )
-                  .then((value) => _shopId = value),
-            );
-        trip.lastLocation = _shop!.locationName;
+            .getAllTripItemsByTripIdAndDay(trip.tripId!, _daySelected)
+            .then((value) async {
+          TripItem item = TripItem(
+              day: _daySelected,
+              no: value.length,
+              locationId: _shop!.locationId,
+              locationCategory: 'ของฝาก',
+              locationName: _shop!.locationName,
+              imageUrl: _shop!.imageUrl,
+              latitude: _shop!.latitude,
+              longitude: _shop!.longitude,
+              startTime: DateTime.parse(value.last.startTime!)
+                  .add(Duration(minutes: value.last.duration))
+                  .toIso8601String(),
+              duration: _shop!.duration,
+              tripId: trip.tripId!);
+          await getPolylineBetweenTwoPoint(value.last, item)
+              .then((polyLines) async {
+            item.distance = await calculateDistance(polyLines);
+            _tripItemOperations
+                .createTripItem(item)
+                .then((value) => _shopId = value);
+          });
+        });
+
+        trip.lastLocation = await getAllTripItemsByTripId(trip.tripId!)
+            .then((locations) => locations[locations.length - 1].locationName);
         trip.totalTripItem += 1;
         await _tripsOperations.updateTrip(trip);
       }
@@ -138,37 +145,55 @@ class TripStepperViewModel with ChangeNotifier {
     final item = tripItems.removeAt(oldIndex);
     tripItems.insert(newIndex, item);
     await reOrderColumnNo(tripItems);
-    // List<int> realIndex = [];
-    // var indexWithoutMeals = await tripItems.where((element) => element.no >= 0);
-    // indexWithoutMeals.forEach((element) {
-    //   realIndex.add(tripItems.indexOf(element));
-    // });
+
     trip.firstLocation = await getAllTripItemsByTripId(trip.tripId!)
         .then((locations) => locations[0].locationName);
     trip.lastLocation = await getAllTripItemsByTripId(trip.tripId!)
         .then((locations) => locations[locations.length - 1].locationName);
     await _tripsOperations.updateTrip(trip);
 
-    if (newIndex == 0) {
-      item.distance = null;
-      // item['drivingDuration'] = 0;
-      await _tripItemOperations.updateTripItem(item);
-    }
+    // if (newIndex == 0) {
+    //   item.distance = null;
+    //   // item['drivingDuration'] = 0;
+    //   await _tripItemOperations.updateTripItem(item);
+    // }
     if (item.startTime != null) {
       await calculateStartTimeForTripItem(tripItems);
     }
     notifyListeners();
 
-    for (int i = newIndex < oldIndex ? newIndex : oldIndex;
-        i < tripItems.length;
-        i++) {
-      if (i > 0)
-        await getPolylineBetweenTwoPoint(tripItems[i - 1], tripItems[i])
-            .then((polyLines) async {
-          tripItems[i].distance = await calculateDistance(polyLines);
-          await _tripItemOperations.updateTripItem(tripItems[i]);
-        });
-      notifyListeners();
+    if (_index == 1) {
+      List<int> realIndex = [];
+      int minIndex = newIndex < oldIndex ? newIndex : oldIndex;
+      var indexWithoutMeals = await tripItems
+          .where((element) => element.no >= 0 && element.day == _day);
+      Future.forEach(indexWithoutMeals, (TripItem element) {
+        realIndex.add(tripItems.indexOf(element));
+      }).then((value) async {
+        for (int i = 0; i < realIndex.length; i++) {
+          if (realIndex[i] > 0 && realIndex[i] > minIndex)
+            await getPolylineBetweenTwoPoint(
+                    tripItems[realIndex[i - 1]], tripItems[realIndex[i]])
+                .then((polyLines) async {
+              tripItems[realIndex[i]].distance =
+                  await calculateDistance(polyLines);
+              await _tripItemOperations.updateTripItem(tripItems[realIndex[i]]);
+            });
+          notifyListeners();
+        }
+      });
+    } else {
+      for (int i = newIndex < oldIndex ? newIndex : oldIndex;
+          i < tripItems.length;
+          i++) {
+        if (i > 0)
+          await getPolylineBetweenTwoPoint(tripItems[i - 1], tripItems[i])
+              .then((polyLines) async {
+            tripItems[i].distance = await calculateDistance(polyLines);
+            await _tripItemOperations.updateTripItem(tripItems[i]);
+          });
+        notifyListeners();
+      }
     }
   }
 
@@ -177,6 +202,9 @@ class TripStepperViewModel with ChangeNotifier {
     while (loop < tripItems.length) {
       if (tripItems[loop].no >= 0 && tripItems[loop].day == _day) {
         tripItems[loop].no = index;
+        if (index == 0) {
+          tripItems[loop].distance = null; //รอ drivingDuration
+        }
         await _tripItemOperations.updateTripItem(tripItems[loop]);
         index++;
       }
@@ -232,16 +260,31 @@ class TripStepperViewModel with ChangeNotifier {
 
   Future<void> deleteTripItem(
       Trip trip, List<TripItem> tripItems, TripItem item) async {
-    await tripItems.remove(item);
-    await _tripItemOperations.deleteTripItem(item);
-    await reOrderColumnNo(tripItems);
-
+    int indexRemoved = tripItems.indexOf(item);
     List<int> realIndex = [];
     var indexWithoutMeals = await tripItems
         .where((element) => element.no >= 0 && element.day == _day);
     indexWithoutMeals.forEach((element) {
       realIndex.add(tripItems.indexOf(element));
     });
+
+    int boforeRemovedItem =
+        realIndex.lastIndexWhere((element) => element < indexRemoved);
+    int afterRemovedItem = realIndex
+        .firstWhere((element) => element > indexRemoved, orElse: () => -1);
+
+    if (afterRemovedItem != -1 && boforeRemovedItem != -1)
+      await getPolylineBetweenTwoPoint(
+              tripItems[boforeRemovedItem], tripItems[afterRemovedItem])
+          .then((polyLines) async {
+        tripItems[afterRemovedItem].distance =
+            await calculateDistance(polyLines).toDouble();
+        await _tripItemOperations.updateTripItem(tripItems[afterRemovedItem]);
+      });
+
+    await tripItems.remove(item);
+    await _tripItemOperations.deleteTripItem(item);
+    await reOrderColumnNo(tripItems);
 
     trip.firstLocation = await getAllTripItemsByTripId(trip.tripId!)
         .then((locations) => locations[0].locationName);
@@ -369,12 +412,12 @@ class TripStepperViewModel with ChangeNotifier {
             .add(tripItems.indexWhere((element) => element.day == day));
       });
 
-    if (firstLocationOfADay.contains(-1) && _index == 0)
+    if (firstLocationOfADay.contains(-1) && (_index == 0 || _index == 1))
       _startTimeIsValid = false;
     else
       _startTimeIsValid = true;
 
-    if (checkLocationForEachDay.contains(-1) && _index == 0)
+    if (checkLocationForEachDay.contains(-1) && (_index == 0 || _index == 1))
       _startPointIsValid = false;
     else
       _startPointIsValid = true;
@@ -399,27 +442,47 @@ class TripStepperViewModel with ChangeNotifier {
           imageUrl: result.imageUrl,
           latitude: result.latitude,
           longitude: result.longitude,
-          duration: result.duration,
+          duration: result.duration * 60,
           tripId: trip.tripId!);
 
-      if (index == tripItems.length)
+      if (index == tripItems.length && index > 0) {
+        await getPolylineBetweenTwoPoint(tripItems[index - 1], item)
+            .then((polyLines) async {
+          item.distance = await calculateDistance(polyLines).toDouble();
+          int tripItemId = await _tripItemOperations.createTripItem(item);
+          item.itemId = tripItemId;
+        });
         tripItems.add(item);
-      else
-        tripItems.replaceRange(index, index + 1, [item]);
-
-      await getPolylineBetweenTwoPoint(tripItems[index], item)
-          .then((polyLines) async {
-        item.distance = await calculateDistance(polyLines);
+      } else {
         int tripItemId = await _tripItemOperations.createTripItem(item);
         item.itemId = tripItemId;
-      });
+        tripItems.isNotEmpty
+            ? tripItems.replaceRange(index, index + 1, [item])
+            : tripItems.add(item);
 
-      List<int> realIndex = [];
-      var indexWithoutMeals = await tripItems
-          .where((element) => element.no >= 0 && element.day == _day);
-      indexWithoutMeals.forEach((element) {
-        realIndex.add(tripItems.indexOf(element));
-      });
+        List<int> _realIndex = [];
+        var _indexWithoutMeals = await tripItems
+            .where((element) => element.no >= 0 && element.day == _day);
+        _indexWithoutMeals.forEach((element) {
+          _realIndex.add(tripItems.indexOf(element));
+        });
+        tripItems[_realIndex[0]].distance = null;
+        await _tripItemOperations.updateTripItem(tripItems[_realIndex[0]]);
+
+        for (int i = 1; i < _realIndex.length; i++) {
+          if (_realIndex[i] >= index) {
+            await getPolylineBetweenTwoPoint(
+                    tripItems[_realIndex[i - 1]], tripItems[_realIndex[i]])
+                .then((polyLines) async {
+              tripItems[_realIndex[i]].distance =
+                  await calculateDistance(polyLines).toDouble();
+              await _tripItemOperations
+                  .updateTripItem(tripItems[_realIndex[i]]);
+            });
+          }
+        }
+      }
+
       trip.firstLocation = await getAllTripItemsByTripId(trip.tripId!)
           .then((locations) => locations[0].locationName);
       trip.lastLocation = await getAllTripItemsByTripId(trip.tripId!)
@@ -428,9 +491,21 @@ class TripStepperViewModel with ChangeNotifier {
           .then((locations) => locations.length);
       _tripsOperations.updateTrip(trip);
 
+      List<int> realIndex = [];
+      var indexWithoutMeals = await tripItems
+          .where((element) => element.no >= 0 && element.day == _day);
+      indexWithoutMeals.forEach((element) {
+        realIndex.add(tripItems.indexOf(element));
+      });
+
       await reOrderColumnNo(tripItems);
       if (tripItems[realIndex[0]].startTime != null)
         await calculateStartTimeForTripItem(tripItems);
+      else
+        realIndex.forEach((element) {
+          tripItems[element].startTime = null;
+          _tripItemOperations.updateTripItem(tripItems[element]);
+        });
     }
     notifyListeners();
   }
@@ -453,15 +528,20 @@ class TripStepperViewModel with ChangeNotifier {
           imageUrl: result.imageUrl,
           latitude: result.latitude,
           longitude: result.longitude,
-          duration: 60,
+          duration: result.duration * 60,
           tripId: trip.tripId!);
 
-      await getPolylineBetweenTwoPoint(tripItems.last, item)
-          .then((polyLines) async {
-        item.distance = await calculateDistance(polyLines);
+      if (index > 0) {
+        await getPolylineBetweenTwoPoint(tripItems.last, item)
+            .then((polyLines) async {
+          item.distance = await calculateDistance(polyLines);
+          int tripItemId = await _tripItemOperations.createTripItem(item);
+          item.itemId = tripItemId;
+        });
+      } else {
         int tripItemId = await _tripItemOperations.createTripItem(item);
         item.itemId = tripItemId;
-      });
+      }
 
       tripItems.add(item);
 
@@ -507,6 +587,19 @@ class TripStepperViewModel with ChangeNotifier {
       MaterialPageRoute(
           builder: (context) => BaggageLocationOnRoutePage(
               tripItems: tripItems, locationList: locationList)),
+    );
+  }
+
+  Future<void> goToShopLocationOnRoutePage(
+      BuildContext context,
+      List<TripItem> tripItems,
+      List<ShopResponse> locationList,
+      List<int> days) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => ShopLocationOnRoutePage(
+              days: days, tripItems: tripItems, locationList: locationList)),
     );
   }
 
@@ -594,6 +687,15 @@ class TripStepperViewModel with ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  void changeDay(int day) {
+    _daySelected = day;
+    notifyListeners();
+  }
+
+  void getDaySelected(int day) {
+    _daySelected = day;
   }
 
   void selectTrumbnail(Trip trip, String imageUrl) {
@@ -729,8 +831,14 @@ class TripStepperViewModel with ChangeNotifier {
     Navigator.pop(context);
   }
 
-  void backToShoppingStep(BuildContext context) {
-    if (_shopId != null) _tripItemOperations.deleteTripItemById(_shopId!);
+  Future<void> backToShoppingStep(BuildContext context, Trip trip) async {
+    if (_shopId != null) {
+      _tripItemOperations.deleteTripItemById(_shopId!);
+      trip.lastLocation = await getAllTripItemsByTripId(trip.tripId!)
+          .then((locations) => locations[locations.length - 1].locationName);
+      trip.totalTripItem -= 1;
+      await _tripsOperations.updateTrip(trip);
+    }
     Navigator.pop(context);
   }
 
@@ -913,6 +1021,63 @@ class TripStepperViewModel with ChangeNotifier {
     return _markers;
   }
 
+  Future<Set<Marker>> getShopMarkers(
+      List<TripItem> _tripItems, List<ShopResponse> locationList) async {
+    Set<Marker> _markers = Set();
+    await Future.forEach(_tripItems, (item) async {
+      final location = item as TripItem;
+      if (item.day == _day) {
+        final _markerId = MarkerId('${item.locationId}');
+        await _markers.add(
+          Marker(
+              markerId: _markerId,
+              position: LatLng(location.latitude, location.longitude),
+              infoWindow: InfoWindow(
+                title: location.locationName,
+              ),
+              icon: await BitmapDescriptor.fromBytes(
+                await getBytesFromCanvas(
+                  item.no + 1,
+                  80,
+                  80,
+                  location.locationCategory == 'ที่เที่ยว'
+                      ? Palette.LightGreenColor
+                      : location.locationCategory == 'ที่กิน'
+                          ? Palette.PeachColor
+                          : Palette.LightOrangeColor,
+                ),
+              ),
+              onTap: () {
+                // scrollToPinCard(item.no);
+              }),
+        );
+      }
+    }).then((value) => Future.forEach(locationList, (item) async {
+          final location = item as ShopResponse;
+
+          final _markerId = MarkerId('${item.locationId}');
+          await _markers.add(
+            Marker(
+                markerId: _markerId,
+                position: LatLng(location.latitude, location.longitude),
+                infoWindow: InfoWindow(
+                  title: location.locationName,
+                ),
+                icon: await BitmapDescriptor.fromBytes(
+                  await getBytesFromAsset(
+                    IconAssets.foodMarker,
+                    100,
+                  ),
+                ),
+                onTap: () {
+                  scrollToPinCard(locationList.indexOf(item));
+                }),
+          );
+        }));
+
+    return _markers;
+  }
+
   Future<List<TripItem>> getPinCard(List<TripItem> tripItems) async {
     return await tripItems.where((element) => element.day == _day).toList();
   }
@@ -1077,6 +1242,7 @@ class TripStepperViewModel with ChangeNotifier {
   int get day => _day;
   ShopResponse? get shop => _shop;
   int? get shopId => _shopId;
+  int get daySelected => _daySelected;
 
   Map<PolylineId, Polyline> get polylines => _polylines;
   List<LatLng> get polylineCoordinates => _polylineCoordinates;
