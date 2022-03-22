@@ -105,9 +105,8 @@ class _ConfirmTripPageState extends State<ConfirmTripPage> {
             leading: IconButton(
               icon: Icon(Icons.arrow_back_rounded),
               color: Palette.BackIconColor,
-              onPressed: () => tripStepperViewModel.backToShoppingStep(
-                context,
-              ),
+              onPressed: () =>
+                  tripStepperViewModel.backToShoppingStep(context, trip),
             ),
             title: Text(
               "สรุปข้อมูลทริป",

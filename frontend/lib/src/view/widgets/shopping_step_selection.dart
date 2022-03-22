@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
@@ -15,26 +17,113 @@ class ShoppingStepSelection extends StatefulWidget {
   ShoppingStepSelection({
     required this.tripStepperViewModel,
     required this.trip,
+    required this.tripItems,
   });
 
   final TripStepperViewModel tripStepperViewModel;
   final Trip trip;
+  final List<TripItem> tripItems;
 
   @override
-  _ShoppingStepSelectionState createState() =>
-      _ShoppingStepSelectionState(this.tripStepperViewModel, this.trip);
+  _ShoppingStepSelectionState createState() => _ShoppingStepSelectionState(
+      this.tripStepperViewModel, this.trip, this.tripItems);
 }
 
 class _ShoppingStepSelectionState extends State<ShoppingStepSelection> {
   final TripStepperViewModel tripStepperViewModel;
-  List<TripItem> tripItems = [];
+  final List<TripItem> tripItems;
   final Trip trip;
 
-  _ShoppingStepSelectionState(this.tripStepperViewModel, this.trip);
+  _ShoppingStepSelectionState(
+      this.tripStepperViewModel, this.trip, this.tripItems);
+
+  @override
+  void initState() {
+    Provider.of<TripStepperViewModel>(context, listen: false)
+        .getDaySelected(trip.totalDay);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    List<int> days =
+        List<int>.generate(trip.totalDay, (int index) => index + 1);
+
+    _showDayChangeModal(BuildContext context,
+            TripStepperViewModel tripStepperViewModel, List<int> days) =>
+        showDialog(
+          context: context,
+          builder: (context) => StatefulBuilder(
+            builder: (context, setState) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              contentPadding: EdgeInsets.zero,
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: days
+                    .map(
+                      (day) => Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Divider(),
+                          ListTile(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: days.length == 1
+                                  ? BorderRadius.only(
+                                      topLeft: Radius.circular(16),
+                                      bottomLeft: Radius.circular(16),
+                                      topRight: Radius.circular(16),
+                                      bottomRight: Radius.circular(16),
+                                    )
+                                  : day == days[days.length - 1]
+                                      ? BorderRadius.only(
+                                          topLeft: Radius.zero,
+                                          bottomLeft: Radius.circular(16),
+                                          topRight: Radius.zero,
+                                          bottomRight: Radius.circular(16),
+                                        )
+                                      : day == days[0]
+                                          ? BorderRadius.only(
+                                              bottomLeft: Radius.zero,
+                                              topLeft: Radius.circular(16),
+                                              bottomRight: Radius.zero,
+                                              topRight: Radius.circular(16),
+                                            )
+                                          : BorderRadius.zero,
+                            ),
+                            contentPadding: EdgeInsets.zero,
+                            dense: true,
+                            selected: day == tripStepperViewModel.daySelected,
+                            selectedTileColor: Palette.SelectedListTileColor,
+                            onTap: () {
+                              tripStepperViewModel.changeDay(day);
+                              Navigator.pop(context);
+                            },
+                            title: Text(
+                              'วันที่ ${day}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: day == tripStepperViewModel.daySelected
+                                    ? Palette.PrimaryColor
+                                    : Palette.BodyText,
+                                fontWeight:
+                                    day == tripStepperViewModel.daySelected
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+          ),
+        );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -52,18 +141,77 @@ class _ShoppingStepSelectionState extends State<ShoppingStepSelection> {
         SizedBox(
           height: getProportionateScreenHeight(15),
         ),
-        // instruction(),
         FutureBuilder(
           future: tripStepperViewModel.getAllShop(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               print(tripStepperViewModel.shop);
               var dataList = snapshot.data as List<ShopResponse>;
+              // shopList = dataList;
               return Column(
-                children: dataList
-                    .map((item) =>
-                        buildShopCard(tripStepperViewModel, item, context))
-                    .toList(),
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.only(
+                      bottom: getProportionateScreenHeight(5),
+                    ),
+                    child: OutlinedButton(
+                      onPressed: () =>
+                          tripStepperViewModel.goToShopLocationOnRoutePage(
+                              context, tripItems, dataList, days),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: getProportionateScreenHeight(10)),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.map_outlined),
+                            Text(
+                              ' ดูตำแหน่งบนแผนที่',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        primary: Palette.SecondaryColor,
+                        alignment: Alignment.center,
+                        side: BorderSide(color: Palette.SecondaryColor),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'กดปุ่ม + เพื่อเพิ่มร้านของฝากไปยัง',
+                        style: FontAssets.bodyText,
+                      ),
+                      TextButton(
+                        onPressed: () => _showDayChangeModal(
+                            context, tripStepperViewModel, days),
+                        child: Text(
+                          'วันที่ ${tripStepperViewModel.daySelected}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  Column(
+                    children: dataList
+                        .map((item) =>
+                            buildShopCard(tripStepperViewModel, item, context))
+                        .toList(),
+                  )
+                ],
               );
             } else {
               return Loading();
