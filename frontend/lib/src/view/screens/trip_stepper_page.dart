@@ -131,6 +131,13 @@ class _TripStepperPageState extends State<TripStepperPage> {
                                       if (snapshot.hasData) {
                                         var dataList =
                                             snapshot.data as List<TripItem>;
+                                        tripStepperViewModel
+                                            .getAllTripItemsByTripId(
+                                                trip.tripId!)
+                                            .then((value) =>
+                                                tripStepperViewModel
+                                                    .isStartTimeValid(
+                                                        value, days));
                                         return FoodStepSelection(
                                           tripStepperViewModel:
                                               tripStepperViewModel,
@@ -150,10 +157,23 @@ class _TripStepperPageState extends State<TripStepperPage> {
                                         trip: data,
                                         days: days,
                                       )
-                                    : ShoppingStepSelection(
-                                        tripStepperViewModel:
-                                            tripStepperViewModel,
-                                        trip: data,
+                                    : FutureBuilder(
+                                        future: tripStepperViewModel
+                                            .getAllTripItemsByTripId(tripId),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            var dataList =
+                                                snapshot.data as List<TripItem>;
+                                            return ShoppingStepSelection(
+                                              tripStepperViewModel:
+                                                  tripStepperViewModel,
+                                              trip: data,
+                                              tripItems: dataList,
+                                            );
+                                          } else {
+                                            return Loading();
+                                          }
+                                        },
                                       ),
                       ),
                     )
