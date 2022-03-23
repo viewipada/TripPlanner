@@ -149,43 +149,6 @@ class _RecommendOnRoutePageState extends State<RecommendOnRoutePage> {
   }
 }
 
-Widget buildDayButton(int day, TripStepperViewModel tripStepperViewModel,
-    Completer<GoogleMapController> _controller, List<TripItem> tripItems) {
-  return Column(
-    children: [
-      SizedBox(
-        width: getProportionateScreenWidth(100),
-        child: TextButton(
-          onPressed: () {
-            tripStepperViewModel.onDayTapped(day);
-            tripStepperViewModel.updateMapView(_controller, tripItems);
-            // tripStepperViewModel.getPolyline(tripItems);
-          },
-          child: Text(
-            'วันที่ ${day}',
-            style: TextStyle(
-              color: Palette.AdditionText,
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          style: TextButton.styleFrom(
-            primary: Palette.LightOrangeColor,
-          ),
-        ),
-      ),
-      Visibility(
-        visible: tripStepperViewModel.day == day,
-        child: Container(
-          height: 3,
-          width: getProportionateScreenWidth(100),
-          color: Palette.SecondaryColor,
-        ),
-      ),
-    ],
-  );
-}
-
 Widget buildGoogleMap(Completer<GoogleMapController> _controller,
     TripStepperViewModel tripStepperViewModel, Set<Marker> markers) {
   // print(markers.first.position);

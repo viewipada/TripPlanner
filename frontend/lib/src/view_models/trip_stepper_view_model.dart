@@ -922,8 +922,11 @@ class TripStepperViewModel with ChangeNotifier {
 
   Future<Set<Marker>> getMarkersRecommend(List<TripItem> _tripItems,
       List<LocationRecommendResponse> locationList) async {
+    List<TripItem> tripItems = _tripItems
+        .where((element) => element.day == _day && element.no >= 0)
+        .toList();
     Set<Marker> _markers = Set();
-    await Future.forEach(_tripItems, (item) async {
+    await Future.forEach(tripItems, (item) async {
       final location = item as TripItem;
       if (item.day == _day) {
         final _markerId = MarkerId('${item.locationId}');
@@ -955,7 +958,7 @@ class TripStepperViewModel with ChangeNotifier {
     await Future.forEach(locationList, (item) async {
       final location = item as LocationRecommendResponse;
 
-      final _markerId = MarkerId('${item.locationId}');
+      final _markerId = MarkerId('${item.locationName}');
       await _markers.add(
         Marker(
             markerId: _markerId,
@@ -983,8 +986,11 @@ class TripStepperViewModel with ChangeNotifier {
 
   Future<Set<Marker>> getBaggageMarkers(
       List<TripItem> _tripItems, List<BaggageResponse> locationList) async {
+    List<TripItem> tripItems = _tripItems
+        .where((element) => element.day == _day && element.no >= 0)
+        .toList();
     Set<Marker> _markers = Set();
-    await Future.forEach(_tripItems, (item) async {
+    await Future.forEach(tripItems, (item) async {
       final location = item as TripItem;
       if (item.day == _day) {
         final _markerId = MarkerId('${item.locationId}');
@@ -1015,7 +1021,7 @@ class TripStepperViewModel with ChangeNotifier {
     }).then((value) => Future.forEach(locationList, (item) async {
           final location = item as BaggageResponse;
 
-          final _markerId = MarkerId('${item.locationId}');
+          final _markerId = MarkerId('${item.locationName}');
           await _markers.add(
             Marker(
                 markerId: _markerId,
@@ -1044,8 +1050,11 @@ class TripStepperViewModel with ChangeNotifier {
 
   Future<Set<Marker>> getShopMarkers(
       List<TripItem> _tripItems, List<ShopResponse> locationList) async {
+    List<TripItem> tripItems = _tripItems
+        .where((element) => element.day == _day && element.no >= 0)
+        .toList();
     Set<Marker> _markers = Set();
-    await Future.forEach(_tripItems, (item) async {
+    await Future.forEach(tripItems, (item) async {
       final location = item as TripItem;
       if (item.day == _day) {
         final _markerId = MarkerId('${item.locationId}');
@@ -1076,7 +1085,7 @@ class TripStepperViewModel with ChangeNotifier {
     }).then((value) => Future.forEach(locationList, (item) async {
           final location = item as ShopResponse;
 
-          final _markerId = MarkerId('${item.locationId}');
+          final _markerId = MarkerId('${item.locationName}');
           await _markers.add(
             Marker(
                 markerId: _markerId,
@@ -1117,8 +1126,9 @@ class TripStepperViewModel with ChangeNotifier {
   }
 
   Future<void> getPolyline(List<TripItem> tripItems) async {
-    List<TripItem> route =
-        await tripItems.where((element) => element.day == _day).toList();
+    List<TripItem> route = await tripItems
+        .where((element) => element.day == _day && element.no >= 0)
+        .toList();
     List<PolylineWayPoint> wayPoints = [];
     _polylineCoordinates = [];
 

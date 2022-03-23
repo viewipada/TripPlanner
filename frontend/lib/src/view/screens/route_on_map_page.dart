@@ -177,7 +177,7 @@ Widget buildDayButton(int day, TripStepperViewModel tripStepperViewModel,
           onPressed: () {
             tripStepperViewModel.onDayTapped(day);
             tripStepperViewModel.updateMapView(_controller, tripItems);
-            // tripStepperViewModel.getPolyline(tripItems);
+            tripStepperViewModel.getPolyline(tripItems);
           },
           child: Text(
             'วันที่ ${day}',

@@ -195,15 +195,7 @@ class _TravelStepSelectionState extends State<TravelStepSelection> {
                 fontSize: 14),
           ),
           onTap: () => tripStepperViewModel.goToLocationRecommendPage(
-              context,
-              tripItems,
-              tripItems.length,
-              trip,
-              tripStepperViewModel.index == 1
-                  ? "ที่เที่ยว"
-                  : tripStepperViewModel.index == 2
-                      ? "ที่กิน"
-                      : "ที่พัก"),
+              context, tripItems, tripItems.length, trip, "ที่เที่ยว"),
         ),
         ListTile(
           dense: true,

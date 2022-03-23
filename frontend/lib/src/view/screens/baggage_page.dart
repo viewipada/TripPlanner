@@ -23,7 +23,7 @@ class _BaggagePageState extends State<BaggagePage> {
 
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 1));
+    // Future.delayed(Duration(seconds: 1));
     Provider.of<BaggageViewModel>(context, listen: false)
         .getBaggageList()
         .then((value) {
