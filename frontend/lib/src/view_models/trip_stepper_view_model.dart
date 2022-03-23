@@ -780,13 +780,17 @@ class TripStepperViewModel with ChangeNotifier {
     _desTripItems = await _tripItemOperations.getAllTripItemsByTripIdAndDay(
         trip.tripId!, day);
 
-    if (_desTripItems.isNotEmpty && _desTripItems.first.startTime != null) {
-      item.startTime = await DateTime.parse(_desTripItems.last.startTime!)
-          .add(Duration(
-              minutes: _desTripItems.last.duration +
-                  (item.drivingDuration == null ? 0 : item.drivingDuration!)))
-          .toIso8601String();
+    if (_desTripItems.isNotEmpty) {
+      if (_desTripItems.first.startTime != null)
+        item.startTime = await DateTime.parse(_desTripItems.last.startTime!)
+            .add(Duration(
+                minutes: _desTripItems.last.duration +
+                    (item.drivingDuration == null ? 0 : item.drivingDuration!)))
+            .toIso8601String();
+      else
+        item.startTime = null;
     }
+
     item.no = _desTripItems.length;
     if (_desTripItems.length == 0) {
       item.distance = null;
