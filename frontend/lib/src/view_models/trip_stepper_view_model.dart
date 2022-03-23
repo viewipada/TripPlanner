@@ -106,6 +106,7 @@ class TripStepperViewModel with ChangeNotifier {
           await getPolylineBetweenTwoPoint(value.last, item)
               .then((polyLines) async {
             item.distance = await calculateDistance(polyLines);
+            item.drivingDuration = await ((item.distance! / 80) * 60).toInt();
             _tripItemOperations
                 .createTripItem(item)
                 .then((value) => _shopId = value);
@@ -177,6 +178,8 @@ class TripStepperViewModel with ChangeNotifier {
                 .then((polyLines) async {
               tripItems[realIndex[i]].distance =
                   await calculateDistance(polyLines);
+              tripItems[realIndex[i]].drivingDuration =
+                  await ((tripItems[realIndex[i]].distance! / 80) * 60).toInt();
               await _tripItemOperations.updateTripItem(tripItems[realIndex[i]]);
             });
           notifyListeners();
@@ -190,6 +193,8 @@ class TripStepperViewModel with ChangeNotifier {
           await getPolylineBetweenTwoPoint(tripItems[i - 1], tripItems[i])
               .then((polyLines) async {
             tripItems[i].distance = await calculateDistance(polyLines);
+            tripItems[i].drivingDuration =
+                await ((tripItems[i].distance! / 80) * 60).toInt();
             await _tripItemOperations.updateTripItem(tripItems[i]);
           });
         notifyListeners();
@@ -203,7 +208,8 @@ class TripStepperViewModel with ChangeNotifier {
       if (tripItems[loop].no >= 0 && tripItems[loop].day == _day) {
         tripItems[loop].no = index;
         if (index == 0) {
-          tripItems[loop].distance = null; //รอ drivingDuration
+          tripItems[loop].distance = null;
+          tripItems[loop].drivingDuration = null;
         }
         await _tripItemOperations.updateTripItem(tripItems[loop]);
         index++;
@@ -279,6 +285,8 @@ class TripStepperViewModel with ChangeNotifier {
           .then((polyLines) async {
         tripItems[afterRemovedItem].distance =
             await calculateDistance(polyLines).toDouble();
+        tripItems[afterRemovedItem].drivingDuration =
+            await ((tripItems[afterRemovedItem].distance! / 80) * 60).toInt();
         await _tripItemOperations.updateTripItem(tripItems[afterRemovedItem]);
       });
 
@@ -449,6 +457,7 @@ class TripStepperViewModel with ChangeNotifier {
         await getPolylineBetweenTwoPoint(tripItems[index - 1], item)
             .then((polyLines) async {
           item.distance = await calculateDistance(polyLines).toDouble();
+          item.drivingDuration = await ((item.distance! / 80) * 60).toInt();
           int tripItemId = await _tripItemOperations.createTripItem(item);
           item.itemId = tripItemId;
         });
@@ -467,6 +476,7 @@ class TripStepperViewModel with ChangeNotifier {
           _realIndex.add(tripItems.indexOf(element));
         });
         tripItems[_realIndex[0]].distance = null;
+        tripItems[_realIndex[0]].drivingDuration = null;
         await _tripItemOperations.updateTripItem(tripItems[_realIndex[0]]);
 
         for (int i = 1; i < _realIndex.length; i++) {
@@ -476,6 +486,9 @@ class TripStepperViewModel with ChangeNotifier {
                 .then((polyLines) async {
               tripItems[_realIndex[i]].distance =
                   await calculateDistance(polyLines).toDouble();
+              tripItems[_realIndex[i]].drivingDuration =
+                  await ((tripItems[_realIndex[i]].distance! / 80) * 60)
+                      .toInt();
               await _tripItemOperations
                   .updateTripItem(tripItems[_realIndex[i]]);
             });
@@ -535,6 +548,7 @@ class TripStepperViewModel with ChangeNotifier {
         await getPolylineBetweenTwoPoint(tripItems.last, item)
             .then((polyLines) async {
           item.distance = await calculateDistance(polyLines);
+          item.drivingDuration = await ((item.distance! / 80) * 60).toInt();
           int tripItemId = await _tripItemOperations.createTripItem(item);
           item.itemId = tripItemId;
         });
@@ -774,12 +788,14 @@ class TripStepperViewModel with ChangeNotifier {
           .toIso8601String();
     }
     item.no = _desTripItems.length;
-    if (_desTripItems.length == 0)
+    if (_desTripItems.length == 0) {
       item.distance = null;
-    else
+      item.drivingDuration = null;
+    } else
       await getPolylineBetweenTwoPoint(_desTripItems.last, item)
           .then((polyLines) async {
         item.distance = await calculateDistance(polyLines);
+        item.drivingDuration = await ((item.distance! / 80) * 60).toInt();
         _tripItemOperations.updateTripItem(item);
       });
     item.day = day;
@@ -789,7 +805,10 @@ class TripStepperViewModel with ChangeNotifier {
       if (element.no >= 0 && element.day == _day) {
         //update no. oldTripItems
         element.no = no;
-        if (no == 0) element.distance = null;
+        if (no == 0) {
+          element.distance = null;
+          element.drivingDuration = null;
+        }
         no++;
         await _tripItemOperations.updateTripItem(element);
       }
@@ -811,6 +830,8 @@ class TripStepperViewModel with ChangeNotifier {
         await getPolylineBetweenTwoPoint(tripItems[i - 1], tripItems[i])
             .then((polyLines) async {
           tripItems[i].distance = await calculateDistance(polyLines);
+          tripItems[i].drivingDuration =
+              await ((tripItems[i].distance! / 80) * 60).toInt();
           _tripItemOperations.updateTripItem(tripItems[i]);
         });
       }
