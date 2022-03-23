@@ -15,6 +15,7 @@ import 'package:trip_planner/src/models/response/my_review_response.dart';
 import 'package:trip_planner/src/models/trip.dart';
 import 'package:trip_planner/src/repository/trips_operations.dart';
 import 'package:trip_planner/src/view/widgets/loading.dart';
+import 'package:trip_planner/src/view/widgets/tag_category.dart';
 import 'package:trip_planner/src/view_models/profile_view_model.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -235,6 +236,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     return Slidable(
                                                         key: Key(
                                                             '${trip.tripId}'),
+                                                        enabled: trip.status ==
+                                                            'unfinished',
                                                         controller:
                                                             slidableController,
                                                         actionPane:
@@ -465,69 +468,84 @@ Widget buildTripList(
       padding: EdgeInsets.symmetric(
         horizontal: getProportionateScreenWidth(15),
       ),
+      color: Colors.white,
       height: getProportionateScreenHeight(110),
-      child: Row(
+      child: Stack(
         children: [
-          Card(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10.0))),
-            child: trip.trumbnail == null
-                ? Image.asset(ImageAssets.noPreview)
-                : Image.network(
-                    trip.trumbnail!,
-                    fit: BoxFit.cover,
-                    height: getProportionateScreenHeight(100),
-                    width: getProportionateScreenHeight(100),
-                  ),
-            clipBehavior: Clip.antiAlias,
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(
-                getProportionateScreenWidth(10),
-                getProportionateScreenHeight(5),
-                0,
-                getProportionateScreenHeight(5),
-              ),
-              child: Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.only(
-                          bottom: getProportionateScreenHeight(5)),
-                      child: Text(
-                        trip.tripName,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: FontAssets.subtitleText,
+          Row(
+            children: [
+              Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                child: trip.trumbnail == null
+                    ? Image.asset(ImageAssets.noPreview)
+                    : Image.network(
+                        trip.trumbnail!,
+                        fit: BoxFit.cover,
+                        height: getProportionateScreenHeight(100),
+                        width: getProportionateScreenHeight(100),
                       ),
+                clipBehavior: Clip.antiAlias,
+              ),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    getProportionateScreenWidth(10),
+                    getProportionateScreenHeight(5),
+                    0,
+                    getProportionateScreenHeight(5),
+                  ),
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.only(
+                              bottom: getProportionateScreenHeight(5)),
+                          child: Text(
+                            trip.tripName,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: FontAssets.subtitleText,
+                          ),
+                        ),
+                        Text(
+                          trip.totalTripItem > 1
+                              ? 'จาก ${trip.firstLocation} ไปยัง ${trip.lastLocation}'
+                              : 'เริ่มต้นที่ ${trip.firstLocation}',
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: FontAssets.bodyText,
+                        ),
+                        Text(
+                          '${trip.totalTripItem} สถานที่',
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: FontAssets.bodyText,
+                        ),
+                        Text(
+                          profileViewModel.showTravelingDay(trip.totalDay),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: FontAssets.bodyText,
+                        ),
+                      ],
                     ),
-                    Text(
-                      trip.totalTripItem > 1
-                          ? 'จาก ${trip.firstLocation} ไปยัง ${trip.lastLocation}'
-                          : 'เริ่มต้นที่ ${trip.firstLocation}',
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: FontAssets.bodyText,
-                    ),
-                    Text(
-                      '${trip.totalTripItem} สถานที่',
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: FontAssets.bodyText,
-                    ),
-                    Text(
-                      profileViewModel.showTravelingDay(trip.totalDay),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: FontAssets.bodyText,
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
+          trip.status == 'finished'
+              ? Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        bottom: getProportionateScreenHeight(5)),
+                    child: TagCategory(category: 'เสร็จสิ้น'),
+                  ),
+                )
+              : SizedBox(),
         ],
       ),
     ),
