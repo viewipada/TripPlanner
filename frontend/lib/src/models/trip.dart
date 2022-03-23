@@ -9,6 +9,7 @@ class Trip {
   int totalDay;
   int totalTripItem;
   String? startDate;
+  String status;
   Trip({
     this.tripId,
     required this.tripName,
@@ -20,6 +21,7 @@ class Trip {
     required this.totalDay,
     required this.totalTripItem,
     this.startDate,
+    required this.status,
   });
   factory Trip.fromMap(Map<String, dynamic> json) {
     return Trip(
@@ -33,6 +35,7 @@ class Trip {
       totalDay: json['totalDay'] as int,
       totalTripItem: json['totalTripItem'] as int,
       startDate: json['startDate'],
+      status: json['status'],
     );
   }
 
@@ -47,6 +50,7 @@ class Trip {
       'totalDay': totalDay,
       'totalTripItem': totalTripItem,
       'startDate': startDate,
+      'status': status,
     };
 
     return map;

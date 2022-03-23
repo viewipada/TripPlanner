@@ -94,6 +94,7 @@ class TripFormViewModel with ChangeNotifier {
       totalPeople: _totalPeople,
       totalDay: _totalTravelingDay,
       totalTripItem: startPointList.length,
+      status: 'unfinished',
     );
     int tripId = await _tripsOperations.createTrip(trip);
 
