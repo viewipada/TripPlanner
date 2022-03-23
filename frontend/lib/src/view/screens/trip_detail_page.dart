@@ -32,238 +32,293 @@ class _TripDetailPageState extends State<TripDetailPage> {
         List<int>.generate(trip.totalDay, (int index) => index + 1);
 
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: getProportionateScreenHeight(170),
-            flexibleSpace: FlexibleSpaceBar(
-              background: Image.asset(
-                ImageAssets.tripBanner,
-                fit: BoxFit.cover,
-                alignment: Alignment.topCenter,
-              ),
-            ),
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back_rounded),
-              color: Palette.BackIconColor,
-              onPressed: () {
-                tripStepperViewModel.goBack(context);
-              },
-            ),
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-          ),
-          SliverToBoxAdapter(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: getProportionateScreenHeight(10),
-                    horizontal: getProportionateScreenWidth(15),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_rounded),
+          color: Palette.BackIconColor,
+          onPressed: () {
+            tripStepperViewModel.goBack(context);
+          },
+        ),
+        title: Text(
+          'แผนการเดินทาง',
+          style: FontAssets.headingText,
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+      ),
+      body: SafeArea(
+        // child:
+        // CustomScrollView(
+        // slivers: [
+        //   SliverAppBar(
+        //     expandedHeight: getProportionateScreenHeight(170),
+        //     flexibleSpace: FlexibleSpaceBar(
+        //       background: Image.asset(
+        //         ImageAssets.tripBanner,
+        //         fit: BoxFit.cover,
+        //         alignment: Alignment.topCenter,
+        //       ),
+        //     ),
+        //     leading: IconButton(
+        //       icon: Icon(Icons.arrow_back_rounded),
+        //       color: Palette.BackIconColor,
+        //       onPressed: () {
+        //         tripStepperViewModel.goBack(context);
+        //       },
+        //     ),
+        //     backgroundColor: Colors.transparent,
+        //     elevation: 0.0,
+        //   ),
+        //   SliverToBoxAdapter(
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    height: getProportionateScreenHeight(5),
                   ),
-                  child: Stack(
-                    children: [
-                      Center(
-                        child: OutlinedButton(
-                          onPressed: () => tripStepperViewModel
-                              .goToRouteOnMapPage(context, trip.tripId!, days),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: getProportionateScreenHeight(10)),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.map_outlined),
-                                Text(
-                                  ' ดูทริปของคุณบนแผนที่',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: getProportionateScreenHeight(10),
+                      horizontal: getProportionateScreenWidth(15),
+                    ),
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: OutlinedButton(
+                            onPressed: () =>
+                                tripStepperViewModel.goToRouteOnMapPage(
+                                    context, trip.tripId!, days),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: getProportionateScreenHeight(10)),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.map_outlined),
+                                  Text(
+                                    ' ดูทริปของคุณบนแผนที่',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
+                                ],
+                              ),
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              primary: Palette.SecondaryColor,
+                              alignment: Alignment.center,
+                              side: BorderSide(color: Palette.SecondaryColor),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: getProportionateScreenHeight(5),
+                      horizontal: getProportionateScreenWidth(15),
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border(
+                        top: BorderSide(
+                          color: Palette.PrimaryColor,
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: getProportionateScreenHeight(10),
+                        ),
+                        Text(
+                          trip.tripName,
+                          // 'อ่างทองไม่เหงา มีเรา 2 3 4 5 คน',
+                          style: FontAssets.titleText,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'มี ${trip.totalTripItem} สถานที่ในทริปนี้',
+                              style: FontAssets.bodyText,
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    right: getProportionateScreenWidth(10),
+                                    // vertical: getProportionateScreenHeight(10),
+                                  ),
+                                  child: Icon(
+                                    Icons.people_alt_outlined,
+                                    color: Palette.InfoText,
+                                  ),
+                                ),
+                                Text(
+                                  '${trip.totalPeople} คน',
+                                  style: FontAssets.bodyText,
                                 ),
                               ],
                             ),
-                          ),
-                          style: OutlinedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            primary: Palette.SecondaryColor,
-                            alignment: Alignment.center,
-                            side: BorderSide(color: Palette.SecondaryColor),
-                          ),
-                        ),
-                      ),
-                      // Align(
-                      //   alignment: Alignment.centerRight,
-                      //   child: CircleAvatar(
-                      //     backgroundColor: Palette.SecondaryColor,
-                      //     foregroundColor: Colors.white,
-                      //     radius: 22,
-                      //     child: IconButton(
-                      //       icon: Icon(Icons.edit),
-                      //       onPressed: () => tripStepperViewModel
-                      //           .goToTripStepperPage(context, trip.tripId!),
-                      //     ),
-                      //   ),
-                      // ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: getProportionateScreenHeight(5),
-                    horizontal: getProportionateScreenWidth(15),
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border(
-                      top: BorderSide(
-                        color: Palette.PrimaryColor,
-                        width: 2,
-                      ),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: getProportionateScreenHeight(10),
-                      ),
-                      Text(
-                        trip.tripName,
-                        // 'อ่างทองไม่เหงา มีเรา 2 3 4 5 คน',
-                        style: FontAssets.titleText,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'มี ${trip.totalTripItem} สถานที่ในทริปนี้',
-                            style: FontAssets.bodyText,
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  right: getProportionateScreenWidth(10),
-                                  // vertical: getProportionateScreenHeight(10),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    right: getProportionateScreenWidth(10),
+                                    // vertical: getProportionateScreenHeight(10),
+                                  ),
+                                  child: Icon(
+                                    Icons.calendar_today_rounded,
+                                    size: 22,
+                                    color: Palette.InfoText,
+                                  ),
                                 ),
-                                child: Icon(
-                                  Icons.people_alt_outlined,
-                                  color: Palette.InfoText,
+                                Text(
+                                  trip.startDate != null
+                                      ? '${trip.startDate}'
+                                      : 'ยังไม่ระบุ',
+                                  style: FontAssets.bodyText,
                                 ),
-                              ),
-                              Text(
-                                '${trip.totalPeople} คน',
-                                style: FontAssets.bodyText,
-                              ),
-                            ],
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  right: getProportionateScreenWidth(10),
-                                  // vertical: getProportionateScreenHeight(10),
-                                ),
-                                child: Icon(
-                                  Icons.calendar_today_rounded,
-                                  size: 22,
-                                  color: Palette.InfoText,
-                                ),
-                              ),
-                              Text(
-                                trip.startDate != null
-                                    ? '${trip.startDate}'
-                                    : 'ยังไม่ระบุ',
-                                style: FontAssets.bodyText,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          TextButton(
-                            onPressed: () => tripStepperViewModel
-                                .goToTripStepperPage(context, trip.tripId!),
-                            child: Text(
-                              'แก้ไขข้อมูลทริป',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold),
+                              ],
                             ),
-                            style:
-                                TextButton.styleFrom(padding: EdgeInsets.zero),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                              onPressed: () => tripStepperViewModel
+                                  .goToTripStepperPage(context, trip.tripId!),
+                              child: Text(
+                                'แก้ไขข้อมูลทริป',
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.bold),
+                              ),
+                              style: TextButton.styleFrom(
+                                  padding: EdgeInsets.zero),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
+                  Divider(),
+                  Container(
+                    color: Colors.white,
+                    width: double.infinity,
+                    margin:
+                        EdgeInsets.only(top: getProportionateScreenHeight(8)),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: days
+                            .map((day) =>
+                                buildDayButton(day, tripStepperViewModel))
+                            .toList(),
+                      ),
+                    ),
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: getProportionateScreenHeight(10),
+                      bottom: getProportionateScreenHeight(15),
+                    ),
+                    child: FutureBuilder(
+                      future: tripStepperViewModel
+                          .getAllTripItemsByTripId(trip.tripId!),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          var _tripItems = snapshot.data as List<TripItem>;
+
+                          return Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: getProportionateScreenWidth(15)),
+                            child: Column(
+                              children: _tripItems
+                                  .map((item) =>
+                                      item.day == tripStepperViewModel.day
+                                          ? InkWell(
+                                              onTap: () => tripStepperViewModel
+                                                  .goToLocationDetail(
+                                                      context, item.locationId),
+                                              child: buildTripItem(
+                                                  item, tripStepperViewModel),
+                                            )
+                                          : SizedBox())
+                                  .toList(),
+                            ),
+                          );
+                        } else {
+                          return Loading();
+                        }
+                      },
+                    ),
+                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(
+                  //       horizontal: getProportionateScreenWidth(15)),
+                  //   child: instruction(
+                  //       ' ต้องการเปลี่ยนแผนการเดินทาง กดปุ่มดินสอเลย'),
+                  // ),
+                  SizedBox(
+                    height: getProportionateScreenHeight(60),
+                  ),
+                ],
+              ),
+            ),
+            Align(
+              // height: getProportionateScreenHeight(48),
+              // bottom: getProportionateScreenHeight(15),
+              // left: getProportionateScreenWidth(15),
+              // right: getProportionateScreenWidth(15),
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: double.infinity,
+                height: getProportionateScreenHeight(48),
+                margin: EdgeInsets.symmetric(
+                  horizontal: getProportionateScreenWidth(15),
+                  vertical: getProportionateScreenHeight(15),
                 ),
-                Divider(),
-                Container(
-                  color: Colors.white,
-                  width: double.infinity,
-                  margin: EdgeInsets.only(top: getProportionateScreenHeight(8)),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: days
-                          .map((day) =>
-                              buildDayButton(day, tripStepperViewModel))
-                          .toList(),
+                child: ElevatedButton(
+                  onPressed: () {
+                    // baggageViewModel.goToCreateTripForm(
+                    //     context, baggageViewModel.selectedList);
+                  },
+                  child: Text(
+                    'จบทริป',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Palette.PrimaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
                     ),
                   ),
                 ),
-                Divider(),
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: getProportionateScreenHeight(10),
-                    bottom: getProportionateScreenHeight(15),
-                  ),
-                  child: FutureBuilder(
-                    future: tripStepperViewModel
-                        .getAllTripItemsByTripId(trip.tripId!),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        var _tripItems = snapshot.data as List<TripItem>;
-
-                        return Container(
-                          margin: EdgeInsets.symmetric(
-                              horizontal: getProportionateScreenWidth(15)),
-                          child: Column(
-                            children: _tripItems
-                                .map((item) => item.day ==
-                                        tripStepperViewModel.day
-                                    ? buildTripItem(item, tripStepperViewModel)
-                                    : SizedBox())
-                                .toList(),
-                          ),
-                        );
-                      } else {
-                        return Loading();
-                      }
-                    },
-                  ),
-                ),
-                // Padding(
-                //   padding: EdgeInsets.symmetric(
-                //       horizontal: getProportionateScreenWidth(15)),
-                //   child: instruction(
-                //       ' ต้องการเปลี่ยนแผนการเดินทาง กดปุ่มดินสอเลย'),
-                // ),
-                // SizedBox(
-                //   height: getProportionateScreenHeight(15),
-                // ),
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
+      //   ],
+      // ),
     );
   }
 }
