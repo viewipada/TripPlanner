@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:trip_planner/src/models/response/location_created_response.dart';
 import 'package:trip_planner/src/models/response/profile_details_response.dart';
 import 'package:trip_planner/src/models/response/profile_response.dart';
 import 'package:trip_planner/src/models/trip.dart';
@@ -34,6 +35,10 @@ class ProfileViewModel with ChangeNotifier {
     _username = profileDetailsResponse!.username;
     _birthdate = profileDetailsResponse!.birthdate;
     notifyListeners();
+  }
+
+  Future<List<LocationCreatedResponse>> getLocationRequest() async {
+    return await ProfileService().getLocationRequest();
   }
 
   String showTravelingDay(int travelingDay) {

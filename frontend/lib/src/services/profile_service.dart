@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:trip_planner/src/models/response/location_created_response.dart';
 import 'package:trip_planner/src/models/response/profile_details_response.dart';
 import 'package:trip_planner/src/models/response/profile_response.dart';
 
@@ -26,6 +27,23 @@ class ProfileService {
       return data;
     } else {
       throw Exception("can not fetch data trips and reviews");
+    }
+  }
+
+  Future<List<LocationCreatedResponse>> getLocationRequest() async {
+    List<LocationCreatedResponse> locationReq = [];
+    final response = await http.get(Uri.parse(
+        "https://run.mocky.io/v3/650b5c21-c293-4919-956f-f0c2bb05b99a"));
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body) as List<dynamic>;
+      data
+          .map(
+              (item) => locationReq.add(LocationCreatedResponse.fromJson(item)))
+          .toList();
+      return locationReq;
+    } else {
+      throw Exception("can not fetch data");
     }
   }
 }

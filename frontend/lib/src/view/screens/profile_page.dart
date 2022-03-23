@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
+import 'package:trip_planner/src/models/response/location_created_response.dart';
 import 'package:trip_planner/src/models/response/my_review_response.dart';
 import 'package:trip_planner/src/models/trip.dart';
 import 'package:trip_planner/src/repository/trips_operations.dart';
@@ -321,7 +322,26 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ],
                                 ),
                               ),
-                              createLocationTabEmpty(context, profileViewModel),
+                              FutureBuilder(
+                                future: profileViewModel.getLocationRequest(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot snapshot) {
+                                  if (snapshot.hasData) {
+                                    var locationList = snapshot.data
+                                        as List<LocationCreatedResponse>;
+                                    return locationList.isEmpty
+                                        ? createLocationTabEmpty(
+                                            context, profileViewModel)
+                                        : buildLocationReqList(
+                                            context,
+                                            profileViewModel,
+                                            locationList,
+                                            slidableController);
+                                  } else {
+                                    return Loading();
+                                  }
+                                },
+                              ),
                             ],
                           ),
                         ),
@@ -338,6 +358,50 @@ class _ProfilePageState extends State<ProfilePage> {
       }),
     );
   }
+}
+
+Widget buildLocationReqList(
+    BuildContext context,
+    ProfileViewModel profileViewModel,
+    List<LocationCreatedResponse> locationList,
+    slidableController) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.end,
+    children: [
+      Padding(
+        padding: EdgeInsets.symmetric(
+            horizontal: getProportionateScreenWidth(15),
+            vertical: getProportionateScreenHeight(15)),
+        child: ElevatedButton.icon(
+          onPressed: () => profileViewModel.goToCreateLocationPage(context),
+          icon: Icon(
+            Icons.add,
+            color: Colors.white,
+            size: 20,
+          ),
+          label: Text(
+            'สร้างสถานที่',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+          ),
+          style: ElevatedButton.styleFrom(
+            primary: Palette.SecondaryColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100),
+            ),
+          ),
+        ),
+      ),
+      Column(
+          children: locationList
+              .map((location) => buildLocationRequest(
+                  profileViewModel, location, context, slidableController))
+              .toList()),
+    ],
+  );
 }
 
 Widget createLocationTabEmpty(context, ProfileViewModel profileViewModel) {
@@ -547,6 +611,133 @@ Widget buildTripList(
                 )
               : SizedBox(),
         ],
+      ),
+    ),
+  );
+}
+
+Widget buildLocationRequest(
+    ProfileViewModel profileViewModel,
+    LocationCreatedResponse location,
+    BuildContext context,
+    slidableController) {
+  return Slidable(
+    key: Key('${location.locationName}'),
+    enabled: location.locationStatus != 'Approved',
+    controller: slidableController,
+    actionPane: SlidableDrawerActionPane(),
+    actionExtentRatio: 0.25,
+    movementDuration: Duration(milliseconds: 500),
+    secondaryActions: [
+      IconSlideAction(
+        caption: 'ลบรายการ',
+        color: Palette.DeleteColor,
+        icon: Icons.delete,
+        onTap: () {
+          // profileViewModel.deleteTrip(trip);
+          Slidable.of(context)?.close();
+        },
+      )
+    ],
+    child: InkWell(
+      onTap: () => {},
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: getProportionateScreenWidth(15),
+        ),
+        height: getProportionateScreenHeight(110),
+        child: Stack(
+          children: [
+            Row(
+              children: [
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                  child: location.imageUrl == ""
+                      ? Image.asset(ImageAssets.noPreview)
+                      : Image.network(
+                          location.imageUrl,
+                          fit: BoxFit.cover,
+                          height: getProportionateScreenHeight(100),
+                          width: getProportionateScreenHeight(100),
+                        ),
+                  clipBehavior: Clip.antiAlias,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      getProportionateScreenWidth(10),
+                      getProportionateScreenHeight(5),
+                      0,
+                      getProportionateScreenHeight(5),
+                    ),
+                    child: Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.only(
+                                bottom: getProportionateScreenHeight(5)),
+                            child: Text(
+                              location.locationName,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: FontAssets.subtitleText,
+                            ),
+                          ),
+                          Text(
+                            '${location.description}',
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: FontAssets.bodyText,
+                          ),
+                          Spacer(),
+                          Expanded(
+                              child: Padding(
+                            padding: EdgeInsets.only(
+                                bottom: getProportionateScreenHeight(5)),
+                            child: Row(
+                              children: [
+                                Text(
+                                  'สถานะ : ',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                      color: Palette.AdditionText),
+                                ),
+                                location.locationStatus == 'Approved'
+                                    ? Text(
+                                        'ตรวจสอบแล้ว',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                            color: Palette.AdditionText),
+                                      )
+                                    : location.locationStatus == 'Deny'
+                                        ? Text('ไม่ผ่านการตรวจสอบ',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 12,
+                                                color: Palette.SecondaryColor))
+                                        : Text(
+                                            'รอตรวจสอบ',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 12,
+                                                color: Palette.CautionColor),
+                                          ),
+                              ],
+                            ),
+                          )),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     ),
   );
