@@ -877,6 +877,15 @@ class TripStepperViewModel with ChangeNotifier {
     _shop = null;
   }
 
+  void endTrip(Trip trip) {
+    trip.status = 'finished';
+    _tripsOperations.updateTrip(trip);
+    _index = 0;
+    _day = 1;
+    _shop = null;
+    notifyListeners();
+  }
+
   Future<List<TripItem>> getAllTripItemsByTripIdAndDay(int tripId) async {
     return await _tripItemOperations.getAllTripItemsByTripIdAndDay(
         tripId, _day);

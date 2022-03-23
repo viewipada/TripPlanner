@@ -369,9 +369,11 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                       reviews: locationDetailViewModel.locationDetail.reviews,
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: getProportionateScreenWidth(15),
-                        vertical: getProportionateScreenHeight(5),
+                      padding: EdgeInsets.fromLTRB(
+                        getProportionateScreenWidth(15),
+                        getProportionateScreenHeight(5),
+                        getProportionateScreenWidth(15),
+                        getProportionateScreenHeight(15),
                       ),
                       child: OutlinedButton(
                         onPressed: () {

@@ -196,22 +196,28 @@ class _TripDetailPageState extends State<TripDetailPage> {
                             ),
                           ],
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            TextButton(
-                              onPressed: () => tripStepperViewModel
-                                  .goToTripStepperPage(context, trip.tripId!),
-                              child: Text(
-                                'แก้ไขข้อมูลทริป',
-                                style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.bold),
+                        trip.status == 'unfinished'
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  TextButton(
+                                    onPressed: () => tripStepperViewModel
+                                        .goToTripStepperPage(
+                                            context, trip.tripId!),
+                                    child: Text(
+                                      'แก้ไขข้อมูลทริป',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    style: TextButton.styleFrom(
+                                        padding: EdgeInsets.zero),
+                                  ),
+                                ],
+                              )
+                            : SizedBox(
+                                height: getProportionateScreenHeight(10),
                               ),
-                              style: TextButton.styleFrom(
-                                  padding: EdgeInsets.zero),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                   ),
@@ -232,6 +238,17 @@ class _TripDetailPageState extends State<TripDetailPage> {
                     ),
                   ),
                   Divider(),
+                  trip.status == 'unfinished'
+                      ? SizedBox()
+                      : Padding(
+                          padding: EdgeInsets.only(
+                            left: getProportionateScreenWidth(15),
+                            right: getProportionateScreenWidth(15),
+                            top: getProportionateScreenWidth(15),
+                          ),
+                          child: instruction(
+                              ' ทริปของคุณจบแล้ว! โปรดบอกเล่าประสบการณ์ที่ดีกับเรา'),
+                        ),
                   Padding(
                     padding: EdgeInsets.only(
                       top: getProportionateScreenHeight(10),
@@ -251,13 +268,8 @@ class _TripDetailPageState extends State<TripDetailPage> {
                               children: _tripItems
                                   .map((item) =>
                                       item.day == tripStepperViewModel.day
-                                          ? InkWell(
-                                              onTap: () => tripStepperViewModel
-                                                  .goToLocationDetail(
-                                                      context, item.locationId),
-                                              child: buildTripItem(
-                                                  item, tripStepperViewModel),
-                                            )
+                                          ? buildTripItem(context, item,
+                                              tripStepperViewModel, trip)
                                           : SizedBox())
                                   .toList(),
                             ),
@@ -275,45 +287,56 @@ class _TripDetailPageState extends State<TripDetailPage> {
                   //       ' ต้องการเปลี่ยนแผนการเดินทาง กดปุ่มดินสอเลย'),
                   // ),
                   SizedBox(
-                    height: getProportionateScreenHeight(60),
+                    height: getProportionateScreenHeight(
+                        trip.status == 'unfinished' ? 60 : 0),
                   ),
                 ],
               ),
             ),
-            Align(
-              // height: getProportionateScreenHeight(48),
-              // bottom: getProportionateScreenHeight(15),
-              // left: getProportionateScreenWidth(15),
-              // right: getProportionateScreenWidth(15),
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                width: double.infinity,
-                height: getProportionateScreenHeight(48),
-                margin: EdgeInsets.symmetric(
-                  horizontal: getProportionateScreenWidth(15),
-                  vertical: getProportionateScreenHeight(15),
-                ),
-                child: ElevatedButton(
-                  onPressed: () {
-                    // baggageViewModel.goToCreateTripForm(
-                    //     context, baggageViewModel.selectedList);
-                  },
-                  child: Text(
-                    'จบทริป',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
+            trip.status == 'unfinished'
+                ? Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      width: double.infinity,
+                      height: getProportionateScreenHeight(48),
+                      margin: EdgeInsets.symmetric(
+                        horizontal: getProportionateScreenWidth(15),
+                        vertical: getProportionateScreenHeight(15),
+                      ),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (trip.startDate != null &&
+                              DateTime.now().isAfter(DateTime.parse(
+                                      DateFormat('yyyy-MM-dd').format(
+                                          DateFormat('dd/MM/yyyy')
+                                              .parse(trip.startDate!)))
+                                  .add(Duration(days: trip.totalDay)))) {
+                            tripStepperViewModel.endTrip(trip);
+                          } else {
+                            alertDialog(
+                                context,
+                                trip.startDate == null
+                                    ? 'คุณยังไม่ได้กำหนดวันเริ่มต้นเดินทาง'
+                                    : 'คุณไม่สามารถจบทริปได้ กรุณาลองใหม่อีกครั้งหลังจากวันที่ ${DateFormat('dd/MM/yyyy').format(DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(trip.startDate!))).add(Duration(days: trip.totalDay - 1)))}');
+                          }
+                        },
+                        child: Text(
+                          'จบทริป',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: Palette.PrimaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    primary: Palette.PrimaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+                  )
+                : SizedBox(),
           ],
         ),
       ),
@@ -323,39 +346,75 @@ class _TripDetailPageState extends State<TripDetailPage> {
   }
 }
 
-// Widget instruction(String text) {
-//   return Container(
-//     padding: EdgeInsets.symmetric(
-//       vertical: getProportionateScreenHeight(10),
-//       horizontal: getProportionateScreenWidth(10),
-//     ),
-//     margin: EdgeInsets.only(
-//       bottom: getProportionateScreenHeight(5),
-//     ),
-//     decoration: BoxDecoration(
-//       color: Color(0xffFEFFE1),
-//       borderRadius: BorderRadius.all(Radius.circular(5.0)),
-//       border: Border.all(color: Palette.LightOrangeColor),
-//     ),
-//     child: Row(
-//       mainAxisAlignment: MainAxisAlignment.center,
-//       children: [
-//         Icon(
-//           Icons.lightbulb_outline_rounded,
-//           color: Palette.LightOrangeColor,
-//           size: 20,
-//         ),
-//         Text(
-//           text,
-//           style: TextStyle(
-//               color: Palette.LightOrangeColor,
-//               fontWeight: FontWeight.bold,
-//               fontSize: 12),
-//         ),
-//       ],
-//     ),
-//   );
-// }
+alertDialog(BuildContext context, String title) {
+  return showDialog<String>(
+    context: context,
+    builder: (BuildContext _context) => AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      title: Text(
+        title,
+        style: TextStyle(
+          color: Palette.BodyText,
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+        ),
+        textAlign: TextAlign.center,
+      ),
+      contentPadding: EdgeInsets.zero,
+      actionsAlignment: MainAxisAlignment.center,
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(
+            _context,
+          ),
+          child: const Text(
+            'โอเค!',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget instruction(String text) {
+  return Container(
+    padding: EdgeInsets.symmetric(
+      vertical: getProportionateScreenHeight(10),
+      horizontal: getProportionateScreenWidth(10),
+    ),
+    margin: EdgeInsets.only(
+      bottom: getProportionateScreenHeight(5),
+    ),
+    decoration: BoxDecoration(
+      color: Color(0xffFEFFE1),
+      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+      border: Border.all(color: Palette.LightOrangeColor),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.lightbulb_outline_rounded,
+          color: Palette.LightOrangeColor,
+          size: 20,
+        ),
+        Text(
+          text,
+          style: TextStyle(
+              color: Palette.LightOrangeColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 12),
+        ),
+      ],
+    ),
+  );
+}
 
 Widget buildDayButton(int day, TripStepperViewModel tripStepperViewModel) {
   return Column(
@@ -389,7 +448,8 @@ Widget buildDayButton(int day, TripStepperViewModel tripStepperViewModel) {
   );
 }
 
-Widget buildTripItem(TripItem item, TripStepperViewModel tripStepperViewModel) {
+Widget buildTripItem(BuildContext context, TripItem item,
+    TripStepperViewModel tripStepperViewModel, Trip trip) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -415,109 +475,108 @@ Widget buildTripItem(TripItem item, TripStepperViewModel tripStepperViewModel) {
                 ],
               ),
             ),
-      Container(
-        // height: getProportionateScreenHeight(90),
-        margin: EdgeInsets.symmetric(vertical: getProportionateScreenHeight(5)),
-        decoration: BoxDecoration(
-          color: item.locationCategory == 'ที่กิน'
-              ? Palette.BaseMeal
-              : Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
-              spreadRadius: 0,
-              blurRadius: 1,
-              offset: Offset(2, 4), // changes position of shadow
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10.0),
-                bottomLeft: Radius.circular(10.0),
-              )),
-              child: item.imageUrl == ""
-                  ? Image.asset(
-                      ImageAssets.noPreview,
-                      fit: BoxFit.cover,
-                      height: getProportionateScreenHeight(80),
-                      width: getProportionateScreenHeight(80),
-                    )
-                  : Image.network(
-                      item.imageUrl,
-                      fit: BoxFit.cover,
-                      height: getProportionateScreenHeight(80),
-                      width: getProportionateScreenHeight(80),
-                    ),
-              clipBehavior: Clip.antiAlias,
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(
-                  getProportionateScreenWidth(10),
-                  getProportionateScreenHeight(10),
-                  0,
-                  0,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '${item.no + 1}. ${item.locationName}',
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: TextStyle(
-                        color: Palette.AdditionText,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
+      InkWell(
+        onTap: () =>
+            tripStepperViewModel.goToLocationDetail(context, item.locationId),
+        child: Container(
+          // height: getProportionateScreenHeight(90),
+          margin:
+              EdgeInsets.symmetric(vertical: getProportionateScreenHeight(5)),
+          decoration: BoxDecoration(
+            color: item.locationCategory == 'ที่กิน'
+                ? Palette.BaseMeal
+                : Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 0,
+                blurRadius: 1,
+                offset: Offset(2, 4), // changes position of shadow
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10.0),
+                  bottomLeft: Radius.circular(10.0),
+                )),
+                child: item.imageUrl == ""
+                    ? Image.asset(
+                        ImageAssets.noPreview,
+                        fit: BoxFit.cover,
+                        height: getProportionateScreenHeight(80),
+                        width: getProportionateScreenHeight(80),
+                      )
+                    : Image.network(
+                        item.imageUrl,
+                        fit: BoxFit.cover,
+                        height: getProportionateScreenHeight(80),
+                        width: getProportionateScreenHeight(80),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          right: getProportionateScreenWidth(15)),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                clipBehavior: Clip.antiAlias,
+              ),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    getProportionateScreenWidth(10),
+                    getProportionateScreenHeight(10),
+                    0,
+                    0,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
                         children: [
-                          TextButton.icon(
-                            icon: Icon(
-                              Icons.access_time_rounded,
-                              color: Palette.LightSecondary,
-                              size: 18,
-                            ),
-                            label: Text(
-                              item.startTime == null
-                                  ? 'ยังไม่ได้ตั้ง'
-                                  : DateFormat("HH:mm")
-                                      .format(DateTime.parse(item.startTime!))
-                                      .toString(),
-                              style: FontAssets.hintText,
-                            ),
-                            style: ButtonStyle(
-                              overlayColor:
-                                  MaterialStateProperty.all(Colors.transparent),
-                              padding:
-                                  MaterialStateProperty.all(EdgeInsets.zero),
-                              alignment: Alignment.bottomLeft,
-                            ),
-                            onPressed: () => null,
-                          ),
                           Expanded(
-                            child: TextButton.icon(
+                            child: Text(
+                              '${item.no + 1}. ${item.locationName}',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: TextStyle(
+                                color: Palette.AdditionText,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          trip.status == 'finished'
+                              ? Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          getProportionateScreenWidth(15)),
+                                  child: Icon(
+                                    Icons.rate_review_outlined,
+                                    color: Palette.SecondaryColor,
+                                  ),
+                                )
+                              : SizedBox(),
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            right: getProportionateScreenWidth(15)),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextButton.icon(
                               icon: Icon(
-                                Icons.place_outlined,
-                                color: Palette.PrimaryColor,
+                                Icons.access_time_rounded,
+                                color: Palette.LightSecondary,
                                 size: 18,
                               ),
                               label: Text(
-                                item.distance == null
-                                    ? 'จุดเริ่มต้น'
-                                    : '${item.distance} km',
+                                item.startTime == null
+                                    ? 'ยังไม่ได้ตั้ง'
+                                    : DateFormat("HH:mm")
+                                        .format(DateTime.parse(item.startTime!))
+                                        .toString(),
                                 style: FontAssets.hintText,
                               ),
                               style: ButtonStyle(
@@ -525,38 +584,61 @@ Widget buildTripItem(TripItem item, TripStepperViewModel tripStepperViewModel) {
                                     Colors.transparent),
                                 padding:
                                     MaterialStateProperty.all(EdgeInsets.zero),
-                                alignment: Alignment.bottomCenter,
+                                alignment: Alignment.bottomLeft,
                               ),
                               onPressed: () => null,
                             ),
-                          ),
-                          TextButton.icon(
-                            icon: Icon(
-                              Icons.hourglass_empty_rounded,
-                              color: Palette.SecondaryColor,
-                              size: 18,
+                            Expanded(
+                              child: TextButton.icon(
+                                icon: Icon(
+                                  Icons.place_outlined,
+                                  color: Palette.PrimaryColor,
+                                  size: 18,
+                                ),
+                                label: Text(
+                                  item.distance == null
+                                      ? 'จุดเริ่มต้น'
+                                      : '${item.distance} km',
+                                  style: FontAssets.hintText,
+                                ),
+                                style: ButtonStyle(
+                                  overlayColor: MaterialStateProperty.all(
+                                      Colors.transparent),
+                                  padding: MaterialStateProperty.all(
+                                      EdgeInsets.zero),
+                                  alignment: Alignment.bottomCenter,
+                                ),
+                                onPressed: () => null,
+                              ),
                             ),
-                            label: Text(
-                              '${item.duration} min',
-                              style: FontAssets.hintText,
+                            TextButton.icon(
+                              icon: Icon(
+                                Icons.hourglass_empty_rounded,
+                                color: Palette.SecondaryColor,
+                                size: 18,
+                              ),
+                              label: Text(
+                                '${item.duration} min',
+                                style: FontAssets.hintText,
+                              ),
+                              style: ButtonStyle(
+                                overlayColor: MaterialStateProperty.all(
+                                    Colors.transparent),
+                                padding:
+                                    MaterialStateProperty.all(EdgeInsets.zero),
+                                alignment: Alignment.bottomLeft,
+                              ),
+                              onPressed: () => null,
                             ),
-                            style: ButtonStyle(
-                              overlayColor:
-                                  MaterialStateProperty.all(Colors.transparent),
-                              padding:
-                                  MaterialStateProperty.all(EdgeInsets.zero),
-                              alignment: Alignment.bottomLeft,
-                            ),
-                            onPressed: () => null,
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     ],
