@@ -88,7 +88,26 @@ class _TravelStepSelectionState extends State<TravelStepSelection> {
                   icon: ImageIcon(
                     AssetImage(IconAssets.sort),
                   ),
-                  onPressed: () => tripStepperViewModel.sortTripItems(trip,tripItems),
+                  onPressed: () {
+                    tripStepperViewModel
+                        .sortTripItems(trip, tripItems)
+                        .then((value) {
+                      final snackBar = SnackBar(
+                        backgroundColor: Palette.SecondaryColor,
+                        content: Text(
+                          'เรียงลำดับสถานที่เรียบร้อยแล้ว',
+                          style: TextStyle(
+                            fontFamily: 'Sukhumvit',
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    });
+                  },
                 ),
               ),
             ),
