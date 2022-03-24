@@ -463,7 +463,10 @@ Widget buildTripItem(
             height: getProportionateScreenHeight(87),
             width: getProportionateScreenHeight(87),
             margin: EdgeInsets.only(
-                bottom: getProportionateScreenHeight(5),
+                bottom: getProportionateScreenHeight(
+                    tripStepperViewModel.recommendToStop(tripItems) == index
+                        ? 80
+                        : 5),
                 left: getProportionateScreenWidth(5)),
             decoration: BoxDecoration(
               color: Palette.DeleteColor,
