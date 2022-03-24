@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:trip_planner/src/models/response/location_request_detail_response.dart';
 import 'package:trip_planner/src/services/create_location_service.dart';
 import 'package:trip_planner/src/view/screens/location_picker_page.dart';
 
@@ -13,9 +14,9 @@ class CreateLocationViewModel with ChangeNotifier {
   File? _images;
   bool? _knowOpeningHour = true;
   List _locationCategory = [
-    {'label': 'ที่เที่ยว', 'value': 'travel'},
-    {'label': 'ที่กิน', 'value': 'food'},
-    {'label': 'ที่พัก', 'value': 'hotel'},
+    {'label': 'ที่เที่ยว', 'value': 'travel'}, //1
+    {'label': 'ที่กิน', 'value': 'food'}, //2
+    {'label': 'ที่พัก', 'value': 'hotel'}, //3
   ];
   List _locationType = [];
   List _dayOfWeek = [
@@ -77,6 +78,72 @@ class CreateLocationViewModel with ChangeNotifier {
   bool _locationPinValid = true;
   // bool _isSameHour = false;
   // TimeOfDay _openTime = TimeOfDay(hour: 14, minute: 0);
+  LocationRequestDetailResponse? _locationRequest;
+  String _locationName = '';
+  String _description = '';
+  String _contactNumber = '';
+  String _website = '';
+  String? _imageUrl;
+  dynamic _defaultCategotyValue;
+  dynamic _defaultLocationTypeValue;
+
+  Future<void> getLocationRequestById(int locationId) async {
+    _locationRequest =
+        await CreateLocationService().getLocationRequestById(locationId);
+
+    if (_locationRequest != null) {
+      _locationName = await _locationRequest!.locationName;
+      _imageUrl = await _locationRequest!.imageUrl;
+      _contactNumber = await _locationRequest!.contactNumber;
+      _website = await _locationRequest!.website;
+      _description = await _locationRequest!.description;
+      _locationPin =
+          await LatLng(_locationRequest!.latitude, _locationRequest!.longitude);
+      // _locationTypeValue = _locationRequest!.locationType; //รอ api จริง
+      _locationTypeValue = "1";
+      _provinceValue = await _locationRequest!.province;
+      _openingEveryday = await !_locationRequest!.openingHour.contains("ปิด");
+      _locationCategoryValue = await _locationRequest!.category == 1
+          ? "ที่เที่ยว"
+          : _locationRequest!.category == 2
+              ? "ที่กิน"
+              : "ที่พัก";
+
+      for (int i = 0; i < _dayOfWeek.length; i++) {
+        if (_locationRequest!.openingHour[i] != "ปิด") {
+          _dayOfWeek[i]['isOpening'] = true;
+          final timeSplit = await _locationRequest!.openingHour[i]
+              .split('-'); // รอดู api จริงว่ามีเว้นวรรคก่อนหลัง - ไหม
+          _dayOfWeek[i]['openTime'] = await timeSplit.first;
+          _dayOfWeek[i]['closedTime'] = await timeSplit.last;
+        }
+      }
+      _provinceLatLng =
+          await LatLng(_locationRequest!.latitude, _locationRequest!.longitude);
+
+      _locationCategoryValid = await _locationCategoryValue != null;
+      _locationTypeValid = await _locationTypeValue != null;
+      _provinceValid = await _provinceValue != null;
+
+      if (_locationCategoryValue != null)
+        await getLocationTypeList(_locationCategoryValue! == "ที่เที่ยว"
+            ? "travel"
+            : _locationCategoryValue! == "ที่กิน"
+                ? "food"
+                : "hotel");
+
+      _locationCategory.forEach((element) {
+        if (element['label'] == _locationCategoryValue)
+          _defaultCategotyValue = element;
+      });
+
+      _locationType.forEach((element) {
+        if (element['value'] == _locationTypeValue)
+          _defaultLocationTypeValue = element;
+      });
+    }
+    notifyListeners();
+  }
 
   Future pickImageFromSource(ImageSource source) async {
     try {
@@ -86,6 +153,7 @@ class CreateLocationViewModel with ChangeNotifier {
         return;
       }
       _images = File(image.path);
+      _imageUrl = null;
       notifyListeners();
     } on PlatformException catch (e) {
       print('Failed to pick image $e form ${source}');
@@ -155,6 +223,26 @@ class CreateLocationViewModel with ChangeNotifier {
     return time;
   }
 
+  void updateLocationName(String locationName) {
+    _locationName = locationName;
+    notifyListeners();
+  }
+
+  void updateDescription(String description) {
+    _description = description;
+    notifyListeners();
+  }
+
+  void updateContactNumber(String contactNumber) {
+    _contactNumber = contactNumber;
+    notifyListeners();
+  }
+
+  void updateWebsite(String website) {
+    _website = website;
+    notifyListeners();
+  }
+
   void updateOpeningHour(day, String openTime, String closedTime) {
     day['openTime'] = openTime;
     day['closedTime'] = closedTime;
@@ -162,12 +250,15 @@ class CreateLocationViewModel with ChangeNotifier {
   }
 
   Future<void> getLocationTypeList(String category) async {
+    _locationType = [];
     _locationType = await CreateLocationService().getLocationTypeList(category);
     notifyListeners();
   }
 
   void updateLocationCategoryValue(String category) {
     _locationCategoryValue = category;
+    _locationTypeValue = null;
+    _defaultLocationTypeValue = null;
     notifyListeners();
   }
 
@@ -320,4 +411,12 @@ class CreateLocationViewModel with ChangeNotifier {
   LatLng? get provinceLatLng => _provinceLatLng;
   LatLng? get locationPin => _locationPin;
   // bool get isSameHour => _isSameHour;
+  LocationRequestDetailResponse? get locationRequest => _locationRequest;
+  String get locationName => _locationName;
+  String get description => _description;
+  String get contactNumber => _contactNumber;
+  String get website => _website;
+  String? get imageUrl => _imageUrl;
+  dynamic get defaultCategotyValue => _defaultCategotyValue;
+  dynamic get defaultLocationTypeValue => _defaultLocationTypeValue;
 }

@@ -10,8 +10,10 @@ import 'package:trip_planner/src/models/response/profile_response.dart';
 import 'package:trip_planner/src/models/trip.dart';
 import 'package:trip_planner/src/repository/trips_operations.dart';
 import 'package:trip_planner/src/services/profile_service.dart';
-import 'package:trip_planner/src/view/screens/create_location.dart';
+import 'package:trip_planner/src/view/screens/create_location_page.dart';
+import 'package:trip_planner/src/view/screens/edit_location_request_page.dart';
 import 'package:trip_planner/src/view/screens/edit_profile_page.dart';
+import 'package:trip_planner/src/view/screens/location_detail_page.dart';
 import 'package:trip_planner/src/view/screens/trip_detail_page.dart';
 
 class ProfileViewModel with ChangeNotifier {
@@ -54,6 +56,23 @@ class ProfileViewModel with ChangeNotifier {
       MaterialPageRoute(
         builder: (context) => CreateLocationPage(),
       ),
+    );
+  }
+
+  void goToLocationDetail(BuildContext context, int locationId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => LocationDetailPage(locationId: locationId)),
+    );
+  }
+
+  void goToEditLocationRequestDetail(BuildContext context, int locationId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) =>
+              EditLocationRequestPage(locationId: locationId)),
     );
   }
 

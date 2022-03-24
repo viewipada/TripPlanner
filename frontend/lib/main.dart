@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
-import 'package:trip_planner/src/view/screens/create_location.dart';
+import 'package:trip_planner/src/view/screens/create_location_page.dart';
 import 'package:trip_planner/src/view/screens/login_page.dart';
 import 'package:trip_planner/src/view/screens/pdpa_page.dart';
 import 'package:trip_planner/src/view/screens/review_page.dart';

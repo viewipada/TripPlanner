@@ -366,37 +366,82 @@ Widget buildLocationReqList(
     List<LocationCreatedResponse> locationList,
     slidableController) {
   return Column(
-    crossAxisAlignment: CrossAxisAlignment.end,
+    crossAxisAlignment: CrossAxisAlignment.start,
     children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+                right: getProportionateScreenWidth(15),
+                top: getProportionateScreenHeight(15)
+                ),
+            child: ElevatedButton.icon(
+              onPressed: () => profileViewModel.goToCreateLocationPage(context),
+              icon: Icon(
+                Icons.add,
+                color: Colors.white,
+                size: 20,
+              ),
+              label: Text(
+                'สร้างสถานที่',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                primary: Palette.SecondaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
       Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal: getProportionateScreenWidth(15),
-            vertical: getProportionateScreenHeight(15)),
-        child: ElevatedButton.icon(
-          onPressed: () => profileViewModel.goToCreateLocationPage(context),
-          icon: Icon(
-            Icons.add,
-            color: Colors.white,
-            size: 20,
-          ),
-          label: Text(
-            'สร้างสถานที่',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
-          ),
-          style: ElevatedButton.styleFrom(
-            primary: Palette.SecondaryColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(100),
-            ),
-          ),
+        padding:
+            EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(15)),
+        child: Text(
+          'ตรวจสอบแล้ว',
+          style: FontAssets.titleText,
         ),
       ),
       Column(
           children: locationList
+              .where((element) => element.locationStatus == 'Approved')
+              .map((location) => buildLocationRequest(
+                  profileViewModel, location, context, slidableController))
+              .toList()),
+      Padding(
+        padding: EdgeInsets.only(
+            left: getProportionateScreenWidth(15),
+            top: getProportionateScreenHeight(10)),
+        child: Text(
+          'กำลังตรวจสอบ',
+          style: FontAssets.titleText,
+        ),
+      ),
+      Column(
+          children: locationList
+              .where((element) => element.locationStatus == 'In progress')
+              .map((location) => buildLocationRequest(
+                  profileViewModel, location, context, slidableController))
+              .toList()),
+      Padding(
+        padding: EdgeInsets.only(
+            left: getProportionateScreenWidth(15),
+            top: getProportionateScreenHeight(10)),
+        child: Text(
+          'ถูกปฏิเสธ',
+          style: FontAssets.titleText,
+        ),
+      ),
+      Column(
+          children: locationList
+              .where((element) => element.locationStatus == 'Deny')
               .map((location) => buildLocationRequest(
                   profileViewModel, location, context, slidableController))
               .toList()),
@@ -640,7 +685,13 @@ Widget buildLocationRequest(
       )
     ],
     child: InkWell(
-      onTap: () => {},
+      onTap: () => location.locationStatus == 'Approved'
+          ? profileViewModel.goToLocationDetail(
+              context,
+              // location.locationId
+              10,
+            )
+          : profileViewModel.goToEditLocationRequestDetail(context,location.locationId),
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: getProportionateScreenWidth(15),
@@ -693,42 +744,12 @@ Widget buildLocationRequest(
                           ),
                           Spacer(),
                           Expanded(
-                              child: Padding(
-                            padding: EdgeInsets.only(
-                                bottom: getProportionateScreenHeight(5)),
-                            child: Row(
-                              children: [
-                                Text(
-                                  'สถานะ : ',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                      color: Palette.AdditionText),
-                                ),
-                                location.locationStatus == 'Approved'
-                                    ? Text(
-                                        'ตรวจสอบแล้ว',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 12,
-                                            color: Palette.AdditionText),
-                                      )
-                                    : location.locationStatus == 'Deny'
-                                        ? Text('ไม่ผ่านการตรวจสอบ',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 12,
-                                                color: Palette.SecondaryColor))
-                                        : Text(
-                                            'รอตรวจสอบ',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 12,
-                                                color: Palette.CautionColor),
-                                          ),
-                              ],
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  bottom: getProportionateScreenHeight(5)),
+                              child: TagCategory(category: location.category),
                             ),
-                          )),
+                          ),
                         ],
                       ),
                     ),

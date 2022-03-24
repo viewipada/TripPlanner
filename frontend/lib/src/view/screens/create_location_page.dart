@@ -229,7 +229,7 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
         ),
         body: SafeArea(
           child: SingleChildScrollView(
-            // keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             child: Container(
               child: Form(
                 key: _formKey,
@@ -249,7 +249,8 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                           }
                           return null;
                         },
-                        // onChanged: (value) => _caption = value.trim(),
+                        onChanged: (value) => createLocationViewModel
+                            .updateLocationName(value.trim()),
                       ),
                     ),
                     Subtitle('หมวดหมู่สถานที่ ', '*'),
@@ -292,6 +293,10 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                           createLocationViewModel.updateLocationCategoryValue(
                               selectedItem['label']);
                         },
+                        resultPadding: EdgeInsets.symmetric(
+                          horizontal: getProportionateScreenWidth(15),
+                        ),
+                        resultHeight: getProportionateScreenHeight(60),
                         resultBD: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -321,76 +326,103 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                       ),
                     ),
                     Subtitle('ประเภทสถานที่ ', '*'),
-                    IgnorePointer(
-                      ignoring: createLocationViewModel.locationType.isEmpty,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: getProportionateScreenWidth(15)),
-                        child: CoolDropdown(
-                          dropdownList: createLocationViewModel.locationType,
-                          placeholder: 'กรุณาเลือก',
-                          dropdownHeight: 170,
-                          dropdownItemGap: 0,
-                          dropdownWidth: SizeConfig.screenWidth -
-                              getProportionateScreenWidth(50),
-                          resultWidth: SizeConfig.screenWidth,
-                          triangleHeight: 0,
-                          gap: getProportionateScreenHeight(5),
-                          resultTS: TextStyle(
-                            color: Palette.AdditionText,
-                            fontSize: 14,
-                            fontFamily: 'Sukhumvit',
-                          ),
-                          selectedItemTS: TextStyle(
-                            color: Palette.PrimaryColor,
-                            fontSize: 14,
-                            fontFamily: 'Sukhumvit',
-                          ),
-                          unselectedItemTS: TextStyle(
-                            color: Palette.BodyText,
-                            fontSize: 14,
-                            fontFamily: 'Sukhumvit',
-                          ),
-                          placeholderTS: TextStyle(
-                            color: Palette.InfoText,
-                            fontSize: 14,
-                            fontFamily: 'Sukhumvit',
-                          ),
-                          onChange: (selectedItem) {
-                            createLocationViewModel
-                                .updateLocationTypeValue(selectedItem['label']);
-                          },
-                          resultBD: BoxDecoration(
-                            color: createLocationViewModel.locationType.isEmpty
-                                ? Palette.BorderInputColor
-                                : Colors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            border: Border(
-                              top: BorderSide(
-                                  color:
-                                      createLocationViewModel.locationTypeValid
-                                          ? Palette.BorderInputColor
-                                          : Colors.red),
-                              bottom: BorderSide(
-                                  color:
-                                      createLocationViewModel.locationTypeValid
-                                          ? Palette.BorderInputColor
-                                          : Colors.red),
-                              left: BorderSide(
-                                  color:
-                                      createLocationViewModel.locationTypeValid
-                                          ? Palette.BorderInputColor
-                                          : Colors.red),
-                              right: BorderSide(
-                                  color:
-                                      createLocationViewModel.locationTypeValid
-                                          ? Palette.BorderInputColor
-                                          : Colors.red),
+                    createLocationViewModel.locationType.isNotEmpty
+                        ? IgnorePointer(
+                            ignoring:
+                                createLocationViewModel.locationType.isEmpty,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: getProportionateScreenWidth(15)),
+                              child: CoolDropdown(
+                                dropdownList:
+                                    createLocationViewModel.locationType,
+                                placeholder: 'กรุณาเลือก',
+                                dropdownHeight: 170,
+                                dropdownItemGap: 0,
+                                dropdownWidth: SizeConfig.screenWidth -
+                                    getProportionateScreenWidth(50),
+                                resultWidth: SizeConfig.screenWidth,
+                                triangleHeight: 0,
+                                gap: getProportionateScreenHeight(5),
+                                resultTS: TextStyle(
+                                  color: Palette.AdditionText,
+                                  fontSize: 14,
+                                  fontFamily: 'Sukhumvit',
+                                ),
+                                selectedItemTS: TextStyle(
+                                  color: Palette.PrimaryColor,
+                                  fontSize: 14,
+                                  fontFamily: 'Sukhumvit',
+                                ),
+                                unselectedItemTS: TextStyle(
+                                  color: Palette.BodyText,
+                                  fontSize: 14,
+                                  fontFamily: 'Sukhumvit',
+                                ),
+                                placeholderTS: TextStyle(
+                                  color: Palette.InfoText,
+                                  fontSize: 14,
+                                  fontFamily: 'Sukhumvit',
+                                ),
+                                onChange: (selectedItem) {
+                                  createLocationViewModel
+                                      .updateLocationTypeValue(
+                                          selectedItem['label']);
+                                },
+                                resultPadding: EdgeInsets.symmetric(
+                                  horizontal: getProportionateScreenWidth(15),
+                                ),
+                                resultHeight: getProportionateScreenHeight(60),
+                                resultBD: BoxDecoration(
+                                  color: createLocationViewModel
+                                          .locationType.isEmpty
+                                      ? Palette.BorderInputColor
+                                      : Colors.white,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  border: Border(
+                                    top: BorderSide(
+                                        color: createLocationViewModel
+                                                .locationTypeValid
+                                            ? Palette.BorderInputColor
+                                            : Colors.red),
+                                    bottom: BorderSide(
+                                        color: createLocationViewModel
+                                                .locationTypeValid
+                                            ? Palette.BorderInputColor
+                                            : Colors.red),
+                                    left: BorderSide(
+                                        color: createLocationViewModel
+                                                .locationTypeValid
+                                            ? Palette.BorderInputColor
+                                            : Colors.red),
+                                    right: BorderSide(
+                                        color: createLocationViewModel
+                                                .locationTypeValid
+                                            ? Palette.BorderInputColor
+                                            : Colors.red),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : IgnorePointer(
+                            ignoring:
+                                createLocationViewModel.locationType.isEmpty,
+                            child: Container(
+                              margin: EdgeInsets.symmetric(
+                                horizontal: getProportionateScreenWidth(15),
+                              ),
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  hintText: 'กรุณาเลือก',
+                                  filled: true,
+                                  fillColor: Palette.BorderInputColor,
+                                ),
+                                enabled: false,
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    ),
                     Subtitle('จังหวัด ', '*'),
                     Padding(
                       padding: EdgeInsets.symmetric(
@@ -429,6 +461,10 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                           createLocationViewModel
                               .updateProvinceValue(selectedItem);
                         },
+                        resultPadding: EdgeInsets.symmetric(
+                          horizontal: getProportionateScreenWidth(15),
+                        ),
+                        resultHeight: getProportionateScreenHeight(60),
                         resultBD: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -527,7 +563,8 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                           }
                           return null;
                         },
-                        // onChanged: (value) => _caption = value.trim(),
+                        onChanged: (value) => createLocationViewModel
+                            .updateDescription(value.trim()),
                       ),
                     ),
                     Subtitle('เบอร์ติดต่อ', ''),
@@ -536,8 +573,11 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                         horizontal: getProportionateScreenWidth(15),
                       ),
                       child: TextFormField(
+                        keyboardType: TextInputType.number,
                         maxLines: 1,
-                        // onChanged: (value) => _caption = value.trim(),
+                        maxLength: 10,
+                        onChanged: (value) => createLocationViewModel
+                            .updateContactNumber(value.trim()),
                       ),
                     ),
                     Subtitle('เว็บไซต์, Facebook', ''),
@@ -709,7 +749,7 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                             .toList(),
                       ),
                     ),
-                    Subtitle('รูปภาพ', ''),
+                    Subtitle('รูปภาพ ', '*'),
                     createLocationViewModel.images != null
                         ? InkWell(
                             onTap: () => createLocationViewModel
@@ -802,23 +842,22 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                               createLocationViewModel.validateLocationPin();
                           if (_formKey.currentState!.validate() &&
                               dropdownValid &&
-                              locationPinValid) {
+                              locationPinValid &&
+                              createLocationViewModel.images != null) {
                             bool openingHourValid =
                                 createLocationViewModel.validateOpeningHour();
                             if (createLocationViewModel.knowOpeningHour! &&
                                 !openingHourValid) {
                               alertDialog(context, 'กรุณาระบุวันเวลาทำการ');
                             } else {
-                              // If the form is valid, display a snackbar. In the real world,
-                              // you'd often call a server or save the information in a database.
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Processing Data')),
-                              );
+                              print(createLocationViewModel.dayOfWeek);
                             }
                           } else {
-                            alertDialog(
-                                context, 'กรุณาระบุข้อมูลที่จำเป็นให้ครบ');
+                            if (createLocationViewModel.images != null)
+                              alertDialog(
+                                  context, 'กรุณาระบุข้อมูลที่จำเป็นให้ครบ');
+                            else
+                              alertDialog(context, 'กรุณาเพิ่มรูปภาพสถานที่');
                           }
                         },
                         child: Text(
