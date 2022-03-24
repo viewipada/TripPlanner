@@ -21,7 +21,7 @@ class LocationService {
 
   Future<List<LocationRecommendResponse>> getLocationRecommend() async {
     final response = await http.get(Uri.parse(
-        'https://run.mocky.io/v3/483b7bf8-78b5-40f4-9e9d-0479bab1ea71'));
+        'https://run.mocky.io/v3/5fe195d1-63a4-4a09-ba61-7a7efa1771b1'));
 
     if (response.statusCode == 200) {
       List<LocationRecommendResponse> locationRecommendList;

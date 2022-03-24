@@ -88,7 +88,7 @@ class _TravelStepSelectionState extends State<TravelStepSelection> {
                   icon: ImageIcon(
                     AssetImage(IconAssets.sort),
                   ),
-                  onPressed: () => print('press'),
+                  onPressed: () => tripStepperViewModel.sortTripItems(trip,tripItems),
                 ),
               ),
             ),

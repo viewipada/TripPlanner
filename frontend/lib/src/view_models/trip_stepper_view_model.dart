@@ -235,6 +235,67 @@ class TripStepperViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> sortTripItems(Trip trip, List<TripItem> tripItems) async {
+    for (int i = 0; i < tripItems.length - 1; i++) {
+      var firstCal = false;
+      var minDistance = 0.0;
+      var nextTripItem = null;
+      for (int j = i + 1; j < tripItems.length; j++) {
+        if (tripItems[i].day == _day &&
+            tripItems[i].no >= 0 &&
+            tripItems[j].day == _day &&
+            tripItems[j].no >= 0) {
+          double distance = coordinateDistance(
+              tripItems[i].latitude,
+              tripItems[i].longitude,
+              tripItems[j].latitude,
+              tripItems[j].longitude);
+
+          if (!firstCal) {
+            minDistance = distance;
+            nextTripItem = tripItems[j];
+            firstCal = true;
+          } else {
+            if (distance < minDistance) {
+              minDistance = distance;
+              nextTripItem = tripItems[j];
+            }
+          }
+        }
+      }
+      if (nextTripItem != null && tripItems.indexOf(nextTripItem) != i + 1) {
+        //ประหยัด api req หากอยู่ตำแหน่งเดิม
+        tripItems.remove(nextTripItem as TripItem);
+        tripItems.insert(i + 1, nextTripItem);
+        await getPolylineBetweenTwoPoint(tripItems[i], tripItems[i + 1])
+            .then((polyLines) async {
+          tripItems[i + 1].distance =
+              await calculateDistance(polyLines).toDouble();
+          tripItems[i + 1].drivingDuration =
+              await ((tripItems[i + 1].distance! / 80) * 60).toInt();
+          await _tripItemOperations.updateTripItem(tripItems[i + 1]);
+          notifyListeners();
+        });
+      }
+    }
+
+    var _tripItems = tripItems
+        .where((element) => element.day == _day && element.no >= 0)
+        .toList();
+
+    await reOrderColumnNo(tripItems);
+    if (_tripItems.first.startTime != null)
+      await calculateStartTimeForTripItem(tripItems);
+
+    trip.firstLocation = await getAllTripItemsByTripId(trip.tripId!)
+        .then((locations) => locations[0].locationName);
+    trip.lastLocation = await getAllTripItemsByTripId(trip.tripId!)
+        .then((locations) => locations[locations.length - 1].locationName);
+    await _tripsOperations.updateTrip(trip);
+
+    notifyListeners();
+  }
+
   Future<void> calculateStartTimeForTripItem(List<TripItem> tripItems) async {
     if ((tripItems.isNotEmpty &&
             tripItems[0].startTime != null &&

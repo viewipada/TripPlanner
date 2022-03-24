@@ -104,7 +104,8 @@ class _FoodStepSelectionState extends State<FoodStepSelection> {
                   icon: ImageIcon(
                     AssetImage(IconAssets.sort),
                   ),
-                  onPressed: () => print('press'),
+                  onPressed: () =>
+                      tripStepperViewModel.sortTripItems(trip, tripItems),
                 ),
               ),
             ),
