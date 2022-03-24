@@ -373,9 +373,9 @@ Widget buildLocationReqList(
         children: [
           Padding(
             padding: EdgeInsets.only(
-                right: getProportionateScreenWidth(15),
-                top: getProportionateScreenHeight(15)
-                ),
+              right: getProportionateScreenWidth(15),
+              top: getProportionateScreenHeight(15),
+            ),
             child: ElevatedButton.icon(
               onPressed: () => profileViewModel.goToCreateLocationPage(context),
               icon: Icon(
@@ -668,7 +668,6 @@ Widget buildLocationRequest(
     slidableController) {
   return Slidable(
     key: Key('${location.locationName}'),
-    enabled: location.locationStatus != 'Approved',
     controller: slidableController,
     actionPane: SlidableDrawerActionPane(),
     actionExtentRatio: 0.25,
@@ -691,7 +690,8 @@ Widget buildLocationRequest(
               // location.locationId
               10,
             )
-          : profileViewModel.goToEditLocationRequestDetail(context,location.locationId),
+          : profileViewModel.goToEditLocationRequestDetail(
+              context, location.locationId),
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: getProportionateScreenWidth(15),
