@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/palette.dart';
-import 'package:trip_planner/src/view/screens/create_location_page.dart';
+import 'package:trip_planner/size_config.dart';
+import 'package:trip_planner/src/repository/shared_pref.dart';
 import 'package:trip_planner/src/view/screens/login_page.dart';
-import 'package:trip_planner/src/view/screens/pdpa_page.dart';
-import 'package:trip_planner/src/view/screens/review_page.dart';
-import 'package:trip_planner/src/view/screens/trip_stepper_page.dart';
 import 'package:trip_planner/src/view/widgets/navigation_bar.dart';
 import 'package:trip_planner/src/view_models/baggage_view_model.dart';
 import 'package:trip_planner/src/view_models/create_location_view_model.dart';
@@ -43,48 +41,68 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => TripStepperViewModel()),
       ],
       child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'EZtrip',
-          theme: ThemeData(
-            canvasColor: Colors.white,
-            primarySwatch: Palette.PrimarySwatchColor,
-            scaffoldBackgroundColor: Palette.BackgroundColor,
-            fontFamily: 'Sukhumvit',
-            dividerTheme: DividerThemeData(
-              color: Palette.Outline,
-              space: 0,
-              thickness: 1,
-            ),
-            unselectedWidgetColor: Palette.Outline,
-            inputDecorationTheme: InputDecorationTheme(
-              enabledBorder: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  borderSide: BorderSide(color: Palette.BorderInputColor)),
-              focusedBorder: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  borderSide:
-                      BorderSide(color: Palette.PrimaryColor, width: 2)),
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  borderSide: BorderSide(color: Palette.BorderInputColor)),
-              hintStyle: TextStyle(
-                fontSize: 14,
-                color: Palette.InfoText,
-              ),
-              contentPadding: EdgeInsets.symmetric(
-                vertical: 15,
-                horizontal: 15,
-              ),
-              filled: true,
-              fillColor: Colors.white,
-            ),
+        debugShowCheckedModeBanner: false,
+        title: 'EZtrip',
+        theme: ThemeData(
+          canvasColor: Colors.white,
+          primarySwatch: Palette.PrimarySwatchColor,
+          scaffoldBackgroundColor: Palette.BackgroundColor,
+          fontFamily: 'Sukhumvit',
+          dividerTheme: DividerThemeData(
+            color: Palette.Outline,
+            space: 0,
+            thickness: 1,
           ),
-          home:
-              LoginPage()
-              // TripStepperPage()
-          // NavigationBar(),
-          // PdpaPage()
+          unselectedWidgetColor: Palette.Outline,
+          inputDecorationTheme: InputDecorationTheme(
+            enabledBorder: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                borderSide: BorderSide(color: Palette.BorderInputColor)),
+            focusedBorder: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                borderSide: BorderSide(color: Palette.PrimaryColor, width: 2)),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                borderSide: BorderSide(color: Palette.BorderInputColor)),
+            hintStyle: TextStyle(
+              fontSize: 14,
+              color: Palette.InfoText,
+            ),
+            contentPadding: EdgeInsets.symmetric(
+              vertical: 15,
+              horizontal: 15,
+            ),
+            filled: true,
+            fillColor: Colors.white,
           ),
+        ),
+        home: LogoPage(),
+      ),
     );
+  }
+}
+
+class LogoPage extends StatefulWidget {
+  @override
+  _LogoPageState createState() => _LogoPageState();
+}
+
+class _LogoPageState extends State<LogoPage> {
+  var userId;
+  @override
+  void initState() {
+    super.initState();
+    SharedPref().getUserId().then((value) {
+      setState(() {
+        userId = value;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    SizeConfig().init(context);
+
+    return userId == null ? LoginPage() : NavigationBar();
   }
 }

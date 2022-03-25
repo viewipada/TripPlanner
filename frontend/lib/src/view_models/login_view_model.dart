@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:trip_planner/src/services/profile_service.dart';
 import 'package:trip_planner/src/view/screens/on_boarding_page.dart';
 import 'package:trip_planner/src/view/screens/pdpa_page.dart';
@@ -63,16 +64,25 @@ class LoginViewModel with ChangeNotifier {
     return true;
   }
 
-  Future<void> tryToRegister() async {
-    await ProfileService().tryToRegister(_userName, _password);
+  Future<int?> tryToRegister(BuildContext context) async {
+    var status = await ProfileService().tryToRegister(_userName, _password);
+    if (status == 201) {
+      goToPdpaPage(context);
+    }
+    return status;
   }
 
-  Future<void> tryToLogin() async {
-    await ProfileService().tryToLogin(_userName, _password);
+  Future<int?> tryToLogin(BuildContext context) async {
+    var status = await ProfileService().tryToLogin(_userName, _password);
+    if (status == 200) {
+      goToHomePage(context);
+    }
+    return status;
   }
 
   void goToPdpaPage(BuildContext context) {
-    Navigator.push(
+    Navigator.pop(context);
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) => PdpaPage(),
@@ -81,7 +91,8 @@ class LoginViewModel with ChangeNotifier {
   }
 
   void goToHomePage(BuildContext context) {
-    Navigator.push(
+    Navigator.pop(context);
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) => NavigationBar(),

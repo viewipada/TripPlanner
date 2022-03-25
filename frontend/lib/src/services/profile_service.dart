@@ -3,51 +3,45 @@ import 'package:http/http.dart' as http;
 import 'package:trip_planner/src/models/response/location_created_response.dart';
 import 'package:trip_planner/src/models/response/profile_details_response.dart';
 import 'package:trip_planner/src/models/response/profile_response.dart';
+import 'package:trip_planner/src/repository/shared_pref.dart';
 
 class ProfileService {
   final String baseUrl = 'http://10.0.2.2:8080';
 
-  Future<void> tryToRegister(String username, String password) async {
+  Future<int?> tryToRegister(String username, String password) async {
     final response = await http.post(
         Uri.parse("${baseUrl}/api/authen/register"),
         body: {"username": username, "password": password, "role": "user"});
 
-    print(response.statusCode);
     if (response.statusCode == 201) {
-      // var data = ProfileResponse.fromJson(json.decode(response.body));
-      // return data;
-      print('pass');
-      print(response.body);
+      var jwt = json.decode(ascii.decode(
+          base64.decode(base64.normalize(response.body.split(".")[1]))));
+      await SharedPref().saveUserId(jwt['user_id']);
+      return response.statusCode;
     } else if (response.statusCode == 409) {
-      print(response.body);
+      return response.statusCode;
     } else {
-      throw Exception("can not fetch data trips and reviews");
+      return null;
     }
   }
 
-  Future<void> tryToLogin(String username, String password) async {
-    final response =
-        await http.post(Uri.parse("${baseUrl}/api/authen/login"), headers: {
-      "Accept": "application/json",
-      // "Content-Type": "application/json"
-    }, body: {
-      "username": username,
-      "password": password
-    });
+  Future<int?> tryToLogin(String username, String password) async {
+    final response = await http.post(Uri.parse("${baseUrl}/api/authen/login"),
+        body: {"username": username, "password": password});
 
-    print(response.statusCode);
     if (response.statusCode == 200) {
-      // var data = ProfileResponse.fromJson(json.decode(response.body));
-      // return data;
-      print('pass');
-      print(response.body);
+      var jwt = json.decode(ascii.decode(
+          base64.decode(base64.normalize(response.body.split(".")[1]))));
+      await SharedPref().saveUserId(jwt['user_id']);
+      return response.statusCode;
     } else if (response.statusCode == 400) {
       //wrong password
-      print(response.body);
-    } else if (response.statusCode == 401) { //user not found 
-      print(response.body);
+      return response.statusCode;
+    } else if (response.statusCode == 401) {
+      //user not found
+      return response.statusCode;
     } else {
-      throw Exception("can not fetch data trips and reviews");
+      return null;
     }
   }
 

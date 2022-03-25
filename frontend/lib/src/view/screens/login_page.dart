@@ -15,6 +15,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final passwordFocusNode = FocusNode();
   final confirmPasswordFocusNode = FocusNode();
+  String? _errorDialog = "";
 
   @override
   Widget build(BuildContext context) {
@@ -127,8 +128,12 @@ class _LoginPageState extends State<LoginPage> {
                                             Icons.cancel_outlined,
                                             color: Palette.AdditionText,
                                           ),
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(),
+                                          onPressed: () {
+                                            setState(() {
+                                              _errorDialog = "";
+                                            });
+                                            Navigator.pop(context);
+                                          },
                                         ),
                                       ),
                                       Text(
@@ -256,6 +261,11 @@ class _LoginPageState extends State<LoginPage> {
                                         onChanged: (value) => loginViewModel
                                             .confirmPasswordChanged(value),
                                       ),
+                                      _errorDialog == null
+                                          ? SizedBox()
+                                          : _errorDialog == ''
+                                              ? SizedBox()
+                                              : instruction(_errorDialog!),
                                       SizedBox(
                                         height:
                                             getProportionateScreenHeight(48),
@@ -266,14 +276,26 @@ class _LoginPageState extends State<LoginPage> {
                                             getProportionateScreenHeight(48),
                                         child: ElevatedButton(
                                           onPressed: () {
-                                            // Validate returns true if the form is valid, or false otherwise.
                                             if (_formKey.currentState!
                                                 .validate()) {
-                                              // If the form is valid, display a snackbar. In the real world,
-                                              // you'd often call a server or save the information in a database.
-                                              loginViewModel.tryToRegister();
-                                              // loginViewModel
-                                              //     .goToPdpaPage(context);
+                                              setState(() {
+                                                _errorDialog = null;
+                                              });
+                                              loginViewModel
+                                                  .tryToRegister(context)
+                                                  .then((status) {
+                                                setState(() {
+                                                  if (status == 201) {
+                                                    _errorDialog = "";
+                                                  } else if (status == 409) {
+                                                    _errorDialog =
+                                                        "ชื่อผู้ใช้นี้ มีอยู่แล้ว";
+                                                  } else {
+                                                    _errorDialog =
+                                                        "กรุณาลองใหม่อีกครั้ง";
+                                                  }
+                                                });
+                                              });
                                             }
                                           },
                                           child: Text(
@@ -284,7 +306,9 @@ class _LoginPageState extends State<LoginPage> {
                                             ),
                                           ),
                                           style: ElevatedButton.styleFrom(
-                                            primary: Palette.PrimaryColor,
+                                            primary: _errorDialog == null
+                                                ? Palette.InfoText
+                                                : Palette.PrimaryColor,
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(5),
@@ -363,8 +387,12 @@ class _LoginPageState extends State<LoginPage> {
                                           Icons.cancel_outlined,
                                           color: Palette.AdditionText,
                                         ),
-                                        onPressed: () =>
-                                            Navigator.of(context).pop(),
+                                        onPressed: () {
+                                          setState(() {
+                                            _errorDialog = "";
+                                          });
+                                          Navigator.pop(context);
+                                        },
                                       ),
                                     ),
                                     Text(
@@ -443,6 +471,11 @@ class _LoginPageState extends State<LoginPage> {
                                       onChanged: (value) =>
                                           loginViewModel.passwordChanged(value),
                                     ),
+                                    _errorDialog == null
+                                        ? SizedBox()
+                                        : _errorDialog == ''
+                                            ? SizedBox()
+                                            : instruction(_errorDialog!),
                                     SizedBox(
                                       height: getProportionateScreenHeight(48),
                                     ),
@@ -451,17 +484,29 @@ class _LoginPageState extends State<LoginPage> {
                                       height: getProportionateScreenHeight(48),
                                       child: ElevatedButton(
                                         onPressed: () {
-                                          // Validate returns true if the form is valid, or false otherwise.
                                           if (_formKey.currentState!
                                               .validate()) {
-                                            // If the form is valid, display a snackbar. In the real world,
-                                            // you'd often call a server or save the information in a database.
-                                            print(loginViewModel.userName +
-                                                ' ' +
-                                                loginViewModel.password);
-                                                  loginViewModel.tryToLogin();
-                                            // loginViewModel
-                                            //     .goToHomePage(context);
+                                            setState(() {
+                                              _errorDialog = null;
+                                            });
+                                            loginViewModel
+                                                .tryToLogin(context)
+                                                .then((status) {
+                                              setState(() {
+                                                if (status == 200) {
+                                                  _errorDialog = "";
+                                                } else if (status == 400) {
+                                                  _errorDialog =
+                                                      "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";
+                                                } else if (status == 401) {
+                                                  _errorDialog =
+                                                      "ไม่พบชื่อผู้ใช้ในระบบ";
+                                                } else {
+                                                  _errorDialog =
+                                                      "กรุณาลองใหม่อีกครั้ง";
+                                                }
+                                              });
+                                            });
                                           }
                                         },
                                         child: Text(
@@ -472,7 +517,9 @@ class _LoginPageState extends State<LoginPage> {
                                           ),
                                         ),
                                         style: ElevatedButton.styleFrom(
-                                          primary: Palette.PrimaryColor,
+                                          primary: _errorDialog == null
+                                              ? Palette.InfoText
+                                              : Palette.PrimaryColor,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(5),
@@ -512,4 +559,38 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+}
+
+Widget instruction(String text) {
+  return Container(
+    padding: EdgeInsets.symmetric(
+      vertical: getProportionateScreenHeight(10),
+      horizontal: getProportionateScreenWidth(10),
+    ),
+    margin: EdgeInsets.symmetric(
+      vertical: getProportionateScreenHeight(10),
+    ),
+    decoration: BoxDecoration(
+      color: Color(0xffFEFFE1),
+      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+      border: Border.all(color: Palette.LightOrangeColor),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.lightbulb_outline_rounded,
+          color: Palette.LightOrangeColor,
+          size: 20,
+        ),
+        Text(
+          text,
+          style: TextStyle(
+              color: Palette.LightOrangeColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 12),
+        ),
+      ],
+    ),
+  );
 }

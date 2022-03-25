@@ -154,7 +154,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   color: Palette.DeleteColor,
                                                   fontSize: 14),
                                             ),
-                                            onTap: () {},
+                                            onTap: () =>
+                                                profileViewModel.logout(context),
                                           ),
                                         ],
                                       );
