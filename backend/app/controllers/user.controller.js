@@ -2,6 +2,7 @@ const db = require("../models");
 const User = db.users;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const tokenKey = require("../config/authen.config");
 
 exports.register = async (req, res) => {
   try {
@@ -44,15 +45,13 @@ exports.register = async (req, res) => {
         username: username,
         role: role,
       },
-      process.env.TOKEN_KEY,
-      { expiresIn: "8h" }
+      tokenKey.secret,
+      { expiresIn: "15d" }
     );
 
     user.token = token;
 
     return res.status(201).json({
-      id: user.id,
-      username: user.username,
       token,
     });
   } catch (err) {
@@ -79,16 +78,16 @@ exports.login = async (req, res) => {
           username: username,
           role: user.role,
         },
-        process.env.TOKEN_KEY,
-        { expiresIn: "4h" }
+        tokenKey.secret,
+        { expiresIn: "15d" }
       );
 
-      user.token = token;
+      // user.token = token;
 
-      res.status(200).json(user);
+      return res.status(200).json(token);
     }
 
-    res.status(400).send("Invalid Credentials");
+    return res.status(400).send("Invalid Credentials");
   } catch (err) {
     console.log(err);
   }
