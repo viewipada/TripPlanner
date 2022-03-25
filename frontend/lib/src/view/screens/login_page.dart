@@ -271,8 +271,9 @@ class _LoginPageState extends State<LoginPage> {
                                                 .validate()) {
                                               // If the form is valid, display a snackbar. In the real world,
                                               // you'd often call a server or save the information in a database.
-                                              loginViewModel
-                                                  .goToPdpaPage(context);
+                                              loginViewModel.tryToRegister();
+                                              // loginViewModel
+                                              //     .goToPdpaPage(context);
                                             }
                                           },
                                           child: Text(
@@ -458,8 +459,9 @@ class _LoginPageState extends State<LoginPage> {
                                             print(loginViewModel.userName +
                                                 ' ' +
                                                 loginViewModel.password);
-                                            loginViewModel
-                                                .goToHomePage(context);
+                                                  loginViewModel.tryToLogin();
+                                            // loginViewModel
+                                            //     .goToHomePage(context);
                                           }
                                         },
                                         child: Text(

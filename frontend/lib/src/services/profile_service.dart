@@ -5,6 +5,52 @@ import 'package:trip_planner/src/models/response/profile_details_response.dart';
 import 'package:trip_planner/src/models/response/profile_response.dart';
 
 class ProfileService {
+  final String baseUrl = 'http://10.0.2.2:8080';
+
+  Future<void> tryToRegister(String username, String password) async {
+    final response = await http.post(
+        Uri.parse("${baseUrl}/api/authen/register"),
+        body: {"username": username, "password": password, "role": "user"});
+
+    print(response.statusCode);
+    if (response.statusCode == 201) {
+      // var data = ProfileResponse.fromJson(json.decode(response.body));
+      // return data;
+      print('pass');
+      print(response.body);
+    } else if (response.statusCode == 409) {
+      print(response.body);
+    } else {
+      throw Exception("can not fetch data trips and reviews");
+    }
+  }
+
+  Future<void> tryToLogin(String username, String password) async {
+    final response =
+        await http.post(Uri.parse("${baseUrl}/api/authen/login"), headers: {
+      "Accept": "application/json",
+      // "Content-Type": "application/json"
+    }, body: {
+      "username": username,
+      "password": password
+    });
+
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      // var data = ProfileResponse.fromJson(json.decode(response.body));
+      // return data;
+      print('pass');
+      print(response.body);
+    } else if (response.statusCode == 400) {
+      //wrong password
+      print(response.body);
+    } else if (response.statusCode == 401) { //user not found 
+      print(response.body);
+    } else {
+      throw Exception("can not fetch data trips and reviews");
+    }
+  }
+
   Future<ProfileResponse> getMyProfile() async {
     final response = await http.get(Uri.parse(
         "https://run.mocky.io/v3/783724fb-230b-4ab2-b873-4cd49ed7f0af"));

@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:trip_planner/src/models/response/location_request_detail_response.dart';
 
 class CreateLocationService {
+  final String baseUrl = 'http://10.0.2.2:8080';
+  
   Future<List> getLocationTypeList(String category) async {
     final response = await http.get(Uri.parse(category == 'travel'
         ? 'https://run.mocky.io/v3/642a8640-04a2-4150-b1e5-35e2063d6780'

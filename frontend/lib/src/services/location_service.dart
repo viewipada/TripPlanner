@@ -5,10 +5,12 @@ import 'package:trip_planner/src/models/response/location_recommend_response.dar
 import 'package:trip_planner/src/models/response/shop_response.dart';
 
 class LocationService {
+  final String baseUrl = 'http://10.0.2.2:8080';
+
   Future<LocationDetailResponse> getLocationDetailById(int locationId) async {
     final response = await http.get(Uri.parse(
         // "https://run.mocky.io/v3/c83fb4de-baa2-44d3-abbe-452f791838e2"
-        'http://10.0.2.2:8080/api/locations/${locationId}'));
+        '${baseUrl}/api/locations/${locationId}'));
     // print(response.body);
     if (response.statusCode == 200) {
       var data = LocationDetailResponse.fromJson(json.decode(response.body));

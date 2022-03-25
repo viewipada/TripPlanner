@@ -3,11 +3,13 @@ import 'package:http/http.dart' as http;
 import 'package:trip_planner/src/models/response/baggage_response.dart';
 
 class BaggageService {
+  final String baseUrl = 'http://10.0.2.2:8080';
+  
   Future<List<BaggageResponse>> getBaggageList() async {
     List<BaggageResponse> baggageList = [];
     final response = await http.get(Uri.parse(
         // "https://run.mocky.io/v3/d7a7721f-b839-437f-a1f4-2a3f0f59007e"
-        'http://10.0.2.2:8080/api/baggage/1'));
+        '${baseUrl}/api/baggage/1'));
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body) as List<dynamic>;

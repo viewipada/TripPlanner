@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:trip_planner/src/services/profile_service.dart';
 import 'package:trip_planner/src/view/screens/on_boarding_page.dart';
 import 'package:trip_planner/src/view/screens/pdpa_page.dart';
 import 'package:trip_planner/src/view/widgets/navigation_bar.dart';
@@ -60,6 +61,14 @@ class LoginViewModel with ChangeNotifier {
     if (_startDate == ' วว/ดด/ปป' || _gender == null || _agree == false)
       return false;
     return true;
+  }
+
+  Future<void> tryToRegister() async {
+    await ProfileService().tryToRegister(_userName, _password);
+  }
+
+  Future<void> tryToLogin() async {
+    await ProfileService().tryToLogin(_userName, _password);
   }
 
   void goToPdpaPage(BuildContext context) {

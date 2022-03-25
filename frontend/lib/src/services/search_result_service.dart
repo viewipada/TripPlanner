@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:trip_planner/src/models/response/search_result_response.dart';
 
 class SearchResultService {
+  final String baseUrl = 'http://10.0.2.2:8080';
+
   Future<List<SearchResultResponse>> getSearchResultBy(
       String category, String sortedBy) async {
     http.Response response;

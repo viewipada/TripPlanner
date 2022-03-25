@@ -4,6 +4,8 @@ import 'package:location/location.dart';
 import 'package:trip_planner/src/models/response/travel_nearby_response.dart';
 
 class LocationNearbyService {
+  final String baseUrl = 'http://10.0.2.2:8080';
+  
   Future<List<LocationNearbyResponse>> getLocationNearby(
       String category, LocationData userLocation) async {
     http.Response response;
