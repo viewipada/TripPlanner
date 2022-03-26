@@ -5,6 +5,10 @@ class NavigationBarViewModel with ChangeNotifier {
   int _selectedIndex = 0;
   PageController _pageController = PageController();
 
+  void initSelectedIndex() {
+    _selectedIndex = 0;
+  }
+
   void onSlidePageView(int index) {
     _selectedIndex = index;
     notifyListeners();

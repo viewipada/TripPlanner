@@ -13,6 +13,13 @@ class NavigationBar extends StatefulWidget {
 
 class _NavigationBarState extends State<NavigationBar> {
   @override
+  void initState() {
+    super.initState();
+    Provider.of<NavigationBarViewModel>(context, listen: false)
+        .initSelectedIndex();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final navigationBarViewModel = Provider.of<NavigationBarViewModel>(context);
 

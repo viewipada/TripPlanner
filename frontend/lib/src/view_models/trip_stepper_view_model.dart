@@ -21,6 +21,7 @@ import 'package:trip_planner/src/repository/trip_item_operations.dart';
 import 'package:trip_planner/src/repository/trips_operations.dart';
 import 'package:trip_planner/src/services/baggage_service.dart';
 import 'package:trip_planner/src/services/location_service.dart';
+import 'package:trip_planner/src/services/trip_service.dart';
 import 'package:trip_planner/src/view/screens/add_from_baggage_page.dart';
 import 'package:trip_planner/src/view/screens/baggage_location_on_route_page.dart';
 import 'package:trip_planner/src/view/screens/confirm_trip_page.dart';
@@ -938,13 +939,20 @@ class TripStepperViewModel with ChangeNotifier {
     _shop = null;
   }
 
-  void endTrip(Trip trip) {
-    trip.status = 'finished';
-    _tripsOperations.updateTrip(trip);
-    _index = 0;
-    _day = 1;
-    _shop = null;
-    notifyListeners();
+  Future<void> endTrip(Trip trip) async {
+    await _tripItemOperations
+        .getAllTripItemsByTripId(trip.tripId!)
+        .then((tripItems) async {
+      final status = await TripService().endTrip(trip, tripItems);
+      if (status == 201) {
+        trip.status = 'finished';
+        _tripsOperations.updateTrip(trip);
+        _index = 0;
+        _day = 1;
+        _shop = null;
+        notifyListeners();
+      }
+    });
   }
 
   Future<List<TripItem>> getAllTripItemsByTripIdAndDay(int tripId) async {

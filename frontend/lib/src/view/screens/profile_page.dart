@@ -154,8 +154,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   color: Palette.DeleteColor,
                                                   fontSize: 14),
                                             ),
-                                            onTap: () =>
-                                                profileViewModel.logout(context),
+                                            onTap: () => profileViewModel
+                                                .logout(context),
                                           ),
                                         ],
                                       );
@@ -238,8 +238,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     return Slidable(
                                                         key: Key(
                                                             '${trip.tripId}'),
-                                                        enabled: trip.status ==
-                                                            'unfinished',
                                                         controller:
                                                             slidableController,
                                                         actionPane:
@@ -694,6 +692,7 @@ Widget buildLocationRequest(
           : profileViewModel.goToEditLocationRequestDetail(
               context, location.locationId),
       child: Container(
+        color: Colors.white,
         padding: EdgeInsets.symmetric(
           horizontal: getProportionateScreenWidth(15),
         ),
