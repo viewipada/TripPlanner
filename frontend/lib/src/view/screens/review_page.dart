@@ -11,19 +11,20 @@ import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/view_models/review_view_model.dart';
 
 class ReviewPage extends StatefulWidget {
-  ReviewPage({
-    required this.locationName,
-  });
+  ReviewPage({required this.locationName, required this.locationId});
 
   final String locationName;
+  final int locationId;
 
   @override
-  _ReviewPageState createState() => _ReviewPageState(this.locationName);
+  _ReviewPageState createState() =>
+      _ReviewPageState(this.locationName, this.locationId);
 }
 
 class _ReviewPageState extends State<ReviewPage> {
   final String locationName;
-  _ReviewPageState(this.locationName);
+  final int locationId;
+  _ReviewPageState(this.locationName, this.locationId);
 
   String _caption = '';
   double _rating = 0;
@@ -301,8 +302,29 @@ class _ReviewPageState extends State<ReviewPage> {
                           child: ElevatedButton(
                             onPressed: () {
                               _rating != 0
-                                  ? print(
-                                      'rating => ${_rating}\ncaption => ${_caption}\nimages => ${reviewViewModel.images}')
+                                  ? reviewViewModel
+                                      .createReview(context, locationId,
+                                          _rating.toInt(), _caption)
+                                      .then((value) {
+                                      if (value == 200) {
+                                        final snackBar = SnackBar(
+                                          backgroundColor:
+                                              Palette.SecondaryColor,
+                                          content: Text(
+                                            'เขียนรีวิวสำเร็จ',
+                                            style: TextStyle(
+                                              fontFamily: 'Sukhumvit',
+                                              fontSize: 14,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
+                                      }
+                                    })
                                   : showDialog<String>(
                                       context: context,
                                       builder: (BuildContext context) =>

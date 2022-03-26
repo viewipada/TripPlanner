@@ -408,7 +408,9 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                           locationDetailViewModel.goToReviewPage(
                               context,
                               locationDetailViewModel
-                                  .locationDetail.locationName);
+                                  .locationDetail.locationName,
+                              locationDetailViewModel
+                                  .locationDetail.locationId);
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,

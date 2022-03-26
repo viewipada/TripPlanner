@@ -24,11 +24,15 @@ class LocationDetailViewModel with ChangeNotifier {
     return _locationDetail;
   }
 
-  void goToReviewPage(BuildContext context, String locationName) {
+  void goToReviewPage(
+      BuildContext context, String locationName, int locationId) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ReviewPage(locationName: locationName),
+        builder: (context) => ReviewPage(
+          locationName: locationName,
+          locationId: locationId,
+        ),
       ),
     );
   }
