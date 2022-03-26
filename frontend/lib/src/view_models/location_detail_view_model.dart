@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trip_planner/src/models/response/location_detail_response.dart';
+import 'package:trip_planner/src/services/baggage_service.dart';
 import 'package:trip_planner/src/services/location_service.dart';
 import 'package:trip_planner/src/view/screens/review_page.dart';
 
@@ -30,6 +31,14 @@ class LocationDetailViewModel with ChangeNotifier {
         builder: (context) => ReviewPage(locationName: locationName),
       ),
     );
+  }
+
+  Future<void> addBaggageItem(int locationId) async {
+    await BaggageService().addBaggageItem(locationId);
+  }
+
+  Future<void> removeBaggageItem(int locationId) async {
+    await BaggageService().removeBaggageItem(locationId);
   }
 
   bool get readMore => _readMore;

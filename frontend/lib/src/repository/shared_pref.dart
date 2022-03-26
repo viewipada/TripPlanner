@@ -15,4 +15,26 @@ class SharedPref {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('userId');
   }
+
+  Future<void> addBaggageItem(int locationId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    await getBaggageItems().then((value) async {
+      value.add('${locationId}');
+      await prefs.setStringList('cart', value);
+    });
+  }
+
+  Future<List<String>> getBaggageItems() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getStringList('cart') ?? [];
+  }
+
+  Future<void> removeBaggageItem(int locationId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await getBaggageItems().then((value) async {
+      value.remove('${locationId}');
+      await prefs.setStringList('cart', value);
+    });
+  }
 }

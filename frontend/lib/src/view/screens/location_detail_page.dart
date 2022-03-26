@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
+import 'package:trip_planner/src/repository/shared_pref.dart';
 import 'package:trip_planner/src/view/widgets/baggage_cart.dart';
 import 'package:trip_planner/src/view/widgets/loading.dart';
 import 'package:trip_planner/src/view/widgets/review_card.dart';
@@ -31,6 +32,16 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
   final int _locationId;
   _LocationDetailPageState(this._locationId);
   Completer<GoogleMapController> _controller = Completer();
+  var isInBaggage;
+  @override
+  void initState() {
+    super.initState();
+    SharedPref().getBaggageItems().then((value) {
+      setState(() {
+        isInBaggage = value.contains('${_locationId}');
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,17 +97,25 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                             locationDetailViewModel.locationDetail.locationName,
                             style: FontAssets.titleText,
                           ),
-                          IconButton(
-                            constraints: BoxConstraints(),
-                            onPressed: () {
-                              print('เพิ่มลง cart');
-                            },
-                            icon: ImageIcon(
-                              AssetImage(IconAssets.baggageAdd),
-                              color: Colors.black,
-                            ),
-                            padding: EdgeInsets.zero,
-                          ),
+                          isInBaggage == null
+                              ? SizedBox()
+                              : IconButton(
+                                  constraints: BoxConstraints(),
+                                  onPressed: () => isInBaggage
+                                      ? locationDetailViewModel
+                                          .removeBaggageItem(_locationId)
+                                      : locationDetailViewModel
+                                          .addBaggageItem(_locationId),
+                                  icon: ImageIcon(
+                                    AssetImage(isInBaggage
+                                        ? IconAssets.baggageDelete
+                                        : IconAssets.baggageAdd),
+                                    color: isInBaggage
+                                        ? Palette.DeleteColor
+                                        : Colors.black,
+                                  ),
+                                  padding: EdgeInsets.zero,
+                                ),
                         ],
                       ),
                     ),
@@ -191,10 +210,17 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                         style: FontAssets.subtitleText,
                       ),
                     ),
-                    openingHour(
-                      'วันเวลาเปิด-ปิด',
-                      locationDetailViewModel.locationDetail.openingHour,
-                    ),
+                    openingHour('วันเวลาเปิด-ปิด',
+                        // locationDetailViewModel.locationDetail.openingHour,
+                        [
+                          "ปิด",
+                          "ปิด",
+                          "ปิด",
+                          "ปิด",
+                          "9:00 - 16:00",
+                          "9:00 - 16:00",
+                          "9:00 - 16:00"
+                        ]),
                     detailLocation('เบอร์ติดต่อ',
                         locationDetailViewModel.locationDetail.contactNumber),
                     detailLocation('เว็บไซต์',
