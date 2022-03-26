@@ -76,7 +76,7 @@ exports.findOne = async (req, res) => {
     raw: true,
   });
 
-  if (reviewData.length == 0) locationData.reviewers = [];
+  if (!reviewData) locationData.reviewers = [];
   else {
     const data = await Promise.all(
       reviewData.map(
