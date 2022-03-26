@@ -22,7 +22,7 @@ class BaggageViewModel with ChangeNotifier {
 
   Future<void> deleteItem(BaggageResponse item) async {
     baggageList.remove(item);
-    // await BaggageService().deleteItem()
+    await BaggageService().removeBaggageItem(item.locationId);
     notifyListeners();
   }
 

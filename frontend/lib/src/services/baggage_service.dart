@@ -50,12 +50,7 @@ class BaggageService {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
       final response = await http.delete(
-        Uri.parse('${baseUrl}/api/baggage/'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(
-            <String, int>{"locationId": locationId, "userId": userId}),
+        Uri.parse('${baseUrl}/api/baggage/${userId}/${locationId}'),
       );
 
       if (response.statusCode == 200) {
