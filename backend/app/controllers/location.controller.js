@@ -76,8 +76,12 @@ exports.findOne = async (req, res) => {
     raw: true,
   });
 
-  if (!reviewData) locationData.reviewers = [];
-  else {
+  console.log(reviewData);
+
+  if (!reviewData) {
+    locationData.reviewers = [];
+  } else {
+    console.log(12345678891000000);
     const data = await Promise.all(
       reviewData.map(
         async ({
@@ -97,18 +101,21 @@ exports.findOne = async (req, res) => {
               },
               raw: true,
             });
-          } catch (error) {
-            console.error(error);
-          }
 
-          return {
-            profileImage,
-            username,
-            rating,
-            caption,
-            images: [reviewImg1, reviewImg2, reviewImg3].filter((image) => image),
-            createdAt,
-          };
+            console.log(profileImage, username);
+
+            return {
+              profileImage,
+              username,
+              rating,
+              caption,
+              images: [reviewImg1, reviewImg2, reviewImg3].filter((image) => image),
+              createdAt,
+            };
+          } catch (error) {
+            console.log(err);
+            return res.status(400).send("Something wrong while query user review");
+          }
         }
       )
     ).catch((err) => {
