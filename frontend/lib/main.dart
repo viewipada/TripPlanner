@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/repository/shared_pref.dart';
@@ -92,9 +93,14 @@ class _LogoPageState extends State<LogoPage> {
   @override
   void initState() {
     super.initState();
-    SharedPref().getUserId().then((value) {
-      setState(() {
-        userId = value;
+    setState(() {
+      userId = -1;
+    });
+    Future.delayed(Duration(seconds: 2)).then((value) {
+      SharedPref().getUserId().then((value) {
+        setState(() {
+          userId = value;
+        });
       });
     });
   }
@@ -102,7 +108,23 @@ class _LogoPageState extends State<LogoPage> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-
-    return userId == null ? LoginPage() : NavigationBar();
+    if (userId == -1)
+      return Scaffold(
+        body: SafeArea(
+          child: Container(
+            color: Colors.white,
+            child: Center(
+              child: Image.asset(
+                ImageAssets.logo,
+                height: getProportionateScreenHeight(150),
+                width: getProportionateScreenHeight(150),
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+        ),
+      );
+    else
+      return userId == null ? LoginPage() : NavigationBar();
   }
 }

@@ -112,8 +112,7 @@ class CreateLocationViewModel with ChangeNotifier {
       for (int i = 0; i < _dayOfWeek.length; i++) {
         if (_locationRequest!.openingHour[i] != "ปิด") {
           _dayOfWeek[i]['isOpening'] = true;
-          final timeSplit = await _locationRequest!.openingHour[i]
-              .split('-'); // รอดู api จริงว่ามีเว้นวรรคก่อนหลัง - ไหม
+          final timeSplit = await _locationRequest!.openingHour[i].split(' - ');
           _dayOfWeek[i]['openTime'] = await timeSplit.first;
           _dayOfWeek[i]['closedTime'] = await timeSplit.last;
         }

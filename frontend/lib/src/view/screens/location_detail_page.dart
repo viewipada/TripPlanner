@@ -191,8 +191,10 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                         style: FontAssets.subtitleText,
                       ),
                     ),
-                    // detailLocation('วันเวลาเปิด-ปิด',
-                    //     locationDetailViewModel.locationDetail.openingHour),
+                    openingHour(
+                      'วันเวลาเปิด-ปิด',
+                      locationDetailViewModel.locationDetail.openingHour,
+                    ),
                     detailLocation('เบอร์ติดต่อ',
                         locationDetailViewModel.locationDetail.contactNumber),
                     detailLocation('เว็บไซต์',
@@ -448,6 +450,151 @@ Widget detailLocation(String title, String detail) {
           child: Text(
             detail,
             style: FontAssets.bodyText,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget openingHour(String title, List<String> openingHour) {
+  return Container(
+    margin: EdgeInsets.fromLTRB(
+      getProportionateScreenWidth(15),
+      0,
+      getProportionateScreenWidth(15),
+      getProportionateScreenHeight(5),
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 1,
+          child: Text(
+            title,
+            style: TextStyle(color: Palette.BodyText, fontSize: 14),
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      "วันจันทร์",
+                      style: FontAssets.bodyText,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      "${openingHour[0]}",
+                      style: FontAssets.bodyText,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      "วันอังคาร",
+                      style: FontAssets.bodyText,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      "${openingHour[1]}",
+                      style: FontAssets.bodyText,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      "วันพุธ",
+                      style: FontAssets.bodyText,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      "${openingHour[2]}",
+                      style: FontAssets.bodyText,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      "วันพฤหัสบดี",
+                      style: FontAssets.bodyText,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      "${openingHour[3]}",
+                      style: FontAssets.bodyText,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      "วันศุกร์",
+                      style: FontAssets.bodyText,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      "${openingHour[4]}",
+                      style: FontAssets.bodyText,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      "วันเสาร์",
+                      style: FontAssets.bodyText,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      "${openingHour[5]}",
+                      style: FontAssets.bodyText,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      "วันอาทิตย์",
+                      style: FontAssets.bodyText,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      "${openingHour[6]}",
+                      style: FontAssets.bodyText,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ],
