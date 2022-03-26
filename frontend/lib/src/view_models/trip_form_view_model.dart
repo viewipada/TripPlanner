@@ -7,6 +7,7 @@ import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
 import 'package:trip_planner/src/models/trip.dart';
 import 'package:trip_planner/src/models/trip_item.dart';
+import 'package:trip_planner/src/repository/shared_pref.dart';
 import 'package:trip_planner/src/repository/trip_item_operations.dart';
 import 'package:trip_planner/src/repository/trips_operations.dart';
 import 'package:trip_planner/src/view/screens/search_start_point_page.dart';
@@ -87,59 +88,64 @@ class TripFormViewModel with ChangeNotifier {
       );
     }
 
-    final trip = Trip(
-      tripName: _tripName,
-      firstLocation: startPointList[0].locationName,
-      lastLocation: startPointList[startPointList.length - 1].locationName,
-      totalPeople: _totalPeople,
-      totalDay: _totalTravelingDay,
-      totalTripItem: startPointList.length,
-      status: 'unfinished',
-    );
-    int tripId = await _tripsOperations.createTrip(trip);
+    var userId = await SharedPref().getUserId();
 
-    List<TripItem> tripItems = [];
-    Future.forEach(startPointList, (BaggageResponse item) async {
-      final tripItem = TripItem(
-        day: 1,
-        no: startPointList.indexOf(item),
-        locationId: item.locationId,
-        locationCategory: item.category,
-        locationName: item.locationName,
-        imageUrl: item.imageUrl,
-        latitude: item.latitude,
-        longitude: item.longitude,
-        duration: item.imageUrl == "" ? 0 : item.duration * 60,
-        tripId: tripId,
+    if (userId != null) {
+      final trip = Trip(
+        tripName: _tripName,
+        firstLocation: startPointList[0].locationName,
+        lastLocation: startPointList[startPointList.length - 1].locationName,
+        totalPeople: _totalPeople,
+        totalDay: _totalTravelingDay,
+        totalTripItem: startPointList.length,
+        status: 'unfinished',
+        userId: userId,
       );
-      tripItem.itemId = await _tripItemOperations.createTripItem(tripItem);
-      tripItems.add(tripItem);
-    }).then((value) async {
-      for (int i = 1; i < tripItems.length; i++) {
-        await getPolylineBetweenTwoPoint(tripItems[i - 1], tripItems[i])
-            .then((polyLines) async {
-          tripItems[i].distance = await calculateDistance(polyLines);
-          tripItems[i].drivingDuration =
-              await ((tripItems[i].distance! / 80) * 60).toInt();
-          await _tripItemOperations.updateTripItem(tripItems[i]);
-        });
-      }
-    }).then((value) {
-      Navigator.of(context).pop();
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => TripStepperPage(tripId: tripId)),
-      );
-    });
+      int tripId = await _tripsOperations.createTrip(trip);
 
-    _date = null;
-    _startDate = 'วันเริ่มต้นทริป';
-    _tripName = '';
-    _totalPeople = 1;
-    _totalTravelingDay = 1;
-    _startPointFromGoogle = null;
-    _startPointFromBaggage = null;
+      List<TripItem> tripItems = [];
+      Future.forEach(startPointList, (BaggageResponse item) async {
+        final tripItem = TripItem(
+          day: 1,
+          no: startPointList.indexOf(item),
+          locationId: item.locationId,
+          locationCategory: item.category,
+          locationName: item.locationName,
+          imageUrl: item.imageUrl,
+          latitude: item.latitude,
+          longitude: item.longitude,
+          duration: item.imageUrl == "" ? 0 : item.duration * 60,
+          tripId: tripId,
+        );
+        tripItem.itemId = await _tripItemOperations.createTripItem(tripItem);
+        tripItems.add(tripItem);
+      }).then((value) async {
+        for (int i = 1; i < tripItems.length; i++) {
+          await getPolylineBetweenTwoPoint(tripItems[i - 1], tripItems[i])
+              .then((polyLines) async {
+            tripItems[i].distance = await calculateDistance(polyLines);
+            tripItems[i].drivingDuration =
+                await ((tripItems[i].distance! / 80) * 60).toInt();
+            await _tripItemOperations.updateTripItem(tripItems[i]);
+          });
+        }
+      }).then((value) {
+        Navigator.of(context).pop();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => TripStepperPage(tripId: tripId)),
+        );
+      });
+
+      _date = null;
+      _startDate = 'วันเริ่มต้นทริป';
+      _tripName = '';
+      _totalPeople = 1;
+      _totalTravelingDay = 1;
+      _startPointFromGoogle = null;
+      _startPointFromBaggage = null;
+    }
   }
 
   Future<List<LatLng>> getPolylineBetweenTwoPoint(

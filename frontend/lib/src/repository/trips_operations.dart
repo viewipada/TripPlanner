@@ -1,5 +1,6 @@
 import 'package:trip_planner/src/models/trip.dart';
 import 'package:trip_planner/src/repository/database.dart';
+import 'package:trip_planner/src/repository/shared_pref.dart';
 
 class TripsOperations {
   late TripsOperations tripsOperations;
@@ -43,11 +44,16 @@ class TripsOperations {
   }
 
   Future<List<Trip>> getAllTrips() async {
+    var userId = await SharedPref().getUserId();
     final db = await dbProvider.database;
-    List<Map<String, dynamic>> allRows =
-        await db!.query('trips', orderBy: "tripId DESC");
-    List<Trip> trips = allRows.map((trip) => Trip.fromMap(trip)).toList();
-    // print(trips);
-    return trips;
+    if (userId == null)
+      return [];
+    else {
+      List<Map<String, dynamic>> allRows = await db!.query('trips',
+          where: "userId=?", whereArgs: [userId], orderBy: "tripId DESC");
+      List<Trip> trips = allRows.map((trip) => Trip.fromMap(trip)).toList();
+
+      return trips;
+    }
   }
 }

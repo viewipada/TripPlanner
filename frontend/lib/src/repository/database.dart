@@ -64,7 +64,8 @@ class DatabaseRepository {
             totalDay INT NOT NULL,
             totalTripItem INT NOT NULL,
             startDate DATETIME,
-            status STRING NOT NULL
+            status STRING NOT NULL,
+            userId INT NOT NULL
           )
           ''');
   }
