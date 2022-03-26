@@ -70,10 +70,12 @@ exports.findOne = async (req, res) => {
 };
 
 exports.delete = (req, res) => {
-  const { baggageItemId: id } = req.params;
+  // const { baggageItemId: id } = req.params;
+  const { userId, locationId } = req.params;
 
+  // const deleteData = await Review.destroy({ where: { userId, locationId } });
   Baggage.destroy({
-    where: { id },
+    where: { userId, locationId },
   })
     .then((num) => {
       if (num === 1) {
@@ -82,13 +84,13 @@ exports.delete = (req, res) => {
         });
       } else {
         res.status(403).send({
-          message: `Cannot delete Baggage with id=${id}. Maybe Baggage was not found!`,
+          message: `Cannot delete Baggage with id=${locationId}. Maybe Baggage was not found!`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: `Could not delete Baggage with id=${id}`,
+        message: `Could not delete Baggage with id=${locationId}`,
       });
     });
 };

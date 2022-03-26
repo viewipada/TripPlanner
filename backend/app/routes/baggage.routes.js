@@ -9,7 +9,7 @@ module.exports = (app) => {
   router.get("/:userId", Baggage.findOne);
 
   // Delete an Item in baggage
-  router.delete("/:baggageItemId", Baggage.delete);
+  router.delete("/:userId/:locationId", Baggage.delete);
 
   app.use("/api/baggage", router);
 };
