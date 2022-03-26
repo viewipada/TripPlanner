@@ -5,14 +5,6 @@ const Category = db.locationCategories;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
-  // Validate request
-  if (!req.body.locationName) {
-    res.status(400).send({
-      message: "Content can not be empty!",
-    });
-    return;
-  }
-
   // Create a Baggage
   const baggage = req.body;
 

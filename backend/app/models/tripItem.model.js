@@ -31,7 +31,8 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.DATE,
     },
     distance: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.DOUBLE,
+      default: null,
     },
     duration: {
       type: Sequelize.INTEGER,

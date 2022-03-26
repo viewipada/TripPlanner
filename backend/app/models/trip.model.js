@@ -22,10 +22,10 @@ module.exports = (sequelize, Sequelize) => {
       defaultValue: Sequelize.NOW,
     },
     firstLocation: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.STRING,
     },
     lastLocation: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.STRING,
     },
     thumnail: {
       type: Sequelize.STRING,
