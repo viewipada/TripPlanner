@@ -718,6 +718,7 @@ class TripStepperViewModel with ChangeNotifier {
   }
 
   void goToTripStepperPage(BuildContext context, int tripId) {
+    Navigator.pop(context);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => TripStepperPage(tripId: tripId)),

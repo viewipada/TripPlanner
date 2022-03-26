@@ -35,7 +35,7 @@ class _NavigationBarState extends State<NavigationBar> {
               children: [
                 HomePage(),
                 SearchPage(),
-                Container(),
+                // Container(),
                 ProfilePage(),
               ],
             );
@@ -64,14 +64,14 @@ class _NavigationBarState extends State<NavigationBar> {
                 icon: Icon(Icons.search),
                 label: 'สำรวจ',
               ),
+              // BottomNavigationBarItem(
+              //   icon: navigationBarViewModel.selectedIndex == 2
+              //       ? Icon(Icons.backpack_rounded)
+              //       : Icon(Icons.backpack_outlined),
+              //   label: 'จัดทริปเที่ยว',
+              // ),
               BottomNavigationBarItem(
                 icon: navigationBarViewModel.selectedIndex == 2
-                    ? Icon(Icons.backpack_rounded)
-                    : Icon(Icons.backpack_outlined),
-                label: 'จัดทริปเที่ยว',
-              ),
-              BottomNavigationBarItem(
-                icon: navigationBarViewModel.selectedIndex == 3
                     ? Icon(Icons.person_rounded)
                     : Icon(Icons.person_outline_rounded),
                 label: 'ข้อมูลผู้ใช้',
