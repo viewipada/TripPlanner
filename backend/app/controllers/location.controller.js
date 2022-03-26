@@ -76,10 +76,6 @@ exports.findOne = async (req, res) => {
     raw: true,
   });
 
-  console.log("reviewData : " + reviewData);
-
-  console.log("category : " + locationData.category);
-
   if (reviewData.length == 0) locationData.reviewers = [];
   else {
     const data = await Promise.all(
