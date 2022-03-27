@@ -4,24 +4,28 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics import pairwise_distances
 from sklearn.model_selection import train_test_split
 
-df_restaurant = pd.read_csv("C:/Users/User/Desktop/Project/Project/Git/rating_final.csv")
-df_restaurant_cuisine = pd.read_csv('C:/Users/User/Desktop/Project/Project/Git/chefmozcuisine.csv')
+# df_restaurant = pd.read_csv("C:/Users/User/Desktop/Project/Project/Git/rating_final_2.csv")
+# df_restaurant_cuisine = pd.read_csv('C:/Users/User/Desktop/Project/Project/Git/chefmozcuisine.csv')
 
-x_train, x_test = train_test_split(df_restaurant, test_size = 0.30, random_state = 42)
+# x_train, x_test = train_test_split(df_restaurant, test_size = 0.30, random_state = 42)
 
-user_data = x_train.pivot(index = 'userID', columns = 'placeID', values = 'rating').fillna(0)
+# user_data = x_train.pivot(index = 'userID', columns = 'placeID', values = 'rating').fillna(0)
 
-dummy_train = x_train.pivot(index = 'userID', columns = 'placeID', values = 'rating').fillna(0)
+# dummy_train = x_train.pivot(index = 'userID', columns = 'placeID', values = 'rating').fillna(0)
 
-dummy_test = x_test.pivot(index = 'userID', columns = 'placeID', values = 'rating').fillna(1)
+# dummy_test = x_test.pivot(index = 'userID', columns = 'placeID', values = 'rating').fillna(1)
 
 
 #---------------------------------
 #test
 # g = "/recommendation/rating_final.csv"
 # df_restaurant = pd.read_csv(g)
-df_restaurant = pd.read_csv("C:/Users/User/Desktop/Project/Project/Git/rating_final.csv")
-df_restaurant_cuisine = pd.read_csv('C:/Users/User/Desktop/Project/Project/Git/chefmozcuisine.csv')
+df_restaurant = pd.read_csv("C:/Users/User/Desktop/TripPlanner/recommendation/test.csv")
+# C:/Users/User/Desktop/TripPlanner/recommendation/rating_final_for_database_3.csv
+# C:/Users/User/Desktop/Project/Project/Git/ratingCopy.csv
+# setwd = ("C:\\Users\\User\\Desktop\\Project\\Project\\Git")
+# df_restaurant = pd.read_csv("rating_final.csv")
+# df_restaurant_cuisine = pd.read_csv('C:/Users/User/Desktop/Project/Project/Git/chefmozcuisine.csv')
 # print(df_restaurant.head(10))
 # print(df_restaurant_cuisine.head(10))
 
@@ -56,12 +60,18 @@ user_predicted_ratings = np.dot(user_similarity, test)
 user_final_ratings = np.multiply(user_predicted_ratings, dummy_train)
 # print(user_final_ratings.head())
 
-print(user_final_ratings.iloc[1].sort_values(ascending = False)[0:10])
+# print(user_final_ratings.iloc[1].sort_values(ascending = False)[0:10])
 
-print(user_final_ratings.iloc[136].sort_values(ascending = False)[0:10].keys().to_list())
+print(user_final_ratings.iloc[1].sort_values(ascending = False)[0:10].keys().to_list())
 
-from joblib import dump
-dump(user_final_ratings, 'collaborative_rating.joblib')
+ratingfinal = user_final_ratings.iloc[1].sort_values(ascending = False)[0:10].keys().to_list()
+
+# print(ratingfinal)
+for i in range(len(ratingfinal)):
+    print(ratingfinal[i])
+
+# from joblib import dump
+# dump(user_final_ratings, 'collaborative_rating.joblib')
 
 #//Evaluation
 

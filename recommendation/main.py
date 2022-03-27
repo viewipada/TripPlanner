@@ -1,48 +1,3 @@
-# import fastapi as _fastapi
-# import service as _service
-# import starlette.responses as _responses
-
-# app = _fastapi.FastAPI()
-
-
-# @app.get("/")
-# async def root():
-#     return _responses.RedirectResponse("/redoc")
-
-
-# @app.get("/events/today")
-# async def today():
-#     return _service.todays_events()
-
-
-# @app.get("/events")
-# async def events():
-#     return _service.get_all_events()
-
-
-# @app.get("/events/{month}")
-# async def events_month(month: str):
-#     month_events = _service.month_events(month)
-#     if month_events:
-#         return month_events
-
-#     return _fastapi.HTTPException(
-#         status_code=404, detail=f"Month: {month} could not be found"
-#     )
-
-
-# @app.get("/events/{month}/{day}")
-# async def events_of_day(month: str, day: int):
-#     events = _service.day_events(month, day)
-#     if events:
-#         return events
-
-#     return _fastapi.HTTPException(
-#         status_code=404, detail=f"Date: {month}/{day} could not be found"
-#     )
-
-# *********************************************************
-
 import pandas as pd
 import numpy as np
 
@@ -62,10 +17,8 @@ from pydantic import BaseModel, Field
 from typing import Optional,List
 # from database import SessionLocal
 import asyncpg
-# import databases
 # import sqlalchemy 
 # import models
-# import databases
 # from database import Base
 # from sqlalchemy import Float, String,Boolean,Integer,Column,Text
 # SELECT * FROM locations;
@@ -85,7 +38,6 @@ metadata = sqlalchemy.MetaData()
 # SessionLocal = session(autocommit=False, autoflush=False, bind=engine)
 metadata.create_all(engine)
 Base = declarative_base()
-
 
 # metadata = sqlalchemy.MetaData()
 
@@ -109,22 +61,6 @@ locations = sqlalchemy.Table(
     sqlalchemy.Column("createBy",sqlalchemy.Integer),
     sqlalchemy.Column("locationStatus",sqlalchemy.String(15),default="inprogress"),
 )
-# class location(SessionLocal):
-#     __tablename__ = 'locations'
-#     id:Column(Integer,primary_key=True)
-#     locationName: Column(String(50),nullable=False,unique=True)
-#     category: Column(Integer,nullable=False)
-#     description: Column(String(300))
-#     contactNumber: Column(String(10))
-#     website: Column(String)
-#     imageUrl: Column(String(500))
-#     latitude: Column(Float)
-#     longitude: Column(Float)
-#     province: Column(String(100),default="Angthong")
-#     averageRating: Column(Float)
-#     totalCheckin: Column(Integer,nullable=False)
-#     createBy: Column(Integer,nullable=False)
-#     locationStatus: Column(String(15),default="inprogress")
 
 class Location(BaseModel): #serializer
     locationId :int
@@ -173,18 +109,21 @@ async def shutdown():
 @app.get('/location/{location_id}',response_model=Location,status_code=status.HTTP_200_OK)
 async def get_an_item(location_id:int):
     location = locations.select().where(locations.c.locationId == location_id)
-    # return database.query(locations).filter(locations.c.locationId == location_id).first()
-    return await database.fetch_one(location)
+    data = database.fetch_one(location)
 
-@app.get('/locations',response_model=List[Location],status_code=status.HTTP_200_OK)
-async def get_all_item():
-    location = locations.select()
-    return await database.fetch_all(location)
+    # location = locations.select().where(locations.c.locationId == location_id)
+    # location = database.query(locations).filter(locations.c.locationId == location_id)
+    # data = database.fetch_one(location)
+    return await data
 
+@app.get('/nearly_user_rating/{latlong}')
+async def get_nearly_location(lot:float,long:float):
+    # location = locations.select()
+    return 'Please wait the system is developing.'
 
 def User_rating(User_id):
-    df_restaurant = pd.read_csv("C:/Users/User/Desktop/Project/Project/Git/rating_final.csv")
-    df_restaurant_cuisine = pd.read_csv('C:/Users/User/Desktop/Project/Project/Git/chefmozcuisine.csv')
+    df_restaurant = pd.read_csv("C:/Users/User/Desktop/Project/Project/Git/test.csv")
+    # df_restaurant_cuisine = pd.read_csv('C:/Users/User/Desktop/Project/Project/Git/chefmozcuisine.csv')
 
     x_train, x_test = train_test_split(df_restaurant, test_size = 0.30, random_state = 42)
 
@@ -202,57 +141,51 @@ def User_rating(User_id):
     user_predicted_ratings = np.dot(user_similarity, test)
     user_final_ratings = np.multiply(user_predicted_ratings, dummy_train)
 
-    user_final_ratings = str(user_final_ratings.iloc[User_id].sort_values(ascending = False)[0:10].keys().to_list())
-    user_db = json.dumps(user_final_ratings)
-    return user_db
+    user_final_ratings = user_final_ratings.iloc[User_id].sort_values(ascending = False)[0:10].keys().to_list()
+    # user_db = json.dumps(user_final_ratings)
+    return user_final_ratings
 
 @app.get("/rating/{User_id}")
-async def get_rating(User_id: int):
-    return User_rating(User_id)
+async def get_location(User_id: int):
+    final_rating = User_rating(User_id)
+    location = locations.select().where(locations.c.locationId.in_(final_rating))
+    data = database.fetch_all(location)
+    return await data
 
+# cd recommendation
+# .env\Scripts\activate
+# uvicorn main:app --reload
+# pip install aiohttp 
+
+# import asyncio
+# from aiohttp import ClientSession
+
+# URL = "http://127.0.0.1:8000"
+
+# async def send_req(session: ClientSession):
+#     async with session.get(URL) as resp:
+#         if resp.status == 200:
+#             r = await resp.json()
+#             print(r)
+#         else:
+#             print(resp.status)
+
+# async def main():
+#     # check what loop is really running in our Main Thread now
+#     loop = asyncio.get_running_loop()
+#     print(loop)
+#     # no need to create ClientSession for all send_req, you need only one ClientSession
+#     async with ClientSession() as session:
+#         # asyncio gather creates tasks itself, no need to create tasks outside
+#         await asyncio.gather(*[send_req(session) for _ in range(8)])
+
+# if __name__ == '__main__':
+#     # set another loop implementation:
+#     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+#     asyncio.run(main())
 
 # @app.get("/rating/{User_id}")
 # async def get_rating(User_id: int):
 #     return User_rating(User_id)
 
-# cd recommendation
-# .env\Scripts\activate
-# uvicorn main:app --reload
 
-
-
-# book_db = [
-#     {
-#         "title":"The C Programming",
-#         "price": 720
-#     },
-#     {
-#         "title":"Learn Python the Hard Way",
-#         "price": 870
-#     },
-#     {
-#         "title":"JavaScript: The Definitive Guide",
-#         "price": 1369
-#     },
-#     {
-#         "title":"Python for Data Analysis",
-#         "price": 1394
-#     },
-#     {
-#         "title":"Clean Code",
-#         "price": 1500
-#     },
-# ]
-
-    # class Config:
-    #     orm_mode=True
-    
-# @app.get("/book/")
-# async def get_books():
-#     return book_db
-
-# @app.get("/book/{book_id}")
-# async def get_book(book_id: int):
-#     return book_db[book_id-1]
-
-# model = joblib.load('collaborative_rating.joblib')
