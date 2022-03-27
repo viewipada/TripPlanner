@@ -425,6 +425,69 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                               ),
                             ),
                           ),
+                    createLocationViewModel.locationCategoryValue == 'ที่พัก'
+                        ? Subtitle('ช่วงราคา ', '*')
+                        : SizedBox(),
+                    createLocationViewModel.locationCategoryValue == 'ที่พัก'
+                        ? Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: getProportionateScreenWidth(15),
+                              ),
+                              Expanded(
+                                child: TextFormField(
+                                  enabled: createLocationViewModel
+                                          .locationCategoryValue ==
+                                      "ที่พัก",
+                                  maxLines: 1,
+                                  keyboardType: TextInputType.number,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'โปรดระบุ';
+                                    }
+                                    return null;
+                                  },
+                                  decoration:
+                                      InputDecoration(hintText: "ต่ำสุด"),
+                                  onChanged: (value) => createLocationViewModel
+                                      .updateMinPrice(value.trim()),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: getProportionateScreenWidth(5),
+                                ),
+                                child: Icon(
+                                  Icons.minimize_rounded,
+                                  color: Palette.InfoText,
+                                ),
+                              ),
+                              Expanded(
+                                child: TextFormField(
+                                  enabled: createLocationViewModel
+                                          .locationCategoryValue ==
+                                      "ที่พัก",
+                                  maxLines: 1,
+                                  keyboardType: TextInputType.number,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'โปรดระบุ';
+                                    }
+                                    return null;
+                                  },
+                                  decoration:
+                                      InputDecoration(hintText: "สูงสุด"),
+                                  onChanged: (value) => createLocationViewModel
+                                      .updateMaxPrice(value.trim()),
+                                ),
+                              ),
+                              SizedBox(
+                                width: getProportionateScreenWidth(15),
+                              ),
+                            ],
+                          )
+                        : SizedBox(),
                     Subtitle('จังหวัด ', '*'),
                     Padding(
                       padding: EdgeInsets.symmetric(

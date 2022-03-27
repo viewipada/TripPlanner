@@ -86,6 +86,8 @@ class CreateLocationViewModel with ChangeNotifier {
   String? _imageUrl;
   dynamic _defaultCategotyValue;
   dynamic _defaultLocationTypeValue;
+  int? _minPrice;
+  int? _maxPrice;
 
   Future<void> getLocationRequestById(int locationId) async {
     _locationRequest =
@@ -245,6 +247,16 @@ class CreateLocationViewModel with ChangeNotifier {
   void updateOpeningHour(day, String openTime, String closedTime) {
     day['openTime'] = openTime;
     day['closedTime'] = closedTime;
+    notifyListeners();
+  }
+
+  void updateMaxPrice(String value) {
+    _maxPrice = int.parse(value);
+    notifyListeners();
+  }
+
+  void updateMinPrice(String value) {
+    _minPrice = int.parse(value);
     notifyListeners();
   }
 
@@ -446,4 +458,6 @@ class CreateLocationViewModel with ChangeNotifier {
   String? get imageUrl => _imageUrl;
   dynamic get defaultCategotyValue => _defaultCategotyValue;
   dynamic get defaultLocationTypeValue => _defaultLocationTypeValue;
+  int? get minPrice => _minPrice;
+  int? get maxPrice => _maxPrice;
 }
