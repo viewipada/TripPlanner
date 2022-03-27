@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
@@ -28,6 +29,8 @@ class _ReviewPageState extends State<ReviewPage> {
 
   String _caption = '';
   double _rating = 0;
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -299,82 +302,109 @@ class _ReviewPageState extends State<ReviewPage> {
                           bottom: getProportionateScreenHeight(15),
                           left: getProportionateScreenWidth(15),
                           right: getProportionateScreenWidth(15),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              _rating != 0
-                                  ? reviewViewModel
-                                      .createReview(context, locationId,
-                                          _rating.toInt(), _caption)
-                                      .then((value) {
-                                      if (value == 200) {
-                                        final snackBar = SnackBar(
-                                          backgroundColor:
-                                              Palette.SecondaryColor,
-                                          content: Text(
-                                            'เขียนรีวิวสำเร็จ',
+                          child: isLoading
+                              ? Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SpinKitFadingCircle(
+                                      color: Palette.PrimaryColor,
+                                      size: getProportionateScreenHeight(24),
+                                    ),
+                                    SizedBox(
+                                        width: getProportionateScreenWidth(10)),
+                                    Text(
+                                      'กำลังสร้างรีวิวของคุณ...',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Palette.PrimaryColor,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : ElevatedButton(
+                                  onPressed: () {
+                                    if (_rating != 0) {
+                                      setState(() {
+                                        isLoading = true;
+                                      });
+                                      reviewViewModel
+                                          .createReview(context, locationId,
+                                              _rating.toInt(), _caption)
+                                          .then((value) {
+                                        if (value == 200) {
+                                          setState(() {
+                                            isLoading = false;
+                                          });
+                                          final snackBar = SnackBar(
+                                            backgroundColor:
+                                                Palette.SecondaryColor,
+                                            content: Text(
+                                              'เขียนรีวิวสำเร็จ',
+                                              style: TextStyle(
+                                                fontFamily: 'Sukhumvit',
+                                                fontSize: 14,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          );
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(snackBar);
+                                        }
+                                      });
+                                    } else
+                                      showDialog<String>(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                          ),
+                                          title: Text(
+                                            'กรุณาให้คะแนนสถานที่นี้',
                                             style: TextStyle(
-                                              fontFamily: 'Sukhumvit',
+                                              color: Palette.BodyText,
                                               fontSize: 14,
-                                              color: Colors.white,
                                               fontWeight: FontWeight.bold,
                                             ),
                                             textAlign: TextAlign.center,
                                           ),
-                                        );
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(snackBar);
-                                      }
-                                    })
-                                  : showDialog<String>(
-                                      context: context,
-                                      builder: (BuildContext context) =>
-                                          AlertDialog(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(16),
-                                        ),
-                                        title: Text(
-                                          'กรุณาให้คะแนนสถานที่นี้',
-                                          style: TextStyle(
-                                            color: Palette.BodyText,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        contentPadding: EdgeInsets.zero,
-                                        actionsAlignment:
-                                            MainAxisAlignment.center,
-                                        actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context, 'โอเค'),
-                                            child: const Text(
-                                              'โอเค!',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold,
+                                          contentPadding: EdgeInsets.zero,
+                                          actionsAlignment:
+                                              MainAxisAlignment.center,
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () => Navigator.pop(
+                                                  context, 'โอเค'),
+                                              child: const Text(
+                                                'โอเค!',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                            },
-                            child: Text(
-                              'ส่งรีวิว',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              primary: Palette.PrimaryColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                          ),
+                                          ],
+                                        ),
+                                      );
+                                  },
+                                  child: Text(
+                                    'ส่งรีวิว',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Palette.PrimaryColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                  ),
+                                ),
                         ),
                       ],
                     ),

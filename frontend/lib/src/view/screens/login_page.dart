@@ -276,26 +276,28 @@ class _LoginPageState extends State<LoginPage> {
                                             getProportionateScreenHeight(48),
                                         child: ElevatedButton(
                                           onPressed: () {
-                                            if (_formKey.currentState!
-                                                .validate()) {
-                                              setState(() {
-                                                _errorDialog = null;
-                                              });
-                                              loginViewModel
-                                                  .tryToRegister(context)
-                                                  .then((status) {
+                                            if (_errorDialog != null) {
+                                              if (_formKey.currentState!
+                                                  .validate()) {
                                                 setState(() {
-                                                  if (status == 201) {
-                                                    _errorDialog = "";
-                                                  } else if (status == 409) {
-                                                    _errorDialog =
-                                                        "ชื่อผู้ใช้นี้ มีอยู่แล้ว";
-                                                  } else {
-                                                    _errorDialog =
-                                                        "กรุณาลองใหม่อีกครั้ง";
-                                                  }
+                                                  _errorDialog = null;
                                                 });
-                                              });
+                                                loginViewModel
+                                                    .tryToRegister(context)
+                                                    .then((status) {
+                                                  setState(() {
+                                                    if (status == 201) {
+                                                      _errorDialog = "";
+                                                    } else if (status == 409) {
+                                                      _errorDialog =
+                                                          "ชื่อผู้ใช้นี้ มีอยู่แล้ว";
+                                                    } else {
+                                                      _errorDialog =
+                                                          "กรุณาลองใหม่อีกครั้ง";
+                                                    }
+                                                  });
+                                                });
+                                              }
                                             }
                                           },
                                           child: Text(
@@ -484,29 +486,31 @@ class _LoginPageState extends State<LoginPage> {
                                       height: getProportionateScreenHeight(48),
                                       child: ElevatedButton(
                                         onPressed: () {
-                                          if (_formKey.currentState!
-                                              .validate()) {
-                                            setState(() {
-                                              _errorDialog = null;
-                                            });
-                                            loginViewModel
-                                                .tryToLogin(context)
-                                                .then((status) {
+                                          if (_errorDialog != null) {
+                                            if (_formKey.currentState!
+                                                .validate()) {
                                               setState(() {
-                                                if (status == 200) {
-                                                  _errorDialog = "";
-                                                } else if (status == 400) {
-                                                  _errorDialog =
-                                                      "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";
-                                                } else if (status == 401) {
-                                                  _errorDialog =
-                                                      "ไม่พบชื่อผู้ใช้ในระบบ";
-                                                } else {
-                                                  _errorDialog =
-                                                      "กรุณาลองใหม่อีกครั้ง";
-                                                }
+                                                _errorDialog = null;
                                               });
-                                            });
+                                              loginViewModel
+                                                  .tryToLogin(context)
+                                                  .then((status) {
+                                                setState(() {
+                                                  if (status == 200) {
+                                                    _errorDialog = "";
+                                                  } else if (status == 400) {
+                                                    _errorDialog =
+                                                        "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";
+                                                  } else if (status == 401) {
+                                                    _errorDialog =
+                                                        "ไม่พบชื่อผู้ใช้ในระบบ";
+                                                  } else {
+                                                    _errorDialog =
+                                                        "กรุณาลองใหม่อีกครั้ง";
+                                                  }
+                                                });
+                                              });
+                                            }
                                           }
                                         },
                                         child: Text(

@@ -332,6 +332,34 @@ class CreateLocationViewModel with ChangeNotifier {
     controller.animateCamera(CameraUpdate.newLatLng(searchLocation));
   }
 
+  Future<int?> createLocation(BuildContext context) async {
+    {}
+    int _category;
+    if (_locationCategoryValue == "ที่เที่ยว")
+      _category = 1;
+    else if (_locationCategoryValue == "ที่กิน")
+      _category = 2;
+    else if (_locationCategoryValue == "ที่พัก")
+      _category = 3;
+    else
+      _category = 0;
+    final statusCode = await CreateLocationService().createLocation(
+        _locationName,
+        _category,
+        _description,
+        _contactNumber,
+        _website,
+        _locationTypeValue!,
+        _images!,
+        _locationPin!,
+        _provinceValue!,
+        _dayOfWeek);
+    if (statusCode == 201) {
+      goBack(context);
+    }
+    return statusCode;
+  }
+
   void goBack(BuildContext context) {
     _images = null;
     _knowOpeningHour = true;
