@@ -78,15 +78,21 @@ class ProfileViewModel with ChangeNotifier {
               EditLocationRequestPage(locationId: locationId)),
     );
   }
-  void goToReviewPage(BuildContext context, int locationId,String locationName) {
+
+  void goToReviewPage(
+      BuildContext context, int locationId, String locationName) {
     Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) =>
-              ReviewPage(locationName: locationName,locationId: locationId)),
+              ReviewPage(locationName: locationName, locationId: locationId)),
     );
   }
-  
+
+  Future<void> deleteReview(int locationId) async {
+    await ProfileService().deleteReview(locationId);
+    notifyListeners();
+  }
 
   void goBack(BuildContext context) {
     Navigator.pop(context);

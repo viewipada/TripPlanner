@@ -492,6 +492,54 @@ Widget createLocationTabEmpty(context, ProfileViewModel profileViewModel) {
 
 Widget buildGridReviewPicture(BuildContext context, MyReviewResponse review,
     ProfileViewModel profileViewModel) {
+  _showReviewMenu(BuildContext context, ProfileViewModel profileViewModel,
+          int locationId, String locationName) =>
+      showDialog(
+        context: context,
+        builder: (context) => StatefulBuilder(
+          builder: (context, setState) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            contentPadding: EdgeInsets.zero,
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  selectedTileColor: Palette.SelectedListTileColor,
+                  onTap: () {
+                    Navigator.pop(context);
+                    profileViewModel.goToReviewPage(
+                        context, locationId, locationName);
+                  },
+                  title: Text(
+                    'แก้ไขรีวิว',
+                    style: FontAssets.bodyText,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Divider(),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  selectedTileColor: Palette.SelectedListTileColor,
+                  onTap: () {
+                    profileViewModel.deleteReview(locationId);
+                    Navigator.pop(context);
+                  },
+                  title: Text(
+                    'ลบรีวิว',
+                    style: FontAssets.bodyText,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
   return Container(
     padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(15)),
     margin: EdgeInsets.only(bottom: getProportionateScreenHeight(15)),
@@ -509,11 +557,10 @@ Widget buildGridReviewPicture(BuildContext context, MyReviewResponse review,
                   fontWeight: FontWeight.bold),
             ),
             IconButton(
-              onPressed: () => null,
-              //  profileViewModel.goToReviewPage(
-              //     context, review.locationId, review.locationName),
+              onPressed: () => _showReviewMenu(context, profileViewModel,
+                  review.locationId, review.locationName),
               icon: Icon(
-                Icons.more_vert_rounded,
+                Icons.more_horiz_rounded,
                 color: Palette.AdditionText,
               ),
               padding: EdgeInsets.zero,

@@ -98,4 +98,19 @@ class ProfileService {
     } else
       return [];
   }
+
+  Future<void> deleteReview(int locationId) async {
+    final userId = await SharedPref().getUserId();
+    if (userId != null) {
+      final response = await http.delete(
+        Uri.parse('${baseUrl}/api/reviews/${userId}/${locationId}'),
+      );
+
+      if (response.statusCode == 200) {
+        print(response.body);
+      } else {
+        throw Exception("can not remove review");
+      }
+    }
+  }
 }
