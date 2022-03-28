@@ -112,7 +112,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                                         : IconAssets.baggageAdd),
                                     color: isInBaggage
                                         ? Palette.DeleteColor
-                                        : Colors.black,
+                                        : Palette.AdditionText,
                                   ),
                                   padding: EdgeInsets.zero,
                                 ),

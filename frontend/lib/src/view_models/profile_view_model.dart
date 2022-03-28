@@ -16,6 +16,7 @@ import 'package:trip_planner/src/view/screens/edit_location_request_page.dart';
 import 'package:trip_planner/src/view/screens/edit_profile_page.dart';
 import 'package:trip_planner/src/view/screens/location_detail_page.dart';
 import 'package:trip_planner/src/view/screens/login_page.dart';
+import 'package:trip_planner/src/view/screens/review_page.dart';
 import 'package:trip_planner/src/view/screens/trip_detail_page.dart';
 
 class ProfileViewModel with ChangeNotifier {
@@ -77,6 +78,15 @@ class ProfileViewModel with ChangeNotifier {
               EditLocationRequestPage(locationId: locationId)),
     );
   }
+  void goToReviewPage(BuildContext context, int locationId,String locationName) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) =>
+              ReviewPage(locationName: locationName,locationId: locationId)),
+    );
+  }
+  
 
   void goBack(BuildContext context) {
     Navigator.pop(context);
