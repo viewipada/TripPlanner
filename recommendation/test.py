@@ -28,15 +28,15 @@ import numpy as np
 # print(final1)
 # print(b)
 
-# jsonStr = '{"a":1, "b":2}'
-# # aList = json.loads(jsonStr)
-# # print(aList)
+jsonStr = '{"a":1, "b":2}'
+# aList = json.loads(jsonStr)
+# print(aList)
 
-# a = np.arange(10)
-# print(a)
-# alist = [0, 1, 2, 3, 4]
-# # b = np.where(aList)
-# b1 = np.where(a)
-# print(np.where(a < 50))
+a = np.arange(10)
+print(a)
+alist = [0, 1, 2, 3, 4]
+# b = np.where(aList)
+b1 = np.where(a)
+print(np.where(a < 50))
 # print(b)
-# print(b1)
+print(b1)

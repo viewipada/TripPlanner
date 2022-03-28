@@ -2,7 +2,6 @@ from sqlalchemy.sql.expression import null
 from database import Base
 from sqlalchemy import Float, String,Boolean,Integer,Column,Text
 
-
 class Location(Base):
     __tablename__= 'locations'
     id: Column(Integer,primary_key=True)

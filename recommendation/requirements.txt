@@ -37,5 +37,11 @@ tornado==6.1
 traitlets==5.1.1
 typing_extensions==4.0.1
 uvicorn==0.16.0
-wcwidth==0.2.5
+wcwidth==0.2.5                      
 zipp==3.6.0
+pandas==1.4.1
+scikit-learn==1.0.2
+sqlalchemy==1.4.31
+asyncpg==0.25.
+databases==0.5.5
+psycopg2==2.9.3

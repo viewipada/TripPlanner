@@ -5,29 +5,21 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics import pairwise_distances
 from sklearn.model_selection import train_test_split
 from fastapi import FastAPI,status,HTTPException
-# from sqlalchemy.orm import Session
 
 import sqlalchemy
 import uvicorn
 import joblib
 import re
 import json
-
-from pydantic import BaseModel, Field
-from typing import Optional,List
-# from database import SessionLocal
 import asyncpg
-# import sqlalchemy 
-# import models
-# from database import Base
-# from sqlalchemy import Float, String,Boolean,Integer,Column,Text
-# SELECT * FROM locations;
 
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import session
 import databases
 import sqlalchemy 
 
+from pydantic import BaseModel, Field
+from typing import Optional,List
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import session
 
 SQLALCHEMY_DATABASE_URL = "postgresql://zfmsgbtyaipvev:0701919781293d9d17ff3aa96c31a3e91d70f6ea43e241179ffe6076e9d6e938@ec2-3-215-83-124.compute-1.amazonaws.com:5432/d3ngpebd1au102"
 
@@ -35,7 +27,6 @@ engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URL)
 database = databases.Database(SQLALCHEMY_DATABASE_URL)
 metadata = sqlalchemy.MetaData()
 
-# SessionLocal = session(autocommit=False, autoflush=False, bind=engine)
 metadata.create_all(engine)
 Base = declarative_base()
 
@@ -78,9 +69,6 @@ class Location(BaseModel): #serializer
     createBy: int
     locationStatus: str
 
-    # class Config:
-    #     orm_mode=True
-
 # db = SessionLocal()
 
 @app.get("/")
@@ -96,10 +84,6 @@ async def startup():
 async def shutdown():
     await database.disconnect()
 
-# @app.get('/location/{location_id}')
-# def get_an_item(location_id:int):
-#     location=db.query(models.Location).filter(models.Location.id==location_id).first()
-#     return location
 
 # @app.get("/location/{location_id}/", response_model=Location, status_code = status.HTTP_200_OK)
 # async def read_location(location_id: int):
@@ -110,10 +94,6 @@ async def shutdown():
 async def get_an_item(location_id:int):
     location = locations.select().where(locations.c.locationId == location_id)
     data = database.fetch_one(location)
-
-    # location = locations.select().where(locations.c.locationId == location_id)
-    # location = database.query(locations).filter(locations.c.locationId == location_id)
-    # data = database.fetch_one(location)
     return await data
 
 @app.get('/nearly_user_rating/{latlong}')
@@ -123,7 +103,6 @@ async def get_nearly_location(lot:float,long:float):
 
 def User_rating(User_id):
     df_restaurant = pd.read_csv("C:/Users/User/Desktop/Project/Project/Git/test.csv")
-    # df_restaurant_cuisine = pd.read_csv('C:/Users/User/Desktop/Project/Project/Git/chefmozcuisine.csv')
 
     x_train, x_test = train_test_split(df_restaurant, test_size = 0.30, random_state = 42)
 
@@ -157,9 +136,6 @@ async def get_location(User_id: int):
 # uvicorn main:app --reload
 # pip install aiohttp 
 
-# import asyncio
-# from aiohttp import ClientSession
-
 # URL = "http://127.0.0.1:8000"
 
 # async def send_req(session: ClientSession):
@@ -183,9 +159,5 @@ async def get_location(User_id: int):
 #     # set another loop implementation:
 #     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 #     asyncio.run(main())
-
-# @app.get("/rating/{User_id}")
-# async def get_rating(User_id: int):
-#     return User_rating(User_id)
 
 
