@@ -621,7 +621,7 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                       ),
                       child: TextFormField(
                         maxLines: 100,
-                        maxLength: 360,
+                        maxLength: 300,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'โปรดระบุ';
