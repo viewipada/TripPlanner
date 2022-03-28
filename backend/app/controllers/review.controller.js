@@ -119,6 +119,49 @@ exports.findAll = (req, res) => {
     });
 };
 
+exports.findOriginalReview = async (req, res) => {
+  try {
+    const uid = req.params.userId;
+    const lid = req.params.locationId;
+
+    const reviewData = await Review.findOne({ where: { userId: uid, locationId: lid }, raw: true });
+
+    console.log(reviewData);
+
+    if (reviewData != null) {
+      const { imgUrl: profileImage, username } = await User.findOne({
+        where: { id: uid },
+        rew: true,
+      });
+      reviewData.profileImage = profileImage;
+      reviewData.username = username;
+      reviewData.rating = reviewData.reviewRate;
+      reviewData.caption = reviewData.reviewCaption;
+      reviewData.images = [reviewData.reviewImg1, reviewData.reviewImg2, reviewData.reviewImg3];
+    }
+
+    const {
+      userId,
+      locationId,
+      reviewRate,
+      reviewCaption,
+      reviewImg1,
+      reviewImg2,
+      reviewImg3,
+      updatedAt,
+      ...newReview
+    } = reviewData;
+
+    return reviewData != null
+      ? res.status(200).json(newReview)
+      : res.status(503).send("There's no review from this user");
+  } catch (err) {
+    console.log(err);
+
+    return res.status(400).send("something wrong while finding review");
+  }
+};
+
 exports.delete = async (req, res) => {
   try {
     const { userId, locationId } = req.params;

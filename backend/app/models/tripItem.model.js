@@ -32,7 +32,7 @@ module.exports = (sequelize, Sequelize) => {
     },
     distance: {
       type: Sequelize.DOUBLE,
-      default: null,
+      defaultValue: null,
     },
     duration: {
       type: Sequelize.INTEGER,
