@@ -3,6 +3,8 @@ const db = require("../models");
 const Location = db.locations;
 const Review = db.reviews;
 const User = db.users;
+const Price = db.prices;
+
 const Op = db.Sequelize.Op;
 const Sequelize = db.Sequelize;
 const sequelize = db.sequelize;
@@ -15,42 +17,51 @@ exports.create = async (req, res) => {
       res.status(400).send("locationName and lat-long can not be empty ! ! ");
     }
 
-    //create new location
+    if (location.categry == 3) {
+      const min_p = req.body.min_price;
+      const max_p = req.body.max_price;
+
+      const { min_price, max_price, ...newObjLocation } = location;
+
+      return newObjLocation;
+    }
+
     const newLocation = await Location.create(location);
 
-    res.status(201).send(newLocation);
+    return res.status(201).send(newLocation);
   } catch (err) {
-    res.status(400).send("Someting wrong while crating Location");
+    //create new location
+    return res.status(400).send("Someting wrong while crating Location");
     console.log(err);
   }
-  // // Validate request
-  // if (!req.body.locationName) {
-  //   res.status(400).send({
-  //     message: "locationName can not be empty!",
-  //   });
-  //   return;
-  // }
-
-  // // Create a Location
-  // const location = req.body;
-
-  // // Save Location in the database
-  // Location.create(location)
-  //   .then((data) => {
-  //     res.status(201).send(data);
-
-  //     const openingDayHourData = {
-  //       location: data.locationId,
-  //       openingDayHour: req.body.openingDayHour,
-  //     };
-  //     OpeningDayHour.create(openingDayHourData);
-  //   })
-  //   .catch((err) => {
-  //     res.status(500).send({
-  //       message: err.message || "Some error occurred while creating the Location.",
-  //     });
-  //   });
 };
+// // Validate request
+// if (!req.body.locationName) {
+//   res.status(400).send({
+//     message: "locationName can not be empty!",
+//   });
+//   return;
+// }
+
+// // Create a Location
+// const location = req.body;
+
+// // Save Location in the database
+// Location.create(location)
+//   .then((data) => {
+//     res.status(201).send(data);
+
+//     const openingDayHourData = {
+//       location: data.locationId,
+//       openingDayHour: req.body.openingDayHour,
+//     };
+//     OpeningDayHour.create(openingDayHourData);
+//   })
+//   .catch((err) => {
+//     res.status(500).send({
+//       message: err.message || "Some error occurred while creating the Location.",
+//     });
+//   });
 
 // Retrieve all objects in Locations Table
 exports.findAllCard = async (req, res) => {

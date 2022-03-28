@@ -34,6 +34,7 @@ db.files = require("./file.model.js")(sequelize, Sequelize);
 db.locations = require("./location.model.js")(sequelize, Sequelize);
 db.locationCategories = require("./locationCategory.model.js")(sequelize, Sequelize);
 db.locationTypes = require("./locationType.model.js")(sequelize, Sequelize);
+db.prices = require("./price.model.js")(sequelize, Sequelize);
 db.reviews = require("./review.model.js")(sequelize, Sequelize);
 db.tripItems = require("./tripItem.model.js")(sequelize, Sequelize);
 db.trips = require("./trip.model.js")(sequelize, Sequelize);
