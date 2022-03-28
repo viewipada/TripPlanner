@@ -53,7 +53,7 @@ class BaggageViewModel with ChangeNotifier {
   }
 
   void clearWidget(BuildContext context) {
-    Navigator.pop(context);
+    Navigator.pop(context, 'refresh');
     _baggageList = [];
     _selectedList = [];
     _checkboxValue = false;

@@ -15,7 +15,7 @@ class LocationDetailViewModel with ChangeNotifier {
   }
 
   void goBack(BuildContext context) {
-    Navigator.pop(context);
+    Navigator.pop(context, 'refresh');
   }
 
   Future<LocationDetailResponse> getLocationDetailById(int locationId) async {
