@@ -4,6 +4,7 @@ import 'package:trip_planner/src/models/response/location_created_response.dart'
 import 'package:trip_planner/src/models/response/profile_details_response.dart';
 import 'package:trip_planner/src/models/response/profile_response.dart';
 import 'package:trip_planner/src/repository/shared_pref.dart';
+import 'package:trip_planner/src/services/baggage_service.dart';
 
 class ProfileService {
   final String baseUrl = 'http://10.0.2.2:8080';
@@ -33,6 +34,13 @@ class ProfileService {
       var jwt = json.decode(ascii.decode(
           base64.decode(base64.normalize(response.body.split(".")[1]))));
       await SharedPref().saveUserId(jwt['user_id']);
+      List<String> _baggage = [];
+      await BaggageService()
+          .getBaggageList()
+          .then((list) => list.forEach((element) {
+                _baggage.add(element.locationId.toString());
+              }));
+      await SharedPref().initialBaggageItem(_baggage);
       return response.statusCode;
     } else if (response.statusCode == 400) {
       //wrong password

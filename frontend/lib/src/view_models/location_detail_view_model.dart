@@ -37,12 +37,12 @@ class LocationDetailViewModel with ChangeNotifier {
     );
   }
 
-  Future<void> addBaggageItem(int locationId) async {
-    await BaggageService().addBaggageItem(locationId);
+  Future<int?> addBaggageItem(int locationId) async {
+    return await BaggageService().addBaggageItem(locationId);
   }
 
-  Future<void> removeBaggageItem(int locationId) async {
-    await BaggageService().removeBaggageItem(locationId);
+  Future<int?> removeBaggageItem(int locationId) async {
+    return await BaggageService().removeBaggageItem(locationId);
   }
 
   bool get readMore => _readMore;

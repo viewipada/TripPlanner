@@ -26,7 +26,7 @@ class BaggageService {
       return [];
   }
 
-  Future<void> addBaggageItem(int locationId) async {
+  Future<int?> addBaggageItem(int locationId) async {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
       final response = await http.post(Uri.parse("${baseUrl}/api/baggage/"),
@@ -39,6 +39,7 @@ class BaggageService {
 
       if (response.statusCode == 201) {
         await SharedPref().addBaggageItem(locationId);
+        return response.statusCode;
       } else {
         throw Exception("can not add baggageItem");
       }
@@ -46,7 +47,7 @@ class BaggageService {
       print('null userId');
   }
 
-  Future<void> removeBaggageItem(int locationId) async {
+  Future<int?> removeBaggageItem(int locationId) async {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
       final response = await http.delete(
@@ -55,7 +56,7 @@ class BaggageService {
 
       if (response.statusCode == 200) {
         await SharedPref().removeBaggageItem(locationId);
-        print(response.body);
+        return response.statusCode;
       } else {
         throw Exception("can not remove baggageItem");
       }
