@@ -29,18 +29,19 @@ exports.create = async (req, res) => {
     // Save Location in the database
     const reviewData = await Review.create(review);
 
+    const l = await Location.findOne({ where: review.locationId });
+    await l.increment("totalReview");
+    await l.reload();
+    console.log(l);
+
     const data = await Review.findAll({
       where: review.locationId,
       attributes: [[sequelize.fn("AVG", sequelize.col("reviewRate")), "avgRating"]],
       group: ["locationId"],
       raw: true,
     });
-    console.log(data);
 
-    const l = await Location.findOne({ where: review.locationId });
-    await l.increment("totalReview");
-    await l.reload();
-    console.log(l);
+    console.log(data);
 
     const locationData = await Location.update(
       { totalReview: l.totalReview, averageRating: data.avgRating },
@@ -159,6 +160,29 @@ exports.findOriginalReview = async (req, res) => {
     console.log(err);
 
     return res.status(400).send("something wrong while finding review");
+  }
+};
+
+exports.update = async (req, res) => {
+  try {
+    const review = req.body;
+    req.updatedAt = new Date();
+
+    const updateData = await Review.update(review, {
+      where: {
+        userId: review.userId,
+        locationId: review.locationId,
+      },
+      returning: true,
+      plain: true,
+      raw: true,
+    });
+
+    console.log(updateData);
+    return res.status(200).send(updateData[1]);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send("something wrong while updating review");
   }
 };
 
