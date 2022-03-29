@@ -16,9 +16,13 @@ class SharedPref {
     await prefs.remove('userId');
   }
 
+  Future<void> initialBaggageItem(list) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('cart', list);
+  }
+
   Future<void> addBaggageItem(int locationId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-
     await getBaggageItems().then((value) async {
       value.add('${locationId}');
       await prefs.setStringList('cart', value);

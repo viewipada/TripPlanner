@@ -717,12 +717,12 @@ class TripStepperViewModel with ChangeNotifier {
     return await LocationService().getAllShop();
   }
 
-  void goToTripStepperPage(BuildContext context, int tripId) {
-    Navigator.pop(context);
-    Navigator.push(
+  Future<void> goToTripStepperPage(BuildContext context, int tripId) async {
+    final result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => TripStepperPage(tripId: tripId)),
     );
+    if (result != null) notifyListeners();
   }
 
   void goToLocationDetail(BuildContext context, int locationId) {
@@ -916,7 +916,7 @@ class TripStepperViewModel with ChangeNotifier {
     _index = 0;
     _day = 1;
     _shop = null;
-    Navigator.pop(context);
+    Navigator.pop(context, 'refresh');
   }
 
   Future<void> backToShoppingStep(BuildContext context, Trip trip) async {
@@ -1005,10 +1005,10 @@ class TripStepperViewModel with ChangeNotifier {
 
   Future<Set<Marker>> getMarkersRecommend(List<TripItem> _tripItems,
       List<LocationRecommendResponse> locationList) async {
-    List<TripItem> tripItems = _tripItems
+    List<TripItem> tripItems = await _tripItems
         .where((element) => element.day == _day && element.no >= 0)
         .toList();
-    Set<Marker> _markers = Set();
+    Set<Marker> _markers = await Set();
     await Future.forEach(tripItems, (item) async {
       final location = item as TripItem;
       if (item.day == _day) {
@@ -1069,10 +1069,10 @@ class TripStepperViewModel with ChangeNotifier {
 
   Future<Set<Marker>> getBaggageMarkers(
       List<TripItem> _tripItems, List<BaggageResponse> locationList) async {
-    List<TripItem> tripItems = _tripItems
+    List<TripItem> tripItems = await _tripItems
         .where((element) => element.day == _day && element.no >= 0)
         .toList();
-    Set<Marker> _markers = Set();
+    Set<Marker> _markers = await Set();
     await Future.forEach(tripItems, (item) async {
       final location = item as TripItem;
       if (item.day == _day) {
@@ -1101,46 +1101,47 @@ class TripStepperViewModel with ChangeNotifier {
               }),
         );
       }
-    }).then((value) => Future.forEach(locationList, (item) async {
-          final location = item as BaggageResponse;
+    });
+    await Future.forEach(locationList, (item) async {
+      final location = item as BaggageResponse;
 
-          final _markerId = MarkerId('${item.locationName}');
-          await _markers.add(
-            Marker(
-                markerId: _markerId,
-                position: LatLng(location.latitude, location.longitude),
-                infoWindow: InfoWindow(
-                  title: location.locationName,
-                ),
-                icon: await BitmapDescriptor.fromBytes(
-                  await getBytesFromAsset(
-                    location.category == 'ที่เที่ยว'
-                        ? IconAssets.travelMarker
-                        : location.category == 'ที่กิน'
-                            ? IconAssets.foodMarker
-                            : IconAssets.hotelMarker,
-                    100,
-                  ),
-                ),
-                onTap: () {
-                  scrollToPinCard(locationList.indexOf(item));
-                }),
-          );
-        }));
+      final _markerId = MarkerId('${item.locationName}');
+      await _markers.add(
+        Marker(
+            markerId: _markerId,
+            position: LatLng(location.latitude, location.longitude),
+            infoWindow: InfoWindow(
+              title: location.locationName,
+            ),
+            icon: await BitmapDescriptor.fromBytes(
+              await getBytesFromAsset(
+                location.category == 'ที่เที่ยว'
+                    ? IconAssets.travelMarker
+                    : location.category == 'ที่กิน'
+                        ? IconAssets.foodMarker
+                        : IconAssets.hotelMarker,
+                100,
+              ),
+            ),
+            onTap: () {
+              scrollToPinCard(locationList.indexOf(item));
+            }),
+      );
+    });
 
     return _markers;
   }
 
   Future<Set<Marker>> getShopMarkers(
       List<TripItem> _tripItems, List<ShopResponse> locationList) async {
-    List<TripItem> tripItems = _tripItems
+    List<TripItem> tripItems = await _tripItems
         .where((element) => element.day == _day && element.no >= 0)
         .toList();
-    Set<Marker> _markers = Set();
+    Set<Marker> _markers = await Set();
     await Future.forEach(tripItems, (item) async {
       final location = item as TripItem;
       if (item.day == _day) {
-        final _markerId = MarkerId('${item.locationId}');
+        final _markerId = MarkerId(tripItems.indexOf(item).toString());
         await _markers.add(
           Marker(
               markerId: _markerId,
@@ -1165,28 +1166,29 @@ class TripStepperViewModel with ChangeNotifier {
               }),
         );
       }
-    }).then((value) => Future.forEach(locationList, (item) async {
-          final location = item as ShopResponse;
+    });
+    await Future.forEach(locationList, (item) async {
+      final location = item as ShopResponse;
 
-          final _markerId = MarkerId('${item.locationName}');
-          await _markers.add(
-            Marker(
-                markerId: _markerId,
-                position: LatLng(location.latitude, location.longitude),
-                infoWindow: InfoWindow(
-                  title: location.locationName,
-                ),
-                icon: await BitmapDescriptor.fromBytes(
-                  await getBytesFromAsset(
-                    IconAssets.foodMarker,
-                    100,
-                  ),
-                ),
-                onTap: () {
-                  scrollToPinCard(locationList.indexOf(item));
-                }),
-          );
-        }));
+      final _markerId = MarkerId('${item.locationName}');
+      await _markers.add(
+        Marker(
+            markerId: _markerId,
+            position: LatLng(location.latitude, location.longitude),
+            infoWindow: InfoWindow(
+              title: location.locationName,
+            ),
+            icon: await BitmapDescriptor.fromBytes(
+              await getBytesFromAsset(
+                IconAssets.foodMarker,
+                100,
+              ),
+            ),
+            onTap: () {
+              scrollToPinCard(locationList.indexOf(item));
+            }),
+      );
+    });
 
     return _markers;
   }

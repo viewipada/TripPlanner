@@ -314,7 +314,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 .profileResponse.reviews
                                                 .map((review) {
                                               return buildGridReviewPicture(
-                                                  context, review);
+                                                  context,
+                                                  review,
+                                                  profileViewModel);
                                             }).toList(),
                                           ),
                                     // SizedBox(height: getProportionateScreenHeight(5)),
@@ -488,19 +490,83 @@ Widget createLocationTabEmpty(context, ProfileViewModel profileViewModel) {
   );
 }
 
-Widget buildGridReviewPicture(BuildContext context, MyReviewResponse review) {
+Widget buildGridReviewPicture(BuildContext context, MyReviewResponse review,
+    ProfileViewModel profileViewModel) {
+  _showReviewMenu(BuildContext context, ProfileViewModel profileViewModel,
+          int locationId, String locationName) =>
+      showDialog(
+        context: context,
+        builder: (context) => StatefulBuilder(
+          builder: (context, setState) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            contentPadding: EdgeInsets.zero,
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  selectedTileColor: Palette.SelectedListTileColor,
+                  onTap: () {
+                    Navigator.pop(context);
+                    profileViewModel.goToReviewPage(
+                        context, locationId, locationName);
+                  },
+                  title: Text(
+                    'แก้ไขรีวิว',
+                    style: FontAssets.bodyText,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Divider(),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  selectedTileColor: Palette.SelectedListTileColor,
+                  onTap: () {
+                    profileViewModel.deleteReview(locationId);
+                    Navigator.pop(context);
+                  },
+                  title: Text(
+                    'ลบรีวิว',
+                    style: FontAssets.bodyText,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
   return Container(
     padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(15)),
     margin: EdgeInsets.only(bottom: getProportionateScreenHeight(15)),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'รีวิว ${review.locationName}',
-          style: TextStyle(
-              color: Palette.BodyText,
-              fontSize: 14,
-              fontWeight: FontWeight.bold),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'รีวิว ${review.locationName}',
+              style: TextStyle(
+                  color: Palette.BodyText,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold),
+            ),
+            IconButton(
+              onPressed: () => _showReviewMenu(context, profileViewModel,
+                  review.locationId, review.locationName),
+              icon: Icon(
+                Icons.more_horiz_rounded,
+                color: Palette.AdditionText,
+              ),
+              padding: EdgeInsets.zero,
+              constraints: BoxConstraints(),
+            ),
+          ],
         ),
         Row(
           children: [

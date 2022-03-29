@@ -6,13 +6,11 @@ import 'package:trip_planner/src/repository/shared_pref.dart';
 
 class HomeService {
   final String baseUrl = 'http://10.0.2.2:8080';
+  final String recommendUrl = 'https://travel-planning-ceproject.herokuapp.com';
 
   Future<List<LocationCardResponse>> getHotLocationList() async {
     List<LocationCardResponse> hotLocationList = [];
-    final response = await http.get(
-        Uri.parse("https://run.mocky.io/v3/af05f43f-50e3-4d95-a026-ec5388c5da51"
-            // 'http://10.0.2.2:8080/api/locations/'
-            ));
+    final response = await http.get(Uri.parse('${baseUrl}/api/locations/'));
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body) as List<dynamic>;
@@ -30,16 +28,18 @@ class HomeService {
     List<LocationCardResponse> locationRecommendedList = [];
     final userId = await SharedPref().getUserId();
     if (userId != null) {
-      final response = await http.get(Uri.parse(
-          // "https://run.mocky.io/v3/af05f43f-50e3-4d95-a026-ec5388c5da51"
-          '${baseUrl}/api/locations/'));
-      // print(response.statusCode);
+      final response = await http.get(
+        Uri.parse("${recommendUrl}/rating/${userId}"),
+      );
+
       if (response.statusCode == 200) {
-        var data = json.decode(response.body) as List<dynamic>;
+        var data =
+            json.decode(utf8.decode(response.body.codeUnits)) as List<dynamic>;
         data
             .map((item) => locationRecommendedList
                 .add(LocationCardResponse.fromJson(item)))
             .toList();
+
         return locationRecommendedList;
       } else {
         throw Exception("can not fetch data location recommended");

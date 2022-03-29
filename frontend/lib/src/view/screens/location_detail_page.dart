@@ -101,18 +101,34 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                               ? SizedBox()
                               : IconButton(
                                   constraints: BoxConstraints(),
-                                  onPressed: () => isInBaggage
-                                      ? locationDetailViewModel
+                                  onPressed: () {
+                                    if (isInBaggage) {
+                                      locationDetailViewModel
                                           .removeBaggageItem(_locationId)
-                                      : locationDetailViewModel
-                                          .addBaggageItem(_locationId),
+                                          .then((value) {
+                                        if (value == 200)
+                                          setState(() {
+                                            isInBaggage = false;
+                                          });
+                                      });
+                                    } else {
+                                      locationDetailViewModel
+                                          .addBaggageItem(_locationId)
+                                          .then((value) {
+                                        if (value == 201)
+                                          setState(() {
+                                            isInBaggage = true;
+                                          });
+                                      });
+                                    }
+                                  },
                                   icon: ImageIcon(
                                     AssetImage(isInBaggage
                                         ? IconAssets.baggageDelete
                                         : IconAssets.baggageAdd),
                                     color: isInBaggage
                                         ? Palette.DeleteColor
-                                        : Colors.black,
+                                        : Palette.AdditionText,
                                   ),
                                   padding: EdgeInsets.zero,
                                 ),

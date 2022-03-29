@@ -33,12 +33,13 @@ class HomeViewModel with ChangeNotifier {
     return '$travelingDay วัน ${travelingDay - 1} คืน';
   }
 
-  void goToLocationDetail(BuildContext context, int locationId) {
-    Navigator.push(
+  Future<void> goToLocationDetail(BuildContext context, int locationId) async {
+    final result = await Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => LocationDetailPage(locationId: locationId)),
     );
+    if (result != null) notifyListeners();
   }
 
   void goToTripFormPage(BuildContext context) {

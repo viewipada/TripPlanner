@@ -5,7 +5,12 @@ import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/repository/shared_pref.dart';
 import 'package:trip_planner/src/view/screens/baggage_page.dart';
 
-class BaggageCart extends StatelessWidget {
+class BaggageCart extends StatefulWidget {
+  @override
+  _BaggageCartState createState() => _BaggageCartState();
+}
+
+class _BaggageCartState extends State<BaggageCart> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -24,11 +29,12 @@ class BaggageCart extends StatelessWidget {
                 AssetImage(IconAssets.baggage),
               ),
               color: Colors.white,
-              onPressed: () {
-                Navigator.push(
+              onPressed: () async {
+                final result = await Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => BaggagePage()),
                 );
+                if (result != null) setState(() {});
               },
             ),
           ),
