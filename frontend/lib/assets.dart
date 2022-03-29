@@ -14,6 +14,19 @@ class ImageAssets {
   static const String boarding_3 = 'assets/images/boarding_3.png';
   static const String boarding_4 = 'assets/images/boarding_4.png';
   static const String tripBanner = 'assets/images/trip_banner.jpg';
+
+  static const String Act1 = 'assets/images/activity_1.jpg';
+  static const String Act2 = 'assets/images/activity_2.jpg';
+  static const String Act3 = 'assets/images/activity_3.jpg';
+  static const String Act4 = 'assets/images/activity_4.jpg';
+  static const String Act5 = 'assets/images/activity_5.jpg';
+  static const String Act6 = 'assets/images/activity_6.jpg';
+  static const String Act7 = 'assets/images/activity_7.jpg';
+  static const String Act8 = 'assets/images/activity_8.jpg';
+  static const String Act9 = 'assets/images/activity_9.jpg';
+  static const String Act10 = 'assets/images/activity_10.jpg';
+  static const String Act11 = 'assets/images/activity_11.jpg';
+  static const String Act12 = 'assets/images/activity_12.jpg';
 }
 
 class IconAssets {

@@ -5,6 +5,7 @@ import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/repository/shared_pref.dart';
 import 'package:trip_planner/src/view/screens/login_page.dart';
+import 'package:trip_planner/src/view/screens/survey_page.dart';
 import 'package:trip_planner/src/view/widgets/navigation_bar.dart';
 import 'package:trip_planner/src/view_models/baggage_view_model.dart';
 import 'package:trip_planner/src/view_models/create_location_view_model.dart';
@@ -15,6 +16,7 @@ import 'package:trip_planner/src/view_models/navigation_bar_view_model.dart';
 import 'package:trip_planner/src/view_models/profile_view_model.dart';
 import 'package:trip_planner/src/view_models/review_view_model.dart';
 import 'package:trip_planner/src/view_models/search_start_point_view_model.dart';
+import 'package:trip_planner/src/view_models/survey_view_model.dart';
 import 'package:trip_planner/src/view_models/trip_form_view_model.dart';
 import 'package:trip_planner/src/view_models/search_view_model.dart';
 import 'package:trip_planner/src/view_models/trip_stepper_view_model.dart';
@@ -40,6 +42,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LoginViewModel()),
         ChangeNotifierProvider(create: (_) => CreateLocationViewModel()),
         ChangeNotifierProvider(create: (_) => TripStepperViewModel()),
+        ChangeNotifierProvider(create: (_) => SurveyViewModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -77,7 +80,9 @@ class MyApp extends StatelessWidget {
             fillColor: Colors.white,
           ),
         ),
-        home: LogoPage(),
+        home: 
+        SurvayPage(),
+        // LogoPage(),
       ),
     );
   }
