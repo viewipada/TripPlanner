@@ -66,6 +66,47 @@ class ReviewService {
       print('null userId');
   }
 
+  Future<int?> updateReview(
+      int locationId, int rating, String caption, List<File> images) async {
+    final userId = await SharedPref().getUserId();
+    if (userId != null) {
+      var _images = [];
+
+      await Future.forEach(images, (File element) async {
+        var formData = FormData();
+        formData.files.add(MapEntry(
+          "file",
+          await MultipartFile.fromFile(element.path),
+        ));
+        var res =
+            await Dio().post("${baseUrl}/api/file/upload", data: formData);
+        _images.add(await res.data['downloadUrl'].toString());
+      });
+
+      final response = await http.put(
+        Uri.parse('${baseUrl}/api/reviews/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          "userId": userId,
+          "locationId": locationId,
+          "reviewRate": rating,
+          "reviewCaption": caption,
+          "reviewImg1": _images.length > 0 ? _images[0] : "",
+          "reviewImg2": _images.length > 1 ? _images[1] : "",
+          "reviewImg3": _images.length > 2 ? _images[2] : ""
+        }),
+      );
+      if (response.statusCode == 200) {
+        return response.statusCode;
+      } else {
+        throw Exception("can not update review");
+      }
+    } else
+      print('null userId');
+  }
+
   // Future<void> removeBaggageItem(int locationId) async {
   //   final userId = await SharedPref().getUserId();
   //   if (userId != null) {

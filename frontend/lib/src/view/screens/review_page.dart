@@ -366,36 +366,77 @@ class _ReviewPageState extends State<ReviewPage> {
                                                 setState(() {
                                                   isLoading = true;
                                                 });
-                                                reviewViewModel
-                                                    .createReview(
-                                                        context, locationId)
-                                                    .then((value) {
-                                                  if (value == 200) {
-                                                    setState(() {
-                                                      isLoading = false;
-                                                    });
-                                                    final snackBar = SnackBar(
-                                                      backgroundColor: Palette
-                                                          .SecondaryColor,
-                                                      content: Text(
-                                                        'เขียนรีวิวสำเร็จ',
-                                                        style: TextStyle(
-                                                          fontFamily:
-                                                              'Sukhumvit',
-                                                          fontSize: 14,
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                      ),
-                                                    );
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(snackBar);
-                                                  }
-                                                });
+                                                hasData
+                                                    ? reviewViewModel
+                                                        .updateReview(
+                                                            context, locationId)
+                                                        .then((value) {
+                                                        if (value == 200) {
+                                                          setState(() {
+                                                            isLoading = false;
+                                                          });
+                                                          final snackBar =
+                                                              SnackBar(
+                                                            backgroundColor: Palette
+                                                                .SecondaryColor,
+                                                            content: Text(
+                                                              'แก้ไขรีวิวสำเร็จ',
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'Sukhumvit',
+                                                                fontSize: 14,
+                                                                color: Colors
+                                                                    .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          );
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                                  snackBar);
+                                                        }
+                                                      })
+                                                    : reviewViewModel
+                                                        .createReview(
+                                                            context, locationId)
+                                                        .then((value) {
+                                                        if (value == 200) {
+                                                          setState(() {
+                                                            isLoading = false;
+                                                          });
+                                                          final snackBar =
+                                                              SnackBar(
+                                                            backgroundColor: Palette
+                                                                .SecondaryColor,
+                                                            content: Text(
+                                                              'เขียนรีวิวสำเร็จ',
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'Sukhumvit',
+                                                                fontSize: 14,
+                                                                color: Colors
+                                                                    .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          );
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                                  snackBar);
+                                                        }
+                                                      });
                                               } else
                                                 showDialog<String>(
                                                   context: context,
@@ -444,7 +485,9 @@ class _ReviewPageState extends State<ReviewPage> {
                                                 );
                                             },
                                             child: Text(
-                                              hasData ? 'บันทึกการแก้ไข' : 'สร้างรีวิว',
+                                              hasData
+                                                  ? 'บันทึกการแก้ไข'
+                                                  : 'สร้างรีวิว',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 14,

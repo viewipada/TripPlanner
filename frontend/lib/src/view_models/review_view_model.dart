@@ -52,6 +52,19 @@ class ReviewViewModel with ChangeNotifier {
     Navigator.pop(context);
   }
 
+  Future<int?> updateReview(BuildContext context, int locationId) async {
+    var statusCode = await ReviewService()
+        .updateReview(locationId, _rating.toInt(), _caption, _images);
+
+    if (statusCode == 200) {
+      Navigator.pop(context);
+      _images = [];
+      _caption = '';
+      _rating = 0;
+      return statusCode;
+    }
+  }
+
   Future<int?> createReview(BuildContext context, int locationId) async {
     var statusCode = await ReviewService()
         .createReview(locationId, _rating.toInt(), _caption, _images);
@@ -72,12 +85,12 @@ class ReviewViewModel with ChangeNotifier {
     if (_reviewResponse != null) {
       _caption = _reviewResponse!.caption;
       _rating = _reviewResponse!.rating.toDouble();
-      // await Future.forEach(_reviewResponse!.images, (String imageUrl) async {
-      //   if (imageUrl != '') {
-      //     var img = await urlToFile(imageUrl);
-      //     _images.add(img);
-      //   }
-      // });
+      await Future.forEach(_reviewResponse!.images, (String imageUrl) async {
+        if (imageUrl != '') {
+          var img = await urlToFile(imageUrl);
+          _images.add(img);
+        }
+      });
     }
     // notifyListeners();
     return _reviewResponse;
