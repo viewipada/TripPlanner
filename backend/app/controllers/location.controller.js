@@ -170,10 +170,10 @@ exports.findAllData = async (req, res, next) => {
 
 exports.findByUser = async (req, res) => {
   try {
-    const { userId, locationId } = req.params;
+    const { userId } = req.params;
 
     const locationData = await Location.findOne({
-      where: { createBy: userId, locationId },
+      where: { createBy: userId },
       raw: true,
     });
     console.log(locationData);
