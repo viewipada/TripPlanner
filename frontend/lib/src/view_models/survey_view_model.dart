@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trip_planner/assets.dart';
+import 'package:trip_planner/src/models/response/user_interested_response.dart';
+import 'package:trip_planner/src/services/profile_service.dart';
+import 'package:trip_planner/src/view/widgets/navigation_bar.dart';
 
 class SurveyViewModel with ChangeNotifier {
   List _activities = [
@@ -86,6 +89,7 @@ class SurveyViewModel with ChangeNotifier {
   List<String> _selectedHotel = [];
   int? _minPrice;
   int? _maxPrice;
+  UserInterestedResponse? _userInterested;
 
   void selectActivity(String activity) {
     _selectedActivities.contains(activity)
@@ -118,6 +122,64 @@ class SurveyViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<UserInterestedResponse?> getUserInterested() async {
+    _userInterested = await ProfileService().getUserInterested();
+    if (_userInterested != null) {
+      if (_userInterested!.firstActivity != null)
+        _selectedActivities.add(_userInterested!.firstActivity!);
+      if (_userInterested!.secondActivity != null)
+        _selectedActivities.add(_userInterested!.secondActivity!);
+      if (_userInterested!.thirdActivity != null)
+        _selectedActivities.add(_userInterested!.thirdActivity!);
+
+      if (_userInterested!.firstFood != null)
+        _selectedRestaurant.add(_userInterested!.firstFood!);
+      if (_userInterested!.secondFood != null)
+        _selectedRestaurant.add(_userInterested!.secondFood!);
+      if (_userInterested!.thirdFood != null)
+        _selectedRestaurant.add(_userInterested!.thirdFood!);
+
+      if (_userInterested!.firstHotel != null)
+        _selectedHotel.add(_userInterested!.firstHotel!);
+      if (_userInterested!.secondHotel != null)
+        _selectedHotel.add(_userInterested!.secondHotel!);
+      if (_userInterested!.thirdHotel != null)
+        _selectedHotel.add(_userInterested!.thirdHotel!);
+
+      _minPrice = _userInterested!.minPrice;
+      _maxPrice = _userInterested!.maxPrice;
+    }
+    notifyListeners();
+    return _userInterested;
+  }
+
+  void goToHomePage(BuildContext context) {
+    Navigator.pop(context);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => NavigationBar(),
+      ),
+    );
+  }
+
+  Future<int?> updateUserInterested(BuildContext context) async {
+    final res = await ProfileService().updateUserInterested(_selectedActivities,
+        _selectedRestaurant, _selectedHotel, _minPrice, _maxPrice);
+    if (res == 200) {
+      Navigator.pop(context);
+      return res;
+    }
+  }
+
+  Future<int?> createUserInterested(BuildContext context) async {
+    final res = await ProfileService().createUserInterested(_selectedActivities,
+        _selectedRestaurant, _selectedHotel, _minPrice, _maxPrice);
+    if (res == 201) {
+      goToHomePage(context);
+    }
+  }
+
   List get activities => _activities;
   List<String> get hotel => _hotel;
   List<String> get restaurant => _restaurant;
@@ -126,4 +188,5 @@ class SurveyViewModel with ChangeNotifier {
   int? get minPrice => _minPrice;
   int? get maxPrice => _maxPrice;
   List<String> get selectedHotel => _selectedHotel;
+  UserInterestedResponse? get userInterested => _userInterested;
 }

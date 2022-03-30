@@ -145,7 +145,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                               'ตั้งค่าความสนใจ',
                                               style: FontAssets.bodyText,
                                             ),
-                                            onTap: () {},
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                              profileViewModel
+                                                  .goToSurveyPage(context);
+                                            },
                                           ),
                                           ListTile(
                                             title: Text(
