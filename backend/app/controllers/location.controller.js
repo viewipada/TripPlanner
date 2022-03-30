@@ -168,46 +168,21 @@ exports.findAllData = async (req, res, next) => {
   }
 };
 
-// try {
-//   let locationName = await req.query.locationName;
-//   let filter = await req.query.filter;
-//   console.log(locationName);
-//   console.log(filter);
-//   let newLocationName = await JSON.stringify(locationName)
-//   var condition = (await locationName)
-//     ? { locationName: { [Op.like]: `%${newLocationName}%` } }
-//     : null;
+exports.findByUser = async (req, res) => {
+  try {
+    const { userId, locationId } = req.params;
 
-//   let locationData = await Location.findAll({
-//     where: { condition },
-//     order: [filter, "ASC"],
-//     attributes: [
-//       "locationId",
-//       "locationName",
-//       "category",
-//       "description",
-//       "contactName",
-//       "website",
-//       "duration",
-//       "type",
-//       "imageUrl",
-//       "latitude",
-//       "longitude",
-//       "province",
-//       "averageRating",
-//       "totalReview",
-//       "totalCheckin",
-//       "createBy",
-//       "locationStatus",
-//       "createdAt",
-//       "updatedAt",
-//     ],
-//   });
-//   console.log("locationData : " + locationData);
+    const locationData = await Location.findOne({
+      where: { createBy: userId, locationId },
+      raw: true,
+    });
+    console.log(locationData);
 
-//   //locationData = await locationData.orderBy(locationData, filter, "asc");
-
-//   res.status(200).json(locationData);
-// } catch (err) {
-//   console.log(err);
-// }
+    return locationData != null
+      ? res.status(200).json(locationData)
+      : res.status(204).json({ msg: "There's no location that user:" + userId + "create" });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send("Something wrong while finding locatoin by use");
+  }
+};
