@@ -80,9 +80,7 @@ class MyApp extends StatelessWidget {
             fillColor: Colors.white,
           ),
         ),
-        home: 
-        SurvayPage(),
-        // LogoPage(),
+        home: LogoPage(),
       ),
     );
   }

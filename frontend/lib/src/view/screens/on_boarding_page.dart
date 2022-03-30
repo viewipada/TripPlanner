@@ -162,7 +162,7 @@ class OnBoardingPageState extends State<OnBoardingPage> {
 
       // Done button
       renderDoneBtn: this.renderDoneBtn(),
-      onDonePress: () => loginViewModel.goToHomePage(context),
+      onDonePress: () => loginViewModel.goToSurveyPage(context),
       doneButtonStyle: myButtonStyle(),
 
       // Dot indicator

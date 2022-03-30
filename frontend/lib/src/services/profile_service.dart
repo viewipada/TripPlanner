@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:trip_planner/src/models/response/location_created_response.dart';
 import 'package:trip_planner/src/models/response/profile_details_response.dart';
 import 'package:trip_planner/src/models/response/profile_response.dart';
+import 'package:trip_planner/src/models/response/user_interested_response.dart';
 import 'package:trip_planner/src/repository/shared_pref.dart';
 import 'package:trip_planner/src/services/baggage_service.dart';
 
@@ -120,5 +121,116 @@ class ProfileService {
         throw Exception("can not remove review");
       }
     }
+  }
+
+  Future<UserInterestedResponse?> getUserInterested() async {
+    final userId = await SharedPref().getUserId();
+
+    if (userId != null) {
+      final response = await http.get(Uri.parse(
+          'https://run.mocky.io/v3/ffc57a1e-8978-4db2-a2a6-3fce28b45df8'));
+
+      if (response.statusCode == 200) {
+        var data = UserInterestedResponse.fromJson(json.decode(response.body));
+        return data;
+      } else if (response.statusCode == 400) {
+        return null;
+      } else {
+        throw Exception("can not fetch data review by user & locationId");
+      }
+    } else
+      return null;
+  }
+
+  Future<int?> createUserInterested(
+      List<String> seletedActivities,
+      List<String> selectedRestaurant,
+      List<String> selectedHotel,
+      int? minPrice,
+      int? maxPrice) async {
+    final userId = await SharedPref().getUserId();
+    if (userId != null) {
+      final response = await http.post(
+          Uri.parse("${baseUrl}/api/"), // รอ api post userInterested
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(
+            <String, dynamic>{
+              "userId": userId,
+              "first_activity":
+                  seletedActivities.length > 0 ? seletedActivities[0] : null,
+              "second_activity":
+                  seletedActivities.length > 1 ? seletedActivities[1] : null,
+              "third_activity":
+                  seletedActivities.length > 2 ? seletedActivities[2] : null,
+              "first_food":
+                  selectedRestaurant.length > 0 ? selectedRestaurant[0] : null,
+              "second_food":
+                  selectedRestaurant.length > 1 ? selectedRestaurant[1] : null,
+              "third_food":
+                  selectedRestaurant.length > 2 ? selectedRestaurant[2] : null,
+              "first_hotel": selectedHotel.length > 0 ? selectedHotel[0] : null,
+              "second_hotel":
+                  selectedHotel.length > 1 ? selectedHotel[1] : null,
+              "third_hotel": selectedHotel.length > 2 ? selectedHotel[2] : null,
+              "min_price": minPrice,
+              "max_price": maxPrice
+            },
+          ));
+
+      if (response.statusCode == 201) {
+        return response.statusCode;
+      } else {
+        throw Exception("can not create userInterest");
+      }
+    } else
+      print('null userId');
+  }
+
+  Future<int?> updateUserInterested(
+      List<String> seletedActivities,
+      List<String> selectedRestaurant,
+      List<String> selectedHotel,
+      int? minPrice,
+      int? maxPrice) async {
+    final userId = await SharedPref().getUserId();
+    if (userId != null) {
+      final response = await http.put(
+          Uri.parse("${baseUrl}/api/"), // รอ api post userInterested
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(
+            <String, dynamic>{
+              "userId": userId,
+              "first_activity":
+                  seletedActivities.length > 0 ? seletedActivities[0] : null,
+              "second_activity":
+                  seletedActivities.length > 1 ? seletedActivities[1] : null,
+              "third_activity":
+                  seletedActivities.length > 2 ? seletedActivities[2] : null,
+              "first_food":
+                  selectedRestaurant.length > 0 ? selectedRestaurant[0] : null,
+              "second_food":
+                  selectedRestaurant.length > 1 ? selectedRestaurant[1] : null,
+              "third_food":
+                  selectedRestaurant.length > 2 ? selectedRestaurant[2] : null,
+              "first_hotel": selectedHotel.length > 0 ? selectedHotel[0] : null,
+              "second_hotel":
+                  selectedHotel.length > 1 ? selectedHotel[1] : null,
+              "third_hotel": selectedHotel.length > 2 ? selectedHotel[2] : null,
+              "min_price": minPrice,
+              "max_price": maxPrice
+            },
+          ));
+
+      if (response.statusCode == 200) {
+        return response.statusCode;
+      } else {
+        throw Exception("can not create userInterest");
+      }
+    } else
+      print('null userId');
   }
 }

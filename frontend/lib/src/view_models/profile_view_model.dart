@@ -17,6 +17,7 @@ import 'package:trip_planner/src/view/screens/edit_profile_page.dart';
 import 'package:trip_planner/src/view/screens/location_detail_page.dart';
 import 'package:trip_planner/src/view/screens/login_page.dart';
 import 'package:trip_planner/src/view/screens/review_page.dart';
+import 'package:trip_planner/src/view/screens/survey_page.dart';
 import 'package:trip_planner/src/view/screens/trip_detail_page.dart';
 
 class ProfileViewModel with ChangeNotifier {
@@ -143,6 +144,15 @@ class ProfileViewModel with ChangeNotifier {
       context,
       MaterialPageRoute(
         builder: (context) => EditProfilePage(),
+      ),
+    );
+  }
+
+  void goToSurveyPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SurveyPage(),
       ),
     );
   }
