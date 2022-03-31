@@ -350,28 +350,28 @@ Widget buildSearchResultCard(BuildContext context,
                         TagCategory(
                           category: item.category,
                         ),
-                        ElevatedButton.icon(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.add,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                          label: Text(
-                            'เพิ่มลงกระเป๋า',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                              primary: Palette.PrimaryColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              elevation: 0),
-                        ),
+                        // ElevatedButton.icon(
+                        //   onPressed: () {},
+                        //   icon: Icon(
+                        //     Icons.add,
+                        //     color: Colors.white,
+                        //     size: 20,
+                        //   ),
+                        //   label: Text(
+                        //     'เพิ่มลงกระเป๋า',
+                        //     style: TextStyle(
+                        //       color: Colors.white,
+                        //       fontWeight: FontWeight.bold,
+                        //       fontSize: 14,
+                        //     ),
+                        //   ),
+                        //   style: ElevatedButton.styleFrom(
+                        //       primary: Palette.PrimaryColor,
+                        //       shape: RoundedRectangleBorder(
+                        //         borderRadius: BorderRadius.circular(5),
+                        //       ),
+                        //       elevation: 0),
+                        // ),
                       ],
                     ),
                   ),

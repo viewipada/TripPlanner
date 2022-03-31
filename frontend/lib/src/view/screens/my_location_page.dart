@@ -423,25 +423,25 @@ Widget pinCard(LocationNearbyResponse location) {
             ),
           ],
         ),
-        Expanded(
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: IconButton(
-              splashRadius: 1,
-              iconSize: 36,
-              onPressed: () {},
-              icon: Icon(
-                Icons.add_circle_outline_rounded,
-                color: Palette.SecondaryColor,
-              ),
-              alignment: Alignment.bottomRight,
-              padding: EdgeInsets.only(
-                right: getProportionateScreenWidth(15),
-                bottom: getProportionateScreenWidth(10),
-              ),
-            ),
-          ),
-        ),
+        // Expanded(
+        //   child: Align(
+        //     alignment: Alignment.bottomRight,
+        //     child: IconButton(
+        //       splashRadius: 1,
+        //       iconSize: 36,
+        //       onPressed: () {},
+        //       icon: Icon(
+        //         Icons.add_circle_outline_rounded,
+        //         color: Palette.SecondaryColor,
+        //       ),
+        //       alignment: Alignment.bottomRight,
+        //       padding: EdgeInsets.only(
+        //         right: getProportionateScreenWidth(15),
+        //         bottom: getProportionateScreenWidth(10),
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ],
     ),
   );
@@ -562,35 +562,35 @@ Widget locationListView(BuildContext context, SearchViewModel searchViewModel) {
                                                 TagCategory(
                                                   category: item.category,
                                                 ),
-                                                ElevatedButton.icon(
-                                                  onPressed: () {},
-                                                  icon: Icon(
-                                                    Icons.add,
-                                                    color: Colors.white,
-                                                    size: 20,
-                                                  ),
-                                                  label: Text(
-                                                    'เพิ่มลงกระเป๋า',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                          primary: Palette
-                                                              .PrimaryColor,
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        5),
-                                                          ),
-                                                          elevation: 0),
-                                                ),
+                                                // ElevatedButton.icon(
+                                                //   onPressed: () {},
+                                                //   icon: Icon(
+                                                //     Icons.add,
+                                                //     color: Colors.white,
+                                                //     size: 20,
+                                                //   ),
+                                                //   label: Text(
+                                                //     'เพิ่มลงกระเป๋า',
+                                                //     style: TextStyle(
+                                                //       color: Colors.white,
+                                                //       fontWeight:
+                                                //           FontWeight.bold,
+                                                //       fontSize: 14,
+                                                //     ),
+                                                //   ),
+                                                //   style:
+                                                //       ElevatedButton.styleFrom(
+                                                //           primary: Palette
+                                                //               .PrimaryColor,
+                                                //           shape:
+                                                //               RoundedRectangleBorder(
+                                                //             borderRadius:
+                                                //                 BorderRadius
+                                                //                     .circular(
+                                                //                         5),
+                                                //           ),
+                                                //           elevation: 0),
+                                                // ),
                                               ],
                                             ),
                                           ),
@@ -678,28 +678,28 @@ Widget locationDetailsBottomSheet(LocationNearbyResponse location,
                 ),
               ),
               SizedBox(width: getProportionateScreenWidth(15)),
-              ElevatedButton.icon(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 20,
-                ),
-                label: Text(
-                  'เพิ่มลงกระเป๋า',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                    primary: Palette.PrimaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    elevation: 0),
-              ),
+              // ElevatedButton.icon(
+              //   onPressed: () {},
+              //   icon: Icon(
+              //     Icons.add,
+              //     color: Colors.white,
+              //     size: 20,
+              //   ),
+              //   label: Text(
+              //     'เพิ่มลงกระเป๋า',
+              //     style: TextStyle(
+              //       color: Colors.white,
+              //       fontWeight: FontWeight.bold,
+              //       fontSize: 14,
+              //     ),
+              //   ),
+              //   style: ElevatedButton.styleFrom(
+              //       primary: Palette.PrimaryColor,
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(5),
+              //       ),
+              //       elevation: 0),
+              // ),
             ],
           ),
         ),

@@ -1232,7 +1232,7 @@ class TripStepperViewModel with ChangeNotifier {
             ),
             icon: await BitmapDescriptor.fromBytes(
               await getBytesFromAsset(
-                IconAssets.foodMarker,
+                IconAssets.shopMarker,
                 100,
               ),
             ),

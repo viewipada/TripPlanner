@@ -95,6 +95,11 @@ class ProfileViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> deleteLocation(int locationId) async {
+    await ProfileService().deleteLocation(locationId);
+    notifyListeners();
+  }
+
   void goBack(BuildContext context) {
     Navigator.pop(context);
   }

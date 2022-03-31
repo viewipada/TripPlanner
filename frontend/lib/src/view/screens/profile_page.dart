@@ -747,18 +747,14 @@ Widget buildLocationRequest(
         color: Palette.DeleteColor,
         icon: Icons.delete,
         onTap: () {
-          // profileViewModel.deleteTrip(trip);
+          profileViewModel.deleteLocation(location.locationId);
           Slidable.of(context)?.close();
         },
       )
     ],
     child: InkWell(
       onTap: () => location.locationStatus == 'Approved'
-          ? profileViewModel.goToLocationDetail(
-              context,
-              // location.locationId
-              10,
-            )
+          ? profileViewModel.goToLocationDetail(context, location.locationId)
           : profileViewModel.goToEditLocationRequestDetail(
               context, location.locationId),
       child: Container(

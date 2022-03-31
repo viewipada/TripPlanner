@@ -12,6 +12,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/src/models/response/search_result_response.dart';
 import 'package:trip_planner/src/models/response/travel_nearby_response.dart';
+import 'package:trip_planner/src/services/baggage_service.dart';
 import 'package:trip_planner/src/services/location_nearby_service.dart';
 import 'package:trip_planner/src/services/search_result_service.dart';
 import 'package:trip_planner/src/view/screens/location_detail_page.dart';
@@ -261,6 +262,16 @@ class SearchViewModel with ChangeNotifier {
       final searchMessageLower = searchMessage.toLowerCase();
       return nameLower.contains(searchMessageLower);
     }).toList();
+    notifyListeners();
+  }
+
+  Future<void> addBaggageItem(int locationId) async {
+    await BaggageService().addBaggageItem(locationId);
+    notifyListeners();
+  }
+
+  Future<void> removeBaggageItem(int locationId) async {
+    await BaggageService().removeBaggageItem(locationId);
     notifyListeners();
   }
 

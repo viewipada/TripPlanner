@@ -42,20 +42,20 @@ class LocationCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      print('see more ... ');
-                    },
-                    child: Container(
-                      child: Text(
-                        "ดูเพิ่มเติม >> ",
-                        textAlign: TextAlign.end,
-                        style: FontAssets.hintText,
-                      ),
-                    ),
-                  ),
-                ),
+                // Expanded(
+                //   child: GestureDetector(
+                //     onTap: () {
+                //       print('see more ... ');
+                //     },
+                //     child: Container(
+                //       child: Text(
+                //         "ดูเพิ่มเติม >> ",
+                //         textAlign: TextAlign.end,
+                //         style: FontAssets.hintText,
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
