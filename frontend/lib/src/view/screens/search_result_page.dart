@@ -238,7 +238,7 @@ Widget buildTabBarView(
           child: CoolDropdown(
             dropdownList: searchViewModel.dropdownItemList,
             defaultValue: searchViewModel.dropdownItemList[0],
-            dropdownHeight: 170,
+            dropdownHeight: 120,
             dropdownItemGap: 0,
             dropdownWidth: getProportionateScreenWidth(150),
             resultWidth: getProportionateScreenWidth(170),

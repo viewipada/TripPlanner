@@ -23,7 +23,6 @@ import 'package:trip_planner/src/view/screens/search_result_page.dart';
 class SearchViewModel with ChangeNotifier {
   List _dropdownItemList = [
     {'label': 'เรียงตามคะแนน', 'value': 'rating'},
-    {'label': 'เรียงตามระยะทาง', 'value': 'distance'},
     {'label': 'เรียงตามยอดเช็คอิน', 'value': 'checkin'},
   ];
   List _tabs = [
