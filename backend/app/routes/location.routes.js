@@ -15,7 +15,7 @@ module.exports = (app) => {
   // Retrieve one location by locationId
   router.get("/:locationId", locations.findOne);
 
-  router.get("/:userId", locations.findByUser);
+  router.get("/user/:userId", locations.findByUser);
 
   app.use("/api/locations", router);
 };
