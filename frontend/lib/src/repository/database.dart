@@ -57,7 +57,6 @@ class DatabaseRepository {
             tripId INTEGER PRIMARY KEY AUTOINCREMENT,
             tripName STRING NOT NULL,
             trumbnail STRING,
-            vehicle STRING,
             firstLocation STRING NOT NULL,
             lastLocation STRING NOT NULL,
             totalPeople INT NOT NULL,
