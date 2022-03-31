@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -63,6 +62,7 @@ class ReviewViewModel with ChangeNotifier {
       _rating = 0;
       return statusCode;
     }
+    return null;
   }
 
   Future<int?> createReview(BuildContext context, int locationId) async {
@@ -76,6 +76,7 @@ class ReviewViewModel with ChangeNotifier {
       _rating = 0;
       return statusCode;
     }
+    return null;
   }
 
   Future<ReviewResponse?> getReviewByUserIdAndLocationId(int locationId) async {

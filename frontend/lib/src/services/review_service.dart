@@ -64,6 +64,7 @@ class ReviewService {
       }
     } else
       print('null userId');
+    return null;
   }
 
   Future<int?> updateReview(
@@ -105,6 +106,7 @@ class ReviewService {
       }
     } else
       print('null userId');
+    return null;
   }
 
   // Future<void> removeBaggageItem(int locationId) async {

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trip_planner/src/models/response/location_detail_response.dart';
 import 'package:trip_planner/src/services/baggage_service.dart';

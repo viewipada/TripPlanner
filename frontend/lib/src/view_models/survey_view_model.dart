@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/src/models/response/user_interested_response.dart';
@@ -158,7 +157,7 @@ class SurveyViewModel with ChangeNotifier {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => NavigationBar(),
+        builder: (context) => NavigationBarPage(),
       ),
     );
   }
@@ -170,6 +169,7 @@ class SurveyViewModel with ChangeNotifier {
       Navigator.pop(context);
       return res;
     }
+    return null;
   }
 
   Future<int?> createUserInterested(BuildContext context) async {
@@ -178,6 +178,7 @@ class SurveyViewModel with ChangeNotifier {
     if (res == 201) {
       goToHomePage(context);
     }
+    return null;
   }
 
   List get activities => _activities;

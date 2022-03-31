@@ -3,7 +3,6 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -17,7 +16,6 @@ import 'package:trip_planner/src/services/location_nearby_service.dart';
 import 'package:trip_planner/src/services/search_result_service.dart';
 import 'package:trip_planner/src/view/screens/location_detail_page.dart';
 import 'package:trip_planner/src/view/screens/my_location_page.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:trip_planner/src/view/screens/search_result_page.dart';
 
 class SearchViewModel with ChangeNotifier {

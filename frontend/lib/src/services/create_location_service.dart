@@ -104,6 +104,7 @@ class CreateLocationService {
       }
     } else
       print('null userId');
+    return null;
   }
 
   Future<int?> updateLocation(
@@ -168,5 +169,6 @@ class CreateLocationService {
       }
     } else
       print('null userId');
+    return null;
   }
 }

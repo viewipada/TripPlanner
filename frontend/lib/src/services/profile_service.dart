@@ -201,6 +201,7 @@ class ProfileService {
       }
     } else
       print('null userId');
+    return null;
   }
 
   Future<int?> updateUserInterested(
@@ -247,5 +248,6 @@ class ProfileService {
       }
     } else
       print('null userId');
+    return null;
   }
 }

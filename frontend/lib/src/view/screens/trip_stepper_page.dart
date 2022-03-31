@@ -1,5 +1,4 @@
 import 'package:enhance_stepper/enhance_stepper.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
@@ -66,7 +65,6 @@ class _TripStepperPageState extends State<TripStepperPage> {
   Widget buildStepperCustom(
       BuildContext context, TripStepperViewModel tripStepperViewModel) {
     late VoidCallback _onStepContinue;
-    late VoidCallback _onStepCancel;
     TripsOperations tripsOperations = TripsOperations();
     Trip trip;
 
@@ -194,12 +192,10 @@ class _TripStepperPageState extends State<TripStepperPage> {
                   tripStepperViewModel.setStepOnTapped(index);
                   // print(index);
                 },
-                controlsBuilder: (BuildContext context,
-                    {VoidCallback? onStepContinue,
-                    VoidCallback? onStepCancel}) {
-                  _onStepContinue = onStepContinue!;
-                  _onStepCancel = onStepCancel!;
-                  return SizedBox.shrink();
+                controlsBuilder:
+                    (BuildContext context, ControlsDetails details) {
+                  _onStepContinue = details.onStepContinue!;
+                  return SizedBox();
                 },
               );
             } else {
@@ -226,19 +222,6 @@ class _TripStepperPageState extends State<TripStepperPage> {
                 ),
               ),
             ),
-            //     Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     TextButton(
-            //       onPressed: () => _onStepCancel(),
-            //       child: Text("Back"),
-            //     ),
-            //     ElevatedButton(
-            //       onPressed: () => _onStepContinue(),
-            //       child: Text("Next"),
-            //     ),
-            //   ],
-            // ),
           ),
         ),
       ],

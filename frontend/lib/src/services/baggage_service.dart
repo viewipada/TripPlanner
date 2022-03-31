@@ -45,6 +45,7 @@ class BaggageService {
       }
     } else
       print('null userId');
+    return null;
   }
 
   Future<int?> removeBaggageItem(int locationId) async {
@@ -61,6 +62,7 @@ class BaggageService {
         throw Exception("can not remove baggageItem");
       }
     }
+    return null;
   }
 
   List<BaggageResponse> setAllSelected(
