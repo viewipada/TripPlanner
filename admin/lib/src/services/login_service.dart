@@ -1,8 +1,9 @@
 import 'dart:convert';
+import 'package:admin/src/shared_pref.dart';
 import 'package:http/http.dart' as http;
 
 class LoginService {
-  final String baseUrl = 'http://10.0.2.2:8080';
+  final String baseUrl = 'http://localhost:8080';
 
   Future<int?> tryToLogin(String username, String password) async {
     final response = await http.post(Uri.parse("$baseUrl/api/authen/login"),
@@ -11,15 +12,8 @@ class LoginService {
     if (response.statusCode == 200) {
       var jwt = json.decode(ascii.decode(
           base64.decode(base64.normalize(response.body.split(".")[1]))));
-      // await SharedPref().saveUserId(jwt['user_id']);
-      // List<String> _baggage = [];
-      // await BaggageService()
-      //     .getBaggageList()
-      //     .then((list) => list.forEach((element) {
-      //           _baggage.add(element.locationId.toString());
-      //         }));
-      // await SharedPref().initialBaggageItem(_baggage);
-      print(jwt['user_id']);
+      await SharedPref().saveUserId(jwt['user_id']);
+      await SharedPref().saveUsername(jwt['username']);
       return response.statusCode;
     } else if (response.statusCode == 400) {
       //wrong password

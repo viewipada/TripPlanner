@@ -1,4 +1,5 @@
 import 'package:admin/src/palette.dart';
+import 'package:admin/src/view/dashboard_page.dart';
 import 'package:admin/src/view/login_page.dart';
 import 'package:admin/src/view_models/login_view_model.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
         ),
         routes: {
           '/': (context) => const LoginPage(),
+          '/dashboard': (context) => const DashboardPage(),
         },
       ),
     );

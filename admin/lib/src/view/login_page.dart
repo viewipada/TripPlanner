@@ -4,6 +4,7 @@ import 'package:admin/src/size_config.dart';
 import 'package:admin/src/view_models/login_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -17,6 +18,8 @@ class _LoginPageState extends State<LoginPage> {
   final passwordFocusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
   bool _passwordVisible = false;
+  String? _errorDialog = "";
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +98,9 @@ class _LoginPageState extends State<LoginPage> {
                     key: _formKey,
                     child: Column(
                       children: [
+                        SizedBox(
+                          height: getProportionateScreenHeight(5),
+                        ),
                         Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: getProportionateScreenWidth(10),
@@ -170,6 +176,11 @@ class _LoginPageState extends State<LoginPage> {
                                 loginViewModel.passwordChanged(value),
                           ),
                         ),
+                        _errorDialog == null
+                            ? const SizedBox()
+                            : _errorDialog == ''
+                                ? const SizedBox()
+                                : instruction(_errorDialog!),
                         Padding(
                           padding: EdgeInsets.symmetric(
                               vertical: getProportionateScreenHeight(15),
@@ -177,45 +188,69 @@ class _LoginPageState extends State<LoginPage> {
                           child: SizedBox(
                             width: double.infinity,
                             height: getProportionateScreenHeight(50),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // if (_errorDialog != null) {
-                                if (_formKey.currentState!.validate()) {
-                                  // setState(() {
-                                  //   _errorDialog = null;
-                                  // });
-                                  // loginViewModel
-                                  //     .tryToRegister(context)
-                                  //     .then((status) {
-                                  //   setState(() {
-                                  //     if (status == 201) {
-                                  //       _errorDialog = "";
-                                  //     } else if (status == 409) {
-                                  //       _errorDialog =
-                                  //           "ชื่อผู้ใช้นี้ มีอยู่แล้ว";
-                                  //     } else {
-                                  //       _errorDialog =
-                                  //           "กรุณาลองใหม่อีกครั้ง";
-                                  //     }
-                                  //   });
-                                  // });
-                                  // }
-                                }
-                              },
-                              child: const Text(
-                                'เข้าสู่ระบบ',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                primary: Palette.webText,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                            ),
+                            child: isLoading
+                                ? Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SpinKitFadingCircle(
+                                        color: Palette.primaryColor,
+                                        size: getProportionateScreenHeight(24),
+                                      ),
+                                      SizedBox(
+                                          width:
+                                              getProportionateScreenWidth(10)),
+                                      const Text(
+                                        'กำลังเข้าสู่ระบบ...',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Palette.primaryColor,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : ElevatedButton(
+                                    onPressed: () {
+                                      if (_errorDialog != null) {
+                                        if (_formKey.currentState!.validate()) {
+                                          setState(() {
+                                            _errorDialog = null;
+                                            isLoading = true;
+                                          });
+                                          loginViewModel
+                                              .tryToLogin(context)
+                                              .then((status) {
+                                            setState(() {
+                                              if (status == 200) {
+                                                _errorDialog = "";
+                                                isLoading = false;
+                                              } else {
+                                                setState(() {
+                                                  _errorDialog =
+                                                      "กรุณาลองใหม่อีกครั้ง";
+                                                  isLoading = false;
+                                                });
+                                              }
+                                            });
+                                          });
+                                        }
+                                      }
+                                    },
+                                    child: const Text(
+                                      'เข้าสู่ระบบ',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Palette.webText,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                  ),
                           ),
                         ),
                       ],
@@ -229,4 +264,39 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+}
+
+Widget instruction(String text) {
+  return Container(
+    padding: EdgeInsets.symmetric(
+      vertical: getProportionateScreenHeight(10),
+      horizontal: getProportionateScreenWidth(10),
+    ),
+    margin: EdgeInsets.symmetric(
+      vertical: getProportionateScreenHeight(10),
+      horizontal: getProportionateScreenWidth(10),
+    ),
+    decoration: BoxDecoration(
+      color: const Color(0xffFEFFE1),
+      borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+      border: Border.all(color: Palette.lightOrangeColor),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Icon(
+          Icons.lightbulb_outline_rounded,
+          color: Palette.lightOrangeColor,
+          size: 20,
+        ),
+        Text(
+          text,
+          style: const TextStyle(
+              color: Palette.lightOrangeColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 12),
+        ),
+      ],
+    ),
+  );
 }
