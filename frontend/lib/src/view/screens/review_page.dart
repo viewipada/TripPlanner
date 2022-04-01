@@ -349,7 +349,9 @@ class _ReviewPageState extends State<ReviewPage> {
                                                       getProportionateScreenWidth(
                                                           10)),
                                               Text(
-                                                'กำลังสร้างรีวิวของคุณ...',
+                                                hasData
+                                                    ? 'กำลังบันทึกการแก้ไข...'
+                                                    : 'กำลังสร้างรีวิวของคุณ...',
                                                 style: TextStyle(
                                                   fontSize: 14,
                                                   color: Palette.PrimaryColor,

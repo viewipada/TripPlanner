@@ -57,8 +57,8 @@ class ProfileService {
   Future<ProfileResponse> getMyProfile() async {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
-      final response = await http.get(Uri.parse(
-          "https://run.mocky.io/v3/783724fb-230b-4ab2-b873-4cd49ed7f0af"));
+      final response =
+          await http.get(Uri.parse("${baseUrl}/api/user/${userId}"));
 
       if (response.statusCode == 200) {
         var data = ProfileResponse.fromJson(json.decode(response.body));
@@ -108,19 +108,20 @@ class ProfileService {
       return [];
   }
 
-  Future<void> deleteReview(int locationId) async {
+  Future<int?> deleteReview(int locationId) async {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
       final response = await http.delete(
         Uri.parse('${baseUrl}/api/reviews/${userId}/${locationId}'),
       );
-
-      if (response.statusCode == 200) {
-        print(response.body);
-      } else {
-        throw Exception("can not remove review");
-      }
+      // if (response.statusCode == 200) {
+      //   print(response.body);
+      // } else {
+      //   throw Exception("can not remove review");
+      // }
+      return response.statusCode;
     }
+    return null;
   }
 
   Future<void> deleteLocation(int locationId) async {
@@ -240,6 +241,28 @@ class ProfileService {
               "max_price": maxPrice
             },
           ));
+
+      if (response.statusCode == 200) {
+        return response.statusCode;
+      } else {
+        throw Exception("can not create userInterest");
+      }
+    } else
+      print('null userId');
+    return null;
+  }
+
+  Future<int?> updateUserProfile(String gender, String birthDath) async {
+    final userId = await SharedPref().getUserId();
+    if (userId != null) {
+      final response =
+          await http.put(Uri.parse("${baseUrl}/api/user/${userId}"),
+              headers: <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
+              },
+              body: jsonEncode(
+                <String, dynamic>{"gender": gender, "birthDath": birthDath},
+              ));
 
       if (response.statusCode == 200) {
         return response.statusCode;
