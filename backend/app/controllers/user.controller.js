@@ -187,7 +187,6 @@ exports.findOne = async (req, res) => {
     if (!reviewData) {
       newUserData.reviewers = [];
     } else {
-      console.log(12345678891000000);
       const data = await Promise.all(
         reviewData.map(
           async ({
@@ -200,7 +199,6 @@ exports.findOne = async (req, res) => {
             createdAt,
           }) => {
             try {
-              console.log(123456);
               let { imgUrl: profileImage, username } = await User.findOne({
                 where: {
                   id: userId,
@@ -240,6 +238,13 @@ exports.findOne = async (req, res) => {
 
 exports.update = async (req, res) => {
   try {
+    const id = req.params.userId;
+
+    const updateData = await User.update(req.body, { where: { id }, returning: true, plain: true });
+
+    console.log(updateData);
+
+    return res.status(200).json(updateData[1]);
   } catch (err) {
     return res.status(400).send(err);
   }
