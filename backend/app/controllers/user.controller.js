@@ -1,5 +1,6 @@
 const db = require("../models");
 const User = db.users;
+const Review = db.reviews;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const tokenKey = require("../config/authen.config");
@@ -162,4 +163,84 @@ exports.delete = (req, res) => {
         data: [],
       });
     });
+};
+
+exports.findOne = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const userData = await User.findOne({ where: { id: userId }, raw: true });
+
+    const { id, password, birthDate, gender, role, createdAt, updatedAt, ...newUserData } =
+      userData;
+    newUserData.rank = "Silver traveller";
+
+    let reviewData = await Review.findAll({
+      where: {
+        userId,
+      },
+      raw: true,
+    });
+
+    console.log(reviewData);
+
+    if (!reviewData) {
+      newUserData.reviewers = [];
+    } else {
+      console.log(12345678891000000);
+      const data = await Promise.all(
+        reviewData.map(
+          async ({
+            userId,
+            reviewRate: rating,
+            reviewCaption: caption,
+            reviewImg1,
+            reviewImg2,
+            reviewImg3,
+            createdAt,
+          }) => {
+            try {
+              console.log(123456);
+              let { imgUrl: profileImage, username } = await User.findOne({
+                where: {
+                  id: userId,
+                },
+                raw: true,
+              });
+
+              console.log(profileImage, username);
+
+              return {
+                profileImage,
+                username,
+                rating,
+                caption,
+                images: [reviewImg1, reviewImg2, reviewImg3].filter((image) => image),
+                createdAt,
+              };
+            } catch (error) {
+              console.log(err);
+              return res.status(400).send("Something wrong while query user review");
+            }
+          }
+        )
+      ).catch((err) => {
+        console.log(err);
+      });
+
+      newUserData.reviewers = data;
+    }
+
+    return res.status(200).json(newUserData);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send("Something worng while finding this user");
+  }
+};
+
+exports.update = async (req, res) => {
+  try {
+  } catch (err) {
+    return res.status(400).send(err);
+  }
 };
