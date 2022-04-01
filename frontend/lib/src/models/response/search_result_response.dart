@@ -8,9 +8,8 @@ class SearchResultResponse {
   String locationName;
   String imageUrl;
   String description;
-  String category;
+  int category;
   double rating;
-  double ditanceFromeUser;
   int totalCheckin;
 
   SearchResultResponse({
@@ -20,7 +19,6 @@ class SearchResultResponse {
     required this.description,
     required this.category,
     required this.rating,
-    required this.ditanceFromeUser,
     required this.totalCheckin,
   });
 

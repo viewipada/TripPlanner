@@ -24,10 +24,10 @@ class SearchViewModel with ChangeNotifier {
     {'label': 'เรียงตามยอดเช็คอิน', 'value': 'checkin'},
   ];
   List _tabs = [
-    {'label': 'ทั้งหมด', 'value': 'all'},
-    {'label': 'ที่เที่ยว', 'value': 'travel'},
-    {'label': 'ที่กิน', 'value': 'food'},
-    {'label': 'ที่พัก', 'value': 'hotel'},
+    {'label': 'ทั้งหมด', 'value': 0},
+    {'label': 'ที่เที่ยว', 'value': 1},
+    {'label': 'ที่กิน', 'value': 2},
+    {'label': 'ที่พัก', 'value': 3},
   ];
   List _radius = [
     {'r': 1, 'isSelected': false},
@@ -231,14 +231,12 @@ class SearchViewModel with ChangeNotifier {
     Navigator.pop(context);
   }
 
-  Future<void> getSearchResultBy(String category, String sortedBy) async {
+  Future<void> getSearchResultBy(int category, String sortedBy) async {
     _searchResultCard = await [];
     notifyListeners();
 
     _searchResultCard =
-        await Future.delayed(Duration(milliseconds: 500), () async {
-      return await SearchResultService().getSearchResultBy(category, sortedBy);
-    });
+        await SearchResultService().getSearchResultBy(category, sortedBy);
     notifyListeners();
   }
 
