@@ -1,7 +1,5 @@
 import 'package:cool_dropdown/cool_dropdown.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
@@ -238,7 +236,7 @@ Widget buildTabBarView(
           child: CoolDropdown(
             dropdownList: searchViewModel.dropdownItemList,
             defaultValue: searchViewModel.dropdownItemList[0],
-            dropdownHeight: 170,
+            dropdownHeight: 120,
             dropdownItemGap: 0,
             dropdownWidth: getProportionateScreenWidth(150),
             resultWidth: getProportionateScreenWidth(170),
@@ -350,28 +348,28 @@ Widget buildSearchResultCard(BuildContext context,
                         TagCategory(
                           category: item.category,
                         ),
-                        ElevatedButton.icon(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.add,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                          label: Text(
-                            'เพิ่มลงกระเป๋า',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                              primary: Palette.PrimaryColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              elevation: 0),
-                        ),
+                        // ElevatedButton.icon(
+                        //   onPressed: () {},
+                        //   icon: Icon(
+                        //     Icons.add,
+                        //     color: Colors.white,
+                        //     size: 20,
+                        //   ),
+                        //   label: Text(
+                        //     'เพิ่มลงกระเป๋า',
+                        //     style: TextStyle(
+                        //       color: Colors.white,
+                        //       fontWeight: FontWeight.bold,
+                        //       fontSize: 14,
+                        //     ),
+                        //   ),
+                        //   style: ElevatedButton.styleFrom(
+                        //       primary: Palette.PrimaryColor,
+                        //       shape: RoundedRectangleBorder(
+                        //         borderRadius: BorderRadius.circular(5),
+                        //       ),
+                        //       elevation: 0),
+                        // ),
                       ],
                     ),
                   ),

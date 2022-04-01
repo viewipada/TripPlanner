@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
-import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/trip_card_response.dart';
 import 'package:trip_planner/src/view_models/home_view_model.dart';
@@ -46,7 +45,7 @@ class TripCard extends StatelessWidget {
               children: tripList.map((trip) {
                 return InkWell(
                   onTap: () {
-                    print('click on trip ${trip.tripId}');
+                    homeViewModel.goToOtherTripPage(context, trip.tripId);
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(
@@ -87,21 +86,23 @@ class TripCard extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
-                                          trip.tripName,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          style: FontAssets.subtitleText,
-                                        ),
-                                        IconButton(
-                                          constraints: BoxConstraints(),
-                                          padding: EdgeInsets.zero,
-                                          icon: ImageIcon(
-                                            AssetImage(IconAssets.copyToEdit),
+                                        Expanded(
+                                          child: Text(
+                                            trip.tripName,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            style: FontAssets.subtitleText,
                                           ),
-                                          color: Palette.DarkGrey,
-                                          onPressed: () {},
                                         ),
+                                        // IconButton(
+                                        //   constraints: BoxConstraints(),
+                                        //   padding: EdgeInsets.zero,
+                                        //   icon: ImageIcon(
+                                        //     AssetImage(IconAssets.copyToEdit),
+                                        //   ),
+                                        //   color: Palette.DarkGrey,
+                                        //   onPressed: () {},
+                                        // ),
                                       ],
                                     ),
                                   ),
@@ -112,8 +113,7 @@ class TripCard extends StatelessWidget {
                                     style: FontAssets.bodyText,
                                   ),
                                   Text(
-                                    trip.sumOfLocation.toString() +
-                                        ' สถานที่',
+                                    trip.sumOfLocation.toString() + ' สถานที่',
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                     style: FontAssets.bodyText,

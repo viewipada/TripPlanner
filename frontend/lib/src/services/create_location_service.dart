@@ -28,7 +28,7 @@ class CreateLocationService {
   Future<LocationRequestDetailResponse> getLocationRequestById(
       int locationId) async {
     final response = await http.get(
-        Uri.parse("https://run.mocky.io/v3/dc592e7e-90a1-436c-9169-a8ad75083be9"
+        Uri.parse("https://run.mocky.io/v3/032128c4-0a9d-415f-9b7e-d48c6e2f7460"
             // 'http://10.0.2.2:8080/api/locations/${locationId}'
             ));
     // print(response.body);
@@ -104,5 +104,71 @@ class CreateLocationService {
       }
     } else
       print('null userId');
+    return null;
+  }
+
+  Future<int?> updateLocation(
+      String locationName,
+      int category,
+      String description,
+      String contactNumber,
+      String website,
+      String locationType,
+      File images,
+      LatLng locationPin,
+      String province,
+      List dayOfWeek) async {
+    final userId = await SharedPref().getUserId();
+    if (userId != null) {
+      List<String> openingHour = [];
+      await Future.forEach(
+          dayOfWeek,
+          (dynamic day) => openingHour.add(day['isOpening']
+              ? '${day['openTime']} - ${day['closedTime']}'
+              : "ปิด"));
+      var formData = FormData();
+      formData.files.add(MapEntry(
+        "file",
+        await MultipartFile.fromFile(images.path),
+      ));
+      var res = await Dio().post("${baseUrl}/api/file/upload", data: formData);
+      final imageUrl = await res.data['downloadUrl'].toString();
+
+      final response = await http.put(Uri.parse("${baseUrl}/api/locations/"),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(
+            <String, dynamic>{
+              "locationId": null,
+              "locationName": locationName,
+              "category": category,
+              "description": description,
+              "contactNumber": contactNumber == '' ? '-' : contactNumber,
+              "website": website == '' ? '-' : website,
+              "duration": 1, //รอ api default duration
+              "type": locationType,
+              "imageUrl": imageUrl,
+              "latitude": locationPin.latitude,
+              "longitude": locationPin.longitude,
+              "province": province,
+              "averageRating": 0.0,
+              "totalReview": 0,
+              "totalCheckin": 0,
+              "createBy": userId,
+              "locationStatus": "In progress",
+              "openingHour": openingHour
+            },
+          ));
+
+      if (response.statusCode == 201) {
+        print(response.body);
+        return response.statusCode;
+      } else {
+        throw Exception("can not create location");
+      }
+    } else
+      print('null userId');
+    return null;
   }
 }

@@ -5,7 +5,6 @@ import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/repository/shared_pref.dart';
 import 'package:trip_planner/src/view/screens/login_page.dart';
-import 'package:trip_planner/src/view/screens/survey_page.dart';
 import 'package:trip_planner/src/view/widgets/navigation_bar.dart';
 import 'package:trip_planner/src/view_models/baggage_view_model.dart';
 import 'package:trip_planner/src/view_models/create_location_view_model.dart';
@@ -128,6 +127,6 @@ class _LogoPageState extends State<LogoPage> {
         ),
       );
     else
-      return userId == null ? LoginPage() : NavigationBar();
+      return userId == null ? LoginPage() : NavigationBarPage();
   }
 }

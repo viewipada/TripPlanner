@@ -1,10 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:trip_planner/src/services/profile_service.dart';
 import 'package:trip_planner/src/view/screens/on_boarding_page.dart';
 import 'package:trip_planner/src/view/screens/pdpa_page.dart';
 import 'package:trip_planner/src/view/screens/survey_page.dart';
+import 'package:trip_planner/src/view/widgets/navigation_bar.dart';
 
 class LoginViewModel with ChangeNotifier {
   String _userName = '';
@@ -75,9 +74,19 @@ class LoginViewModel with ChangeNotifier {
   Future<int?> tryToLogin(BuildContext context) async {
     var status = await ProfileService().tryToLogin(_userName, _password);
     if (status == 200) {
-      goToSurveyPage(context);
+      goToHomePage(context);
     }
     return status;
+  }
+
+  void goToHomePage(BuildContext context) {
+    Navigator.pop(context);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => NavigationBarPage(),
+      ),
+    );
   }
 
   void goToPdpaPage(BuildContext context) {

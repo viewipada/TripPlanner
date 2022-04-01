@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:trip_planner/src/models/response/location_card_response.dart';
+import 'package:trip_planner/src/models/response/other_trip_response.dart';
 import 'package:trip_planner/src/models/response/trip_card_response.dart';
 import 'package:trip_planner/src/repository/shared_pref.dart';
 
@@ -10,7 +11,7 @@ class HomeService {
 
   Future<List<LocationCardResponse>> getHotLocationList() async {
     List<LocationCardResponse> hotLocationList = [];
-    final response = await http.get(Uri.parse('${baseUrl}/api/locations/'));
+    final response = await http.get(Uri.parse('${baseUrl}/api/locations/hot'));
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body) as List<dynamic>;
@@ -67,5 +68,21 @@ class HomeService {
       }
     } else
       return [];
+  }
+
+  Future<OtherTripResponse> getTripDetail(int tripId) async {
+    final userId = await SharedPref().getUserId();
+    if (userId != null) {
+      final response = await http.get(Uri.parse(
+          "https://run.mocky.io/v3/7162eab6-8da9-48e8-8d9f-8314cc37a17f"));
+
+      if (response.statusCode == 200) {
+        var data = OtherTripResponse.fromMap(json.decode(response.body));
+        return data;
+      } else {
+        throw Exception("can not fetch data trip details");
+      }
+    } else
+      return throw Exception("null userId");
   }
 }

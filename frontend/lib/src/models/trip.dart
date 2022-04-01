@@ -2,7 +2,6 @@ class Trip {
   int? tripId;
   String tripName;
   String? trumbnail;
-  String? vehicle;
   String firstLocation;
   String lastLocation;
   int totalPeople;
@@ -15,7 +14,6 @@ class Trip {
     this.tripId,
     required this.tripName,
     this.trumbnail,
-    this.vehicle,
     required this.firstLocation,
     required this.lastLocation,
     required this.totalPeople,
@@ -30,7 +28,6 @@ class Trip {
       tripId: json['tripId'] ?? 0,
       tripName: json['tripName'] as String,
       trumbnail: json['trumbnail'],
-      vehicle: json['vehicle'],
       firstLocation: json['firstLocation'] as String,
       lastLocation: json['lastLocation'] as String,
       totalPeople: json['totalPeople'] as int,
@@ -46,7 +43,6 @@ class Trip {
     var map = <String, dynamic>{
       'tripName': tripName,
       'trumbnail': trumbnail,
-      'vehicle': vehicle,
       'firstLocation': firstLocation,
       'lastLocation': lastLocation,
       'totalPeople': totalPeople,

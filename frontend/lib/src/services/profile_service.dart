@@ -123,6 +123,21 @@ class ProfileService {
     }
   }
 
+  Future<void> deleteLocation(int locationId) async {
+    final userId = await SharedPref().getUserId();
+    if (userId != null) {
+      final response = await http.delete(
+        Uri.parse('${baseUrl}/api/locations/${userId}/${locationId}'),
+      );
+
+      if (response.statusCode == 200) {
+        print(response.body);
+      } else {
+        throw Exception("can not remove review");
+      }
+    }
+  }
+
   Future<UserInterestedResponse?> getUserInterested() async {
     final userId = await SharedPref().getUserId();
 
@@ -186,6 +201,7 @@ class ProfileService {
       }
     } else
       print('null userId');
+    return null;
   }
 
   Future<int?> updateUserInterested(
@@ -232,5 +248,6 @@ class ProfileService {
       }
     } else
       print('null userId');
+    return null;
   }
 }

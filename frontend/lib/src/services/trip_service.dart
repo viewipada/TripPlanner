@@ -62,5 +62,6 @@ class TripService {
       }
     } else
       print('can not create trip');
+    return null;
   }
 }

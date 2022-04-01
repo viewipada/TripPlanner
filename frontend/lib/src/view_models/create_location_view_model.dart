@@ -1,11 +1,13 @@
 import 'dart:io';
+import 'dart:math';
 
-import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:trip_planner/src/models/response/location_request_detail_response.dart';
 import 'package:trip_planner/src/services/create_location_service.dart';
 import 'package:trip_planner/src/view/screens/location_picker_page.dart';
@@ -96,8 +98,12 @@ class CreateLocationViewModel with ChangeNotifier {
     if (_locationRequest != null) {
       _locationName = await _locationRequest!.locationName;
       _imageUrl = await _locationRequest!.imageUrl;
-      _contactNumber = await _locationRequest!.contactNumber;
-      _website = await _locationRequest!.website;
+      _contactNumber = await _locationRequest!.contactNumber == "-"
+          ? ""
+          : _locationRequest!.contactNumber;
+      _website = await _locationRequest!.website == "-"
+          ? ""
+          : _locationRequest!.website;
       _description = await _locationRequest!.description;
       _locationPin =
           await LatLng(_locationRequest!.latitude, _locationRequest!.longitude);
@@ -345,7 +351,6 @@ class CreateLocationViewModel with ChangeNotifier {
   }
 
   Future<int?> createLocation(BuildContext context) async {
-    {}
     int _category;
     if (_locationCategoryValue == "ที่เที่ยว")
       _category = 1;
@@ -370,6 +375,53 @@ class CreateLocationViewModel with ChangeNotifier {
       goBack(context);
     }
     return statusCode;
+  }
+
+  Future<int?> updateLocation(BuildContext context) async {
+    int _category;
+    if (_locationCategoryValue == "ที่เที่ยว")
+      _category = 1;
+    else if (_locationCategoryValue == "ที่กิน")
+      _category = 2;
+    else if (_locationCategoryValue == "ที่พัก")
+      _category = 3;
+    else
+      _category = 0;
+
+    if (imageUrl != null) _images = await urlToFile(imageUrl!);
+    final statusCode = await CreateLocationService().updateLocation(
+        _locationName,
+        _category,
+        _description,
+        _contactNumber,
+        _website,
+        _locationTypeValue!,
+        _images!,
+        _locationPin!,
+        _provinceValue!,
+        _dayOfWeek);
+    if (statusCode == 200) {
+      goBack(context);
+    }
+    return statusCode;
+  }
+
+  Future<File> urlToFile(String imageUrl) async {
+// generate random number.
+    var rng = new Random();
+// get temporary directory of device.
+    Directory tempDir = await getTemporaryDirectory();
+// get temporary path from temporary directory.
+    String tempPath = tempDir.path;
+// create a new file in temporary path with random file name.
+    File file = new File('$tempPath' + (rng.nextInt(100)).toString() + '.png');
+// call http.get method and pass imageUrl into it to get response.
+    http.Response response = await http.get(Uri.parse(imageUrl));
+// write bodyBytes received in response to file.
+    await file.writeAsBytes(response.bodyBytes);
+// now return the file which is created with random name in
+// temporary directory and image bytes from response is written to // that file.
+    return file;
   }
 
   void goBack(BuildContext context) {

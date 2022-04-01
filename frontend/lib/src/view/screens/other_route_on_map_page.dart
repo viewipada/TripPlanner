@@ -8,31 +8,28 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
-import 'package:trip_planner/src/models/trip_item.dart';
+import 'package:trip_planner/src/models/response/other_trip_response.dart';
 import 'package:trip_planner/src/view/widgets/loading.dart';
 import 'package:trip_planner/src/view/widgets/tag_category.dart';
 import 'package:trip_planner/src/view_models/trip_stepper_view_model.dart';
 
-class RouteOnMapPage extends StatefulWidget {
+class OtherRouteOnMapPage extends StatefulWidget {
   final List<int> days;
   final int tripId;
 
-  RouteOnMapPage({
-    required this.days,
-    required this.tripId,
-  });
+  OtherRouteOnMapPage({required this.days, required this.tripId});
 
   @override
-  _RouteOnMapPageState createState() =>
-      _RouteOnMapPageState(this.days, this.tripId);
+  _OtherRouteOnMapPageState createState() =>
+      _OtherRouteOnMapPageState(this.days, this.tripId);
 }
 
-class _RouteOnMapPageState extends State<RouteOnMapPage> {
+class _OtherRouteOnMapPageState extends State<OtherRouteOnMapPage> {
   final List<int> days;
   final int tripId;
-  List<TripItem> tripItems = [];
+  List<OtherTripItemResponse> tripItems = [];
 
-  _RouteOnMapPageState(this.days, this.tripId);
+  _OtherRouteOnMapPageState(this.days, this.tripId);
 
   Completer<GoogleMapController> _controller = Completer();
 
@@ -41,10 +38,10 @@ class _RouteOnMapPageState extends State<RouteOnMapPage> {
     super.initState();
     Provider.of<TripStepperViewModel>(context, listen: false).getMapStyle();
     Provider.of<TripStepperViewModel>(context, listen: false)
-        .getAllTripItemsByTripId(tripId)
+        .getOtherTripDetail(tripId)
         .then((value) {
       setState(() {
-        tripItems = value;
+        tripItems = value.tripItems;
       });
     }).then((value) {
       Provider.of<TripStepperViewModel>(context, listen: false)
@@ -80,7 +77,7 @@ class _RouteOnMapPageState extends State<RouteOnMapPage> {
             : Stack(
                 children: [
                   FutureBuilder(
-                    future: tripStepperViewModel.getMarkers(tripItems),
+                    future: tripStepperViewModel.getMarkersOtherTrip(tripItems),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
                         return buildGoogleMap(_controller, tripStepperViewModel,
@@ -166,8 +163,11 @@ class _RouteOnMapPageState extends State<RouteOnMapPage> {
   }
 }
 
-Widget buildDayButton(int day, TripStepperViewModel tripStepperViewModel,
-    Completer<GoogleMapController> _controller, List<TripItem> tripItems) {
+Widget buildDayButton(
+    int day,
+    TripStepperViewModel tripStepperViewModel,
+    Completer<GoogleMapController> _controller,
+    List<OtherTripItemResponse> tripItems) {
   return Column(
     children: [
       SizedBox(
@@ -226,7 +226,7 @@ Widget buildGoogleMap(Completer<GoogleMapController> _controller,
   );
 }
 
-Widget pinCard(TripItem location) {
+Widget pinCard(OtherTripItemResponse location) {
   return Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(10),
@@ -298,7 +298,12 @@ Widget pinCard(TripItem location) {
                 : Padding(
                     padding: EdgeInsets.only(
                         bottom: getProportionateScreenHeight(15)),
-                    child: TagCategory(category: location.locationCategory),
+                    child: TagCategory(
+                        category: location.locationCategory == 1
+                            ? "ที่เที่ยว"
+                            : location.locationCategory == 2
+                                ? "ที่กิน"
+                                : "ที่พัก"),
                   )
           ],
         ),

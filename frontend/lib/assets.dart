@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:trip_planner/palette.dart';
 
@@ -39,6 +38,7 @@ class IconAssets {
   static const String travelMarker = 'assets/icons/travel_pin.png';
   static const String foodMarker = 'assets/icons/food_pin.png';
   static const String hotelMarker = 'assets/icons/hotel_pin.png';
+  static const String shopMarker = 'assets/icons/shop_pin.png';
   static const String sort = 'assets/icons/sort.png';
 }
 

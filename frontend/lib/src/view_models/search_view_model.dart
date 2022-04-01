@@ -3,7 +3,6 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -12,17 +11,16 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/src/models/response/search_result_response.dart';
 import 'package:trip_planner/src/models/response/travel_nearby_response.dart';
+import 'package:trip_planner/src/services/baggage_service.dart';
 import 'package:trip_planner/src/services/location_nearby_service.dart';
 import 'package:trip_planner/src/services/search_result_service.dart';
 import 'package:trip_planner/src/view/screens/location_detail_page.dart';
 import 'package:trip_planner/src/view/screens/my_location_page.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:trip_planner/src/view/screens/search_result_page.dart';
 
 class SearchViewModel with ChangeNotifier {
   List _dropdownItemList = [
     {'label': 'เรียงตามคะแนน', 'value': 'rating'},
-    {'label': 'เรียงตามระยะทาง', 'value': 'distance'},
     {'label': 'เรียงตามยอดเช็คอิน', 'value': 'checkin'},
   ];
   List _tabs = [
@@ -261,6 +259,16 @@ class SearchViewModel with ChangeNotifier {
       final searchMessageLower = searchMessage.toLowerCase();
       return nameLower.contains(searchMessageLower);
     }).toList();
+    notifyListeners();
+  }
+
+  Future<void> addBaggageItem(int locationId) async {
+    await BaggageService().addBaggageItem(locationId);
+    notifyListeners();
+  }
+
+  Future<void> removeBaggageItem(int locationId) async {
+    await BaggageService().removeBaggageItem(locationId);
     notifyListeners();
   }
 

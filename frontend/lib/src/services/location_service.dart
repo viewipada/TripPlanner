@@ -9,9 +9,8 @@ class LocationService {
   final String baseUrl = 'http://10.0.2.2:8080';
 
   Future<LocationDetailResponse> getLocationDetailById(int locationId) async {
-    final response = await http.get(Uri.parse(
-        // "https://run.mocky.io/v3/c83fb4de-baa2-44d3-abbe-452f791838e2"
-        '${baseUrl}/api/locations/${locationId}'));
+    final response =
+        await http.get(Uri.parse('${baseUrl}/api/locations/${locationId}'));
     // print(response.body);
     if (response.statusCode == 200) {
       var data = LocationDetailResponse.fromJson(json.decode(response.body));

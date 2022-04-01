@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'dart:math' show cos, sqrt, asin;
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -14,12 +12,14 @@ import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/src/models/response/baggage_response.dart';
 import 'package:trip_planner/src/models/response/location_recommend_response.dart';
+import 'package:trip_planner/src/models/response/other_trip_response.dart';
 import 'package:trip_planner/src/models/response/shop_response.dart';
 import 'package:trip_planner/src/models/trip.dart';
 import 'package:trip_planner/src/models/trip_item.dart';
 import 'package:trip_planner/src/repository/trip_item_operations.dart';
 import 'package:trip_planner/src/repository/trips_operations.dart';
 import 'package:trip_planner/src/services/baggage_service.dart';
+import 'package:trip_planner/src/services/home_service.dart';
 import 'package:trip_planner/src/services/location_service.dart';
 import 'package:trip_planner/src/services/trip_service.dart';
 import 'package:trip_planner/src/view/screens/add_from_baggage_page.dart';
@@ -27,6 +27,7 @@ import 'package:trip_planner/src/view/screens/baggage_location_on_route_page.dar
 import 'package:trip_planner/src/view/screens/confirm_trip_page.dart';
 import 'package:trip_planner/src/view/screens/location_detail_page.dart';
 import 'package:trip_planner/src/view/screens/location_recommend_page.dart';
+import 'package:trip_planner/src/view/screens/other_route_on_map_page.dart';
 import 'package:trip_planner/src/view/screens/recommend_on_route_page.dart';
 import 'package:trip_planner/src/view/screens/route_on_map_page.dart';
 import 'package:trip_planner/src/view/screens/shop_location_on_route_page.dart';
@@ -76,6 +77,10 @@ class TripStepperViewModel with ChangeNotifier {
   String _mapStyle = '';
 
   ItemScrollController _itemScrollController = ItemScrollController();
+
+  Future<OtherTripResponse> getOtherTripDetail(int tripId) async {
+    return await HomeService().getTripDetail(tripId);
+  }
 
   void go(int index, BuildContext context, Trip trip) async {
     if (index == -1 && _index <= 0) {
@@ -743,6 +748,16 @@ class TripStepperViewModel with ChangeNotifier {
     );
   }
 
+  void goToOtherRouteOnMapPage(
+      BuildContext context, List<int> days, int tripId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => OtherRouteOnMapPage(days: days, tripId: tripId),
+      ),
+    );
+  }
+
   void selectedLocation(
       BuildContext context, LocationRecommendResponse location) {
     Navigator.pop(context, location);
@@ -1003,6 +1018,41 @@ class TripStepperViewModel with ChangeNotifier {
     return _markers;
   }
 
+  Future<Set<Marker>> getMarkersOtherTrip(
+      List<OtherTripItemResponse> _tripItems) async {
+    Set<Marker> _markers = Set();
+    await Future.forEach(_tripItems, (item) async {
+      final location = item as OtherTripItemResponse;
+      if (item.day == _day) {
+        final _markerId = MarkerId('${item.locationId}');
+        await _markers.add(
+          Marker(
+              markerId: _markerId,
+              position: LatLng(location.latitude, location.longitude),
+              infoWindow: InfoWindow(
+                title: location.locationName,
+              ),
+              icon: await BitmapDescriptor.fromBytes(
+                await getBytesFromCanvas(
+                  item.no + 1,
+                  80,
+                  80,
+                  location.locationCategory == 'ที่เที่ยว'
+                      ? Palette.LightGreenColor
+                      : location.locationCategory == 'ที่กิน'
+                          ? Palette.PeachColor
+                          : Palette.LightOrangeColor,
+                ),
+              ),
+              onTap: () {
+                scrollToPinCard(item.no);
+              }),
+        );
+      }
+    });
+    return _markers;
+  }
+
   Future<Set<Marker>> getMarkersRecommend(List<TripItem> _tripItems,
       List<LocationRecommendResponse> locationList) async {
     List<TripItem> tripItems = await _tripItems
@@ -1180,7 +1230,7 @@ class TripStepperViewModel with ChangeNotifier {
             ),
             icon: await BitmapDescriptor.fromBytes(
               await getBytesFromAsset(
-                IconAssets.foodMarker,
+                IconAssets.shopMarker,
                 100,
               ),
             ),
@@ -1193,7 +1243,7 @@ class TripStepperViewModel with ChangeNotifier {
     return _markers;
   }
 
-  Future<List<TripItem>> getPinCard(List<TripItem> tripItems) async {
+  Future<List> getPinCard(tripItems) async {
     return await tripItems.where((element) => element.day == _day).toList();
   }
 
@@ -1210,8 +1260,8 @@ class TripStepperViewModel with ChangeNotifier {
     // setState(() {});
   }
 
-  Future<void> getPolyline(List<TripItem> tripItems) async {
-    List<TripItem> route = await tripItems
+  Future<void> getPolyline(tripItems) async {
+    final route = await tripItems
         .where((element) => element.day == _day && element.no >= 0)
         .toList();
     List<PolylineWayPoint> wayPoints = [];
@@ -1322,8 +1372,8 @@ class TripStepperViewModel with ChangeNotifier {
     return data!.buffer.asUint8List();
   }
 
-  Future<void> updateMapView(Completer<GoogleMapController> _controller,
-      List<TripItem> tripItems) async {
+  Future<void> updateMapView(
+      Completer<GoogleMapController> _controller, tripItems) async {
     var initItem = tripItems.firstWhere((element) => element.day == _day);
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(

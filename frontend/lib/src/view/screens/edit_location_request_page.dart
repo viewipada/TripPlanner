@@ -1,8 +1,6 @@
 import 'package:cool_dropdown/cool_dropdown.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
@@ -23,6 +21,7 @@ class EditLocationRequestPage extends StatefulWidget {
 class _EditLocationRequestPageState extends State<EditLocationRequestPage> {
   final _formKey = GlobalKey<FormState>();
   final int locationId;
+  bool isLoading = false;
 
   _EditLocationRequestPageState(this.locationId);
 
@@ -952,55 +951,101 @@ class _EditLocationRequestPageState extends State<EditLocationRequestPage> {
                             ),
                             height: getProportionateScreenHeight(48),
                             width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                bool dropdownValid =
-                                    createLocationViewModel.validateDropdown();
-                                bool locationPinValid = createLocationViewModel
-                                    .validateLocationPin();
-                                if (_formKey.currentState!.validate() &&
-                                    dropdownValid &&
-                                    locationPinValid &&
-                                    createLocationViewModel.images != null) {
-                                  bool openingHourValid =
-                                      createLocationViewModel
-                                          .validateOpeningHour();
-                                  if (createLocationViewModel
-                                          .knowOpeningHour! &&
-                                      !openingHourValid) {
-                                    alertDialog(
-                                        context, 'กรุณาระบุวันเวลาทำการ');
-                                  } else {
-                                    // If the form is valid, display a snackbar. In the real world,
-                                    // you'd often call a server or save the information in a database.
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text('Processing Data')),
-                                    );
-                                  }
-                                } else {
-                                  if (createLocationViewModel.images != null )
-                                    alertDialog(context,
-                                        'กรุณาระบุข้อมูลที่จำเป็นให้ครบ');
-                                  // else
-                                  //   alertDialog(
-                                  //       context, 'กรุณาเพิ่มรูปภาพสถานที่');
-                                }
-                              },
-                              child: Text(
-                                'สร้างสถานที่',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                primary: Palette.PrimaryColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                              ),
-                            ),
+                            child: isLoading
+                                ? Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SpinKitFadingCircle(
+                                        color: Palette.PrimaryColor,
+                                        size: getProportionateScreenHeight(24),
+                                      ),
+                                      SizedBox(
+                                          width:
+                                              getProportionateScreenWidth(10)),
+                                      Text(
+                                        'กำลังแก้ไขข้อมูลสถานที่...',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Palette.PrimaryColor,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : ElevatedButton(
+                                    onPressed: () {
+                                      bool dropdownValid =
+                                          createLocationViewModel
+                                              .validateDropdown();
+                                      bool locationPinValid =
+                                          createLocationViewModel
+                                              .validateLocationPin();
+                                      if (_formKey.currentState!.validate() &&
+                                          dropdownValid &&
+                                          locationPinValid &&
+                                          createLocationViewModel.images !=
+                                              null) {
+                                        bool openingHourValid =
+                                            createLocationViewModel
+                                                .validateOpeningHour();
+                                        if (createLocationViewModel
+                                                .knowOpeningHour! &&
+                                            !openingHourValid) {
+                                          alertDialog(
+                                              context, 'กรุณาระบุวันเวลาทำการ');
+                                        } else {
+                                          createLocationViewModel
+                                              .updateLocation(context)
+                                              .then((value) {
+                                            if (value == 200) {
+                                              setState(() {
+                                                isLoading = false;
+                                              });
+                                              final snackBar = SnackBar(
+                                                backgroundColor:
+                                                    Palette.SecondaryColor,
+                                                content: Text(
+                                                  'แก้ไขข้อมูลสถานที่เรียบร้อย',
+                                                  style: TextStyle(
+                                                    fontFamily: 'Sukhumvit',
+                                                    fontSize: 14,
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              );
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(snackBar);
+                                            }
+                                          });
+                                          ;
+                                        }
+                                      } else {
+                                        if (createLocationViewModel.images !=
+                                            null)
+                                          alertDialog(context,
+                                              'กรุณาระบุข้อมูลที่จำเป็นให้ครบ');
+                                        // else
+                                        //   alertDialog(
+                                        //       context, 'กรุณาเพิ่มรูปภาพสถานที่');
+                                      }
+                                    },
+                                    child: Text(
+                                      'สร้างสถานที่',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Palette.PrimaryColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                    ),
+                                  ),
                           ),
                         ],
                       ),
