@@ -143,26 +143,32 @@ exports.findOne = async (req, res) => {
 
 exports.findAllData = async (req, res, next) => {
   try {
-    let filters = await req.query;
+    const filters = await req.query.category;
+    const { sort } = await req.params;
     //let filters = await req.query.filters;
-    // console.log(category);
-    //console.log(filters);
+    console.log(sort == "rating" ? "averageRating" : "totalCheckin");
+    console.log("filters : " + filters);
 
-    const data = await Location.findAll();
-
-    const filteredData = data.filter((location) => {
-      let isValid = true;
-      for (key in filters) {
-        console.log(key, location[key], filters[key]);
-        isValid = isValid && location[key] == filters[key];
-      }
-      return isValid;
+    const data = await Location.findAll({
+      where: { category: filters },
+      order: [
+        [sort == "rating" ? "averageRating" : "totalCheckin", "DESC"],
+        ["locationName", "ASC"],
+      ],
     });
-    // console.log("locationData : " + locationData);
 
-    //locationData = await locationData.orderBy(locationData, filter, "asc");
+    if (filters == 0) {
+      const allData = await Location.findAll({
+        order: [
+          [sort == "rating" ? "averageRating" : "totalCheckin", "DESC"],
+          ["locationName", "ASC"],
+        ],
+      });
 
-    res.status(200).json(filteredData);
+      return res.status(200).json(allData);
+    }
+
+    return res.status(200).json(data);
   } catch (err) {
     console.log(err);
   }

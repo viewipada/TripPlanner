@@ -10,7 +10,7 @@ module.exports = (app) => {
   router.get("/card", locations.findAllCard);
 
   // Retrieve all location data
-  router.get("/", locations.findAllData);
+  router.get("/search/:sort", locations.findAllData);
 
   // Retrieve one location by locationId
   router.get("/:locationId", locations.findOne);
