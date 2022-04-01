@@ -17,21 +17,16 @@ class LoginViewModel with ChangeNotifier {
 
   Future<int?> tryToLogin(BuildContext context) async {
     var status = await LoginService().tryToLogin(_userName, _password);
-    // if (status == 200) {
-    //   goToHomePage(context);
-    // }
+    if (status == 200) {
+      goToDashBoard(context);
+    }
     return status;
   }
 
-  // void goToHomePage(BuildContext context) {
-  //   Navigator.pop(context);
-  //   Navigator.pushReplacement(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => NavigationBarPage(),
-  //     ),
-  //   );
-  // }
+  void goToDashBoard(BuildContext context) {
+    Navigator.pushNamedAndRemoveUntil(
+        context, '/dashboard', ModalRoute.withName('/dashboard'));
+  }
 
   String get userName => _userName;
   String get password => _password;
