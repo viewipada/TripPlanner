@@ -1,6 +1,7 @@
 const db = require("../models");
 const User = db.users;
 const Review = db.reviews;
+const Location = db.locations;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const tokenKey = require("../config/authen.config");
@@ -190,7 +191,7 @@ exports.findOne = async (req, res) => {
       const data = await Promise.all(
         reviewData.map(
           async ({
-            userId,
+            locationId,
             reviewRate: rating,
             reviewCaption: caption,
             reviewImg1,
@@ -199,25 +200,25 @@ exports.findOne = async (req, res) => {
             createdAt,
           }) => {
             try {
-              let { imgUrl: profileImage, username } = await User.findOne({
+              let { locationName } = await Location.findOne({
                 where: {
-                  id: userId,
+                  locationId,
                 },
                 raw: true,
               });
 
-              console.log(profileImage, username);
+              console.log(locationName);
 
               return {
-                profileImage,
-                username,
+                locationId,
+                locationName,
                 rating,
                 caption,
                 images: [reviewImg1, reviewImg2, reviewImg3].filter((image) => image),
                 createdAt,
               };
             } catch (error) {
-              console.log(err);
+              console.log(error);
               return res.status(400).send("Something wrong while query user review");
             }
           }
@@ -245,6 +246,13 @@ exports.update = async (req, res) => {
     console.log(updateData);
 
     return res.status(200).json(updateData[1]);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+};
+
+exports.interested = async (req, res) => {
+  try {
   } catch (err) {
     return res.status(400).send(err);
   }
