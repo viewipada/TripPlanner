@@ -8,19 +8,19 @@ class LocationNearbyService {
 
   Future<List<LocationNearbyResponse>> getLocationNearby(
       String category, LocationData userLocation) async {
-    http.Response response;
+    var catNum;
     if (category == 'ทุกแบบ')
-      response = await http.get(Uri.parse('${baseUrl}/api/locations/nearby/0'),
-          headers: {"Accept": "application/json"});
+      catNum = 0;
     else if (category == 'ที่เที่ยว')
-      response = await http.get(Uri.parse('${baseUrl}/api/locations/nearby/1'),
-          headers: {"Accept": "application/json"});
+      catNum = 1;
     else if (category == 'ที่กิน')
-      response = await http.get(Uri.parse('${baseUrl}/api/locations/nearby/2'),
-          headers: {"Accept": "application/json"});
+      catNum = 2;
     else
-      response = await http.get(Uri.parse('${baseUrl}/api/locations/nearby/3'),
-          headers: {"Accept": "application/json"});
+      catNum = 3;
+
+    http.Response response = await http.get(
+        Uri.parse('${baseUrl}/api/locations/nearby/${catNum}'),
+        headers: {"Accept": "application/json"});
 
     if (response.statusCode == 200) {
       List<LocationNearbyResponse> travelNearbyList;

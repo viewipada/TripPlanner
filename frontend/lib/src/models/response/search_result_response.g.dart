@@ -13,9 +13,8 @@ SearchResultResponse _$SearchResultResponseFromJson(
       locationName: json['locationName'] as String,
       imageUrl: json['imageUrl'] as String,
       description: json['description'] as String,
-      category: json['category'] as String,
-      rating: (json['rating'] as num).toDouble(),
-      ditanceFromeUser: (json['ditanceFromeUser'] as num).toDouble(),
+      category: json['category'] as int,
+      rating: (json['averageRating'] as num).toDouble(),
       totalCheckin: json['totalCheckin'] as int,
     );
 
@@ -28,6 +27,5 @@ Map<String, dynamic> _$SearchResultResponseToJson(
       'description': instance.description,
       'category': instance.category,
       'rating': instance.rating,
-      'ditanceFromeUser': instance.ditanceFromeUser,
       'totalCheckin': instance.totalCheckin,
     };

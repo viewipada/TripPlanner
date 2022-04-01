@@ -21,7 +21,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
   @override
   void initState() {
     Provider.of<SearchViewModel>(context, listen: false)
-        .getSearchResultBy('all', 'rating')
+        .getSearchResultBy(0, 'rating')
         .then((value) => allLocationList =
             Provider.of<SearchViewModel>(context, listen: false)
                 .searchResultCard);
@@ -346,7 +346,11 @@ Widget buildSearchResultCard(BuildContext context,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         TagCategory(
-                          category: item.category,
+                          category: item.category == 1
+                              ? "ที่เที่ยว"
+                              : item.category == 2
+                                  ? "ที่กิน"
+                                  : "ที่พัก",
                         ),
                         // ElevatedButton.icon(
                         //   onPressed: () {},
