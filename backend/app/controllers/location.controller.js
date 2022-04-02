@@ -17,16 +17,12 @@ exports.create = async (req, res) => {
       res.status(400).send("locationName and lat-long can not be empty ! ! ");
     }
 
-    if (location.categry == 3) {
-      const min_p = req.body.min_price;
-      const max_p = req.body.max_price;
+    // const min_price = req.body.min_price;
+    // const max_price = req.body.max_price;
 
-      const { min_price, max_price, ...newObjLocation } = location;
+    const { min_price, max_price, ...newObjLocation } = await location;
 
-      return newObjLocation;
-    }
-
-    const newLocation = await Location.create(location);
+    const newLocation = await Location.create(newObjLocation);
 
     return res.status(201).send(newLocation);
   } catch (err) {
