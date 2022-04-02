@@ -24,7 +24,7 @@ exports.create = async (req, res) => {
 
     const newLocation = await Location.create(newObjLocation);
 
-    return res.status(201).send(newLocation);
+    return res.status(201).json(newLocation);
   } catch (err) {
     //create new location
     return res.status(400).send("Someting wrong while crating Location");
