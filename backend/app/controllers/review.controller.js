@@ -127,6 +127,10 @@ exports.findOriginalReview = async (req, res) => {
 
     const reviewData = await Review.findOne({ where: { userId: uid, locationId: lid }, raw: true });
 
+    if (reviewData == null) {
+      return res.status(204).send({ msg: "no review" });
+    }
+
     console.log(reviewData);
 
     if (reviewData != null) {

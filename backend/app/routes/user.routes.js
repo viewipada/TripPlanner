@@ -7,5 +7,9 @@ module.exports = (app) => {
 
   router.put("/:userId", users.update);
 
+  router.post("/interested", users.create_interested);
+
+  router.put("/interested/:userId", users.update_interested);
+
   app.use("/api/user", router);
 };

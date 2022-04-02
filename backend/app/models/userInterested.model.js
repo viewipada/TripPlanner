@@ -4,9 +4,38 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER,
       primaryKey: true,
     },
-    interestedType: {
+    first_activity: {
+      type: Sequelize.STRING,
+    },
+    second_activity: {
+      type: Sequelize.STRING,
+    },
+    third_activity: {
+      type: Sequelize.STRING,
+    },
+    first_food: {
+      type: Sequelize.STRING,
+    },
+    second_food: {
+      type: Sequelize.STRING,
+    },
+    third_food: {
+      type: Sequelize.STRING,
+    },
+    first_hotel: {
+      type: Sequelize.STRING,
+    },
+    second_hotel: {
+      type: Sequelize.STRING,
+    },
+    third_hotel: {
+      type: Sequelize.STRING,
+    },
+    min_price: {
       type: Sequelize.INTEGER,
-      primaryKey: true,
+    },
+    max_price: {
+      type: Sequelize.INTEGER,
     },
   });
 

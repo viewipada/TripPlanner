@@ -34,3 +34,15 @@ exports.create = async (req, res) => {
     console.log(err);
   }
 };
+
+exports.findOne = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const tripData = await Trip.findOne({ where: { userId }, raw: true });
+
+    return res.status(200).json(tripData);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+};

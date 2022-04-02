@@ -2,6 +2,7 @@ const db = require("../models");
 const User = db.users;
 const Review = db.reviews;
 const Location = db.locations;
+const Interested = db.userInterested;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const tokenKey = require("../config/authen.config");
@@ -251,8 +252,29 @@ exports.update = async (req, res) => {
   }
 };
 
-exports.interested = async (req, res) => {
+exports.create_interested = async (req, res) => {
   try {
+    const interested = req.body;
+
+    const interestedData = await Interested.create(interested);
+
+    return res.status(201).json(interestedData);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+};
+
+exports.update_interested = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const updateData = await Interested.update(req.body, {
+      where: { userId },
+      returning: true,
+      plain: true,
+    });
+
+    return res.status(200).json(updateData[1]);
   } catch (err) {
     return res.status(400).send(err);
   }
