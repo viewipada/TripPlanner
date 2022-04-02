@@ -52,7 +52,9 @@ class CreateLocationService {
       File images,
       LatLng locationPin,
       String province,
-      List dayOfWeek) async {
+      List dayOfWeek,
+      int? minPrice,
+      int? maxPrice) async {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
       List<String> openingHour = [];
@@ -92,7 +94,9 @@ class CreateLocationService {
               "totalCheckin": 0,
               "createBy": userId,
               "locationStatus": "In progress",
-              "openingHour": openingHour
+              "openingHour": openingHour,
+              "min_price": minPrice,
+              "max_price": maxPrice
             },
           ));
 
@@ -117,7 +121,9 @@ class CreateLocationService {
       File images,
       LatLng locationPin,
       String province,
-      List dayOfWeek) async {
+      List dayOfWeek,
+      int? minPrice,
+      int? maxPrice) async {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
       List<String> openingHour = [];
@@ -157,7 +163,9 @@ class CreateLocationService {
               "totalCheckin": 0,
               "createBy": userId,
               "locationStatus": "In progress",
-              "openingHour": openingHour
+              "openingHour": openingHour,
+              "min_price": minPrice,
+              "max_price": maxPrice
             },
           ));
 

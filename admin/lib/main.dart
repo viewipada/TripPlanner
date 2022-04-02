@@ -1,6 +1,8 @@
 import 'package:admin/src/palette.dart';
+import 'package:admin/src/view/create_location_page.dart';
 import 'package:admin/src/view/dashboard_page.dart';
 import 'package:admin/src/view/login_page.dart';
+import 'package:admin/src/view_models/create_location_view_model.dart';
 import 'package:admin/src/view_models/dashboard_view_model.dart';
 import 'package:admin/src/view_models/login_view_model.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => LoginViewModel()),
         ChangeNotifierProvider(create: (_) => DashBoardViewModel()),
+        ChangeNotifierProvider(create: (_) => CreateLocationViewModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -60,6 +63,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (context) => const LoginPage(),
           '/dashboard': (context) => const DashboardPage(),
+          '/create': (context) => const CreateLocationPage(),
         },
       ),
     );

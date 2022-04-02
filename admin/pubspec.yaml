@@ -39,21 +39,19 @@ dependencies:
   flutter_spinkit: ^5.1.0
   shimmer: ^2.0.0
   google_maps_flutter: ^2.0.11
-  image_picker: ^0.8.4+3
+  
   shared_preferences: ^2.0.8
   flutter_spinbox: ^0.6.0
   location: ^4.3.0
-  scrollable_positioned_list: ^0.2.3
   cool_dropdown: ^1.4.1
-  google_place: ^0.4.3
   uuid: ^3.0.5
   intl: ^0.17.0
-  map_picker: ^0.0.3
   flutter_time_picker_spinner: ^2.0.0
   path_provider: ^2.0.9
   numberpicker: ^2.1.1
-  flutter_polyline_points: ^1.0.0
   dio: ^4.0.4
+  image_picker_web: ^2.1.1
+  mime_type: ^1.0.0
 
 dev_dependencies:
   flutter_test:

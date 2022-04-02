@@ -1,24 +1,22 @@
-import 'dart:io';
-import 'dart:math';
+import 'dart:typed_data';
 
-import 'package:http/http.dart' as http;
+import 'package:admin/src/services/create_location_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:trip_planner/src/models/response/location_request_detail_response.dart';
-import 'package:trip_planner/src/services/create_location_service.dart';
-import 'package:trip_planner/src/view/screens/location_picker_page.dart';
+import 'dart:html' as html;
+
+import 'package:mime_type/mime_type.dart';
+import 'package:path/path.dart' as path;
 
 class CreateLocationViewModel with ChangeNotifier {
-  File? _images;
   bool? _knowOpeningHour = true;
-  List _locationCategory = [
-    {'label': 'ที่เที่ยว', 'value': 'travel'}, //1
-    {'label': 'ที่กิน', 'value': 'food'}, //2
-    {'label': 'ที่พัก', 'value': 'hotel'}, //3
+  final List _locationCategory = [
+    {'label': 'ที่เที่ยว', 'value': 1},
+    {'label': 'ที่กิน', 'value': 2},
+    {'label': 'ที่พัก', 'value': 3},
+    {'label': 'ของฝาก', 'value': 4},
   ];
   List _locationType = [];
   List _dayOfWeek = [
@@ -65,8 +63,8 @@ class CreateLocationViewModel with ChangeNotifier {
       'closedTime': '16:00'
     },
   ];
-  List _provinceList = [
-    {'label': 'อ่างทอง', 'value': LatLng(14.589605, 100.455055)}
+  final List _provinceList = [
+    {'label': 'อ่างทอง', 'value': const LatLng(14.589605, 100.455055)}
   ];
   LatLng? _provinceLatLng;
   bool _openingEveryday = false;
@@ -76,94 +74,45 @@ class CreateLocationViewModel with ChangeNotifier {
   bool _locationCategoryValid = true;
   bool _locationTypeValid = true;
   bool _provinceValid = true;
-  LatLng? _locationPin;
-  bool _locationPinValid = true;
-  // bool _isSameHour = false;
-  // TimeOfDay _openTime = TimeOfDay(hour: 14, minute: 0);
-  LocationRequestDetailResponse? _locationRequest;
+  double? _latitude;
+  double? _longitude;
   String _locationName = '';
   String _description = '';
   String _contactNumber = '';
   String _website = '';
-  String? _imageUrl;
   dynamic _defaultCategotyValue;
   dynamic _defaultLocationTypeValue;
   int? _minPrice;
   int? _maxPrice;
 
-  Future<void> getLocationRequestById(int locationId) async {
-    _locationRequest =
-        await CreateLocationService().getLocationRequestById(locationId);
+  Uint8List? _fileBytes;
+  String? _fileName;
 
-    if (_locationRequest != null) {
-      _locationName = await _locationRequest!.locationName;
-      _imageUrl = await _locationRequest!.imageUrl;
-      _contactNumber = await _locationRequest!.contactNumber == "-"
-          ? ""
-          : _locationRequest!.contactNumber;
-      _website = await _locationRequest!.website == "-"
-          ? ""
-          : _locationRequest!.website;
-      _description = await _locationRequest!.description;
-      _locationPin =
-          await LatLng(_locationRequest!.latitude, _locationRequest!.longitude);
-      // _locationTypeValue = _locationRequest!.locationType; //รอ api จริง
-      _locationTypeValue = "1";
-      _provinceValue = await _locationRequest!.province;
-      _openingEveryday = await !_locationRequest!.openingHour.contains("ปิด");
-      _locationCategoryValue = await _locationRequest!.category == 1
-          ? "ที่เที่ยว"
-          : _locationRequest!.category == 2
-              ? "ที่กิน"
-              : "ที่พัก";
+  // Future pickImageFromSource(ImageSource source) async {
+  //   try {
+  //     final image = await ImagePicker().pickImage(source: source);
+  //     if (image == null) {
+  //       notifyListeners();
+  //       return;
+  //     }
+  //     _images = File(image.path);
+  //     _imageUrl = null;
+  //     notifyListeners();
+  //   } on PlatformException catch (e) {
+  //     print('Failed to pick image $e form ${source}');
+  //   }
+  // }
 
-      for (int i = 0; i < _dayOfWeek.length; i++) {
-        if (_locationRequest!.openingHour[i] != "ปิด") {
-          _dayOfWeek[i]['isOpening'] = true;
-          final timeSplit = await _locationRequest!.openingHour[i].split(' - ');
-          _dayOfWeek[i]['openTime'] = await timeSplit.first;
-          _dayOfWeek[i]['closedTime'] = await timeSplit.last;
-        }
-      }
-      _provinceLatLng =
-          await LatLng(_locationRequest!.latitude, _locationRequest!.longitude);
+  Future<void> pickImage() async {
+    var mediaData = await ImagePickerWeb.getImageInfo;
+    var mimeType = mime(path.basename(mediaData!.fileName!));
+    var mediaFile =
+        html.File(mediaData.data!, mediaData.fileName!, {'type': mimeType});
 
-      _locationCategoryValid = await _locationCategoryValue != null;
-      _locationTypeValid = await _locationTypeValue != null;
-      _provinceValid = await _provinceValue != null;
-
-      if (_locationCategoryValue != null)
-        await getLocationTypeList(_locationCategoryValue! == "ที่เที่ยว"
-            ? "travel"
-            : _locationCategoryValue! == "ที่กิน"
-                ? "food"
-                : "hotel");
-
-      _locationCategory.forEach((element) {
-        if (element['label'] == _locationCategoryValue)
-          _defaultCategotyValue = element;
-      });
-
-      _locationType.forEach((element) {
-        if (element['value'] == _locationTypeValue)
-          _defaultLocationTypeValue = element;
-      });
-    }
-    notifyListeners();
-  }
-
-  Future pickImageFromSource(ImageSource source) async {
-    try {
-      final image = await ImagePicker().pickImage(source: source);
-      if (image == null) {
-        notifyListeners();
-        return;
-      }
-      _images = File(image.path);
-      _imageUrl = null;
+    if (mediaFile != null) {
+      _fileBytes = mediaData.data;
+      _fileName = mediaData.fileName;
       notifyListeners();
-    } on PlatformException catch (e) {
-      print('Failed to pick image $e form ${source}');
     }
   }
 
@@ -171,17 +120,17 @@ class CreateLocationViewModel with ChangeNotifier {
     _knowOpeningHour = value;
     if (!_knowOpeningHour!) {
       _openingEveryday = false;
-      _dayOfWeek.forEach((element) {
+      for (var element in _dayOfWeek) {
         element['isOpening'] = false;
         element['openTime'] = '9:00';
         element['closedTime'] = '16:00';
-      });
+      }
     }
     notifyListeners();
   }
 
-  void switchIsOpening(day, bool value) async {
-    day['isOpening'] = await value;
+  void switchIsOpening(day, bool value) {
+    day['isOpening'] = value;
     if (!day['isOpening']) {
       _openingEveryday = false;
       day['openTime'] = '9:00';
@@ -194,13 +143,13 @@ class CreateLocationViewModel with ChangeNotifier {
 
   void setOpeningEveryday(bool value) {
     _openingEveryday = value;
-    _dayOfWeek.forEach((element) {
+    for (var element in _dayOfWeek) {
       element['isOpening'] = value;
       if (!value) {
         element['openTime'] = '9:00';
         element['closedTime'] = '16:00';
       }
-    });
+    }
     notifyListeners();
   }
 
@@ -266,7 +215,17 @@ class CreateLocationViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getLocationTypeList(String category) async {
+  void updateLatitude(String value) {
+    _latitude = double.parse(value);
+    notifyListeners();
+  }
+
+  void updateLongitude(String value) {
+    _longitude = double.parse(value);
+    notifyListeners();
+  }
+
+  Future<void> getLocationTypeList(int category) async {
     _locationType = [];
     _locationType = await CreateLocationService().getLocationTypeList(category);
     notifyListeners();
@@ -294,9 +253,6 @@ class CreateLocationViewModel with ChangeNotifier {
     _locationCategoryValid = _locationCategoryValue != null;
     _locationTypeValid = _locationTypeValue != null;
     _provinceValid = _provinceValue != null;
-    // print(_locationCategoryValid);
-    // print(_locationTypeValid);
-    // print(_provinceValid);
     notifyListeners();
 
     if (_locationCategoryValue == null ||
@@ -319,47 +275,17 @@ class CreateLocationViewModel with ChangeNotifier {
     return _isValid;
   }
 
-  bool validateLocationPin() {
-    if (_locationPin == null)
-      _locationPinValid = false;
-    else
-      _locationPinValid = true;
-
-    return _locationPinValid;
-  }
-
-  void goToLocationPickerPage(
-      BuildContext context, LatLng initialLatLng) async {
-    LatLng result = await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              LocationPickerPage(initialLatLng: initialLatLng),
-        ));
-    _locationPin = result;
-    notifyListeners();
-  }
-
-  void selectedLocationPin(BuildContext context, LatLng locationPin) {
-    Navigator.pop(context, locationPin);
-  }
-
-  Future goToNewLocationPinWithSearch(
-      _controller, LatLng searchLocation) async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newLatLng(searchLocation));
-  }
-
   Future<int?> createLocation(BuildContext context) async {
     int _category;
-    if (_locationCategoryValue == "ที่เที่ยว")
+    if (_locationCategoryValue == "ที่เที่ยว") {
       _category = 1;
-    else if (_locationCategoryValue == "ที่กิน")
+    } else if (_locationCategoryValue == "ที่กิน") {
       _category = 2;
-    else if (_locationCategoryValue == "ที่พัก")
+    } else if (_locationCategoryValue == "ที่พัก") {
       _category = 3;
-    else
-      _category = 0;
+    } else {
+      _category = 4;
+    }
     final statusCode = await CreateLocationService().createLocation(
         _locationName,
         _category,
@@ -367,69 +293,41 @@ class CreateLocationViewModel with ChangeNotifier {
         _contactNumber,
         _website,
         _locationTypeValue!,
-        _images!,
-        _locationPin!,
+        _fileBytes!,
+        _latitude!,
+        _longitude!,
         _provinceValue!,
         _dayOfWeek,
+        _fileName!,
         _minPrice,
         _maxPrice);
     if (statusCode == 201) {
       goBack(context);
     }
     return statusCode;
+    // return null;
   }
 
-  Future<int?> updateLocation(BuildContext context) async {
-    int _category;
-    if (_locationCategoryValue == "ที่เที่ยว")
-      _category = 1;
-    else if (_locationCategoryValue == "ที่กิน")
-      _category = 2;
-    else if (_locationCategoryValue == "ที่พัก")
-      _category = 3;
-    else
-      _category = 0;
-
-    if (imageUrl != null) _images = await urlToFile(imageUrl!);
-    final statusCode = await CreateLocationService().updateLocation(
-        _locationName,
-        _category,
-        _description,
-        _contactNumber,
-        _website,
-        _locationTypeValue!,
-        _images!,
-        _locationPin!,
-        _provinceValue!,
-        _dayOfWeek,
-        _minPrice,
-        _maxPrice);
-    if (statusCode == 200) {
-      goBack(context);
-    }
-    return statusCode;
-  }
-
-  Future<File> urlToFile(String imageUrl) async {
-// generate random number.
-    var rng = new Random();
-// get temporary directory of device.
-    Directory tempDir = await getTemporaryDirectory();
-// get temporary path from temporary directory.
-    String tempPath = tempDir.path;
-// create a new file in temporary path with random file name.
-    File file = new File('$tempPath' + (rng.nextInt(100)).toString() + '.png');
-// call http.get method and pass imageUrl into it to get response.
-    http.Response response = await http.get(Uri.parse(imageUrl));
-// write bodyBytes received in response to file.
-    await file.writeAsBytes(response.bodyBytes);
-// now return the file which is created with random name in
-// temporary directory and image bytes from response is written to // that file.
-    return file;
-  }
+//   Future<File> urlToFile(String imageUrl) async {
+// // generate random number.
+//     var rng = new Random();
+// // get temporary directory of device.
+//     Directory tempDir = await getTemporaryDirectory();
+// // get temporary path from temporary directory.
+//     String tempPath = tempDir.path;
+// // create a new file in temporary path with random file name.
+//     File file = new File('$tempPath' + (rng.nextInt(100)).toString() + '.png');
+// // call http.get method and pass imageUrl into it to get response.
+//     http.Response response = await http.get(Uri.parse(imageUrl));
+// // write bodyBytes received in response to file.
+//     await file.writeAsBytes(response.bodyBytes);
+// // now return the file which is created with random name in
+// // temporary directory and image bytes from response is written to // that file.
+//     return file;
+//   }
 
   void goBack(BuildContext context) {
-    _images = null;
+    _fileBytes = null;
     _knowOpeningHour = true;
     _locationType = [];
     _dayOfWeek = [
@@ -484,12 +382,15 @@ class CreateLocationViewModel with ChangeNotifier {
     _locationCategoryValid = true;
     _locationTypeValid = true;
     _provinceValid = true;
-    _locationPin = null;
-    _locationPinValid = true;
+    _latitude = null;
+    _longitude = null;
     Navigator.pop(context);
   }
 
-  File? get images => _images;
+  void logout(BuildContext context) {
+    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+  }
+
   bool? get knowOpeningHour => _knowOpeningHour;
   List get dayOfWeek => _dayOfWeek;
   bool get openingEveryday => _openingEveryday;
@@ -501,19 +402,18 @@ class CreateLocationViewModel with ChangeNotifier {
   bool get locationCategoryValid => _locationCategoryValid;
   bool get locationTypeValid => _locationTypeValid;
   bool get provinceValid => _provinceValid;
-  bool get locationPinValid => _locationPinValid;
   List get provinceList => _provinceList;
   LatLng? get provinceLatLng => _provinceLatLng;
-  LatLng? get locationPin => _locationPin;
-  // bool get isSameHour => _isSameHour;
-  LocationRequestDetailResponse? get locationRequest => _locationRequest;
   String get locationName => _locationName;
   String get description => _description;
   String get contactNumber => _contactNumber;
   String get website => _website;
-  String? get imageUrl => _imageUrl;
   dynamic get defaultCategotyValue => _defaultCategotyValue;
   dynamic get defaultLocationTypeValue => _defaultLocationTypeValue;
   int? get minPrice => _minPrice;
   int? get maxPrice => _maxPrice;
+  double? get latitude => _latitude;
+  double? get longitude => _longitude;
+
+  Uint8List? get fileBytes => _fileBytes;
 }
