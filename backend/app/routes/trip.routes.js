@@ -6,8 +6,8 @@ module.exports = (app) => {
   // Create a new trip
   router.post("/", trips.create);
 
-  // Retrieve all trips
-  //router.get("/", trips.findAll);
+  //Retrieve all trips
+  router.get("/:userId", trips.findOne);
 
   // Retrieve one trip by tripId
   //router.get("/:tripId", trips.findOne);
