@@ -14,7 +14,7 @@ exports.create = async (req, res) => {
     const location = req.body;
 
     if (!(location.locationName && location.latitude && location.longitude)) {
-      res.status(400).send("locationName and lat-long can not be empty ! ! ");
+      return res.status(400).send("locationName and lat-long can not be empty ! ! ");
     }
 
     // const min_price = req.body.min_price;
