@@ -279,3 +279,15 @@ exports.update_interested = async (req, res) => {
     return res.status(400).send(err);
   }
 };
+
+exports.findOne_interested = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const data = await Interested.findOne({ where: { userId }, raw: true });
+
+    return res.status(200).json(data);
+  } catch (err) {
+    return res.status(400).send(400);
+  }
+};

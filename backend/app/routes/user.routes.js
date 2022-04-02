@@ -11,5 +11,7 @@ module.exports = (app) => {
 
   router.put("/interested/:userId", users.update_interested);
 
+  router.get("/interested/:userId", users.findOne_interested);
+
   app.use("/api/user", router);
 };
