@@ -1,3 +1,6 @@
+import 'package:admin/src/models/location_card_response.dart';
+import 'package:admin/src/models/location_detail_response.dart';
+import 'package:admin/src/services/dashboard_service.dart';
 import 'package:flutter/material.dart';
 
 class DashBoardViewModel with ChangeNotifier {
@@ -8,11 +11,11 @@ class DashBoardViewModel with ChangeNotifier {
     {'label': 'ที่พัก', 'value': 3},
   ];
   bool _isQuery = false;
+  List<LocationCardResponse> _locations = [];
   // List<SearchResultResponse> _queryResult = [];
 
-  Future<void> getSearchResultBy(int category) async {
-    // _searchResultCard =
-    //     await SearchResultService().getSearchResultBy(category, sortedBy);
+  Future<void> getLocationBy(int category) async {
+    _locations = await DashboardService().getLocationBy(category);
     notifyListeners();
   }
 
@@ -21,7 +24,16 @@ class DashBoardViewModel with ChangeNotifier {
   }
 
   void logout(BuildContext context) {
-    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+  }
+
+  void goToLocationDetail(BuildContext context, int locationId) {
+    Navigator.of(context)
+        .pushNamed('/dashboard/location', arguments: locationId);
+  }
+
+  Future<LocationDetailResponse> getLocationDetailById(int locationId) async {
+    return await DashboardService().getLocationDetailById(locationId);
   }
 
   void isSearchMode() {
@@ -45,4 +57,6 @@ class DashBoardViewModel with ChangeNotifier {
   // }
 
   List get dropdownItemList => _dropdownItemList;
+  bool get isQuery => _isQuery;
+  List<LocationCardResponse> get locations => _locations;
 }

@@ -17,11 +17,13 @@ class FontAssets {
   static const TextStyle subtitleText = TextStyle(
       color: Palette.webText, fontSize: 16, fontWeight: FontWeight.bold);
   static const TextStyle bodyText =
-      TextStyle(color: Palette.additionText, fontSize: 14);
+      TextStyle(color: Color(0xff374A59), fontSize: 14);
   static const TextStyle hintText =
       TextStyle(color: Palette.additionText, fontSize: 12);
   static const TextStyle requiredField = TextStyle(
       color: Palette.secondaryColor, fontWeight: FontWeight.bold, fontSize: 16);
+  static const TextStyle columnText = TextStyle(
+      color: Color(0xff374A59), fontSize: 14, fontWeight: FontWeight.bold);
 }
 
 class GoogleAssets {

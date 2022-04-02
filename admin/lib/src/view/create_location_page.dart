@@ -289,6 +289,13 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    SizedBox(
+                      height: getProportionateScreenHeight(25),
+                    ),
+                    const Text(
+                      'สร้างสถานที่',
+                      style: FontAssets.subtitleText,
+                    ),
                     subtitle('ชื่อสถานที่ ', '*'),
                     TextFormField(
                       maxLines: 1,
@@ -925,8 +932,7 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                                           isLoading = false;
                                         });
                                         const snackBar = SnackBar(
-                                          backgroundColor:
-                                              Palette.primaryColor,
+                                          backgroundColor: Palette.primaryColor,
                                           content: Text(
                                             'สร้างสถานที่สำเร็จ',
                                             style: TextStyle(
@@ -963,6 +969,9 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                               ),
                             ),
                     ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(25),
+                    ),
                   ],
                 ),
               ),
@@ -986,7 +995,7 @@ Widget subtitle(String text, String symbol) {
       children: [
         Text(
           text,
-          style: FontAssets.subtitleText,
+          style: FontAssets.columnText,
         ),
         Text(
           symbol,

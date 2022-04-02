@@ -1,11 +1,14 @@
 import 'package:admin/src/assets.dart';
+import 'package:admin/src/models/location_card_response.dart';
 import 'package:admin/src/palette.dart';
 import 'package:admin/src/shared_pref.dart';
 import 'package:admin/src/size_config.dart';
 import 'package:admin/src/view_models/dashboard_view_model.dart';
 import 'package:cool_dropdown/cool_dropdown.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -25,6 +28,9 @@ class _DashboardPageState extends State<DashboardPage> {
         username = value;
       });
     });
+    Provider.of<DashBoardViewModel>(context, listen: false).getLocationBy(0);
+    textController.clear();
+
     super.initState();
   }
 
@@ -112,15 +118,14 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.screenWidth / 4,
+            horizontal: SizeConfig.screenWidth / 6,
             vertical: getProportionateScreenHeight(25)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               alignment: Alignment.centerRight,
-              margin: EdgeInsets.only(
-                  bottom: getProportionateScreenHeight(10)),
+              margin: EdgeInsets.only(bottom: getProportionateScreenHeight(10)),
               child: ElevatedButton.icon(
                 onPressed: () => dashboardViewModel.goToCreateLocation(context),
                 icon: const Icon(
@@ -147,6 +152,28 @@ class _DashboardPageState extends State<DashboardPage> {
             const Text(
               'รอตรวจสอบ',
               style: FontAssets.subtitleText,
+            ),
+            buildColumn(),
+            const Divider(),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: getProportionateScreenHeight(15)),
+              child: dashboardViewModel.locations.isEmpty
+                  ? ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: 3,
+                      itemBuilder: (context, index) => loadingRow())
+                  : ListView(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: dashboardViewModel.locations
+                          .map(
+                            (item) =>
+                                buildCard(context, dashboardViewModel, item),
+                          )
+                          .toList(),
+                    ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -181,14 +208,269 @@ class _DashboardPageState extends State<DashboardPage> {
                     fontFamily: 'Sukhumvit',
                   ),
                   onChange: (selectedItem) {
-                    dashboardViewModel.getSearchResultBy(selectedItem['value']);
+                    dashboardViewModel.getLocationBy(selectedItem['value']);
                   },
                 ),
               ],
+            ),
+            buildColumn(),
+            const Divider(),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: getProportionateScreenHeight(15)),
+              child: dashboardViewModel.locations.isEmpty
+                  ? ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: 3,
+                      itemBuilder: (context, index) => loadingRow())
+                  : ListView(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: dashboardViewModel.locations
+                          .map(
+                            (item) =>
+                                buildCard(context, dashboardViewModel, item),
+                          )
+                          .toList(),
+                    ),
             ),
           ],
         ),
       ),
     );
+  }
+}
+
+Widget loadingRow() {
+  return Row(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Expanded(
+        child: Shimmer.fromColors(
+          baseColor: Palette.darkGrey,
+          highlightColor: Palette.tagGrey,
+          child: Container(
+            margin: EdgeInsets.only(
+              top: getProportionateScreenHeight(15),
+              bottom: getProportionateScreenHeight(15),
+              right: getProportionateScreenWidth(10),
+            ),
+            height: getProportionateScreenHeight(15),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Palette.outline,
+            ),
+          ),
+        ),
+      ),
+      Expanded(
+        flex: 2,
+        child: Shimmer.fromColors(
+          baseColor: Palette.darkGrey,
+          highlightColor: Palette.tagGrey,
+          child: Container(
+            margin: EdgeInsets.only(
+              top: getProportionateScreenHeight(15),
+              bottom: getProportionateScreenHeight(15),
+              right: getProportionateScreenWidth(10),
+            ),
+            height: getProportionateScreenHeight(15),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Palette.outline,
+            ),
+          ),
+        ),
+      ),
+      Expanded(
+        flex: 3,
+        child: Shimmer.fromColors(
+          baseColor: Palette.darkGrey,
+          highlightColor: Palette.tagGrey,
+          child: Container(
+            margin: EdgeInsets.only(
+              top: getProportionateScreenHeight(15),
+              bottom: getProportionateScreenHeight(15),
+              right: getProportionateScreenWidth(10),
+            ),
+            height: getProportionateScreenHeight(15),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Palette.outline,
+            ),
+          ),
+        ),
+      ),
+      Expanded(
+        child: Shimmer.fromColors(
+          baseColor: Palette.darkGrey,
+          highlightColor: Palette.tagGrey,
+          child: Container(
+            margin: EdgeInsets.only(
+              top: getProportionateScreenHeight(15),
+              bottom: getProportionateScreenHeight(15),
+              right: getProportionateScreenWidth(10),
+            ),
+            height: getProportionateScreenHeight(15),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Palette.outline,
+            ),
+          ),
+        ),
+      ),
+      Expanded(
+        child: Shimmer.fromColors(
+          baseColor: Palette.darkGrey,
+          highlightColor: Palette.tagGrey,
+          child: Container(
+            margin: EdgeInsets.only(
+              top: getProportionateScreenHeight(15),
+              bottom: getProportionateScreenHeight(15),
+              right: getProportionateScreenWidth(10),
+            ),
+            height: getProportionateScreenHeight(15),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Palette.outline,
+            ),
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+Widget buildCard(BuildContext context, DashBoardViewModel dashBoardViewModel,
+    LocationCardResponse location) {
+  return OnHover(
+    builder: (isHovered) {
+      return InkWell(
+        onTap: () =>
+            dashBoardViewModel.goToLocationDetail(context, location.locationId),
+        child: Container(
+          padding:
+              EdgeInsets.symmetric(vertical: getProportionateScreenHeight(15)),
+          color: isHovered ? const Color(0xffDEF1FF) : null,
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  DateFormat('dd/MM/yyyy')
+                      .format(DateTime.parse(location.updateDate)),
+                  style: FontAssets.bodyText,
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Text(
+                  'location.username',
+                  style: FontAssets.bodyText,
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: Text(
+                  location.locationName,
+                  style: FontAssets.bodyText,
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  location.category == 1
+                      ? "ที่เที่ยว"
+                      : location.category == 2
+                          ? "ที่กิน"
+                          : location.category == 3
+                              ? "ที่พัก"
+                              : "ของฝาก",
+                  style: FontAssets.bodyText,
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  location.locationType,
+                  style: FontAssets.bodyText,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+Widget buildColumn() {
+  return Padding(
+    padding: EdgeInsets.symmetric(vertical: getProportionateScreenHeight(15)),
+    child: Row(
+      children: const [
+        Expanded(
+          child: Text(
+            'วันที่',
+            style: FontAssets.columnText,
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: Text(
+            'ชื่อผู้ใช้',
+            style: FontAssets.columnText,
+          ),
+        ),
+        Expanded(
+          flex: 3,
+          child: Text(
+            'ชื่อสถานที่',
+            style: FontAssets.columnText,
+          ),
+        ),
+        Expanded(
+          child: Text(
+            'หมวดหมู่',
+            style: FontAssets.columnText,
+          ),
+        ),
+        Expanded(
+          child: Text(
+            'ประเภท',
+            style: FontAssets.columnText,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+class OnHover extends StatefulWidget {
+  final Widget Function(bool isHovered) builder;
+
+  const OnHover({Key? key, required this.builder}) : super(key: key);
+
+  @override
+  _OnHoverState createState() => _OnHoverState();
+}
+
+class _OnHoverState extends State<OnHover> {
+  bool isHovered = false;
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => onEntered(true),
+      onExit: (_) => onEntered(false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        child: widget.builder(isHovered),
+      ),
+    );
+  }
+
+  void onEntered(bool isHovered) {
+    setState(() {
+      this.isHovered = isHovered;
+    });
   }
 }

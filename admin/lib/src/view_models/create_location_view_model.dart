@@ -388,7 +388,7 @@ class CreateLocationViewModel with ChangeNotifier {
   }
 
   void logout(BuildContext context) {
-    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
   }
 
   bool? get knowOpeningHour => _knowOpeningHour;

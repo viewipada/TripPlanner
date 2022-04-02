@@ -1,6 +1,7 @@
 import 'package:admin/src/palette.dart';
 import 'package:admin/src/view/create_location_page.dart';
 import 'package:admin/src/view/dashboard_page.dart';
+import 'package:admin/src/view/location_detail_page.dart';
 import 'package:admin/src/view/login_page.dart';
 import 'package:admin/src/view_models/create_location_view_model.dart';
 import 'package:admin/src/view_models/dashboard_view_model.dart';
@@ -60,10 +61,12 @@ class MyApp extends StatelessWidget {
             fillColor: Colors.white,
           ),
         ),
+        initialRoute: '/login',
         routes: {
-          '/': (context) => const LoginPage(),
+          '/login': (context) => const LoginPage(),
           '/dashboard': (context) => const DashboardPage(),
           '/create': (context) => const CreateLocationPage(),
+          LocationDetailPage.route: (context) => const LocationDetailPage(),
         },
       ),
     );
