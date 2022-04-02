@@ -73,6 +73,9 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                   color: Palette.additionText,
                 ),
               ),
+              SizedBox(
+                width: getProportionateScreenWidth(8),
+              )
             ],
           ),
         ],

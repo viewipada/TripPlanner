@@ -28,6 +28,27 @@ class DashboardService {
     }
   }
 
+  Future<List<LocationCardResponse>> getLocationsRequest() async {
+    List<LocationCardResponse> baggageList = [];
+    final userId = await SharedPref().getUserId();
+    if (userId != null) {
+      final response = await http.get(Uri.parse(
+          '$baseUrl/api/locations/search/rating?category=3')); // mock api
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body) as List<dynamic>;
+        data
+            .map((item) => baggageList.add(LocationCardResponse.fromJson(item)))
+            .toList();
+        return baggageList;
+      } else {
+        throw Exception("can not fetch data");
+      }
+    } else {
+      return [];
+    }
+  }
+
   Future<LocationDetailResponse> getLocationDetailById(int locationId) async {
     final response =
         await http.get(Uri.parse('$baseUrl/api/locations/$locationId'));

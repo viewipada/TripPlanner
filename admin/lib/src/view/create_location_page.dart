@@ -272,6 +272,9 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                     color: Palette.additionText,
                   ),
                 ),
+                SizedBox(
+                  width: getProportionateScreenWidth(8),
+                )
               ],
             ),
           ],

@@ -29,6 +29,8 @@ class _DashboardPageState extends State<DashboardPage> {
       });
     });
     Provider.of<DashBoardViewModel>(context, listen: false).getLocationBy(0);
+    Provider.of<DashBoardViewModel>(context, listen: false)
+        .getLocationRequest();
     textController.clear();
 
     super.initState();
@@ -158,7 +160,7 @@ class _DashboardPageState extends State<DashboardPage> {
             Padding(
               padding: EdgeInsets.symmetric(
                   vertical: getProportionateScreenHeight(15)),
-              child: dashboardViewModel.locations.isEmpty
+              child: dashboardViewModel.locationsRequest.isEmpty
                   ? ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -167,7 +169,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   : ListView(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      children: dashboardViewModel.locations
+                      children: dashboardViewModel.locationsRequest
                           .map(
                             (item) =>
                                 buildCard(context, dashboardViewModel, item),
@@ -186,10 +188,12 @@ class _DashboardPageState extends State<DashboardPage> {
                 CoolDropdown(
                   dropdownList: dashboardViewModel.dropdownItemList,
                   defaultValue: dashboardViewModel.dropdownItemList[0],
-                  dropdownHeight: 220,
+                  dropdownHeight: getProportionateScreenHeight(200) + 20,
                   dropdownItemGap: 0,
-                  dropdownWidth: getProportionateScreenWidth(40),
+                  dropdownWidth: getProportionateScreenWidth(45),
+                  dropdownItemHeight: getProportionateScreenHeight(50),
                   resultWidth: getProportionateScreenWidth(50),
+                  resultHeight: getProportionateScreenHeight(50),
                   triangleHeight: 0,
                   gap: getProportionateScreenHeight(5),
                   resultTS: const TextStyle(
