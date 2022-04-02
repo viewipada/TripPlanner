@@ -143,8 +143,8 @@ class ProfileService {
     final userId = await SharedPref().getUserId();
 
     if (userId != null) {
-      final response = await http.get(Uri.parse(
-          'https://run.mocky.io/v3/ffc57a1e-8978-4db2-a2a6-3fce28b45df8'));
+      final response =
+          await http.get(Uri.parse("${baseUrl}/api/user/interested/${userId}"));
 
       if (response.statusCode == 200) {
         var data = UserInterestedResponse.fromJson(json.decode(response.body));
@@ -167,7 +167,7 @@ class ProfileService {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
       final response = await http.post(
-          Uri.parse("${baseUrl}/api/"), // รอ api post userInterested
+          Uri.parse("${baseUrl}/api/user/interested/"),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
@@ -214,7 +214,7 @@ class ProfileService {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
       final response = await http.put(
-          Uri.parse("${baseUrl}/api/"), // รอ api post userInterested
+          Uri.parse("${baseUrl}/api/user/interested/${userId}"),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
