@@ -81,7 +81,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           style: FontAssets.titleText,
                                         ),
                                         Text(
-                                          'Sliver traveller',
+                                          profileViewModel.profileResponse.rank,
                                           style: FontAssets.bodyText,
                                         ),
                                       ],
@@ -525,6 +525,24 @@ Widget buildGridReviewPicture(BuildContext context, MyReviewResponse review,
                   selectedTileColor: Palette.SelectedListTileColor,
                   onTap: () {
                     profileViewModel.deleteReview(locationId);
+                    final snackBar = SnackBar(
+                      backgroundColor: Palette.SecondaryColor,
+                      content: Container(
+                        child: Text(
+                          'ลบรีวิว ${locationName}',
+                          style: TextStyle(
+                            fontFamily: 'Sukhumvit',
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     Navigator.pop(context);
                   },
                   title: Text(

@@ -89,9 +89,10 @@ class ProfileViewModel with ChangeNotifier {
     );
   }
 
-  Future<void> deleteReview(int locationId) async {
-    await ProfileService().deleteReview(locationId);
-    notifyListeners();
+  Future<int?> deleteReview(int locationId) async {
+    final status = await ProfileService().deleteReview(locationId);
+    if (status != null) notifyListeners();
+    return status;
   }
 
   Future<void> deleteLocation(int locationId) async {

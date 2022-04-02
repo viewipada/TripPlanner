@@ -224,7 +224,18 @@ class _LoginPageState extends State<LoginPage> {
                                             setState(() {
                                               if (status == 200) {
                                                 _errorDialog = "";
-                                                isLoading = false;
+                                              } else if (status == 400) {
+                                                setState(() {
+                                                  _errorDialog =
+                                                      "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";
+                                                  isLoading = false;
+                                                });
+                                              } else if (status == 401) {
+                                                setState(() {
+                                                  _errorDialog =
+                                                      "ไม่พบชื่อผู้ใช้ในระบบ";
+                                                  isLoading = false;
+                                                });
                                               } else {
                                                 setState(() {
                                                   _errorDialog =

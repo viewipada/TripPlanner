@@ -1,6 +1,7 @@
 import 'package:admin/src/palette.dart';
 import 'package:admin/src/view/dashboard_page.dart';
 import 'package:admin/src/view/login_page.dart';
+import 'package:admin/src/view_models/dashboard_view_model.dart';
 import 'package:admin/src/view_models/login_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => LoginViewModel()),
+        ChangeNotifierProvider(create: (_) => DashBoardViewModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

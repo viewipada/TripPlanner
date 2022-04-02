@@ -24,8 +24,7 @@ class LoginViewModel with ChangeNotifier {
   }
 
   void goToDashBoard(BuildContext context) {
-    Navigator.pushNamedAndRemoveUntil(
-        context, '/dashboard', ModalRoute.withName('/dashboard'));
+    Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
   }
 
   String get userName => _userName;

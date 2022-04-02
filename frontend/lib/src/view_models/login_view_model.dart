@@ -109,7 +109,9 @@ class LoginViewModel with ChangeNotifier {
     );
   }
 
-  void goToOnboarding(BuildContext context) {
+  Future<void> goToOnboarding(BuildContext context) async {
+    await ProfileService()
+        .updateUserProfile(_gender!, _date!.toIso8601String());
     Navigator.push(
       context,
       MaterialPageRoute(

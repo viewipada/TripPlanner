@@ -4,24 +4,23 @@ import 'package:trip_planner/src/models/response/my_review_response.dart';
 class ProfileResponse {
   final String userImage;
   final String username;
-  // final List<TripCardResponse> trips;
+  final String rank;
   final List<MyReviewResponse> reviews;
 
   ProfileResponse({
     required this.userImage,
     required this.username,
-    // required this.trips,
+    required this.rank,
     required this.reviews,
   });
 
   factory ProfileResponse.fromJson(Map<String, dynamic> json) {
-    var reviewList = json['reviews'] as List;
-    // var tripList = json['trips'] as List;
+    var reviewList = json['reviewers'] as List;
 
     return ProfileResponse(
-      userImage: json['userImage'] as String,
+      userImage: json['imgUrl'] as String,
       username: json['username'] as String,
-      // trips: tripList.map((i) => TripCardResponse.fromJson(i)).toList(),
+      rank: json['rank'] as String,
       reviews: reviewList.map((i) => MyReviewResponse.fromJson(i)).toList(),
     );
   }
@@ -30,7 +29,7 @@ class ProfileResponse {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['userImage'] = this.userImage;
     data['username'] = this.username;
-    // data['trips'] = this.trips.map((v) => v.toMap()).toList();
+    data['rank'] = this.rank;
     data['reviews'] = this.reviews.map((v) => v.toJson()).toList();
 
     return data;
