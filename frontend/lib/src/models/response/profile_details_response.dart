@@ -15,7 +15,8 @@ class ProfileDetailsResponse {
 
   factory ProfileDetailsResponse.fromJson(Map<String, dynamic> json) {
     return ProfileDetailsResponse(
-      userImage: json['userImage'] as String,
+      userImage: json['imgUrl'] ??
+          "https://cdn.iconscout.com/icon/free/png-256/user-avatar-contact-portfolio-personal-portrait-profile-2-5270.png",
       username: json['username'] as String,
       gender: json['gender'] as String,
       birthdate: json['birthdate'] as String,

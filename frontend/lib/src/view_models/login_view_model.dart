@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:trip_planner/src/services/profile_service.dart';
 import 'package:trip_planner/src/view/screens/on_boarding_page.dart';
 import 'package:trip_planner/src/view/screens/pdpa_page.dart';
@@ -100,7 +101,6 @@ class LoginViewModel with ChangeNotifier {
   }
 
   void goToSurveyPage(BuildContext context) {
-    Navigator.pop(context);
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -110,9 +110,12 @@ class LoginViewModel with ChangeNotifier {
   }
 
   Future<void> goToOnboarding(BuildContext context) async {
-    await ProfileService()
-        .updateUserProfile(_gender!, _date!.toIso8601String());
-    Navigator.push(
+    await ProfileService().updateUserProfile(
+        _gender!,
+        DateTime.parse(DateFormat('yyyy-MM-dd')
+                .format(DateFormat('dd/MM/yyyy').parse(_startDate.trim())))
+            .toIso8601String());
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) => OnBoardingPage(),

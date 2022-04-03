@@ -153,7 +153,6 @@ class SurveyViewModel with ChangeNotifier {
   }
 
   void goToHomePage(BuildContext context) {
-    Navigator.pop(context);
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -177,6 +176,7 @@ class SurveyViewModel with ChangeNotifier {
         _selectedRestaurant, _selectedHotel, _minPrice, _maxPrice);
     if (res == 201) {
       goToHomePage(context);
+      return res;
     }
     return null;
   }

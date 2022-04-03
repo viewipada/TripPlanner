@@ -1,5 +1,4 @@
 class UserInterestedResponse {
-  final int userId;
   final String? firstActivity;
   final String? secondActivity;
   final String? thirdActivity;
@@ -13,7 +12,6 @@ class UserInterestedResponse {
   final int? maxPrice;
 
   UserInterestedResponse({
-    required this.userId,
     this.firstActivity,
     this.secondActivity,
     this.thirdActivity,
@@ -29,7 +27,6 @@ class UserInterestedResponse {
 
   factory UserInterestedResponse.fromJson(Map<String, dynamic> json) {
     return UserInterestedResponse(
-      userId: json['userId'] as int,
       firstActivity: json['first_activity'],
       secondActivity: json['second_activity'],
       thirdActivity: json['third_activity'],
