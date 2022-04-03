@@ -81,14 +81,14 @@ class _DashboardPageState extends State<DashboardPage> {
                   dashboardViewModel.isSearchMode();
                 },
               ),
-              hintText: 'ค้นหาสถานที่',
+              hintText: 'ค้นหาชื่อสถานที่',
             ),
             onChanged: (value) {
-              if (value.length == 0) {
-                // dashboardViewModel.isSearchMode();
+              if (value == "") {
+                dashboardViewModel.isSearchMode();
               } else {
-                // dashboardViewModel.isQueryMode();
-                // dashboardViewModel.query(allLocationList, value);
+                dashboardViewModel.isQueryMode();
+                dashboardViewModel.query(value);
               }
             },
           ),
@@ -219,26 +219,56 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
             buildColumn(),
             const Divider(),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: getProportionateScreenHeight(15)),
-              child: dashboardViewModel.locations.isEmpty
-                  ? ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: 3,
-                      itemBuilder: (context, index) => loadingRow())
-                  : ListView(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: dashboardViewModel.locations
-                          .map(
-                            (item) =>
-                                buildCard(context, dashboardViewModel, item),
-                          )
-                          .toList(),
-                    ),
+            Visibility(
+              visible: !dashboardViewModel.isQuery,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: getProportionateScreenHeight(15)),
+                child: dashboardViewModel.locations.isEmpty
+                    ? ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: 3,
+                        itemBuilder: (context, index) => loadingRow())
+                    : ListView(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: dashboardViewModel.locations
+                            .map(
+                              (item) =>
+                                  buildCard(context, dashboardViewModel, item),
+                            )
+                            .toList(),
+                      ),
+              ),
             ),
+            Visibility(
+                visible: dashboardViewModel.isQuery,
+                child: dashboardViewModel.queryResult.isEmpty
+                    ? Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: getProportionateScreenHeight(30)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Text(
+                              'ไม่พบผลลัพธ์ที่คุณค้นหา',
+                              style: FontAssets.bodyText,
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ))
+                    : Expanded(
+                        child: ListView.builder(
+                          padding: EdgeInsets.symmetric(
+                              vertical: getProportionateScreenHeight(15)),
+                          itemCount: dashboardViewModel.queryResult.length,
+                          itemBuilder: (context, index) => buildCard(
+                              context,
+                              dashboardViewModel,
+                              dashboardViewModel.queryResult[index]),
+                        ),
+                      )),
           ],
         ),
       ),

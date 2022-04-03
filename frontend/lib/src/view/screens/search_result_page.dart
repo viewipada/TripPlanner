@@ -100,7 +100,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
                           hintText: 'ค้นหาที่เที่ยวเลย',
                         ),
                         onChanged: (value) {
-                          if (value.length == 0) {
+                          if (value == "") {
                             searchViewModel.isSearchMode();
                           } else {
                             searchViewModel.isQueryMode();
