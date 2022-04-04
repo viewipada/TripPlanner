@@ -61,6 +61,16 @@ class DashBoardViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<int?> updateLocationStatus(
+      BuildContext context, int locationId, String status) async {
+    final statusCode =
+        await DashboardService().updateLocationStatus(locationId, status);
+    if (statusCode == 200) {
+      Navigator.pop(context);
+    }
+    return statusCode;
+  }
+
   List get dropdownItemList => _dropdownItemList;
   bool get isQuery => _isQuery;
   List<LocationCardResponse> get locations => _locations;

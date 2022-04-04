@@ -118,113 +118,52 @@ class _DashboardPageState extends State<DashboardPage> {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.screenWidth / 6,
-            vertical: getProportionateScreenHeight(25)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              alignment: Alignment.centerRight,
-              margin: EdgeInsets.only(bottom: getProportionateScreenHeight(10)),
-              child: ElevatedButton.icon(
-                onPressed: () => dashboardViewModel.goToCreateLocation(context),
-                icon: const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 20,
-                ),
-                label: const Text(
-                  'สร้างสถานที่',
-                  style: TextStyle(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.screenWidth / 6,
+              vertical: getProportionateScreenHeight(25)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                alignment: Alignment.centerRight,
+                margin:
+                    EdgeInsets.only(bottom: getProportionateScreenHeight(10)),
+                child: ElevatedButton.icon(
+                  onPressed: () =>
+                      dashboardViewModel.goToCreateLocation(context),
+                  icon: const Icon(
+                    Icons.add,
                     color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
+                    size: 20,
                   ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  primary: Palette.webText,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(100),
+                  label: const Text(
+                    'สร้างสถานที่',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Palette.webText,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100),
+                    ),
                   ),
                 ),
               ),
-            ),
-            const Text(
-              'รอตรวจสอบ',
-              style: FontAssets.subtitleText,
-            ),
-            buildColumn(),
-            const Divider(),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: getProportionateScreenHeight(15)),
-              child: dashboardViewModel.locationsRequest.isEmpty
-                  ? ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: 3,
-                      itemBuilder: (context, index) => loadingRow())
-                  : ListView(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: dashboardViewModel.locationsRequest
-                          .map(
-                            (item) =>
-                                buildCard(context, dashboardViewModel, item),
-                          )
-                          .toList(),
-                    ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  'สถานที่ทั้งหมด',
-                  style: FontAssets.subtitleText,
-                ),
-                CoolDropdown(
-                  dropdownList: dashboardViewModel.dropdownItemList,
-                  defaultValue: dashboardViewModel.dropdownItemList[0],
-                  dropdownHeight: getProportionateScreenHeight(200) + 20,
-                  dropdownItemGap: 0,
-                  dropdownWidth: getProportionateScreenWidth(45),
-                  dropdownItemHeight: getProportionateScreenHeight(50),
-                  resultWidth: getProportionateScreenWidth(50),
-                  resultHeight: getProportionateScreenHeight(50),
-                  triangleHeight: 0,
-                  gap: getProportionateScreenHeight(5),
-                  resultTS: const TextStyle(
-                    color: Palette.additionText,
-                    fontSize: 14,
-                    fontFamily: 'Sukhumvit',
-                  ),
-                  selectedItemTS: const TextStyle(
-                    color: Palette.primaryColor,
-                    fontSize: 14,
-                    fontFamily: 'Sukhumvit',
-                  ),
-                  unselectedItemTS: const TextStyle(
-                    color: Palette.bodyText,
-                    fontSize: 14,
-                    fontFamily: 'Sukhumvit',
-                  ),
-                  onChange: (selectedItem) {
-                    dashboardViewModel.getLocationBy(selectedItem['value']);
-                  },
-                ),
-              ],
-            ),
-            buildColumn(),
-            const Divider(),
-            Visibility(
-              visible: !dashboardViewModel.isQuery,
-              child: Padding(
+              const Text(
+                'รอตรวจสอบ',
+                style: FontAssets.subtitleText,
+              ),
+              buildColumn(),
+              const Divider(),
+              Padding(
                 padding: EdgeInsets.symmetric(
                     vertical: getProportionateScreenHeight(15)),
-                child: dashboardViewModel.locations.isEmpty
+                child: dashboardViewModel.locationsRequest.isEmpty
                     ? ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
@@ -233,7 +172,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     : ListView(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        children: dashboardViewModel.locations
+                        children: dashboardViewModel.locationsRequest
                             .map(
                               (item) =>
                                   buildCard(context, dashboardViewModel, item),
@@ -241,8 +180,72 @@ class _DashboardPageState extends State<DashboardPage> {
                             .toList(),
                       ),
               ),
-            ),
-            Visibility(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    'สถานที่ทั้งหมด',
+                    style: FontAssets.subtitleText,
+                  ),
+                  CoolDropdown(
+                    dropdownList: dashboardViewModel.dropdownItemList,
+                    defaultValue: dashboardViewModel.dropdownItemList[0],
+                    dropdownHeight: getProportionateScreenHeight(200) + 20,
+                    dropdownItemGap: 0,
+                    dropdownWidth: getProportionateScreenWidth(45),
+                    dropdownItemHeight: getProportionateScreenHeight(50),
+                    resultWidth: getProportionateScreenWidth(50),
+                    resultHeight: getProportionateScreenHeight(50),
+                    triangleHeight: 0,
+                    gap: getProportionateScreenHeight(5),
+                    resultTS: const TextStyle(
+                      color: Palette.additionText,
+                      fontSize: 14,
+                      fontFamily: 'Sukhumvit',
+                    ),
+                    selectedItemTS: const TextStyle(
+                      color: Palette.primaryColor,
+                      fontSize: 14,
+                      fontFamily: 'Sukhumvit',
+                    ),
+                    unselectedItemTS: const TextStyle(
+                      color: Palette.bodyText,
+                      fontSize: 14,
+                      fontFamily: 'Sukhumvit',
+                    ),
+                    onChange: (selectedItem) {
+                      dashboardViewModel.getLocationBy(selectedItem['value']);
+                    },
+                  ),
+                ],
+              ),
+              buildColumn(),
+              const Divider(),
+              Visibility(
+                visible: !dashboardViewModel.isQuery,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: getProportionateScreenHeight(15)),
+                  child: dashboardViewModel.locations.isEmpty
+                      ? ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: 3,
+                          itemBuilder: (context, index) => loadingRow())
+                      : ListView(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          children: dashboardViewModel.locations
+                              .map(
+                                (item) => buildCard(
+                                    context, dashboardViewModel, item),
+                              )
+                              .toList(),
+                        ),
+                ),
+              ),
+              Visibility(
                 visible: dashboardViewModel.isQuery,
                 child: dashboardViewModel.queryResult.isEmpty
                     ? Padding(
@@ -257,19 +260,23 @@ class _DashboardPageState extends State<DashboardPage> {
                               textAlign: TextAlign.center,
                             ),
                           ],
-                        ))
-                    : Expanded(
-                        child: ListView.builder(
-                          padding: EdgeInsets.symmetric(
-                              vertical: getProportionateScreenHeight(15)),
-                          itemCount: dashboardViewModel.queryResult.length,
-                          itemBuilder: (context, index) => buildCard(
-                              context,
-                              dashboardViewModel,
-                              dashboardViewModel.queryResult[index]),
                         ),
-                      )),
-          ],
+                      )
+                    : ListView(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.symmetric(
+                            vertical: getProportionateScreenHeight(15)),
+                        children: dashboardViewModel.queryResult
+                            .map(
+                              (item) =>
+                                  buildCard(context, dashboardViewModel, item),
+                            )
+                            .toList(),
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
     );

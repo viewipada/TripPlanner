@@ -87,11 +87,268 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             var location = snapshot.data as LocationDetailResponse;
-            return Container(
-              margin:
-                  EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth / 4),
-              child: Column(
-                children: [],
+            return SingleChildScrollView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              child: Container(
+                margin: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.screenWidth / 4),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Card(
+                      child: Image.network(
+                        location.imageUrl,
+                        height: getProportionateScreenHeight(350),
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                    ),
+                    subtitle('ชื่อสถานที่ ', '*'),
+                    TextFormField(
+                      initialValue: location.locationName,
+                      maxLines: 1,
+                      readOnly: true,
+                      enabled: false,
+                    ),
+                    subtitle('หมวดหมู่สถานที่ ', '*'),
+                    TextFormField(
+                      initialValue: location.category == 1
+                          ? "ที่เที่ยว"
+                          : location.category == 2
+                              ? "ที่กิน"
+                              : location.category == 3
+                                  ? "ที่พัก"
+                                  : "ของฝาก",
+                      maxLines: 1,
+                      readOnly: true,
+                      enabled: false,
+                    ),
+                    subtitle('ประเภทสถานที่ ', '*'),
+                    TextFormField(
+                      initialValue: location.locationType,
+                      maxLines: 1,
+                      readOnly: true,
+                      enabled: false,
+                    ),
+                    location.locationType == 'ที่พัก'
+                        ? subtitle('ช่วงราคา ', '*')
+                        : const SizedBox(),
+                    location.locationType == 'ที่พัก'
+                        ? Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  initialValue: location.minPrice.toString(),
+                                  maxLines: 1,
+                                  readOnly: true,
+                                  enabled: false,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: getProportionateScreenWidth(5),
+                                ),
+                                child: const Icon(
+                                  Icons.minimize_rounded,
+                                  color: Palette.infoText,
+                                ),
+                              ),
+                              Expanded(
+                                child: TextFormField(
+                                  initialValue: location.maxPrice.toString(),
+                                  maxLines: 1,
+                                  readOnly: true,
+                                  enabled: false,
+                                ),
+                              ),
+                            ],
+                          )
+                        : const SizedBox(),
+                    subtitle('จังหวัด ', '*'),
+                    TextFormField(
+                      initialValue: location.province,
+                      maxLines: 1,
+                      readOnly: true,
+                      enabled: false,
+                    ),
+                    subtitle('ตำแหน่งบนแผนที่ ', '*'),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            initialValue: location.latitude.toString(),
+                            maxLines: 1,
+                            readOnly: true,
+                            enabled: false,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: getProportionateScreenWidth(5),
+                          ),
+                          child: const Text(
+                            ',',
+                            style: FontAssets.headingText,
+                          ),
+                        ),
+                        Expanded(
+                          child: TextFormField(
+                            initialValue: location.longitude.toString(),
+                            maxLines: 1,
+                            readOnly: true,
+                            enabled: false,
+                          ),
+                        ),
+                      ],
+                    ),
+                    subtitle('เขียนแนะนำสถานที่เบื้องต้น ', '*'),
+                    SizedBox(
+                      height: getProportionateScreenHeight(150),
+                      child: TextFormField(
+                        initialValue: location.description,
+                        maxLines: 100,
+                        maxLength: 300,
+                        readOnly: true,
+                        enabled: false,
+                        decoration: const InputDecoration(
+                          counterText: "",
+                        ),
+                      ),
+                    ),
+                    subtitle('เบอร์ติดต่อ', ''),
+                    TextFormField(
+                      initialValue: location.contactNumber,
+                      maxLines: 1,
+                      maxLength: 10,
+                      readOnly: true,
+                      enabled: false,
+                      decoration: const InputDecoration(
+                        counterText: "",
+                      ),
+                    ),
+                    subtitle('เว็บไซต์, Facebook', ''),
+                    TextFormField(
+                      initialValue: location.website,
+                      maxLines: 1,
+                      readOnly: true,
+                      enabled: false,
+                    ),
+                    Container(
+                      alignment: Alignment.bottomLeft,
+                      margin: EdgeInsets.only(
+                          top: getProportionateScreenHeight(15)),
+                      child: const Text(
+                        'วันเวลาทำการ',
+                        style: FontAssets.columnText,
+                      ),
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(15),
+                    ),
+                    // buildOpeningHour("วันจันทร์", location.openingHour[0]),
+                    // buildOpeningHour("วันอังคาร", location.openingHour[1]),
+                    // buildOpeningHour("วันพุธ", location.openingHour[2]),
+                    // buildOpeningHour("วันพฤหัสบดี", location.openingHour[3]),
+                    // buildOpeningHour("วันศุกร์", location.openingHour[4]),
+                    // buildOpeningHour("วันเสาร์", location.openingHour[5]),
+                    // buildOpeningHour("วันอาทิตย์", location.openingHour[6]),
+                    buildOpeningHour("วันจันทร์", "ปิด"),
+                    buildOpeningHour("วันอังคาร", "ปิด"),
+                    buildOpeningHour("วันพุธ", "ปิด"),
+                    buildOpeningHour("วันพฤหัสบดี", "ปิด"),
+                    buildOpeningHour("วันศุกร์", "9:00 - 16:00"),
+                    buildOpeningHour("วันเสาร์", "9:00 - 16:00"),
+                    buildOpeningHour("วันอาทิตย์", "8:00 - 20:00"),
+                    Visibility(
+                      visible: true,
+                      // location.locationStatus == "In progress",
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: getProportionateScreenWidth(5)),
+                            child: TextButton(
+                              onPressed: () {
+                                dashBoardViewModel
+                                    .updateLocationStatus(
+                                        context, location.locationId, "Deny")
+                                    .then((value) {
+                                  if (value == 200) {
+                                    final snackBar = SnackBar(
+                                      backgroundColor: Palette.secondaryColor,
+                                      content: Text(
+                                        'ปฏิเสธคำขอสร้างสถานที่ ${location.locationName} แล้ว',
+                                        style: const TextStyle(
+                                          fontFamily: 'Sukhumvit',
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  }
+                                });
+                              },
+                              child: const Text(
+                                "ปฏิเสธ",
+                                style: TextStyle(
+                                    color: Palette.deleteColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: getProportionateScreenHeight(48),
+                            width: getProportionateScreenWidth(50),
+                            margin: EdgeInsets.symmetric(
+                                vertical: getProportionateScreenHeight(25)),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                dashBoardViewModel
+                                    .updateLocationStatus(context,
+                                        location.locationId, "Approved")
+                                    .then((value) {
+                                  if (value == 200) {
+                                    final snackBar = SnackBar(
+                                      backgroundColor: Palette.primaryColor,
+                                      content: Text(
+                                        'อนุมัติคำขอสร้างสถานที่ ${location.locationName} แล้ว',
+                                        style: const TextStyle(
+                                          fontFamily: 'Sukhumvit',
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  }
+                                });
+                              },
+                              child: const Text(
+                                "อนุมัติ",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           } else {
@@ -112,6 +369,56 @@ Widget loading() {
         size: getProportionateScreenWidth(30),
       ),
       const Text('กรุณารอสักครู่...', style: FontAssets.bodyText)
+    ],
+  );
+}
+
+Widget subtitle(String text, String symbol) {
+  return Container(
+    alignment: Alignment.bottomLeft,
+    padding: EdgeInsets.symmetric(
+      vertical: getProportionateScreenHeight(15),
+    ),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          text,
+          style: FontAssets.columnText,
+        ),
+        Text(
+          symbol,
+          style: FontAssets.requiredField,
+        ),
+      ],
+    ),
+  );
+}
+
+Widget buildOpeningHour(String day, String openingHour) {
+  return Column(
+    children: [
+      ListTile(
+        tileColor: Colors.white,
+        title: Row(
+          children: [
+            Expanded(
+              child: Text(
+                day,
+                style: FontAssets.bodyText,
+              ),
+            ),
+            Expanded(
+              child: Text(
+                openingHour,
+                style: FontAssets.bodyText,
+              ),
+            ),
+          ],
+        ),
+      ),
+      const Divider()
     ],
   );
 }

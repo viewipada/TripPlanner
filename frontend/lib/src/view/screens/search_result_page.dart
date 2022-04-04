@@ -1,5 +1,6 @@
 import 'package:cool_dropdown/cool_dropdown.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
@@ -333,12 +334,30 @@ Widget buildSearchResultCard(BuildContext context,
                     padding: EdgeInsets.only(
                       bottom: getProportionateScreenHeight(15),
                     ),
-                    child: Text(
-                      item.description,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: FontAssets.bodyText,
+                    child: Row(
+                      children: [
+                        Text(
+                          '${item.rating} ',
+                          style: FontAssets.hintText,
+                        ),
+                        RatingBarIndicator(
+                          unratedColor: Palette.Outline,
+                          rating: item.rating,
+                          itemBuilder: (context, index) => Icon(
+                            Icons.star_rounded,
+                            color: Palette.CautionColor,
+                          ),
+                          itemCount: 5,
+                          itemSize: 16,
+                        ),
+                      ],
                     ),
+                    //  Text(
+                    //   item.description,
+                    //   overflow: TextOverflow.ellipsis,
+                    //   maxLines: 1,
+                    //   style: FontAssets.bodyText,
+                    // ),
                   ),
                   Expanded(
                     child: Row(

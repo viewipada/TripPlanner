@@ -274,7 +274,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                                   size: 18,
                                 ),
                                 Text(
-                                  ' เช็คอินแล้ว ${locationDetailViewModel.locationDetail.totalCheckin} คน',
+                                  ' เช็คอินแล้ว ${locationDetailViewModel.locationDetail.totalCheckin} ครั้ง',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 14,
