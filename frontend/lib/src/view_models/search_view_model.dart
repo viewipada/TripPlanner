@@ -52,6 +52,7 @@ class SearchViewModel with ChangeNotifier {
   Set<Marker> _markers = Set();
   ItemScrollController _itemScrollController = ItemScrollController();
   bool _isQuery = false;
+  String _sortedBy = "rating";
 
   Future<void> getUserLocation() async {
     Location location = new Location();
@@ -233,8 +234,8 @@ class SearchViewModel with ChangeNotifier {
 
   Future<void> getSearchResultBy(int category, String sortedBy) async {
     _searchResultCard = await [];
+    _sortedBy = sortedBy;
     notifyListeners();
-
     _searchResultCard =
         await SearchResultService().getSearchResultBy(category, sortedBy);
     notifyListeners();
@@ -284,4 +285,5 @@ class SearchViewModel with ChangeNotifier {
   List get dropdownItemList => _dropdownItemList;
   List get tabs => _tabs;
   bool get isQuery => _isQuery;
+  String get sortedBy => _sortedBy;
 }

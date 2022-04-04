@@ -330,34 +330,35 @@ Widget buildSearchResultCard(BuildContext context,
                     overflow: TextOverflow.ellipsis,
                     style: FontAssets.subtitleText,
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      bottom: getProportionateScreenHeight(15),
-                    ),
-                    child: Row(
-                      children: [
-                        Text(
-                          '${item.rating} ',
-                          style: FontAssets.hintText,
+                  searchViewModel.sortedBy == "rating"
+                      ? Row(
+                          children: [
+                            Text(
+                              '${item.rating} ',
+                              style: FontAssets.hintText,
+                            ),
+                            RatingBarIndicator(
+                              unratedColor: Palette.Outline,
+                              rating: item.rating,
+                              itemBuilder: (context, index) => Icon(
+                                Icons.star_rounded,
+                                color: Palette.CautionColor,
+                              ),
+                              itemCount: 5,
+                              itemSize: 16,
+                            ),
+                          ],
+                        )
+                      : Text(
+                          'เช็คอินแล้ว ${item.totalCheckin} ครั้ง',
+                          style: TextStyle(
+                              fontSize: 14, color: Palette.PrimaryColor),
                         ),
-                        RatingBarIndicator(
-                          unratedColor: Palette.Outline,
-                          rating: item.rating,
-                          itemBuilder: (context, index) => Icon(
-                            Icons.star_rounded,
-                            color: Palette.CautionColor,
-                          ),
-                          itemCount: 5,
-                          itemSize: 16,
-                        ),
-                      ],
-                    ),
-                    //  Text(
-                    //   item.description,
-                    //   overflow: TextOverflow.ellipsis,
-                    //   maxLines: 1,
-                    //   style: FontAssets.bodyText,
-                    // ),
+                  Text(
+                    item.description,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: FontAssets.bodyText,
                   ),
                   Expanded(
                     child: Row(
