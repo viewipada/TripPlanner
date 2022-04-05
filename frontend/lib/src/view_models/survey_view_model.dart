@@ -13,8 +13,8 @@ class SurveyViewModel with ChangeNotifier {
     },
     {
       "imageUrl": ImageAssets.Act2,
-      "label": "เต้นรำ",
-      "value": "เต้นรำ",
+      "label": "ปาร์ตี้",
+      "value": "ปาร์ตี้",
     },
     {
       "imageUrl": ImageAssets.Act3,
@@ -63,8 +63,8 @@ class SurveyViewModel with ChangeNotifier {
     },
     {
       "imageUrl": ImageAssets.Act12,
-      "label": "เที่ยวเมืองจำลอง",
-      "value": "สถานที่ท่องเที่ยวบรรยากาศต่างประเทศ",
+      "label": "ชุมชน/เมืองจำลอง",
+      "value": "ชุมชน/เมืองจำลอง",
     },
   ];
 
