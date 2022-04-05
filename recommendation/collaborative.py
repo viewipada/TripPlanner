@@ -4,71 +4,73 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics import pairwise_distances
 from sklearn.model_selection import train_test_split
 
-# df_restaurant = pd.read_csv("C:/Users/User/Desktop/Project/Project/Git/rating_final_2.csv")
-# df_restaurant_cuisine = pd.read_csv('C:/Users/User/Desktop/Project/Project/Git/chefmozcuisine.csv')
+# # df_restaurant = pd.read_csv("C:/Users/User/Desktop/Project/Project/Git/rating_final_2.csv")
+# # df_restaurant_cuisine = pd.read_csv('C:/Users/User/Desktop/Project/Project/Git/chefmozcuisine.csv')
+
+# # x_train, x_test = train_test_split(df_restaurant, test_size = 0.30, random_state = 42)
+
+# # user_data = x_train.pivot(index = 'userID', columns = 'placeID', values = 'rating').fillna(0)
+
+# # dummy_train = x_train.pivot(index = 'userID', columns = 'placeID', values = 'rating').fillna(0)
+
+# # dummy_test = x_test.pivot(index = 'userID', columns = 'placeID', values = 'rating').fillna(1)
+
+
+# #---------------------------------
+# #test
+# # g = "/recommendation/rating_final.csv"
+# # df_restaurant = pd.read_csv(g)
+# df_restaurant = pd.read_csv("C:/Users/User/Desktop/TripPlanner/recommendation/test.csv")
+# # C:/Users/User/Desktop/TripPlanner/recommendation/rating_final_for_database_3.csv
+# # C:/Users/User/Desktop/Project/Project/Git/ratingCopy.csv
+# # setwd = ("C:\\Users\\User\\Desktop\\Project\\Project\\Git")
+# # df_restaurant = pd.read_csv("rating_final.csv")
+# # df_restaurant_cuisine = pd.read_csv('C:/Users/User/Desktop/Project/Project/Git/chefmozcuisine.csv')
+# # print(df_restaurant.head(10))
+# # print(df_restaurant_cuisine.head(10))
 
 # x_train, x_test = train_test_split(df_restaurant, test_size = 0.30, random_state = 42)
+# # print(x_train.shape)
+# # print(x_test.shape)
 
 # user_data = x_train.pivot(index = 'userID', columns = 'placeID', values = 'rating').fillna(0)
+# # print(user_data.head())
 
 # dummy_train = x_train.pivot(index = 'userID', columns = 'placeID', values = 'rating').fillna(0)
+# # print(dummy_train.head())
 
 # dummy_test = x_test.pivot(index = 'userID', columns = 'placeID', values = 'rating').fillna(1)
+# # print(dummy_test.head())
 
+# test = user_data
+# test['user_index'] = np.arange(0, dummy_train.shape[0],1)
+# # print(test.head())
 
-#---------------------------------
-#test
-# g = "/recommendation/rating_final.csv"
-# df_restaurant = pd.read_csv(g)
-df_restaurant = pd.read_csv("C:/Users/User/Desktop/TripPlanner/recommendation/test.csv")
-# C:/Users/User/Desktop/TripPlanner/recommendation/rating_final_for_database_3.csv
-# C:/Users/User/Desktop/Project/Project/Git/ratingCopy.csv
-# setwd = ("C:\\Users\\User\\Desktop\\Project\\Project\\Git")
-# df_restaurant = pd.read_csv("rating_final.csv")
-# df_restaurant_cuisine = pd.read_csv('C:/Users/User/Desktop/Project/Project/Git/chefmozcuisine.csv')
-# print(df_restaurant.head(10))
-# print(df_restaurant_cuisine.head(10))
+# test.set_index(['user_index'], inplace = True)
+# # print(test.head())
 
-x_train, x_test = train_test_split(df_restaurant, test_size = 0.30, random_state = 42)
-# print(x_train.shape)
-# print(x_test.shape)
+# user_similarity = cosine_similarity(test)
+# user_similarity[np.isnan(user_similarity)] = 0
+# # print(user_similarity)
+# # print(user_similarity.shape)
 
-user_data = x_train.pivot(index = 'userID', columns = 'placeID', values = 'rating').fillna(0)
-# print(user_data.head())
+# user_predicted_ratings = np.dot(user_similarity, test)
+# # print(user_predicted_ratings)
 
-dummy_train = x_train.pivot(index = 'userID', columns = 'placeID', values = 'rating').fillna(0)
-# print(dummy_train.head())
+# user_final_ratings = np.multiply(user_predicted_ratings, dummy_train)
+# # print(user_final_ratings.head())
 
-dummy_test = x_test.pivot(index = 'userID', columns = 'placeID', values = 'rating').fillna(1)
-# print(dummy_test.head())
+# # print(user_final_ratings.iloc[1].sort_values(ascending = False)[0:10])
 
-test = user_data
-test['user_index'] = np.arange(0, dummy_train.shape[0],1)
-# print(test.head())
+# print(user_final_ratings.iloc[1].sort_values(ascending = False)[0:10].keys().to_list())
 
-test.set_index(['user_index'], inplace = True)
-# print(test.head())
+# ratingfinal = user_final_ratings.iloc[1].sort_values(ascending = False)[0:10].keys().to_list()
 
-user_similarity = cosine_similarity(test)
-user_similarity[np.isnan(user_similarity)] = 0
-# print(user_similarity)
-# print(user_similarity.shape)
+# # print(ratingfinal)
+# for i in range(len(ratingfinal)):
+#     print(ratingfinal[i])
 
-user_predicted_ratings = np.dot(user_similarity, test)
-# print(user_predicted_ratings)
-
-user_final_ratings = np.multiply(user_predicted_ratings, dummy_train)
-# print(user_final_ratings.head())
-
-# print(user_final_ratings.iloc[1].sort_values(ascending = False)[0:10])
-
-print(user_final_ratings.iloc[1].sort_values(ascending = False)[0:10].keys().to_list())
-
-ratingfinal = user_final_ratings.iloc[1].sort_values(ascending = False)[0:10].keys().to_list()
-
-# print(ratingfinal)
-for i in range(len(ratingfinal)):
-    print(ratingfinal[i])
+# ............................................................
 
 # from joblib import dump
 # dump(user_final_ratings, 'collaborative_rating.joblib')
@@ -113,3 +115,42 @@ for i in range(len(ratingfinal)):
 # sum_of_squares_err = diff_sqr_matrix.sum().sum() 
 # rmse = np.sqrt(sum_of_squares_err/total_non_nan)
 # print(rmse)
+
+
+# ............................................................
+# .............Decision Tree....................
+# ............................................................
+# import pandas as pd
+# from sklearn.tree import DecisionTreeClassifier
+# from sklearn.model_selection import train_test_split
+# from sklearn import tree
+# from sklearn.neighbors import KNeighborsClassifier
+
+# data = pd.read_csv("C:/Users/User/Desktop/TripPlanner/recommendation/decisiontree_8.csv")
+# print(data.เพศ.unique())
+# print(data.ช่วงอายุ.unique())
+# print(data.กิจกรรม.unique())
+# print(data.คุณอยากไปเที่ยวที่ไหน.unique())
+# data['เพศ'] = data.เพศ.replace(['หญิง','ชาย'],[1,2])
+# data['ช่วงอายุ'] = data.ช่วงอายุ.replace(['น้อยกว่า 18 ปี','18 -25 ปี', '26 - 35 ปี', '36 - 55 ปี', 'มากกว่า 55 ปี'],[1,2,3,4,5])
+from joblib import dump, load
+test = load('C:/Users/User/Desktop/TripPlanner/recommendation/decision_tree_model.joblib') 
+print(test.predict([[1,2,1]]))
+
+# x = data[['เพศ','ช่วงอายุ','กิจกรรม']]
+# y = data[['คุณอยากไปเที่ยวที่ไหน']]
+
+# train_x, test_x, train_y, test_y = train_test_split(x, y, train_size=0.7, random_state=10)
+# print("Train",train_x.count())
+# print("Teast",test_x.count())
+
+# Treemodel = tree.DecisionTreeClassifier()
+# Treemodel = Treemodel.fit(train_x, train_y)
+
+# fs = pd.Series(Treemodel.feature_importances_, index=train_x.columns).sort_values(
+#     ascending=False)
+# print(fs)
+
+# Test = [[1,2,1],[2,2,2],[1,2,3],[1,2,4],
+#         [1,2,5],[2,2,8],[2,2,7],[1,2,6]]
+# print(Treemodel.predict(Test))

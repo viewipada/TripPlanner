@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics import pairwise_distances
 from sklearn.model_selection import train_test_split
-from fastapi import FastAPI,status,HTTPException
+from fastapi import FastAPI,status,HTTPException,Request
 
 import sqlalchemy
 import uvicorn
@@ -20,6 +20,7 @@ from pydantic import BaseModel, Field
 from typing import Optional,List
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import session
+# import from folderName import filename
 
 SQLALCHEMY_DATABASE_URL = "postgresql://zfmsgbtyaipvev:0701919781293d9d17ff3aa96c31a3e91d70f6ea43e241179ffe6076e9d6e938@ec2-3-215-83-124.compute-1.amazonaws.com:5432/d3ngpebd1au102"
 
@@ -33,6 +34,9 @@ Base = declarative_base()
 # metadata = sqlalchemy.MetaData()
 
 app = FastAPI()
+
+# uvicorn main:app --root-path /api/v1
+app = FastAPI(root_path="")
 
 locations = sqlalchemy.Table(
     "locations",
@@ -71,9 +75,9 @@ class Location(BaseModel): #serializer
 
 # db = SessionLocal()
 
-@app.get("/")
-async def main():
-    return {"message": "This is the Recommondation of the API"}
+# @app.get("/")
+# async def main():
+#     return {"message": "This is the Recommondation of the API"}
 
 @app.on_event("startup")
 async def startup():
@@ -102,7 +106,7 @@ async def get_nearly_location(lot:float,long:float):
     return 'Please wait the system is developing.'
 
 def User_rating(User_id):
-    df_restaurant = pd.read_csv("C:/Users/User/Desktop/Project/Project/Git/test.csv")
+    df_restaurant = pd.read_csv("test.csv")
 
     x_train, x_test = train_test_split(df_restaurant, test_size = 0.30, random_state = 42)
 
@@ -131,6 +135,8 @@ async def get_location(User_id: int):
     data = database.fetch_all(location)
     return await data
 
+
+# retern distance สานที่ว่าห่างจากที่ได้มาเท่าไร
 # cd recommendation
 # .env\Scripts\activate
 # uvicorn main:app --reload
@@ -159,5 +165,9 @@ async def get_location(User_id: int):
 #     # set another loop implementation:
 #     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 #     asyncio.run(main())
+
+@app.get("/Just_rating/{User_id}")
+async def get_Just_rating_recommendation(User_id: int):
+    return User_rating(User_id)
 
 
