@@ -37,7 +37,7 @@ module.exports = (sequelize, Sequelize) => {
     },
     province: {
       type: Sequelize.STRING(100),
-      defaultValue: "Angthong",
+      defaultValue: "อ่างทอง",
     },
     averageRating: {
       type: Sequelize.DOUBLE,
@@ -53,7 +53,7 @@ module.exports = (sequelize, Sequelize) => {
     },
     locationStatus: {
       type: Sequelize.STRING(15),
-      defaultValue: "inprogress",
+      defaultValue: "In progress",
     },
   });
 

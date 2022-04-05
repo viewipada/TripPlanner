@@ -54,4 +54,26 @@ class LocationService {
       throw Exception('Failed to load campaigns');
     }
   }
+
+  Future<int?> tryToCheckin(int locationId) async {
+    final userId = await SharedPref().getUserId();
+    if (userId != null) {
+      // final response =
+      //     await http.put(Uri.parse("${baseUrl}/api/user/${userId}"),
+      //         headers: <String, String>{
+      //           'Content-Type': 'application/json; charset=UTF-8',
+      //         },
+      //         body: jsonEncode(
+      //           <String, dynamic>{"gender": gender, "birthDate": birthDath},
+      //         ));
+
+      // if (response.statusCode == 200) {
+      //   return response.statusCode;
+      // } else {
+      //   throw Exception("can not create userInterest");
+      // }
+      return 200;
+    } else
+      return null;
+  }
 }

@@ -13,8 +13,8 @@ class SurveyViewModel with ChangeNotifier {
     },
     {
       "imageUrl": ImageAssets.Act2,
-      "label": "เต้นรำ",
-      "value": "เต้นรำ",
+      "label": "ปาร์ตี้",
+      "value": "ปาร์ตี้",
     },
     {
       "imageUrl": ImageAssets.Act3,
@@ -63,8 +63,8 @@ class SurveyViewModel with ChangeNotifier {
     },
     {
       "imageUrl": ImageAssets.Act12,
-      "label": "เที่ยวเมืองจำลอง",
-      "value": "สถานที่ท่องเที่ยวบรรยากาศต่างประเทศ",
+      "label": "ชุมชน/เมืองจำลอง",
+      "value": "ชุมชน/เมืองจำลอง",
     },
   ];
 
@@ -123,6 +123,9 @@ class SurveyViewModel with ChangeNotifier {
 
   Future<UserInterestedResponse?> getUserInterested() async {
     _userInterested = await ProfileService().getUserInterested();
+    _selectedActivities = [];
+    _selectedHotel = [];
+    _selectedRestaurant = [];
     if (_userInterested != null) {
       if (_userInterested!.firstActivity != null)
         _selectedActivities.add(_userInterested!.firstActivity!);
@@ -153,7 +156,6 @@ class SurveyViewModel with ChangeNotifier {
   }
 
   void goToHomePage(BuildContext context) {
-    Navigator.pop(context);
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -177,6 +179,7 @@ class SurveyViewModel with ChangeNotifier {
         _selectedRestaurant, _selectedHotel, _minPrice, _maxPrice);
     if (res == 201) {
       goToHomePage(context);
+      return res;
     }
     return null;
   }

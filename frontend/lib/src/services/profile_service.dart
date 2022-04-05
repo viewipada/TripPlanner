@@ -147,7 +147,9 @@ class ProfileService {
           await http.get(Uri.parse("${baseUrl}/api/user/interested/${userId}"));
 
       if (response.statusCode == 200) {
-        var data = UserInterestedResponse.fromJson(json.decode(response.body));
+        var data = response.body == 'null'
+            ? null
+            : UserInterestedResponse.fromJson(json.decode(response.body));
         return data;
       } else if (response.statusCode == 400) {
         return null;
@@ -261,7 +263,7 @@ class ProfileService {
                 'Content-Type': 'application/json; charset=UTF-8',
               },
               body: jsonEncode(
-                <String, dynamic>{"gender": gender, "birthDath": birthDath},
+                <String, dynamic>{"gender": gender, "birthDate": birthDath},
               ));
 
       if (response.statusCode == 200) {

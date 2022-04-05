@@ -253,35 +253,63 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                             'ตำแหน่งบนแผนที่',
                             style: FontAssets.subtitleText,
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Palette.PrimaryColor,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(20),
-                              ),
-                            ),
-                            padding: EdgeInsets.fromLTRB(
-                              getProportionateScreenWidth(8),
-                              getProportionateScreenHeight(3),
-                              getProportionateScreenWidth(8),
-                              getProportionateScreenHeight(3),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.location_on_outlined,
-                                  color: Colors.white,
-                                  size: 18,
+                          InkWell(
+                            onTap: () {
+                              locationDetailViewModel
+                                  .tryToCheckin(this._locationId)
+                                  .then((value) {
+                                if (value == 200) {
+                                  final snackBar = SnackBar(
+                                    backgroundColor: Palette.SecondaryColor,
+                                    content: Text(
+                                      'เช็คอินสำเร็จ',
+                                      style: const TextStyle(
+                                        fontFamily: 'Sukhumvit',
+                                        fontSize: 14,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                } else {
+                                  alertDialog(context,
+                                      'คุณไม่สามารถเช็คอินได้ ลองใหม่อีกครั้ง\nเมื่ออยู่ห่างจากสถานที่ไม่เกิน 500 เมตร');
+                                }
+                              });
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Palette.PrimaryColor,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(20),
                                 ),
-                                Text(
-                                  ' เช็คอินแล้ว ${locationDetailViewModel.locationDetail.totalCheckin} คน',
-                                  style: TextStyle(
+                              ),
+                              padding: EdgeInsets.fromLTRB(
+                                getProportionateScreenWidth(8),
+                                getProportionateScreenHeight(3),
+                                getProportionateScreenWidth(8),
+                                getProportionateScreenHeight(3),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.location_on_outlined,
                                     color: Colors.white,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
+                                    size: 18,
                                   ),
-                                )
-                              ],
+                                  Text(
+                                    ' เช็คอินแล้ว ${locationDetailViewModel.locationDetail.totalCheckin} ครั้ง',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -637,6 +665,42 @@ Widget openingHour(String title, List<String> openingHour) {
                 ],
               ),
             ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+alertDialog(BuildContext context, String title) {
+  return showDialog<String>(
+    context: context,
+    builder: (BuildContext _context) => AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      title: Text(
+        title,
+        style: const TextStyle(
+          color: Palette.BodyText,
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+        ),
+        textAlign: TextAlign.center,
+      ),
+      contentPadding: EdgeInsets.zero,
+      actionsAlignment: MainAxisAlignment.center,
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(
+            _context,
+          ),
+          child: const Text(
+            'โอเค!',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ],

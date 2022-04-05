@@ -13,7 +13,7 @@ class DashBoardViewModel with ChangeNotifier {
   bool _isQuery = false;
   List<LocationCardResponse> _locations = [];
   List<LocationCardResponse> _locationsRequest = [];
-  // List<SearchResultResponse> _queryResult = [];
+  List<LocationCardResponse> _queryResult = [];
 
   Future<void> getLocationBy(int category) async {
     _locations = await DashboardService().getLocationBy(category);
@@ -52,18 +52,28 @@ class DashBoardViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  // Future<void> query(
-  //     List<SearchResultResponse> allLocationList, String searchMessage) async {
-  //   _queryResult = await allLocationList.where((location) {
-  //     final nameLower = location.locationName.toLowerCase();
-  //     final searchMessageLower = searchMessage.toLowerCase();
-  //     return nameLower.contains(searchMessageLower);
-  //   }).toList();
-  //   notifyListeners();
-  // }
+  void query(String searchMessage) {
+    _queryResult = _locations.where((location) {
+      final nameLower = location.locationName.toLowerCase();
+      final searchMessageLower = searchMessage.toLowerCase();
+      return nameLower.contains(searchMessageLower);
+    }).toList();
+    notifyListeners();
+  }
+
+  Future<int?> updateLocationStatus(
+      BuildContext context, int locationId, String status) async {
+    final statusCode =
+        await DashboardService().updateLocationStatus(locationId, status);
+    if (statusCode == 200) {
+      Navigator.pop(context);
+    }
+    return statusCode;
+  }
 
   List get dropdownItemList => _dropdownItemList;
   bool get isQuery => _isQuery;
   List<LocationCardResponse> get locations => _locations;
   List<LocationCardResponse> get locationsRequest => _locationsRequest;
+  List<LocationCardResponse> get queryResult => _queryResult;
 }

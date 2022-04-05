@@ -649,7 +649,8 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                       ),
                       child: TextFormField(
                         maxLines: 1,
-                        // onChanged: (value) => _caption = value.trim(),
+                        onChanged: (value) =>
+                            createLocationViewModel.updateWebsite(value.trim()),
                       ),
                     ),
                     Container(

@@ -660,7 +660,8 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                     subtitle('เว็บไซต์, Facebook', ''),
                     TextFormField(
                       maxLines: 1,
-                      // onChanged: (value) => _caption = value.trim(),
+                      onChanged: (value) =>
+                          createLocationViewModel.updateWebsite(value.trim()),
                     ),
                     Container(
                       alignment: Alignment.bottomLeft,
@@ -668,7 +669,7 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                           top: getProportionateScreenHeight(15)),
                       child: const Text(
                         'วันเวลาทำการ',
-                        style: FontAssets.subtitleText,
+                        style: FontAssets.columnText,
                       ),
                     ),
                     SizedBox(

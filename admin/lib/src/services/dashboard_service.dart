@@ -12,7 +12,7 @@ class DashboardService {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
       final response = await http.get(Uri.parse(
-          '$baseUrl/api/locations/search/rating?category=3')); // mock api
+          '$baseUrl/api/locations/search/rating?category=2')); // mock api
 
       if (response.statusCode == 200) {
         var data = json.decode(response.body) as List<dynamic>;
@@ -59,6 +59,29 @@ class DashboardService {
       return data;
     } else {
       throw Exception("can not fetch data hot location");
+    }
+  }
+
+  Future<int?> updateLocationStatus(int locationId, String status) async {
+    final userId = await SharedPref().getUserId();
+    if (userId != null) {
+      // final response =
+      //     await http.put(Uri.parse("$baseUrl/api/locations/$locationId"),
+      //         headers: <String, String>{
+      //           'Content-Type': 'application/json; charset=UTF-8',
+      //         },
+      //         body: jsonEncode(
+      //           <String, dynamic>{"locationStatus": status, "userId": userId},
+      //         ));
+
+      // if (response.statusCode == 200) {
+      //   return response.statusCode;
+      // } else {
+      //   throw Exception("can not update locationStatus");
+      // }
+      return 200;
+    } else {
+      return null;
     }
   }
 }

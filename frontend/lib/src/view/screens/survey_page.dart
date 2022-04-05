@@ -391,17 +391,19 @@ class _SurveyPageState extends State<SurveyPage> {
                               : ElevatedButton(
                                   onPressed: () {
                                     if (surveyViewModel
-                                        .selectedActivities.isEmpty) {
+                                            .selectedActivities.length <
+                                        3) {
                                       alertDialog(context,
-                                          'กรุณาเลือกกิจกรรมที่อยากทำ\nอย่างน้อย 1 อย่าง');
+                                          'กรุณาเลือกกิจกรรมที่อยากทำ 3 อันดับ');
                                     } else if (surveyViewModel
-                                        .selectedRestaurant.isEmpty) {
-                                      alertDialog(context,
-                                          'กรุณาเลือกร้านอาหาร\nอย่างน้อย 1 อย่าง');
+                                            .selectedRestaurant.length <
+                                        3) {
+                                      alertDialog(
+                                          context, 'กรุณาเลือกร้านอาหารที่ชอบ 3 อันดับ');
                                     } else if (surveyViewModel
-                                        .selectedHotel.isEmpty) {
-                                      alertDialog(context,
-                                          'กรุณาเลือกที่พัก\nอย่างน้อย 1 อย่าง');
+                                            .selectedHotel.length <
+                                        3) {
+                                      alertDialog(context, 'กรุณาเลือกที่พักที่ชอบ 3 อันดับ');
                                     } else {
                                       setState(() {
                                         isLoading = true;

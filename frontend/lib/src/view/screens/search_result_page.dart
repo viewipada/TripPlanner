@@ -1,5 +1,6 @@
 import 'package:cool_dropdown/cool_dropdown.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
@@ -100,7 +101,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
                           hintText: 'ค้นหาที่เที่ยวเลย',
                         ),
                         onChanged: (value) {
-                          if (value.length == 0) {
+                          if (value == "") {
                             searchViewModel.isSearchMode();
                           } else {
                             searchViewModel.isQueryMode();
@@ -329,16 +330,35 @@ Widget buildSearchResultCard(BuildContext context,
                     overflow: TextOverflow.ellipsis,
                     style: FontAssets.subtitleText,
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      bottom: getProportionateScreenHeight(15),
-                    ),
-                    child: Text(
-                      item.description,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: FontAssets.bodyText,
-                    ),
+                  searchViewModel.sortedBy == "rating"
+                      ? Row(
+                          children: [
+                            Text(
+                              '${item.rating} ',
+                              style: FontAssets.hintText,
+                            ),
+                            RatingBarIndicator(
+                              unratedColor: Palette.Outline,
+                              rating: item.rating,
+                              itemBuilder: (context, index) => Icon(
+                                Icons.star_rounded,
+                                color: Palette.CautionColor,
+                              ),
+                              itemCount: 5,
+                              itemSize: 16,
+                            ),
+                          ],
+                        )
+                      : Text(
+                          'เช็คอินแล้ว ${item.totalCheckin} ครั้ง',
+                          style: TextStyle(
+                              fontSize: 14, color: Palette.PrimaryColor),
+                        ),
+                  Text(
+                    item.description,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: FontAssets.bodyText,
                   ),
                   Expanded(
                     child: Row(
