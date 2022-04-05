@@ -394,16 +394,16 @@ class _SurveyPageState extends State<SurveyPage> {
                                             .selectedActivities.length <
                                         3) {
                                       alertDialog(context,
-                                          'กรุณาเลือกกิจกรรมที่อยากทำ');
+                                          'กรุณาเลือกกิจกรรมที่อยากทำ 3 อันดับ');
                                     } else if (surveyViewModel
                                             .selectedRestaurant.length <
                                         3) {
                                       alertDialog(
-                                          context, 'กรุณาเลือกร้านอาหาร');
+                                          context, 'กรุณาเลือกร้านอาหารที่ชอบ 3 อันดับ');
                                     } else if (surveyViewModel
                                             .selectedHotel.length <
                                         3) {
-                                      alertDialog(context, 'กรุณาเลือกที่พัก');
+                                      alertDialog(context, 'กรุณาเลือกที่พักที่ชอบ 3 อันดับ');
                                     } else {
                                       setState(() {
                                         isLoading = true;
