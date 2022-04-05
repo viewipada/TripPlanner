@@ -188,3 +188,25 @@ exports.findByUser = async (req, res) => {
     return res.status(400).send("Something wrong while finding locatoin by use");
   }
 };
+
+exports.findPopular = async (req, res) => {
+  try {
+    const popularData = await Location.findAndCountAll({});
+
+    return res.status(200).json(popularData);
+  } catch (err) {
+    return res.status(400).send(400);
+  }
+};
+
+exports.delete = async (req, res) => {
+  try {
+    const { locationId } = req.params;
+
+    const deleteData = await Location.destroy({ where: { locationId } });
+
+    return res.status(200).json(deleteData);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+};

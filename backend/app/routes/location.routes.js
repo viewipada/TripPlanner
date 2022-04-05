@@ -18,5 +18,11 @@ module.exports = (app) => {
   // retrieve locations created by user
   router.get("/:userId", locations.findByUser);
 
+  //delete one location
+  router.delete("/:locationId", locations.delete);
+
+  //Retrieve ten most popular
+  router.get("/popular", locations.findPopular);
+
   app.use("/api/locations", router);
 };

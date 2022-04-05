@@ -15,7 +15,7 @@ module.exports = (app) => {
 
   router.delete("/:userId/:locationId", reviews.delete);
 
-  router.put("/", reviews.update);
+  router.put("/:userId", reviews.update);
 
   app.use("/api/reviews", router);
 };
