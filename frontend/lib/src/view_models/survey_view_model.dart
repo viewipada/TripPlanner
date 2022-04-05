@@ -123,6 +123,9 @@ class SurveyViewModel with ChangeNotifier {
 
   Future<UserInterestedResponse?> getUserInterested() async {
     _userInterested = await ProfileService().getUserInterested();
+    _selectedActivities = [];
+    _selectedHotel = [];
+    _selectedRestaurant = [];
     if (_userInterested != null) {
       if (_userInterested!.firstActivity != null)
         _selectedActivities.add(_userInterested!.firstActivity!);
