@@ -191,11 +191,17 @@ exports.findByUser = async (req, res) => {
 
 exports.findPopular = async (req, res) => {
   try {
-    const popularData = await Location.findAndCountAll({});
+    const popularData = await Location.findAll({
+      limit: 10,
+      order: [["totalCheckin", "DESC"]],
+      raw: true,
+    });
 
+    console.log(popularData);
     return res.status(200).json(popularData);
   } catch (err) {
-    return res.status(400).send(400);
+    console.log(err);
+    return res.status(400).send(err);
   }
 };
 
@@ -205,7 +211,7 @@ exports.delete = async (req, res) => {
 
     const deleteData = await Location.destroy({ where: { locationId } });
 
-    return res.status(200).json(deleteData);
+    return res.status(200).json("LocationId : " + locationId + ";" + deleteData);
   } catch (err) {
     return res.status(400).send(err);
   }

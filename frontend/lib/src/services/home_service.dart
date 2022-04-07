@@ -11,7 +11,7 @@ class HomeService {
 
   Future<List<LocationCardResponse>> getHotLocationList() async {
     List<LocationCardResponse> hotLocationList = [];
-    final response = await http.get(Uri.parse('${baseUrl}/api/locations/hot'));
+    final response = await http.get(Uri.parse('${baseUrl}/api/locations/top/popular'));
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body) as List<dynamic>;

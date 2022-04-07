@@ -22,7 +22,7 @@ module.exports = (app) => {
   router.delete("/:locationId", locations.delete);
 
   //Retrieve ten most popular
-  router.get("/popular", locations.findPopular);
+  router.get("/top/popular", locations.findPopular);
 
   app.use("/api/locations", router);
 };
