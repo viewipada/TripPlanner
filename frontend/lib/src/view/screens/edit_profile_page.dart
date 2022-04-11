@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +16,7 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  final _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -27,79 +28,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     final profileViewModel = Provider.of<ProfileViewModel>(context);
-
-    Future<void> _displayEditUsernameDialog(BuildContext context) async {
-      String editUsername = '';
-      return showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          title: Text(
-            'แก้ไขชื่อผู้ใช้',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-              color: Palette.BodyText,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          content: Form(
-            key: _formKey,
-            child: TextFormField(
-              autofocus: true,
-              initialValue: profileViewModel.username,
-              style: FontAssets.bodyText,
-              maxLength: 15,
-              decoration: InputDecoration(
-                counterText: "",
-              ),
-              inputFormatters: [
-                FilteringTextInputFormatter.deny(
-                  RegExp(r'\s'),
-                ),
-              ],
-              validator: (value) {
-                if (value!.trim().isEmpty) {
-                  return 'โปรดระบุ';
-                }
-                return null;
-              },
-              onChanged: (value) => editUsername = value,
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context, 'ยกเลิก'),
-              child: const Text(
-                'ยกเลิก',
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  Navigator.pop(context, 'ยืนยัน');
-                  profileViewModel.updateUsername(editUsername);
-                }
-              },
-              child: const Text(
-                'ยืนยัน',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.white,
-                ),
-              ),
-              style:
-                  TextButton.styleFrom(backgroundColor: Palette.PrimaryColor),
-            ),
-          ],
-        ),
-      );
-    }
 
     Future<void> _displayEditGenderDialog(BuildContext context) async {
       String? editGender = profileViewModel.gender;
@@ -374,8 +302,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 ),
                               ],
                             ),
-                            trailing: Icon(Icons.arrow_forward_ios_rounded),
-                            onTap: () => _displayEditUsernameDialog(context),
+                            trailing: Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: Colors.white,
+                            ),
                           ),
                           Divider(),
                           ListTile(
@@ -395,7 +325,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 ),
                               ],
                             ),
-                            trailing: Icon(Icons.arrow_forward_ios_rounded),
+                            trailing: Icon(
+                              Icons.mode_edit_outline_rounded,
+                              color: Palette.AdditionText,
+                            ),
                             onTap: () => profileViewModel.pickDate(context),
                           ),
                           Divider(),
@@ -414,7 +347,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 ),
                               ],
                             ),
-                            trailing: Icon(Icons.arrow_forward_ios_rounded),
+                            trailing: Icon(
+                              Icons.mode_edit_outline_rounded,
+                              color: Palette.AdditionText,
+                            ),
                             onTap: () => _displayEditGenderDialog(context),
                           ),
                           Divider(),
@@ -427,22 +363,70 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         margin: EdgeInsets.symmetric(
                             vertical: getProportionateScreenHeight(15),
                             horizontal: getProportionateScreenWidth(15)),
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          child: Text(
-                            'บันทึกข้อมูล',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            primary: Palette.PrimaryColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                          ),
-                        ),
+                        child: isLoading
+                            ? Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SpinKitFadingCircle(
+                                    color: Palette.PrimaryColor,
+                                    size: getProportionateScreenHeight(24),
+                                  ),
+                                  SizedBox(
+                                      width: getProportionateScreenWidth(10)),
+                                  const Text(
+                                    'กำลังบันทึกการแก้ไข...',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Palette.PrimaryColor,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  profileViewModel
+                                      .updateUserProfileDetail(context)
+                                      .then((value) {
+                                    if (value == 201) {
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+                                      const snackBar = SnackBar(
+                                        backgroundColor: Palette.PrimaryColor,
+                                        content: Text(
+                                          'แก้ไขข้อมูลส่วนตัวสำเร็จ',
+                                          style: TextStyle(
+                                            fontFamily: 'Sukhumvit',
+                                            fontSize: 14,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    }
+                                  });
+                                },
+                                child: Text(
+                                  'บันทึกข้อมูล',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  primary: Palette.PrimaryColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                ),
+                              ),
                       ),
                     ],
                   ),

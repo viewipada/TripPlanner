@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:trip_planner/src/models/response/location_created_response.dart';
 import 'package:trip_planner/src/models/response/profile_details_response.dart';
@@ -254,7 +256,7 @@ class ProfileService {
     return null;
   }
 
-  Future<int?> updateUserProfile(String gender, String birthDath) async {
+  Future<int?> updateUserProfile(String gender, String birthDate) async {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
       final response =
@@ -263,7 +265,47 @@ class ProfileService {
                 'Content-Type': 'application/json; charset=UTF-8',
               },
               body: jsonEncode(
-                <String, dynamic>{"gender": gender, "birthDate": birthDath},
+                <String, dynamic>{"gender": gender, "birthDate": birthDate},
+              ));
+
+      if (response.statusCode == 200) {
+        return response.statusCode;
+      } else {
+        throw Exception("can not create userInterest");
+      }
+    } else
+      print('null userId');
+    return null;
+  }
+
+  Future<int?> updateUserProfileDetail(
+      String gender, String birthDate, File? userImage) async {
+    final userId = await SharedPref().getUserId();
+    if (userId != null) {
+      String? imgUrl;
+
+      if (userImage != null) {
+        var formData = FormData();
+        formData.files.add(MapEntry(
+          "file",
+          await MultipartFile.fromFile(userImage.path),
+        ));
+        var res =
+            await Dio().post("${baseUrl}/api/file/upload", data: formData);
+        imgUrl = res.data['downloadUrl'].toString();
+      }
+
+      final response =
+          await http.put(Uri.parse("${baseUrl}/api/user/${userId}"),
+              headers: <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
+              },
+              body: jsonEncode(
+                <String, dynamic>{
+                  "gender": gender,
+                  "birthDate": birthDate,
+                  "imgUrl": imgUrl
+                },
               ));
 
       if (response.statusCode == 200) {

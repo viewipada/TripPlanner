@@ -109,11 +109,6 @@ class ProfileViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateUsername(String editUsername) {
-    _username = editUsername;
-    notifyListeners();
-  }
-
   Future pickDate(BuildContext context) async {
     final newDate = await showDatePicker(
       context: context,
@@ -181,6 +176,15 @@ class ProfileViewModel with ChangeNotifier {
       context,
       MaterialPageRoute(builder: (context) => LoginPage()),
     );
+  }
+
+  Future<int?> updateUserProfileDetail(BuildContext context) async {
+    var status = await ProfileService()
+        .updateUserProfileDetail(_gender!, _birthdate, _profileImage);
+    if (status == 200) {
+      Navigator.pop(context);
+    }
+    return status;
   }
 
   ProfileResponse get profileResponse => _profileResponse;

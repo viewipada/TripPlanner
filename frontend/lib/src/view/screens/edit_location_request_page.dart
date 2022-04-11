@@ -1006,7 +1006,7 @@ class _EditLocationRequestPageState extends State<EditLocationRequestPage> {
                                                 backgroundColor:
                                                     Palette.SecondaryColor,
                                                 content: Text(
-                                                  'แก้ไขข้อมูลสถานที่เรียบร้อย',
+                                                  'แก้ไขข้อมูลสถานที่สำเร็จ',
                                                   style: TextStyle(
                                                     fontFamily: 'Sukhumvit',
                                                     fontSize: 14,
