@@ -231,6 +231,12 @@ class _LoginPageState extends State<LoginPage> {
                                                       "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";
                                                   isLoading = false;
                                                 });
+                                              } else if (status == 403) {
+                                                setState(() {
+                                                  _errorDialog =
+                                                      "ชื่อผู้ใช้นี้ไม่มีสิทธิ์การเข้าถึง";
+                                                  isLoading = false;
+                                                });
                                               } else if (status == 401) {
                                                 setState(() {
                                                   _errorDialog =

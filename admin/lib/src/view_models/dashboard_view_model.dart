@@ -12,7 +12,7 @@ class DashBoardViewModel with ChangeNotifier {
   ];
   bool _isQuery = false;
   List<LocationCardResponse> _locations = [];
-  List<LocationCardResponse> _locationsRequest = [];
+  List<LocationCardResponse>? _locationsRequest;
   List<LocationCardResponse> _queryResult = [];
 
   Future<void> getLocationBy(int category) async {
@@ -74,6 +74,6 @@ class DashBoardViewModel with ChangeNotifier {
   List get dropdownItemList => _dropdownItemList;
   bool get isQuery => _isQuery;
   List<LocationCardResponse> get locations => _locations;
-  List<LocationCardResponse> get locationsRequest => _locationsRequest;
+  List<LocationCardResponse>? get locationsRequest => _locationsRequest;
   List<LocationCardResponse> get queryResult => _queryResult;
 }

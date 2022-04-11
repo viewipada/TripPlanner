@@ -163,22 +163,37 @@ class _DashboardPageState extends State<DashboardPage> {
               Padding(
                 padding: EdgeInsets.symmetric(
                     vertical: getProportionateScreenHeight(15)),
-                child: dashboardViewModel.locationsRequest.isEmpty
+                child: dashboardViewModel.locationsRequest == null
                     ? ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: 3,
                         itemBuilder: (context, index) => loadingRow())
-                    : ListView(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        children: dashboardViewModel.locationsRequest
-                            .map(
-                              (item) =>
-                                  buildCard(context, dashboardViewModel, item),
-                            )
-                            .toList(),
-                      ),
+                    : dashboardViewModel.locationsRequest!.isEmpty
+                        ? Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: getProportionateScreenHeight(10)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Text(
+                                  'ไม่มีรายการรอตรวจสอบ',
+                                  style: FontAssets.bodyText,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          )
+                        : ListView(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            children: dashboardViewModel.locationsRequest!
+                                .map(
+                                  (item) => buildCard(
+                                      context, dashboardViewModel, item),
+                                )
+                                .toList(),
+                          ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

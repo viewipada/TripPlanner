@@ -18,7 +18,7 @@ class HomeViewModel with ChangeNotifier {
   List<TripCardResponse> _tripRecommendedList = [];
 
   Future<List<LocationCardResponse>> getHotLocationList() async {
-    // _hotLocationList = await HomeService().getHotLocationList();
+    _hotLocationList = await HomeService().getHotLocationList();
     return _hotLocationList;
   }
 

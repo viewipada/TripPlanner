@@ -12,9 +12,13 @@ class LoginService {
     if (response.statusCode == 200) {
       var jwt = json.decode(ascii.decode(
           base64.decode(base64.normalize(response.body.split(".")[1]))));
-      await SharedPref().saveUserId(jwt['user_id']);
-      await SharedPref().saveUsername(jwt['username']);
-      return response.statusCode;
+      if (jwt['role'] == 'user') {
+        return 403;
+      } else {
+        await SharedPref().saveUserId(jwt['user_id']);
+        await SharedPref().saveUsername(jwt['username']);
+        return response.statusCode;
+      }
     } else if (response.statusCode == 400) {
       //wrong password
       return response.statusCode;
