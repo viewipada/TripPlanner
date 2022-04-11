@@ -278,8 +278,8 @@ class ProfileService {
     return null;
   }
 
-  Future<int?> updateUserProfileDetail(
-      String gender, String birthDate, File? userImage) async {
+  Future<int?> updateUserProfileDetail(String gender, String birthDate,
+      File? userImage, String? imageUrl) async {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
       String? imgUrl;
@@ -293,6 +293,8 @@ class ProfileService {
         var res =
             await Dio().post("${baseUrl}/api/file/upload", data: formData);
         imgUrl = res.data['downloadUrl'].toString();
+      } else {
+        imgUrl = imageUrl;
       }
 
       final response =

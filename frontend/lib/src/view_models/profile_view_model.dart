@@ -27,6 +27,7 @@ class ProfileViewModel with ChangeNotifier {
   String _username = '';
   String _birthdate = '';
   File? _profileImage;
+  String? _imageUrl;
 
   Future<ProfileResponse> getMyProfile() async {
     _profileResponse = await ProfileService().getMyProfile();
@@ -39,6 +40,7 @@ class ProfileViewModel with ChangeNotifier {
     _gender = _profileDetailsResponse!.gender;
     _username = profileDetailsResponse!.username;
     _birthdate = profileDetailsResponse!.birthdate;
+    _imageUrl = profileDetailsResponse!.userImage;
     notifyListeners();
   }
 
@@ -133,6 +135,7 @@ class ProfileViewModel with ChangeNotifier {
         return;
       }
       _profileImage = File(image.path);
+      _imageUrl = null;
       notifyListeners();
     } on PlatformException catch (e) {
       print('Failed to pick image $e form ${source}');
@@ -180,7 +183,7 @@ class ProfileViewModel with ChangeNotifier {
 
   Future<int?> updateUserProfileDetail(BuildContext context) async {
     var status = await ProfileService()
-        .updateUserProfileDetail(_gender!, _birthdate, _profileImage);
+        .updateUserProfileDetail(_gender!, _birthdate, _profileImage,_imageUrl);
     if (status == 200) {
       Navigator.pop(context);
     }
