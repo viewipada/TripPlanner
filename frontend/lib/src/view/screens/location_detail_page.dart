@@ -95,41 +95,83 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                             locationDetailViewModel.locationDetail.locationName,
                             style: FontAssets.titleText,
                           ),
-                          isInBaggage == null
-                              ? SizedBox()
-                              : IconButton(
-                                  constraints: BoxConstraints(),
-                                  onPressed: () {
-                                    if (isInBaggage) {
-                                      locationDetailViewModel
-                                          .removeBaggageItem(_locationId)
-                                          .then((value) {
-                                        if (value == 200)
-                                          setState(() {
-                                            isInBaggage = false;
-                                          });
-                                      });
+                          Row(
+                            children: [
+                              IconButton(
+                                constraints: BoxConstraints(),
+                                onPressed: () {
+                                  locationDetailViewModel
+                                      .tryToCheckin(this._locationId)
+                                      .then((value) {
+                                    if (value == 200) {
+                                      final snackBar = SnackBar(
+                                        backgroundColor: Palette.SecondaryColor,
+                                        content: Text(
+                                          'เช็คอินสำเร็จ',
+                                          style: const TextStyle(
+                                            fontFamily: 'Sukhumvit',
+                                            fontSize: 14,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
                                     } else {
-                                      locationDetailViewModel
-                                          .addBaggageItem(_locationId)
-                                          .then((value) {
-                                        if (value == 201)
-                                          setState(() {
-                                            isInBaggage = true;
-                                          });
-                                      });
+                                      alertDialog(context,
+                                          'คุณไม่สามารถเช็คอินได้ ลองใหม่อีกครั้ง\nเมื่ออยู่ห่างจากสถานที่ไม่เกิน 500 เมตร');
                                     }
-                                  },
-                                  icon: ImageIcon(
-                                    AssetImage(isInBaggage
-                                        ? IconAssets.baggageDelete
-                                        : IconAssets.baggageAdd),
-                                    color: isInBaggage
-                                        ? Palette.DeleteColor
-                                        : Palette.AdditionText,
-                                  ),
-                                  padding: EdgeInsets.zero,
+                                  });
+                                },
+                                icon: Icon(
+                                  Icons.pin_drop_outlined,
+                                  color: Palette.AdditionText,
+                                  size: 26,
                                 ),
+                                padding: EdgeInsets.zero,
+                              ),
+                              SizedBox(
+                                width: getProportionateScreenWidth(15),
+                              ),
+                              isInBaggage == null
+                                  ? SizedBox()
+                                  : IconButton(
+                                      constraints: BoxConstraints(),
+                                      onPressed: () {
+                                        if (isInBaggage) {
+                                          locationDetailViewModel
+                                              .removeBaggageItem(_locationId)
+                                              .then((value) {
+                                            if (value == 200)
+                                              setState(() {
+                                                isInBaggage = false;
+                                              });
+                                          });
+                                        } else {
+                                          locationDetailViewModel
+                                              .addBaggageItem(_locationId)
+                                              .then((value) {
+                                            if (value == 201)
+                                              setState(() {
+                                                isInBaggage = true;
+                                              });
+                                          });
+                                        }
+                                      },
+                                      icon: ImageIcon(
+                                        AssetImage(isInBaggage
+                                            ? IconAssets.baggageDelete
+                                            : IconAssets.baggageAdd),
+                                        color: isInBaggage
+                                            ? Palette.DeleteColor
+                                            : Palette.AdditionText,
+                                      ),
+                                      padding: EdgeInsets.zero,
+                                    ),
+                            ],
+                          )
                         ],
                       ),
                     ),
@@ -212,33 +254,28 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                         },
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(
-                        getProportionateScreenWidth(15),
-                        0,
+                    Container(
+                      margin: EdgeInsets.fromLTRB(
+                        getProportionateScreenWidth(10),
+                        getProportionateScreenHeight(10),
                         getProportionateScreenWidth(15),
                         getProportionateScreenHeight(10),
                       ),
-                      child: Text(
-                        'รายละเอียด',
-                        style: FontAssets.subtitleText,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.hourglass_empty_rounded,
+                            color: Palette.SecondaryColor,
+                            size: 18,
+                          ),
+                          Text(
+                            ' เวลาที่ใช้ ${locationDetailViewModel.locationDetail.duration}hr',
+                            style: FontAssets.bodyText,
+                          ),
+                        ],
                       ),
                     ),
-                    openingHour('วันเวลาเปิด-ปิด',
-                        // locationDetailViewModel.locationDetail.openingHour,
-                        [
-                          "ปิด",
-                          "ปิด",
-                          "ปิด",
-                          "ปิด",
-                          "9:00 - 16:00",
-                          "9:00 - 16:00",
-                          "9:00 - 16:00"
-                        ]),
-                    detailLocation('เบอร์ติดต่อ',
-                        locationDetailViewModel.locationDetail.contactNumber),
-                    detailLocation('เว็บไซต์',
-                        locationDetailViewModel.locationDetail.website),
                     Container(
                       margin: EdgeInsets.fromLTRB(
                         getProportionateScreenWidth(15),
@@ -253,63 +290,35 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                             'ตำแหน่งบนแผนที่',
                             style: FontAssets.subtitleText,
                           ),
-                          InkWell(
-                            onTap: () {
-                              locationDetailViewModel
-                                  .tryToCheckin(this._locationId)
-                                  .then((value) {
-                                if (value == 200) {
-                                  final snackBar = SnackBar(
-                                    backgroundColor: Palette.SecondaryColor,
-                                    content: Text(
-                                      'เช็คอินสำเร็จ',
-                                      style: const TextStyle(
-                                        fontFamily: 'Sukhumvit',
-                                        fontSize: 14,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  );
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
-                                } else {
-                                  alertDialog(context,
-                                      'คุณไม่สามารถเช็คอินได้ ลองใหม่อีกครั้ง\nเมื่ออยู่ห่างจากสถานที่ไม่เกิน 500 เมตร');
-                                }
-                              });
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Palette.PrimaryColor,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(20),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Palette.PrimaryColor,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(20),
+                              ),
+                            ),
+                            padding: EdgeInsets.fromLTRB(
+                              getProportionateScreenWidth(8),
+                              getProportionateScreenHeight(3),
+                              getProportionateScreenWidth(8),
+                              getProportionateScreenHeight(3),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.location_on_outlined,
+                                  color: Colors.white,
+                                  size: 18,
                                 ),
-                              ),
-                              padding: EdgeInsets.fromLTRB(
-                                getProportionateScreenWidth(8),
-                                getProportionateScreenHeight(3),
-                                getProportionateScreenWidth(8),
-                                getProportionateScreenHeight(3),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.location_on_outlined,
+                                Text(
+                                  ' เช็คอินแล้ว ${locationDetailViewModel.locationDetail.totalCheckin} ครั้ง',
+                                  style: TextStyle(
                                     color: Colors.white,
-                                    size: 18,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  Text(
-                                    ' เช็คอินแล้ว ${locationDetailViewModel.locationDetail.totalCheckin} ครั้ง',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  )
-                                ],
-                              ),
+                                )
+                              ],
                             ),
                           ),
                         ],
@@ -348,27 +357,35 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                         },
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(
-                        getProportionateScreenWidth(10),
-                        getProportionateScreenHeight(10),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        getProportionateScreenWidth(15),
+                        getProportionateScreenHeight(15),
                         getProportionateScreenWidth(15),
                         getProportionateScreenHeight(10),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Icon(
-                            Icons.hourglass_empty_rounded,
-                            color: Palette.SecondaryColor,
-                            size: 18,
-                          ),
-                          Text(
-                            ' เวลาที่ใช้ ${locationDetailViewModel.locationDetail.duration}hr',
-                            style: FontAssets.bodyText,
-                          ),
-                        ],
+                      child: Text(
+                        'รายละเอียด',
+                        style: FontAssets.subtitleText,
                       ),
+                    ),
+                    openingHour('วันเวลาเปิด-ปิด',
+                        // locationDetailViewModel.locationDetail.openingHour,
+                        [
+                          "ปิด",
+                          "ปิด",
+                          "ปิด",
+                          "ปิด",
+                          "9:00 - 16:00",
+                          "9:00 - 16:00",
+                          "9:00 - 16:00"
+                        ]),
+                    detailLocation('เบอร์ติดต่อ',
+                        locationDetailViewModel.locationDetail.contactNumber),
+                    detailLocation('เว็บไซต์',
+                        locationDetailViewModel.locationDetail.website),
+                    SizedBox(
+                      height: getProportionateScreenHeight(10),
                     ),
                     Divider(),
                     Container(
