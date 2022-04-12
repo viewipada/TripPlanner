@@ -81,7 +81,7 @@ exports.findOne = async (req, res) => {
       locationId,
     },
     raw: true,
-    limit: 5,
+    limit: 3,
   });
 
   console.log(reviewData);
