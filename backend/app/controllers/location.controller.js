@@ -1,4 +1,5 @@
 const { response } = require("express");
+const { locations } = require("../models");
 const db = require("../models");
 const Location = db.locations;
 const Review = db.reviews;
@@ -187,6 +188,26 @@ exports.findByUser = async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(400).send("Something wrong while finding locatoin by use");
+  }
+};
+
+exports.updateLocationStatus = async (req, res) => {
+  try {
+    const { locationId } = req.params;
+    const locationStatus = req.body;
+    req.updatedAt = new Date();
+
+    const updateData = Location.update(locationStatus, {
+      where: { locationId },
+      returning: true,
+      plain: true,
+      raw: true,
+    });
+
+    console.log(updateData);
+    return res.status(200).json(updateData[1]);
+  } catch (err) {
+    return res.status(400).send(err);
   }
 };
 

@@ -65,21 +65,20 @@ class DashboardService {
   Future<int?> updateLocationStatus(int locationId, String status) async {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
-      // final response =
-      //     await http.put(Uri.parse("$baseUrl/api/locations/$locationId"),
-      //         headers: <String, String>{
-      //           'Content-Type': 'application/json; charset=UTF-8',
-      //         },
-      //         body: jsonEncode(
-      //           <String, dynamic>{"locationStatus": status, "userId": userId},
-      //         ));
+      final response =
+          await http.put(Uri.parse("$baseUrl/api/locations/$locationId"),
+              headers: <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
+              },
+              body: jsonEncode(
+                <String, dynamic>{"locationStatus": status, "userId": userId},
+              ));
 
-      // if (response.statusCode == 200) {
-      //   return response.statusCode;
-      // } else {
-      //   throw Exception("can not update locationStatus");
-      // }
-      return 200;
+      if (response.statusCode == 200) {
+        return response.statusCode;
+      } else {
+        throw Exception("can not update locationStatus");
+      }
     } else {
       return null;
     }

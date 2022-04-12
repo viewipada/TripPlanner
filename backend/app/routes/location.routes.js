@@ -26,5 +26,7 @@ module.exports = (app) => {
 
   router.get("/nearby/:category/:lat/:lng", locations.findNearBy);
 
+  router.put("/:locationId", locations.updateLocationStatus);
+
   app.use("/api/locations", router);
 };
