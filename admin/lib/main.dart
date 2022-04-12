@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'EZtrip',
+        title: 'EZtrip Admin',
         theme: ThemeData(
           canvasColor: Colors.white,
           primarySwatch: Palette.primarySwatchColor,
