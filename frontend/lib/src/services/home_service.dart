@@ -74,7 +74,7 @@ class HomeService {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
       final response = await http.get(Uri.parse(
-          "https://run.mocky.io/v3/7162eab6-8da9-48e8-8d9f-8314cc37a17f"));
+          "${baseUrl}/api/trips/${tripId}"));
 
       if (response.statusCode == 200) {
         var data = OtherTripResponse.fromMap(json.decode(response.body));

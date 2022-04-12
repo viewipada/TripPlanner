@@ -37,9 +37,14 @@ exports.create = async (req, res) => {
 
 exports.findOne = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const { id } = req.params;
 
-    const tripData = await Trip.findOne({ where: { userId }, raw: true });
+    const tripData = await Trip.findOne({ where: { id }, raw: true });
+
+    const tripItemData = await TripItem.findAll({ where: { tripId: tripData.id } });
+
+    tripData.tripItem = tripItemData;
+    console.log(tripData);
 
     return res.status(200).json(tripData);
   } catch (err) {

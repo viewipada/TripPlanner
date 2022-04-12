@@ -28,7 +28,7 @@ class OtherTripResponse {
     var tripItemList = json['tripItem'] as List;
 
     return OtherTripResponse(
-      tripId: json['tripId'] as int,
+      tripId: json['id'] as int,
       tripName: json['name'] as String,
       trumbnail: json['trumbnail'],
       firstLocation: json['firstLocation'] as String,
