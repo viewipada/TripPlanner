@@ -262,91 +262,159 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                     buildOpeningHour("วันศุกร์", "9:00 - 16:00"),
                     buildOpeningHour("วันเสาร์", "9:00 - 16:00"),
                     buildOpeningHour("วันอาทิตย์", "8:00 - 20:00"),
-                    Visibility(
-                      visible: true,
-                      // location.locationStatus == "In progress",
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: getProportionateScreenWidth(5)),
-                            child: TextButton(
-                              onPressed: () {
-                                dashBoardViewModel
-                                    .updateLocationStatus(
-                                        context, location.locationId, "Deny")
-                                    .then((value) {
-                                  if (value == 200) {
-                                    final snackBar = SnackBar(
-                                      backgroundColor: Palette.secondaryColor,
-                                      content: Text(
-                                        'ปฏิเสธคำขอสร้างสถานที่ ${location.locationName} แล้ว',
-                                        style: const TextStyle(
-                                          fontFamily: 'Sukhumvit',
-                                          fontSize: 14,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  }
-                                });
-                              },
-                              child: const Text(
-                                "ปฏิเสธ",
-                                style: TextStyle(
-                                    color: Palette.deleteColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14),
+                    location.locationStatus == "In progress"
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: getProportionateScreenWidth(5)),
+                                child: TextButton(
+                                  onPressed: () {
+                                    dashBoardViewModel
+                                        .updateLocationStatus(context,
+                                            location.locationId, "Deny")
+                                        .then((value) {
+                                      if (value == 200) {
+                                        final snackBar = SnackBar(
+                                          backgroundColor:
+                                              Palette.secondaryColor,
+                                          content: Text(
+                                            'ปฏิเสธคำขอสร้างสถานที่ ${location.locationName} แล้ว',
+                                            style: const TextStyle(
+                                              fontFamily: 'Sukhumvit',
+                                              fontSize: 14,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
+                                      }
+                                    });
+                                  },
+                                  child: const Text(
+                                    "ปฏิเสธ",
+                                    style: TextStyle(
+                                        color: Palette.deleteColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                          Container(
-                            height: getProportionateScreenHeight(48),
-                            width: getProportionateScreenWidth(50),
-                            margin: EdgeInsets.symmetric(
-                                vertical: getProportionateScreenHeight(25)),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                dashBoardViewModel
-                                    .updateLocationStatus(context,
-                                        location.locationId, "Approved")
-                                    .then((value) {
-                                  if (value == 200) {
-                                    final snackBar = SnackBar(
-                                      backgroundColor: Palette.primaryColor,
-                                      content: Text(
-                                        'อนุมัติคำขอสร้างสถานที่ ${location.locationName} แล้ว',
-                                        style: const TextStyle(
-                                          fontFamily: 'Sukhumvit',
-                                          fontSize: 14,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  }
-                                });
-                              },
-                              child: const Text(
-                                "อนุมัติ",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14),
+                              Container(
+                                height: getProportionateScreenHeight(48),
+                                width: getProportionateScreenWidth(50),
+                                margin: EdgeInsets.symmetric(
+                                    vertical: getProportionateScreenHeight(25)),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    dashBoardViewModel
+                                        .updateLocationStatus(context,
+                                            location.locationId, "Approved")
+                                        .then((value) {
+                                      if (value == 200) {
+                                        final snackBar = SnackBar(
+                                          backgroundColor: Palette.primaryColor,
+                                          content: Text(
+                                            'อนุมัติคำขอสร้างสถานที่ ${location.locationName} แล้ว',
+                                            style: const TextStyle(
+                                              fontFamily: 'Sukhumvit',
+                                              fontSize: 14,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
+                                      }
+                                    });
+                                  },
+                                  child: const Text(
+                                    "อนุมัติ",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                            ],
+                          )
+                        : location.locationStatus == "Approved"
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    height: getProportionateScreenHeight(48),
+                                    width: getProportionateScreenWidth(50),
+                                    margin: EdgeInsets.symmetric(
+                                        vertical:
+                                            getProportionateScreenHeight(25)),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        dashBoardViewModel
+                                            .deleteLocation(
+                                                context, location.locationId)
+                                            .then((value) {
+                                          if (value == 200) {
+                                            const snackBar = SnackBar(
+                                              backgroundColor:
+                                                  Palette.primaryColor,
+                                              content: Text(
+                                                'ลบสถานที่สำเร็จ',
+                                                style: TextStyle(
+                                                  fontFamily: 'Sukhumvit',
+                                                  fontSize: 14,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            );
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(snackBar);
+                                          } else {
+                                            const snackBar = SnackBar(
+                                              backgroundColor:
+                                                  Palette.secondaryColor,
+                                              content: Text(
+                                                'ลบสถานที่ไม่สำเร็จ',
+                                                style: TextStyle(
+                                                  fontFamily: 'Sukhumvit',
+                                                  fontSize: 14,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            );
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(snackBar);
+                                          }
+                                        });
+                                      },
+                                      child: const Text(
+                                        "ลบสถานที่",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Palette.deleteColor,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : SizedBox(
+                                height: getProportionateScreenHeight(25),
+                              ),
                   ],
                 ),
               ),

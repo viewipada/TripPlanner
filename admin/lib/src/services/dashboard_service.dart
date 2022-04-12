@@ -83,4 +83,20 @@ class DashboardService {
       return null;
     }
   }
+
+  Future<int?> deleteLocation(int locationId) async {
+    final userId = await SharedPref().getUserId();
+    if (userId != null) {
+      final response = await http.delete(
+        Uri.parse('$baseUrl/api/locations/$locationId'),
+      );
+
+      if (response.statusCode == 200) {
+        return response.statusCode;
+      } else {
+        return null;
+      }
+    }
+    return null;
+  }
 }

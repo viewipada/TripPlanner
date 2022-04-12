@@ -71,6 +71,14 @@ class DashBoardViewModel with ChangeNotifier {
     return statusCode;
   }
 
+  Future<int?> deleteLocation(BuildContext context, int locationId) async {
+    final status = await DashboardService().deleteLocation(locationId);
+    if (status == 200) {
+      Navigator.pop(context);
+    }
+    return status;
+  }
+
   List get dropdownItemList => _dropdownItemList;
   bool get isQuery => _isQuery;
   List<LocationCardResponse> get locations => _locations;
