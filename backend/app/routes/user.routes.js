@@ -13,5 +13,7 @@ module.exports = (app) => {
 
   router.get("/interested/:userId", users.findOne_interested);
 
+  router.get("/settingProfile/:userId", users.settingProfile);
+
   app.use("/api/user", router);
 };

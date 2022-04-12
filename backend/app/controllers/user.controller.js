@@ -167,6 +167,22 @@ exports.delete = (req, res) => {
     });
 };
 
+exports.settingProfile = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const userData = await User.findOne({ where: { id: userId }, raw: true });
+
+    const { id, password, role, createdAt, updatedAt, ...newUserData } = userData;
+    newUserData.rank = "Silver traveller";
+
+    return res.status(200).json(newUserData);
+  } catch (err) {
+    return res.status(400).send(400);
+  }
+};
+
+//view Profile
 exports.findOne = async (req, res) => {
   try {
     const { userId } = req.params;

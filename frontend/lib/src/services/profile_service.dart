@@ -76,7 +76,7 @@ class ProfileService {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
       final response = await http.get(Uri.parse(
-          "https://run.mocky.io/v3/9e629bae-263f-440e-a5f6-b9419428b4d8"));
+          "${baseUrl}/api/user/settingProfile/${userId}"));
 
       if (response.statusCode == 200) {
         var data = ProfileDetailsResponse.fromJson(json.decode(response.body));
