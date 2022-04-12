@@ -16,11 +16,7 @@ exports.uploadImage = async (req, res) => {
       return res.send({
         status: 200,
         message: "File is uploaded",
-        data: {
-          name: file.name,
-          mimetype: file.mimetype,
-          size: file.size,
-        },
+        url: "http://localhost:8080/" + file.name,
       });
     }
   } catch (err) {
