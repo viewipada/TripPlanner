@@ -134,7 +134,7 @@ class ProfileService {
       if (response.statusCode == 200) {
         print(response.body);
       } else {
-        throw Exception("can not remove review");
+        throw Exception("can not remove location by user");
       }
     }
   }

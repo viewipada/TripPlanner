@@ -4,7 +4,7 @@ class LocationCreatedResponse {
   final double latitude;
   final double longitude;
   final String imageUrl;
-  final String category;
+  final int category;
   final String description;
   final String locationStatus;
 
@@ -26,7 +26,7 @@ class LocationCreatedResponse {
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
       imageUrl: json['imageUrl'] as String,
-      category: json['category'] as String,
+      category: json['category'] as int,
       description: json['description'] as String,
       locationStatus: json['locationStatus'] as String,
     );

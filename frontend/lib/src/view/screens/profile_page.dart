@@ -401,20 +401,6 @@ Widget buildLocationReqList(
         ],
       ),
       Padding(
-        padding:
-            EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(15)),
-        child: Text(
-          'ตรวจสอบแล้ว',
-          style: FontAssets.titleText,
-        ),
-      ),
-      Column(
-          children: locationList
-              .where((element) => element.locationStatus == 'Approved')
-              .map((location) => buildLocationRequest(
-                  profileViewModel, location, context, slidableController))
-              .toList()),
-      Padding(
         padding: EdgeInsets.only(
             left: getProportionateScreenWidth(15),
             top: getProportionateScreenHeight(10)),
@@ -429,6 +415,19 @@ Widget buildLocationReqList(
               .map((location) => buildLocationRequest(
                   profileViewModel, location, context, slidableController))
               .toList()),
+      locationList
+              .where((element) => element.locationStatus == 'In progress')
+              .isEmpty
+          ? Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(
+                  horizontal: getProportionateScreenWidth(15)),
+              child: Text(
+                'ไม่มีรายการ',
+                style: FontAssets.bodyText,
+              ),
+            )
+          : SizedBox(),
       Padding(
         padding: EdgeInsets.only(
             left: getProportionateScreenWidth(15),
@@ -444,6 +443,44 @@ Widget buildLocationReqList(
               .map((location) => buildLocationRequest(
                   profileViewModel, location, context, slidableController))
               .toList()),
+      locationList.where((element) => element.locationStatus == 'Deny').isEmpty
+          ? Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(
+                  horizontal: getProportionateScreenWidth(15)),
+              child: Text(
+                'ไม่มีรายการ',
+                style: FontAssets.bodyText,
+              ),
+            )
+          : SizedBox(),
+      Padding(
+        padding:
+            EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(15)),
+        child: Text(
+          'ตรวจสอบแล้ว',
+          style: FontAssets.titleText,
+        ),
+      ),
+      Column(
+          children: locationList
+              .where((element) => element.locationStatus == 'Approved')
+              .map((location) => buildLocationRequest(
+                  profileViewModel, location, context, slidableController))
+              .toList()),
+      locationList
+              .where((element) => element.locationStatus == 'Approved')
+              .isEmpty
+          ? Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(
+                  horizontal: getProportionateScreenWidth(15)),
+              child: Text(
+                'ไม่มีรายการ',
+                style: FontAssets.bodyText,
+              ),
+            )
+          : SizedBox(),
     ],
   );
 }
@@ -827,12 +864,15 @@ Widget buildLocationRequest(
                             style: FontAssets.bodyText,
                           ),
                           Spacer(),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                  bottom: getProportionateScreenHeight(5)),
-                              child: TagCategory(category: location.category),
-                            ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                bottom: getProportionateScreenHeight(5)),
+                            child: TagCategory(
+                                category: location.category == 1
+                                    ? "ที่เที่ยว"
+                                    : location.category == 2
+                                        ? "ที่กิน"
+                                        : "ที่พัก"),
                           ),
                         ],
                       ),
