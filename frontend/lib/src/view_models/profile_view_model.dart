@@ -182,8 +182,8 @@ class ProfileViewModel with ChangeNotifier {
   }
 
   Future<int?> updateUserProfileDetail(BuildContext context) async {
-    var status = await ProfileService()
-        .updateUserProfileDetail(_gender!, _birthdate, _profileImage,_imageUrl);
+    var status = await ProfileService().updateUserProfileDetail(
+        _gender!, _birthdate, _profileImage, _imageUrl);
     if (status == 200) {
       Navigator.pop(context);
     }

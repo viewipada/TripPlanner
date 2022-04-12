@@ -75,12 +75,10 @@ class ProfileService {
   Future<ProfileDetailsResponse> getProfileDetails() async {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
-      final response = await http.get(Uri.parse(
-          "${baseUrl}/api/user/settingProfile/${userId}"));
-
+      final response = await http
+          .get(Uri.parse("${baseUrl}/api/user/settingProfile/${userId}"));
       if (response.statusCode == 200) {
         var data = ProfileDetailsResponse.fromJson(json.decode(response.body));
-        print(data);
         return data;
       } else {
         throw Exception("can not fetch data trips and reviews");
@@ -93,8 +91,8 @@ class ProfileService {
     List<LocationCreatedResponse> locationReq = [];
     final userId = await SharedPref().getUserId();
     if (userId != null) {
-      final response = await http.get(Uri.parse(
-          "${baseUrl}/api/locations/byUser/${userId}"));
+      final response = await http
+          .get(Uri.parse("${baseUrl}/api/locations/byUser/${userId}"));
 
       if (response.statusCode == 200) {
         var data = json.decode(response.body) as List<dynamic>;

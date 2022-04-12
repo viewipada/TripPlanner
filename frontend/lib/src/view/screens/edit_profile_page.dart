@@ -318,8 +318,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 ),
                                 Text(
                                   DateFormat('dd/MM/yyyy').format(
-                                      DateTime.parse(
-                                          profileViewModel.birthdate)),
+                                      DateTime.parse(profileViewModel.birthdate)
+                                          .add(Duration(hours: 7))),
                                   style: FontAssets.bodyText,
                                 ),
                               ],

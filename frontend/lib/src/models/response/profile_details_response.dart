@@ -19,7 +19,7 @@ class ProfileDetailsResponse {
           "https://cdn.iconscout.com/icon/free/png-256/user-avatar-contact-portfolio-personal-portrait-profile-2-5270.png",
       username: json['username'] as String,
       gender: json['gender'] as String,
-      birthdate: json['birthdate'] as String,
+      birthdate: json['birthDate'] as String,
       rank: json['rank'] as String,
     );
   }
