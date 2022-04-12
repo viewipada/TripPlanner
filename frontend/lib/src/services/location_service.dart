@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:trip_planner/src/models/response/location_detail_response.dart';
 import 'package:trip_planner/src/models/response/location_recommend_response.dart';
+import 'package:trip_planner/src/models/response/review_response.dart';
 import 'package:trip_planner/src/models/response/shop_response.dart';
 import 'package:trip_planner/src/repository/shared_pref.dart';
 
@@ -52,6 +53,20 @@ class LocationService {
       return shopList;
     } else {
       throw Exception('Failed to load campaigns');
+    }
+  }
+
+  Future<List<ReviewResponse>> getReviewsByLocationId(int locationId) async {
+    final response = await http.get(Uri.parse(
+        '${baseUrl}/api/reviews/reviewLocation?locationId=${locationId}'));
+    if (response.statusCode == 200) {
+      List<ReviewResponse> reviewList;
+      reviewList = (json.decode(response.body) as List)
+          .map((i) => ReviewResponse.fromJson(i))
+          .toList();
+      return reviewList;
+    } else {
+      throw Exception('Failed to load reviews');
     }
   }
 

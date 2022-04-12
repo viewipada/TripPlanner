@@ -16,7 +16,7 @@ class ReviewService {
       if (response.statusCode == 200) {
         var data = ReviewResponse.fromJson(json.decode(response.body));
         return data;
-      } else if (response.statusCode == 400) {
+      } else if (response.statusCode == 204) {
         return null;
       } else {
         throw Exception("can not fetch data review by user & locationId");
@@ -39,7 +39,7 @@ class ReviewService {
         ));
         var res =
             await Dio().post("${baseUrl}/api/file/upload", data: formData);
-        _images.add(await res.data['downloadUrl'].toString());
+        _images.add(await '${baseUrl}/' + res.data['name'].toString());
       });
 
       final response = await http.post(
@@ -81,11 +81,11 @@ class ReviewService {
         ));
         var res =
             await Dio().post("${baseUrl}/api/file/upload", data: formData);
-        _images.add(await res.data['downloadUrl'].toString());
+        _images.add(await '${baseUrl}/' + res.data['name'].toString());
       });
 
       final response = await http.put(
-        Uri.parse('${baseUrl}/api/reviews/'),
+        Uri.parse('${baseUrl}/api/reviews/${userId}'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

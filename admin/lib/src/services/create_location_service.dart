@@ -54,7 +54,7 @@ class CreateLocationService {
 
       var responseString = await streamedResponse.stream.bytesToString();
       final decodedMap = json.decode(responseString);
-      final imageUrl = decodedMap['downloadUrl'];
+      final imageUrl = decodedMap['name'];
 
       final response = await http.post(Uri.parse("$baseUrl/api/locations/"),
           headers: <String, String>{
@@ -120,7 +120,7 @@ class CreateLocationService {
   //       await MultipartFile.fromFile(images.path),
   //     ));
   //     var res = await Dio().post("${baseUrl}/api/file/upload", data: formData);
-  //     final imageUrl = await res.data['downloadUrl'].toString();
+  //     final imageUrl = await res.data['name'].toString();
 
   //     final response = await http.put(Uri.parse("${baseUrl}/api/locations/"),
   //         headers: <String, String>{

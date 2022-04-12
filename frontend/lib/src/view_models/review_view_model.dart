@@ -56,7 +56,7 @@ class ReviewViewModel with ChangeNotifier {
         .updateReview(locationId, _rating.toInt(), _caption, _images);
 
     if (statusCode == 200) {
-      Navigator.pop(context);
+      Navigator.pop(context, 'refresh');
       _images = [];
       _caption = '';
       _rating = 0;
@@ -70,7 +70,7 @@ class ReviewViewModel with ChangeNotifier {
         .createReview(locationId, _rating.toInt(), _caption, _images);
 
     if (statusCode == 200) {
-      Navigator.pop(context);
+      Navigator.pop(context, 'refresh');
       _images = [];
       _caption = '';
       _rating = 0;

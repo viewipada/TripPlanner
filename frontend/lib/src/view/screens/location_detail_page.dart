@@ -407,16 +407,31 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                               ),
                             ),
                           ),
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                print('ดู review เพิ่มเติม');
-                              },
-                              child: Container(
-                                child: Text(
-                                  "ดูเพิ่มเติม >> ",
-                                  textAlign: TextAlign.end,
-                                  style: FontAssets.hintText,
+                          Visibility(
+                            visible: locationDetailViewModel
+                                    .locationDetail.totalReview >
+                                3,
+                            child: Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  locationDetailViewModel
+                                      .goToLocationDetailReviewsPage(
+                                    context,
+                                    locationDetailViewModel
+                                        .locationDetail.locationId,
+                                    locationDetailViewModel
+                                        .locationDetail.locationName,
+                                    locationDetailViewModel
+                                        .locationDetail.totalReview, locationDetailViewModel
+                                              .locationDetail.averageRating,
+                                  );
+                                },
+                                child: Container(
+                                  child: Text(
+                                    "ดูเพิ่มเติม >> ",
+                                    textAlign: TextAlign.end,
+                                    style: FontAssets.hintText,
+                                  ),
                                 ),
                               ),
                             ),

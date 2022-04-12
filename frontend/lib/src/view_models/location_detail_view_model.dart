@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:trip_planner/src/models/response/location_detail_response.dart';
+import 'package:trip_planner/src/models/response/review_response.dart';
 import 'package:trip_planner/src/services/baggage_service.dart';
 import 'package:trip_planner/src/services/location_service.dart';
+import 'package:trip_planner/src/view/screens/location_detail_reviews_page.dart';
 import 'package:trip_planner/src/view/screens/review_page.dart';
 import 'dart:math' show cos, sqrt, asin;
 
@@ -28,14 +30,34 @@ class LocationDetailViewModel with ChangeNotifier {
     return _locationDetail;
   }
 
-  void goToReviewPage(
-      BuildContext context, String locationName, int locationId) {
-    Navigator.push(
+  Future<List<ReviewResponse>> getReviewsByLocationId(int locationId) async {
+    return await LocationService().getReviewsByLocationId(locationId);
+  }
+
+  Future<void> goToReviewPage(
+      BuildContext context, String locationName, int locationId) async {
+    final result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ReviewPage(
           locationName: locationName,
           locationId: locationId,
+        ),
+      ),
+    );
+    if (result != null) notifyListeners();
+  }
+
+  void goToLocationDetailReviewsPage(BuildContext context, int locationId,
+      String locationName, int totalReview, double avgRating) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LocationDetailReviewsPage(
+          locationId: locationId,
+          locationName: locationName,
+          totalReview: totalReview,
+          avgRating: avgRating,
         ),
       ),
     );

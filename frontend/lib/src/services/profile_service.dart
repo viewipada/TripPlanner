@@ -292,7 +292,7 @@ class ProfileService {
         ));
         var res =
             await Dio().post("${baseUrl}/api/file/upload", data: formData);
-        imgUrl = res.data['downloadUrl'].toString();
+        imgUrl = '${baseUrl}/' + res.data['name'].toString();
       } else {
         imgUrl = imageUrl;
       }

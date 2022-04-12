@@ -69,7 +69,7 @@ class CreateLocationService {
         await MultipartFile.fromFile(images.path),
       ));
       var res = await Dio().post("${baseUrl}/api/file/upload", data: formData);
-      final imageUrl = await res.data['downloadUrl'].toString();
+      final imageUrl = await '${baseUrl}/' + res.data['name'].toString();
 
       final response = await http.post(Uri.parse("${baseUrl}/api/locations/"),
           headers: <String, String>{
@@ -138,7 +138,7 @@ class CreateLocationService {
         await MultipartFile.fromFile(images.path),
       ));
       var res = await Dio().post("${baseUrl}/api/file/upload", data: formData);
-      final imageUrl = await res.data['downloadUrl'].toString();
+      final imageUrl = await '${baseUrl}/' + res.data['name'].toString();
 
       final response = await http.put(Uri.parse("${baseUrl}/api/locations/"),
           headers: <String, String>{

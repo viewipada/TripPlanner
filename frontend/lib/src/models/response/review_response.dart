@@ -17,7 +17,8 @@ class ReviewResponse {
 
   factory ReviewResponse.fromJson(Map<String, dynamic> json) {
     return ReviewResponse(
-      profileImage: json['profileImage'] as String,
+      profileImage: json['profileImage'] ??
+          "https://cdn.iconscout.com/icon/free/png-256/user-avatar-contact-portfolio-personal-portrait-profile-2-5270.png",
       username: json['username'] as String,
       rating: json['rating'] as int,
       caption: json['caption'] as String,
