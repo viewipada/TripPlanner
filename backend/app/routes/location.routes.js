@@ -24,5 +24,7 @@ module.exports = (app) => {
   //Retrieve ten most popular
   router.get("/top/popular", locations.findPopular);
 
+  router.get("/nearby/:category/:lat/:lng", locations.findNearBy);
+
   app.use("/api/locations", router);
 };

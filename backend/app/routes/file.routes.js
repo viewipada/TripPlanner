@@ -1,5 +1,6 @@
 module.exports = (app) => {
   const fileWorker = require("../controllers/file.controller.js");
+  const image = require("../controllers/image.controller.js");
 
   var router = require("express").Router();
 
@@ -17,6 +18,8 @@ module.exports = (app) => {
   router.get("/info", fileWorker.listAllFiles);
 
   router.get("/:id", fileWorker.downloadFile);
+
+  router.post("/uploadImage", image.uploadImage);
 
   app.use("/api/file", router);
 };

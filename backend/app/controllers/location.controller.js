@@ -205,6 +205,71 @@ exports.findPopular = async (req, res) => {
   }
 };
 
+exports.findNearBy = async (req, res) => {
+  try {
+    const { category } = req.params;
+    const latUser = req.params.lat;
+    const lonUser = req.params.lng;
+    const lat = 18.767372356599942;
+    const lon = 99.03631263889169;
+
+    function distanceBetween(lat1, lon1) {
+      const R = 6371; // metres
+      const seta1 = (lat1 * Math.PI) / 180; // φ, λ in radians
+      const seta2 = (latUser * Math.PI) / 180;
+      const difSeta = ((latUser - lat1) * Math.PI) / 180;
+      const difLamda = ((lonUser - lon1) * Math.PI) / 180;
+
+      const a =
+        Math.sin(difSeta / 2) * Math.sin(difSeta / 2) +
+        Math.cos(seta1) * Math.cos(seta2) * Math.sin(difLamda / 2) * Math.sin(difLamda / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+      const d = R * c; // in metres
+
+      return d;
+    }
+
+    const locationData = await Location.findAll({
+      where: { category },
+      attributes: [
+        "locationId",
+        "locationName",
+        "imageUrl",
+        "description",
+        "category",
+        "latitude",
+        "longitude",
+      ],
+      raw: true,
+    });
+
+    const data = await locationData.map(
+      ({ locationId, locationName, imageUrl, description, category, latitude, longitude }) => {
+        return {
+          locationId,
+          locationName,
+          imageUrl,
+          description,
+          category,
+          latitude,
+          longitude,
+          ditanceFromeUser: distanceBetween(latitude, longitude),
+        };
+      }
+    );
+
+    console.log(data);
+
+    console.log("ระยะทาง : " + distanceBetween(lat, lon));
+
+    return res.status(200).json(data);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send(err);
+  }
+};
+
 exports.delete = async (req, res) => {
   try {
     const { locationId } = req.params;
