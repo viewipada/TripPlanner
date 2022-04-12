@@ -7,19 +7,19 @@ exports.uploadImage = async (req, res) => {
       });
     } else {
       //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
-      let avatar = req.files.avatar;
+      let file = req.files.file;
 
       //Use the mv() method to place the file in upload directory (i.e. "uploads")
-      avatar.mv("./uploads/" + avatar.name);
+      file.mv("./uploads/" + file.name);
 
       //send response
       return res.send({
         status: 200,
         message: "File is uploaded",
         data: {
-          name: avatar.name,
-          mimetype: avatar.mimetype,
-          size: avatar.size,
+          name: file.name,
+          mimetype: file.mimetype,
+          size: file.size,
         },
       });
     }
