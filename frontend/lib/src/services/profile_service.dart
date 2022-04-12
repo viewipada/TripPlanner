@@ -94,7 +94,7 @@ class ProfileService {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
       final response = await http.get(Uri.parse(
-          "https://run.mocky.io/v3/650b5c21-c293-4919-956f-f0c2bb05b99a"));
+          "${baseUrl}/api/locations/byUser/${userId}"));
 
       if (response.statusCode == 200) {
         var data = json.decode(response.body) as List<dynamic>;

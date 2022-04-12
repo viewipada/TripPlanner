@@ -37,7 +37,7 @@ class LocationRequestDetailResponse {
       locationName: json['locationName'] as String,
       imageUrl: json['imageUrl'] as String,
       category: json['category'] as int,
-      locationType: json['locationType'] as String,
+      locationType: json['type'] as String,
       description: json['description'] as String,
       openingHour: json['openingHour'].cast<String>(),
       contactNumber: json['contactNumber'] as String,

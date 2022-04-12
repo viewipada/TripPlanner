@@ -175,7 +175,7 @@ exports.findByUser = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const locationData = await Location.findOne({
+    const locationData = await Location.findAll({
       where: { createBy: userId },
       raw: true,
     });

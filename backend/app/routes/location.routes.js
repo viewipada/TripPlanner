@@ -16,7 +16,7 @@ module.exports = (app) => {
   router.get("/:locationId", locations.findOne);
 
   // retrieve locations created by user
-  router.get("/:userId", locations.findByUser);
+  router.get("/byUser/:userId", locations.findByUser);
 
   //delete one location
   router.delete("/:locationId", locations.delete);

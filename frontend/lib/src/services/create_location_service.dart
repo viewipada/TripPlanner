@@ -28,8 +28,7 @@ class CreateLocationService {
   Future<LocationRequestDetailResponse> getLocationRequestById(
       int locationId) async {
     final response = await http.get(
-        Uri.parse("https://run.mocky.io/v3/032128c4-0a9d-415f-9b7e-d48c6e2f7460"
-            // 'http://10.0.2.2:8080/api/locations/${locationId}'
+        Uri.parse('${baseUrl}/api/locations/${locationId}'
             ));
     // print(response.body);
     if (response.statusCode == 200) {
