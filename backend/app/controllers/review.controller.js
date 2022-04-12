@@ -106,10 +106,11 @@ exports.findAllReviewLocation = async (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-  const { locationId } = req.query;
-  var condition = locationId ? { locationId: { [Op.iLike]: `%${locationId}%` } } : null;
+  const locationId = req.query.locationId;
 
-  Review.findAll({ where: condition })
+  console.log(locationId);
+
+  Review.findAll({ where: { locationId } })
     .then((data) => {
       res.send(data);
     })

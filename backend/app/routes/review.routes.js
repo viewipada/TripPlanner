@@ -7,7 +7,7 @@ module.exports = (app) => {
   router.post("/", reviews.create);
 
   // Retrieve all reviews
-  router.get("/", reviews.findAll);
+  router.get("/reviewLocation", reviews.findAll);
 
   router.get("/:locationId", reviews.findAllReviewLocation);
 
