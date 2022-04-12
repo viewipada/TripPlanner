@@ -12,14 +12,14 @@ module.exports = (app) => {
     res.sendFile(path + "index.html");
   });
 
-  router.post("/upload", upload.single("file"), fileWorker.uploadFile);
+  router.post("/uploadImage", upload.single("file"), fileWorker.uploadFile);
   router.post("/multiple/upload", upload.array("file", 4), fileWorker.uploadMultipleFiles);
 
   router.get("/info", fileWorker.listAllFiles);
 
   router.get("/:id", fileWorker.downloadFile);
 
-  router.post("/uploadImage", image.uploadImage);
+  router.post("/upload", image.uploadImage);
 
   app.use("/api/file", router);
 };
