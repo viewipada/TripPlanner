@@ -68,45 +68,46 @@ class _LocationDetailReviewsPageState extends State<LocationDetailReviewsPage> {
                     padding: EdgeInsets.symmetric(
                         horizontal: getProportionateScreenWidth(15)),
                     child: Text(
-                      'รีวิว (${widget.locationName})',
+                      'รีวิว ${widget.locationName}',
                       textAlign: TextAlign.start,
                       style: FontAssets.subtitleText,
                     ),
                   ),
-                  Container(
+                  Padding(
                     padding: EdgeInsets.fromLTRB(
                       getProportionateScreenWidth(15),
                       getProportionateScreenHeight(5),
                       getProportionateScreenWidth(15),
                       getProportionateScreenHeight(5),
                     ),
+                    child: Text(
+                      'ทั้งหมด (${widget.totalReview})',
+                      textAlign: TextAlign.start,
+                      style: FontAssets.bodyText,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      getProportionateScreenWidth(15),
+                      0,
+                      getProportionateScreenWidth(15),
+                      getProportionateScreenHeight(15),
+                    ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'ทั้งหมด (${widget.totalReview})',
-                          textAlign: TextAlign.start,
-                          style: FontAssets.subtitleText,
+                          '${locationDetailViewModel.locationDetail.averageRating} ',
+                          style: FontAssets.bodyText,
                         ),
-                        Row(
-                          children: [
-                            Text(
-                              '${locationDetailViewModel.locationDetail.averageRating} ',
-                              style: FontAssets.bodyText,
-                            ),
-                            RatingBarIndicator(
-                              unratedColor: Palette.Outline,
-                              rating: locationDetailViewModel
-                                  .locationDetail.averageRating
-                                  .toDouble(),
-                              itemBuilder: (context, index) => Icon(
-                                Icons.star_rounded,
-                                color: Palette.CautionColor,
-                              ),
-                              itemCount: 5,
-                              itemSize: 20,
-                            ),
-                          ],
+                        RatingBarIndicator(
+                          unratedColor: Palette.Outline,
+                          rating: widget.avgRating.toDouble(),
+                          itemBuilder: (context, index) => Icon(
+                            Icons.star_rounded,
+                            color: Palette.CautionColor,
+                          ),
+                          itemCount: 5,
+                          itemSize: 20,
                         ),
                       ],
                     ),
@@ -114,6 +115,9 @@ class _LocationDetailReviewsPageState extends State<LocationDetailReviewsPage> {
                   ReviewCard(
                     reviews: snapshot.data,
                   ),
+                  SizedBox(
+                    height: getProportionateScreenHeight(15),
+                  )
                 ],
               ),
             );

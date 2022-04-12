@@ -602,49 +602,55 @@ Widget buildGridReviewPicture(BuildContext context, MyReviewResponse review,
             ),
           ],
         ),
-        Text(
-          review.caption,
-          style: FontAssets.bodyText,
-        ),
-        Visibility(
-          visible: review.images.isNotEmpty,
-          child: GridView(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: getProportionateScreenWidth(10),
-            ),
-            children: review.images.map((image) {
-              return GestureDetector(
-                onLongPress: () => showDialog(
-                  context: context,
-                  builder: (_) => Dialog(
-                    backgroundColor: Colors.transparent,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: Image.network(
-                        image,
-                        fit: BoxFit.cover,
+        review.caption == ""
+            ? SizedBox(
+                height: getProportionateScreenHeight(5),
+              )
+            : Text(
+                review.caption,
+                style: FontAssets.bodyText,
+              ),
+        review.images.isNotEmpty
+            ? GridView(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: getProportionateScreenWidth(10),
+                ),
+                children: review.images.map((image) {
+                  return GestureDetector(
+                    onLongPress: () => showDialog(
+                      context: context,
+                      builder: (_) => Dialog(
+                        backgroundColor: Colors.transparent,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Image.network(
+                            image,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                  child: Image.network(
-                    image,
-                    height: getProportionateScreenHeight(100),
-                    width: getProportionateScreenHeight(100),
-                    fit: BoxFit.cover,
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                ),
-              );
-            }).toList(),
-          ),
-        ),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0))),
+                      child: Image.network(
+                        image,
+                        height: getProportionateScreenHeight(100),
+                        width: getProportionateScreenHeight(100),
+                        fit: BoxFit.cover,
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                    ),
+                  );
+                }).toList(),
+              )
+            : SizedBox(
+                height: getProportionateScreenHeight(5),
+              ),
       ],
     ),
   );
