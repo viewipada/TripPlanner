@@ -105,20 +105,68 @@ exports.findAllReviewLocation = async (req, res) => {
   }
 };
 
-exports.findAll = (req, res) => {
-  const locationId = req.query.locationId;
+exports.findAll = async (req, res) => {
+  try {
+    const locationId = req.query.locationId;
 
-  console.log(locationId);
+    console.log(locationId);
 
-  Review.findAll({ where: { locationId } })
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while retrieving tutorials.",
-      });
+    Review.findAll({ where: { locationId } });
+    let reviewData = await Review.findAll({
+      where: {
+        locationId,
+      },
+      raw: true,
     });
+
+    console.log(reviewData);
+
+    const data = await Promise.all(
+      reviewData.map(
+        async ({
+          userId,
+          reviewRate: rating,
+          reviewCaption: caption,
+          reviewImg1,
+          reviewImg2,
+          reviewImg3,
+          createdAt,
+        }) => {
+          try {
+            console.log(123456);
+            let { imgUrl: profileImage, username } = await User.findOne({
+              where: {
+                id: userId,
+              },
+              raw: true,
+            });
+
+            console.log(profileImage, username);
+
+            return {
+              profileImage,
+              username,
+              rating,
+              caption,
+              images: [reviewImg1, reviewImg2, reviewImg3].filter((image) => image),
+              createdAt,
+            };
+          } catch (error) {
+            console.log(err);
+            return res.status(400).send("Something wrong while query user review");
+          }
+        }
+      )
+    ).catch((err) => {
+      console.log(err);
+    });
+
+    console.log(data);
+
+    return res.status(200).json(data);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
 };
 
 exports.findOriginalReview = async (req, res) => {
