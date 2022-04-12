@@ -984,8 +984,11 @@ class _EditLocationRequestPageState extends State<EditLocationRequestPage> {
                                       if (_formKey.currentState!.validate() &&
                                           dropdownValid &&
                                           locationPinValid &&
-                                          createLocationViewModel.images !=
-                                              null) {
+                                          (createLocationViewModel.images !=
+                                                  null ||
+                                              createLocationViewModel
+                                                      .imageUrl !=
+                                                  null)) {
                                         bool openingHourValid =
                                             createLocationViewModel
                                                 .validateOpeningHour();
@@ -996,7 +999,8 @@ class _EditLocationRequestPageState extends State<EditLocationRequestPage> {
                                               context, 'กรุณาระบุวันเวลาทำการ');
                                         } else {
                                           createLocationViewModel
-                                              .updateLocation(context)
+                                              .updateLocation(
+                                                  context, locationId)
                                               .then((value) {
                                             if (value == 200) {
                                               setState(() {
@@ -1023,13 +1027,8 @@ class _EditLocationRequestPageState extends State<EditLocationRequestPage> {
                                           ;
                                         }
                                       } else {
-                                        if (createLocationViewModel.images !=
-                                            null)
-                                          alertDialog(context,
-                                              'กรุณาระบุข้อมูลที่จำเป็นให้ครบ');
-                                        // else
-                                        //   alertDialog(
-                                        //       context, 'กรุณาเพิ่มรูปภาพสถานที่');
+                                        alertDialog(context,
+                                            'กรุณาระบุข้อมูลที่จำเป็นให้ครบ');
                                       }
                                     },
                                     child: Text(

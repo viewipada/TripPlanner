@@ -379,7 +379,7 @@ class CreateLocationViewModel with ChangeNotifier {
     return statusCode;
   }
 
-  Future<int?> updateLocation(BuildContext context) async {
+  Future<int?> updateLocation(BuildContext context, int locationId) async {
     int _category;
     if (_locationCategoryValue == "ที่เที่ยว")
       _category = 1;
@@ -392,6 +392,7 @@ class CreateLocationViewModel with ChangeNotifier {
 
     if (imageUrl != null) _images = await urlToFile(imageUrl!);
     final statusCode = await CreateLocationService().updateLocation(
+        locationId,
         _locationName,
         _category,
         _description,

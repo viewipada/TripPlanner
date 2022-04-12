@@ -11,7 +11,8 @@ class HomeService {
 
   Future<List<LocationCardResponse>> getHotLocationList() async {
     List<LocationCardResponse> hotLocationList = [];
-    final response = await http.get(Uri.parse('${baseUrl}/api/locations/top/popular'));
+    final response =
+        await http.get(Uri.parse('${baseUrl}/api/locations/top/popular'));
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body) as List<dynamic>;
@@ -73,9 +74,8 @@ class HomeService {
   Future<OtherTripResponse> getTripDetail(int tripId) async {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
-      final response = await http.get(Uri.parse(
-          "${baseUrl}/api/trips/${tripId}"));
-
+      final response =
+          await http.get(Uri.parse("${baseUrl}/api/trips/${tripId}"));
       if (response.statusCode == 200) {
         var data = OtherTripResponse.fromMap(json.decode(response.body));
         return data;

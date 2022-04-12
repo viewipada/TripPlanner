@@ -27,9 +27,8 @@ class CreateLocationService {
 
   Future<LocationRequestDetailResponse> getLocationRequestById(
       int locationId) async {
-    final response = await http.get(
-        Uri.parse('${baseUrl}/api/locations/${locationId}'
-            ));
+    final response =
+        await http.get(Uri.parse('${baseUrl}/api/locations/${locationId}'));
     // print(response.body);
     if (response.statusCode == 200) {
       var data =
@@ -111,6 +110,7 @@ class CreateLocationService {
   }
 
   Future<int?> updateLocation(
+      int locationId,
       String locationName,
       int category,
       String description,
@@ -139,36 +139,37 @@ class CreateLocationService {
       var res = await Dio().post("${baseUrl}/api/file/upload", data: formData);
       final imageUrl = await '${baseUrl}/' + res.data['name'].toString();
 
-      final response = await http.put(Uri.parse("${baseUrl}/api/locations/"),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: jsonEncode(
-            <String, dynamic>{
-              "locationId": null,
-              "locationName": locationName,
-              "category": category,
-              "description": description,
-              "contactNumber": contactNumber == '' ? '-' : contactNumber,
-              "website": website == '' ? '-' : website,
-              "duration": 1, //รอ api default duration
-              "type": locationType,
-              "imageUrl": imageUrl,
-              "latitude": locationPin.latitude,
-              "longitude": locationPin.longitude,
-              "province": province,
-              "averageRating": 0.0,
-              "totalReview": 0,
-              "totalCheckin": 0,
-              "createBy": userId,
-              "locationStatus": "In progress",
-              "openingHour": openingHour,
-              "min_price": minPrice,
-              "max_price": maxPrice
-            },
-          ));
+      final response =
+          await http.put(Uri.parse("${baseUrl}/api/locations/${locationId}"),
+              headers: <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
+              },
+              body: jsonEncode(
+                <String, dynamic>{
+                  "locationId": locationId,
+                  "locationName": locationName,
+                  "category": category,
+                  "description": description,
+                  "contactNumber": contactNumber == '' ? '-' : contactNumber,
+                  "website": website == '' ? '-' : website,
+                  "duration": 1, //รอ api default duration
+                  "type": locationType,
+                  "imageUrl": imageUrl,
+                  "latitude": locationPin.latitude,
+                  "longitude": locationPin.longitude,
+                  "province": province,
+                  "averageRating": 0.0,
+                  "totalReview": 0,
+                  "totalCheckin": 0,
+                  "createBy": userId,
+                  "locationStatus": "In progress",
+                  "openingHour": openingHour,
+                  "min_price": minPrice,
+                  "max_price": maxPrice
+                },
+              ));
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         print(response.body);
         return response.statusCode;
       } else {

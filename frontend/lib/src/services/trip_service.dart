@@ -22,7 +22,7 @@ class TripService {
         "firstLocation": trip.firstLocation,
         "lastLocation": trip.lastLocation,
         "thumnail": trip.trumbnail,
-        "status": trip.status,
+        "status": 'finished',
         "tripItem": tripItems
             .map((item) => <String, dynamic>{
                   "tripId": null,

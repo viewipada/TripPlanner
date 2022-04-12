@@ -128,7 +128,7 @@ class ProfileService {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
       final response = await http.delete(
-        Uri.parse('${baseUrl}/api/locations/${userId}/${locationId}'),
+        Uri.parse('${baseUrl}/api/locations/${locationId}'),
       );
 
       if (response.statusCode == 200) {

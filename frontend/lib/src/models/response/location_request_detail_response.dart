@@ -39,7 +39,7 @@ class LocationRequestDetailResponse {
       category: json['category'] as int,
       locationType: json['type'] as String,
       description: json['description'] as String,
-      openingHour: json['openingHour'].cast<String>(),
+      openingHour: json['openingHour'] ?? ["ปิด","ปิด","ปิด","ปิด","ปิด","ปิด","9:00 - 16:00"], // รอ .cast<String>()
       contactNumber: json['contactNumber'] as String,
       website: json['website'] as String,
       // duration: json['duration'] as int,
