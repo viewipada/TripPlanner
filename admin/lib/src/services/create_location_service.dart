@@ -7,11 +7,8 @@ class CreateLocationService {
   final String baseUrl = 'http://localhost:8080';
 
   Future<List> getLocationTypeList(int category) async {
-    final response = await http.get(Uri.parse(category == 1
-        ? 'https://run.mocky.io/v3/642a8640-04a2-4150-b1e5-35e2063d6780'
-        : category == 2
-            ? 'https://run.mocky.io/v3/b802aedf-338e-47ca-b1b3-cfc20267b352'
-            : 'https://run.mocky.io/v3/bc962922-d2aa-4db4-9d36-a0e643fae811'));
+    final response = await http
+        .get(Uri.parse('$baseUrl/api/locations/category/type/$category'));
     List locationTypeList = [];
     if (response.statusCode == 200) {
       var data = json.decode(response.body) as List<dynamic>;
@@ -39,12 +36,21 @@ class CreateLocationService {
       int? maxPrice) async {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
-      List<String> openingHour = [];
+      List<String> openingHourList = [];
       await Future.forEach(
           dayOfWeek,
-          (dynamic day) => openingHour.add(day['isOpening']
+          (dynamic day) => openingHourList.add(day['isOpening']
               ? '${day['openTime']} - ${day['closedTime']}'
               : "ปิด"));
+      var openingHour = {
+        "mon": openingHourList[0],
+        "tue": openingHourList[1],
+        "wed": openingHourList[2],
+        "thu": openingHourList[3],
+        "fri": openingHourList[4],
+        "sat": openingHourList[5],
+        "sun": openingHourList[6]
+      };
 
       var request =
           http.MultipartRequest('POST', Uri.parse("$baseUrl/api/file/upload"));
@@ -78,7 +84,7 @@ class CreateLocationService {
               "totalReview": 0,
               "totalCheckin": 0,
               "createBy": userId,
-              "locationStatus": "In progress",
+              "locationStatus": "Approved",
               "openingHour": openingHour,
               "min_price": minPrice,
               "max_price": maxPrice

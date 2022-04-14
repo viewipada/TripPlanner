@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
+import 'package:trip_planner/src/models/response/opening_hour.dart';
 import 'package:trip_planner/src/repository/shared_pref.dart';
 import 'package:trip_planner/src/view/widgets/baggage_cart.dart';
 import 'package:trip_planner/src/view/widgets/loading.dart';
@@ -369,17 +370,10 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                         style: FontAssets.subtitleText,
                       ),
                     ),
-                    openingHour('วันเวลาเปิด-ปิด',
-                        // locationDetailViewModel.locationDetail.openingHour,
-                        [
-                          "ปิด",
-                          "ปิด",
-                          "ปิด",
-                          "ปิด",
-                          "9:00 - 16:00",
-                          "9:00 - 16:00",
-                          "9:00 - 16:00"
-                        ]),
+                    openingHour(
+                      'วันเวลาเปิด-ปิด',
+                      locationDetailViewModel.locationDetail.openingHour,
+                    ),
                     detailLocation('เบอร์ติดต่อ',
                         locationDetailViewModel.locationDetail.contactNumber),
                     detailLocation('เว็บไซต์',
@@ -422,8 +416,9 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                                     locationDetailViewModel
                                         .locationDetail.locationName,
                                     locationDetailViewModel
-                                        .locationDetail.totalReview, locationDetailViewModel
-                                              .locationDetail.averageRating,
+                                        .locationDetail.totalReview,
+                                    locationDetailViewModel
+                                        .locationDetail.averageRating,
                                   );
                                 },
                                 child: Container(
@@ -559,7 +554,7 @@ Widget detailLocation(String title, String detail) {
   );
 }
 
-Widget openingHour(String title, List<String> openingHour) {
+Widget openingHour(String title, OpeningHour openingHour) {
   return Container(
     margin: EdgeInsets.fromLTRB(
       getProportionateScreenWidth(15),
@@ -594,7 +589,7 @@ Widget openingHour(String title, List<String> openingHour) {
                   ),
                   Expanded(
                     child: Text(
-                      "${openingHour[0]}",
+                      "${openingHour.mon}",
                       style: FontAssets.bodyText,
                     ),
                   ),
@@ -610,7 +605,7 @@ Widget openingHour(String title, List<String> openingHour) {
                   ),
                   Expanded(
                     child: Text(
-                      "${openingHour[1]}",
+                      "${openingHour.tue}",
                       style: FontAssets.bodyText,
                     ),
                   ),
@@ -626,7 +621,7 @@ Widget openingHour(String title, List<String> openingHour) {
                   ),
                   Expanded(
                     child: Text(
-                      "${openingHour[2]}",
+                      "${openingHour.wed}",
                       style: FontAssets.bodyText,
                     ),
                   ),
@@ -642,7 +637,7 @@ Widget openingHour(String title, List<String> openingHour) {
                   ),
                   Expanded(
                     child: Text(
-                      "${openingHour[3]}",
+                      "${openingHour.thu}",
                       style: FontAssets.bodyText,
                     ),
                   ),
@@ -658,7 +653,7 @@ Widget openingHour(String title, List<String> openingHour) {
                   ),
                   Expanded(
                     child: Text(
-                      "${openingHour[4]}",
+                      "${openingHour.fri}",
                       style: FontAssets.bodyText,
                     ),
                   ),
@@ -674,7 +669,7 @@ Widget openingHour(String title, List<String> openingHour) {
                   ),
                   Expanded(
                     child: Text(
-                      "${openingHour[5]}",
+                      "${openingHour.sat}",
                       style: FontAssets.bodyText,
                     ),
                   ),
@@ -690,7 +685,7 @@ Widget openingHour(String title, List<String> openingHour) {
                   ),
                   Expanded(
                     child: Text(
-                      "${openingHour[6]}",
+                      "${openingHour.sun}",
                       style: FontAssets.bodyText,
                     ),
                   ),

@@ -16,9 +16,9 @@ class CreateLocationViewModel with ChangeNotifier {
   File? _images;
   bool? _knowOpeningHour = true;
   List _locationCategory = [
-    {'label': 'ที่เที่ยว', 'value': 'travel'}, //1
-    {'label': 'ที่กิน', 'value': 'food'}, //2
-    {'label': 'ที่พัก', 'value': 'hotel'}, //3
+    {'label': 'ที่เที่ยว', 'value': 1},
+    {'label': 'ที่กิน', 'value': 2},
+    {'label': 'ที่พัก', 'value': 3},
   ];
   List _locationType = [];
   List _dayOfWeek = [
@@ -90,12 +90,20 @@ class CreateLocationViewModel with ChangeNotifier {
   dynamic _defaultLocationTypeValue;
   int? _minPrice;
   int? _maxPrice;
+  List<String> _openingHour = [];
 
   Future<void> getLocationRequestById(int locationId) async {
     _locationRequest =
         await CreateLocationService().getLocationRequestById(locationId);
 
     if (_locationRequest != null) {
+      _openingHour.add(_locationRequest!.openingHour.mon);
+      _openingHour.add(_locationRequest!.openingHour.tue);
+      _openingHour.add(_locationRequest!.openingHour.wed);
+      _openingHour.add(_locationRequest!.openingHour.thu);
+      _openingHour.add(_locationRequest!.openingHour.fri);
+      _openingHour.add(_locationRequest!.openingHour.sat);
+      _openingHour.add(_locationRequest!.openingHour.sun);
       _locationName = await _locationRequest!.locationName;
       _imageUrl = await _locationRequest!.imageUrl;
       _contactNumber = await _locationRequest!.contactNumber == "-"
@@ -107,10 +115,9 @@ class CreateLocationViewModel with ChangeNotifier {
       _description = await _locationRequest!.description;
       _locationPin =
           await LatLng(_locationRequest!.latitude, _locationRequest!.longitude);
-      // _locationTypeValue = _locationRequest!.locationType; //รอ api จริง
-      _locationTypeValue = "1";
+      _locationTypeValue = await _locationRequest!.locationType;
       _provinceValue = await _locationRequest!.province;
-      _openingEveryday = await !_locationRequest!.openingHour.contains("ปิด");
+      _openingEveryday = await !_openingHour.contains("ปิด");
       _locationCategoryValue = await _locationRequest!.category == 1
           ? "ที่เที่ยว"
           : _locationRequest!.category == 2
@@ -118,9 +125,9 @@ class CreateLocationViewModel with ChangeNotifier {
               : "ที่พัก";
 
       for (int i = 0; i < _dayOfWeek.length; i++) {
-        if (_locationRequest!.openingHour[i] != "ปิด") {
+        if (_openingHour[i] != "ปิด") {
           _dayOfWeek[i]['isOpening'] = true;
-          final timeSplit = await _locationRequest!.openingHour[i].split(' - ');
+          final timeSplit = await _openingHour[i].split(' - ');
           _dayOfWeek[i]['openTime'] = await timeSplit.first;
           _dayOfWeek[i]['closedTime'] = await timeSplit.last;
         }
@@ -134,18 +141,17 @@ class CreateLocationViewModel with ChangeNotifier {
 
       if (_locationCategoryValue != null)
         await getLocationTypeList(_locationCategoryValue! == "ที่เที่ยว"
-            ? "travel"
+            ? 1
             : _locationCategoryValue! == "ที่กิน"
-                ? "food"
-                : "hotel");
+                ? 2
+                : 3);
 
-      _locationCategory.forEach((element) {
+      await Future.forEach(_locationCategory, (dynamic element) {
         if (element['label'] == _locationCategoryValue)
           _defaultCategotyValue = element;
       });
-
-      _locationType.forEach((element) {
-        if (element['value'] == _locationTypeValue)
+      await Future.forEach(_locationType, (dynamic element) {
+        if (element['label'] == _locationTypeValue)
           _defaultLocationTypeValue = element;
       });
     }
@@ -266,7 +272,7 @@ class CreateLocationViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getLocationTypeList(String category) async {
+  Future<void> getLocationTypeList(int category) async {
     _locationType = [];
     _locationType = await CreateLocationService().getLocationTypeList(category);
     notifyListeners();

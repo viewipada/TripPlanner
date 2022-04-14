@@ -389,7 +389,11 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                               dropdownList:
                                   createLocationViewModel.locationType,
                               placeholder: 'กรุณาเลือก',
-                              dropdownHeight: 170,
+                              dropdownHeight: createLocationViewModel
+                                          .locationCategoryValue ==
+                                      "ของฝาก"
+                                  ? 120
+                                  : 170,
                               dropdownItemGap: 0,
                               dropdownWidth: (SizeConfig.screenWidth / 2) -
                                   getProportionateScreenWidth(5),

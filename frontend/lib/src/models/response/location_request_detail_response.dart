@@ -1,3 +1,5 @@
+import 'package:trip_planner/src/models/response/opening_hour.dart';
+
 class LocationRequestDetailResponse {
   final int locationId;
   final double latitude;
@@ -7,11 +9,13 @@ class LocationRequestDetailResponse {
   final int category;
   final String locationType;
   final String description;
-  final List<String> openingHour;
+  final OpeningHour openingHour;
   final String contactNumber;
   final String website;
   // final int duration;
   final String province;
+  final int? minPrice;
+  final int? maxPrice;
 
   LocationRequestDetailResponse({
     required this.locationId,
@@ -27,6 +31,8 @@ class LocationRequestDetailResponse {
     required this.website,
     // required this.duration,
     required this.province,
+    this.maxPrice,
+    this.minPrice,
   });
 
   factory LocationRequestDetailResponse.fromJson(Map<String, dynamic> json) {
@@ -39,11 +45,13 @@ class LocationRequestDetailResponse {
       category: json['category'] as int,
       locationType: json['type'] as String,
       description: json['description'] as String,
-      openingHour: json['openingHour'] ?? ["ปิด","ปิด","ปิด","ปิด","ปิด","ปิด","9:00 - 16:00"], // รอ .cast<String>()
+      openingHour: OpeningHour.fromMap(json['openingHour']),
       contactNumber: json['contactNumber'] as String,
       website: json['website'] as String,
       // duration: json['duration'] as int,
       province: json['province'] as String,
+      minPrice: json['minPrice'],
+      maxPrice: json['maxPrice'],
     );
   }
 

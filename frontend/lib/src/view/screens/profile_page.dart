@@ -791,7 +791,7 @@ Widget buildLocationRequest(
     BuildContext context,
     slidableController) {
   return Slidable(
-    key: Key('${location.locationName}'),
+    key: Key('${location.locationId}'),
     controller: slidableController,
     actionPane: SlidableDrawerActionPane(),
     actionExtentRatio: 0.25,
