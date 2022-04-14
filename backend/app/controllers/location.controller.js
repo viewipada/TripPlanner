@@ -4,6 +4,7 @@ const db = require("../models");
 const Location = db.locations;
 const Review = db.reviews;
 const User = db.users;
+const CheckIn = db.checkIns;
 const Price = db.prices;
 
 const Op = db.Sequelize.Op;
@@ -129,6 +130,34 @@ exports.findOne = async (req, res) => {
       console.log(err);
     });
 
+    const totalReviews = await Review.count({ where: { locationId } });
+
+    const avg = await Review.findAll({
+      where: { locationId },
+      attributes: [[sequelize.fn("avg", sequelize.col("reviewRate")), "average"]],
+      raw: true,
+    });
+
+    //const totalCheckin = await CheckIn.count({ where: { locationId } });
+
+    console.log(totalReviews);
+    console.log(avg);
+
+    const updateData = Location.update(
+      {
+        totalReview: totalReviews,
+        averageRating: avg[0].average == null ? 0 : parseFloat(avg[0].average).toFixed(2),
+      },
+      {
+        where: { locationId },
+        returning: true,
+        plain: true,
+        raw: true,
+      }
+    );
+
+    locationData.totalReview = totalReviews;
+    locationData.averageRating = avg[0].average == null ? 0 : parseFloat(avg[0].average).toFixed(2);
     locationData.reviewers = data;
   }
 
