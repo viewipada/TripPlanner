@@ -11,8 +11,8 @@ class DashboardService {
     List<LocationCardResponse> baggageList = [];
     final userId = await SharedPref().getUserId();
     if (userId != null) {
-      final response = await http.get(Uri.parse(
-          '$baseUrl/api/locations/search/rating?category=2')); // mock api
+      final response = await http.get(
+          Uri.parse('$baseUrl/api/locations/search/rating?category=$category')); //ไม่ return username
 
       if (response.statusCode == 200) {
         var data = json.decode(response.body) as List<dynamic>;

@@ -60,7 +60,7 @@ class CreateLocationService {
 
       var responseString = await streamedResponse.stream.bytesToString();
       final decodedMap = json.decode(responseString);
-      final imageUrl = decodedMap['name'];
+      final imageUrl = '$baseUrl/' + decodedMap['name'].toString();
 
       final response = await http.post(Uri.parse("$baseUrl/api/locations/"),
           headers: <String, String>{

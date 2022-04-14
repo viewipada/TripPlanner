@@ -7,7 +7,7 @@ class LocationDetailResponse {
   final int category;
   final String locationType;
   final String description;
-  // final List<String> openingHour;
+  final OpeningHour openingHour;
   final String contactNumber;
   final String website;
   final int duration;
@@ -25,7 +25,7 @@ class LocationDetailResponse {
     required this.category,
     required this.locationType,
     required this.description,
-    // required this.openingHour,
+    required this.openingHour,
     required this.contactNumber,
     required this.website,
     required this.duration,
@@ -45,7 +45,7 @@ class LocationDetailResponse {
       category: json['category'] as int,
       locationType: json['type'] as String,
       description: json['description'] as String,
-      // openingHour: json['openingHour'].cast<String>(),
+      openingHour: OpeningHour.fromMap(json['openingHour']),
       contactNumber: json['contactNumber'] as String,
       website: json['website'] as String,
       duration: json['duration'] as int,
@@ -75,4 +75,36 @@ class LocationDetailResponse {
 
   //   return data;
   // }
+}
+
+class OpeningHour {
+  final String mon;
+  final String tue;
+  final String wed;
+  final String thu;
+  final String fri;
+  final String sat;
+  final String sun;
+
+  OpeningHour({
+    required this.mon,
+    required this.tue,
+    required this.wed,
+    required this.thu,
+    required this.fri,
+    required this.sat,
+    required this.sun,
+  });
+
+  factory OpeningHour.fromMap(Map<String, dynamic> json) {
+    return OpeningHour(
+      mon: json['mon'] as String,
+      tue: json['tue'] as String,
+      wed: json['wed'] as String,
+      thu: json['thu'] as String,
+      fri: json['fri'] as String,
+      sat: json['sat'] as String,
+      sun: json['sun'] as String,
+    );
+  }
 }

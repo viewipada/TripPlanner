@@ -131,8 +131,11 @@ class _DashboardPageState extends State<DashboardPage> {
                 margin:
                     EdgeInsets.only(bottom: getProportionateScreenHeight(10)),
                 child: ElevatedButton.icon(
-                  onPressed: () =>
-                      dashboardViewModel.goToCreateLocation(context),
+                  onPressed: () {
+                    textController.clear();
+                    dashboardViewModel.isSearchMode();
+                    dashboardViewModel.goToCreateLocation(context);
+                  },
                   icon: const Icon(
                     Icons.add,
                     color: Colors.white,
@@ -189,8 +192,8 @@ class _DashboardPageState extends State<DashboardPage> {
                             physics: const NeverScrollableScrollPhysics(),
                             children: dashboardViewModel.locationsRequest!
                                 .map(
-                                  (item) => buildCard(
-                                      context, dashboardViewModel, item),
+                                  (item) => buildCard(context,
+                                      dashboardViewModel, item, textController),
                                 )
                                 .toList(),
                           ),
@@ -253,8 +256,8 @@ class _DashboardPageState extends State<DashboardPage> {
                           physics: const NeverScrollableScrollPhysics(),
                           children: dashboardViewModel.locations
                               .map(
-                                (item) => buildCard(
-                                    context, dashboardViewModel, item),
+                                (item) => buildCard(context, dashboardViewModel,
+                                    item, textController),
                               )
                               .toList(),
                         ),
@@ -284,8 +287,8 @@ class _DashboardPageState extends State<DashboardPage> {
                             vertical: getProportionateScreenHeight(15)),
                         children: dashboardViewModel.queryResult
                             .map(
-                              (item) =>
-                                  buildCard(context, dashboardViewModel, item),
+                              (item) => buildCard(context, dashboardViewModel,
+                                  item, textController),
                             )
                             .toList(),
                       ),
@@ -400,12 +403,15 @@ Widget loadingRow() {
 }
 
 Widget buildCard(BuildContext context, DashBoardViewModel dashBoardViewModel,
-    LocationCardResponse location) {
+    LocationCardResponse location, textController) {
   return OnHover(
     builder: (isHovered) {
       return InkWell(
-        onTap: () =>
-            dashBoardViewModel.goToLocationDetail(context, location.locationId),
+        onTap: () {
+          textController.clear();
+          dashBoardViewModel.isSearchMode();
+          dashBoardViewModel.goToLocationDetail(context, location.locationId);
+        },
         child: Container(
           padding:
               EdgeInsets.symmetric(vertical: getProportionateScreenHeight(15)),

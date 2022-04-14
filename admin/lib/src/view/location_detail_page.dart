@@ -24,6 +24,7 @@ class LocationDetailPage extends StatefulWidget {
 
 class _LocationDetailPageState extends State<LocationDetailPage> {
   String? username;
+  bool isLoading = false;
   @override
   void initState() {
     SharedPref().getUsername().then((value) {
@@ -248,20 +249,13 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                     SizedBox(
                       height: getProportionateScreenHeight(15),
                     ),
-                    // buildOpeningHour("วันจันทร์", location.openingHour[0]),
-                    // buildOpeningHour("วันอังคาร", location.openingHour[1]),
-                    // buildOpeningHour("วันพุธ", location.openingHour[2]),
-                    // buildOpeningHour("วันพฤหัสบดี", location.openingHour[3]),
-                    // buildOpeningHour("วันศุกร์", location.openingHour[4]),
-                    // buildOpeningHour("วันเสาร์", location.openingHour[5]),
-                    // buildOpeningHour("วันอาทิตย์", location.openingHour[6]),
-                    buildOpeningHour("วันจันทร์", "ปิด"),
-                    buildOpeningHour("วันอังคาร", "ปิด"),
-                    buildOpeningHour("วันพุธ", "ปิด"),
-                    buildOpeningHour("วันพฤหัสบดี", "ปิด"),
-                    buildOpeningHour("วันศุกร์", "9:00 - 16:00"),
-                    buildOpeningHour("วันเสาร์", "9:00 - 16:00"),
-                    buildOpeningHour("วันอาทิตย์", "8:00 - 20:00"),
+                    buildOpeningHour("วันจันทร์", location.openingHour.mon),
+                    buildOpeningHour("วันอังคาร", location.openingHour.tue),
+                    buildOpeningHour("วันพุธ", location.openingHour.wed),
+                    buildOpeningHour("วันพฤหัสบดี", location.openingHour.thu),
+                    buildOpeningHour("วันศุกร์", location.openingHour.fri),
+                    buildOpeningHour("วันเสาร์", location.openingHour.sat),
+                    buildOpeningHour("วันอาทิตย์", location.openingHour.sun),
                     location.locationStatus == "In progress"
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.end,
@@ -271,6 +265,9 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                                     horizontal: getProportionateScreenWidth(5)),
                                 child: TextButton(
                                   onPressed: () {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
                                     dashBoardViewModel
                                         .updateLocationStatus(context,
                                             location.locationId, "Deny")
@@ -292,13 +289,18 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                                         );
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(snackBar);
+                                        setState(() {
+                                          isLoading = false;
+                                        });
                                       }
                                     });
                                   },
-                                  child: const Text(
+                                  child: Text(
                                     "ปฏิเสธ",
                                     style: TextStyle(
-                                        color: Palette.deleteColor,
+                                        color: isLoading
+                                            ? Palette.infoText
+                                            : Palette.deleteColor,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14),
                                   ),
@@ -311,6 +313,9 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                                     vertical: getProportionateScreenHeight(25)),
                                 child: ElevatedButton(
                                   onPressed: () {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
                                     dashBoardViewModel
                                         .updateLocationStatus(context,
                                             location.locationId, "Approved")
@@ -331,6 +336,9 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                                         );
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(snackBar);
+                                        setState(() {
+                                          isLoading = false;
+                                        });
                                       }
                                     });
                                   },
@@ -340,6 +348,11 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    primary: isLoading
+                                        ? Palette.infoText
+                                        : Palette.primaryColor,
                                   ),
                                 ),
                               ),
@@ -357,6 +370,9 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                                             getProportionateScreenHeight(25)),
                                     child: ElevatedButton(
                                       onPressed: () {
+                                        setState(() {
+                                          isLoading = true;
+                                        });
                                         dashBoardViewModel
                                             .deleteLocation(
                                                 context, location.locationId)
@@ -378,6 +394,9 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                                             );
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(snackBar);
+                                            // setState(() {
+                                            //   isLoading = false;
+                                            // });
                                           } else {
                                             const snackBar = SnackBar(
                                               backgroundColor:
@@ -395,6 +414,9 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                                             );
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(snackBar);
+                                            // setState(() {
+                                            //   isLoading = false;
+                                            // });
                                           }
                                         });
                                       },
@@ -406,7 +428,9 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                                             fontSize: 14),
                                       ),
                                       style: ElevatedButton.styleFrom(
-                                        primary: Palette.deleteColor,
+                                        primary: isLoading
+                                            ? Palette.infoText
+                                            : Palette.deleteColor,
                                       ),
                                     ),
                                   ),

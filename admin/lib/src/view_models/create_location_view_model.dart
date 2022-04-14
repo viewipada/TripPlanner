@@ -384,7 +384,7 @@ class CreateLocationViewModel with ChangeNotifier {
     _provinceValid = true;
     _latitude = null;
     _longitude = null;
-    Navigator.pop(context);
+    Navigator.pop(context, 'refresh');
   }
 
   void logout(BuildContext context) {

@@ -25,8 +25,11 @@ class DashBoardViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void goToCreateLocation(BuildContext context) {
-    Navigator.pushNamed(context, '/create');
+  Future<void> goToCreateLocation(BuildContext context) async {
+    final res = await Navigator.pushNamed(context, '/create');
+    if (res != null) {
+      await getLocationBy(0);
+    }
   }
 
   void logout(BuildContext context) {
@@ -66,7 +69,9 @@ class DashBoardViewModel with ChangeNotifier {
     final statusCode =
         await DashboardService().updateLocationStatus(locationId, status);
     if (statusCode == 200) {
-      Navigator.pop(context);
+      Navigator.pop(context, 'refresh');
+      await getLocationBy(0);
+      isSearchMode();
     }
     return statusCode;
   }
@@ -75,6 +80,8 @@ class DashBoardViewModel with ChangeNotifier {
     final status = await DashboardService().deleteLocation(locationId);
     if (status == 200) {
       Navigator.pop(context);
+      await getLocationBy(0);
+      isSearchMode();
     }
     return status;
   }
