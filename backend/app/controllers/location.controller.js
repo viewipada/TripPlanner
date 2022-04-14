@@ -90,7 +90,6 @@ exports.findOne = async (req, res) => {
   if (!reviewData) {
     locationData.reviewers = [];
   } else {
-    console.log(12345678891000000);
     const data = await Promise.all(
       reviewData.map(
         async ({
@@ -103,7 +102,6 @@ exports.findOne = async (req, res) => {
           createdAt,
         }) => {
           try {
-            console.log(123456);
             let { imgUrl: profileImage, username } = await User.findOne({
               where: {
                 id: userId,
@@ -188,6 +186,49 @@ exports.findByUser = async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(400).send("Something wrong while finding locatoin by use");
+  }
+};
+
+exports.getType = async (req, res) => {
+  try {
+    const { category } = req.params;
+
+    if (category == 1) {
+      return res.status(200).json({
+        type: [
+          "สถานที่ผจญภัย",
+          "สถานบันเทิง/ผับ/บาร์",
+          "ภูเขา/ป่าไม้/ธรรมชาติ",
+          "ชายหาด/เกาะ",
+          "สวน",
+          "พิพิธภัณฑ์",
+          "วัด/โบราณสถาน",
+          "ตลาด/ชุมชน/สถานที่ถ่ายภาพ",
+        ],
+      });
+    } else if (category == 2) {
+      return res.status(200).json({
+        type: [
+          "อาหารเส้น",
+          "อาหารตามสั่ง/จานด่วน",
+          "สตรีทฟู้ด",
+          "ร้านอาหาร/ภัตราคาร",
+          "ปิ้งย่าง/บุฟเฟ่ต์",
+          "คาเฟ่/ร้านกาแฟ",
+        ],
+      });
+    } else if (category == 3) {
+      return res.status(200).json({
+        type: ["Resort", "Camping", "โรงแรม", "บังกะโล/บ้านพัก", "โฮมสเตย์/เกสเฮาส์"],
+      });
+    } else if (category == 4) {
+      return res.status(200).json({
+        type: ["ของกิน", "ของใช้"],
+      });
+    } else return null;
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send(err);
   }
 };
 

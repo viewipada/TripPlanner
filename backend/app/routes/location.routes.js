@@ -24,9 +24,14 @@ module.exports = (app) => {
   //Retrieve ten most popular
   router.get("/top/popular", locations.findPopular);
 
+  //Retrieve nearby user location by category
   router.get("/nearby/:category/:lat/:lng", locations.findNearBy);
 
+  //update status location when admin checked
   router.put("/:locationId", locations.updateLocationStatus);
+
+  //get type of location by categoty
+  router.get("/category/type/:category", locations.getType);
 
   app.use("/api/locations", router);
 };
