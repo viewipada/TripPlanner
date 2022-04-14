@@ -19,20 +19,25 @@ exports.create = async (req, res) => {
       return res.status(400).send("locationName and lat-long can not be empty ! ! ");
     }
 
-    if (location.categy == 3) {
-      const min_price = req.body.min_price;
-      const max_price = req.body.max_price;
-    }
-
     const { min_price, max_price, ...newObjLocation } = await location;
 
-    const newLocation = await Location.create(newObjLocation);
+    const newLocation = await Location.create(location.category == 3 ? location : newObjLocation);
+
+    if (location.category == 3) {
+      const priceData = await Price.create({
+        locationId: newLocation.locationId,
+        min_price: req.body.min_price,
+        max_price: req.body.max_price,
+      });
+    }
+
+    console.log(newLocation);
 
     return res.status(201).json(newLocation);
   } catch (err) {
     //create new location
-    return res.status(400).send("Someting wrong while crating Location");
     console.log(err);
+    return res.status(400).send("Someting wrong while crating Location");
   }
 };
 // // Validate request
@@ -79,6 +84,12 @@ exports.findOne = async (req, res) => {
   const { locationId } = req.params;
 
   let locationData = await Location.findOne({ where: { locationId }, raw: true });
+
+  if (locationData.category == 3) {
+    let { min_price, max_price } = await Price.findOne({ where: { locationId }, raw: true });
+    locationData.min_price = min_price;
+    locationData.max_price = max_price;
+  }
 
   let reviewData = await Review.findAll({
     where: {
