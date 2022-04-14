@@ -23,6 +23,9 @@ module.exports = (sequelize, Sequelize) => {
     duration: {
       type: Sequelize.INTEGER,
     },
+    openingHour: {
+      type: Sequelize.JSON,
+    },
     type: {
       type: Sequelize.STRING,
     },

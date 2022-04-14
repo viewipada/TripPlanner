@@ -19,8 +19,10 @@ exports.create = async (req, res) => {
       return res.status(400).send("locationName and lat-long can not be empty ! ! ");
     }
 
-    // const min_price = req.body.min_price;
-    // const max_price = req.body.max_price;
+    if (location.categy == 3) {
+      const min_price = req.body.min_price;
+      const max_price = req.body.max_price;
+    }
 
     const { min_price, max_price, ...newObjLocation } = await location;
 
@@ -224,37 +226,37 @@ exports.getType = async (req, res) => {
 
     if (category == 1) {
       return res.status(200).json([
-        { label: "สถานที่ผจญภัย", type: "สถานที่ผจญภัย" },
-        { label: "สถานบันเทิง, ผับ, บาร์", type: "สถานบันเทิง, ผับ, บาร์" },
-        { label: "ภูเขา, ป่าไม้, ธรรมชาติ", type: "ภูเขา, ป่าไม้, ธรรมชาติ" },
-        { label: "ชายหาด, เกาะ", type: "ชายหาด, เกาะ" },
-        { label: "สวน", type: "สวน" },
-        { label: "พิพิธภัณฑ์", type: "พิพิธภัณฑ์" },
-        { label: "วัด, โบราณสถาน", type: "วัด, โบราณสถาน" },
-        { label: "ตลาด, ชุมชน, สถานที่ถ่ายภาพ", type: "ตลาด, ชุมชน, สถานที่ถ่ายภาพ" },
+        { label: "สถานที่ผจญภัย", value: "สถานที่ผจญภัย" },
+        { label: "สถานบันเทิง, ผับ, บาร์", value: "สถานบันเทิง, ผับ, บาร์" },
+        { label: "ภูเขา, ป่าไม้, ธรรมชาติ", value: "ภูเขา, ป่าไม้, ธรรมชาติ" },
+        { label: "ชายหาด, เกาะ", value: "ชายหาด, เกาะ" },
+        { label: "สวน", value: "สวน" },
+        { label: "พิพิธภัณฑ์", value: "พิพิธภัณฑ์" },
+        { label: "วัด, โบราณสถาน", value: "วัด, โบราณสถาน" },
+        { label: "ตลาด, ชุมชน, สถานที่ถ่ายภาพ", value: "ตลาด, ชุมชน, สถานที่ถ่ายภาพ" },
       ]);
     } else if (category == 2) {
       return res.status(200).json([
-        { label: "อาหารเส้น", type: "อาหารเส้น" },
-        { label: "อาหารตามสั่ง, จานด่วน", type: "อาหารตามสั่ง, จานด่วน" },
-        { label: "สตรีทฟู้ด", type: "สตรีทฟู้ด" },
-        { label: "ร้านอาหาร, ภัตราคาร", type: "ร้านอาหาร, ภัตราคาร" },
-        { label: "ปิ้งย่าง, บุฟเฟ่ต์", type: "ปิ้งย่าง, บุฟเฟ่ต์" },
-        { label: "คาเฟ่", type: "คาเฟ่" },
-        { label: "ร้านกาแฟ", type: "ร้านกาแฟ" },
+        { label: "อาหารเส้น", value: "อาหารเส้น" },
+        { label: "อาหารตามสั่ง, จานด่วน", value: "อาหารตามสั่ง, จานด่วน" },
+        { label: "สตรีทฟู้ด", value: "สตรีทฟู้ด" },
+        { label: "ร้านอาหาร, ภัตราคาร", value: "ร้านอาหาร, ภัตราคาร" },
+        { label: "ปิ้งย่าง, บุฟเฟ่ต์", value: "ปิ้งย่าง, บุฟเฟ่ต์" },
+        { label: "คาเฟ่", value: "คาเฟ่" },
+        { label: "ร้านกาแฟ", value: "ร้านกาแฟ" },
       ]);
     } else if (category == 3) {
       return res.status(200).json([
-        { label: "รีสอร์ท", type: "รีสอร์ท" },
-        { label: "แคมป์ปิ้ง", type: "แคมป์ปิ้ง" },
-        { label: "โรงแรม", type: "โรงแรม" },
-        { label: "บังกะโล, บ้านพัก", type: "บังกะโล, บ้านพัก" },
-        { label: "โฮมสเตย์, เกสเฮาส์", type: "โฮมสเตย์, เกสเฮาส์" },
+        { label: "รีสอร์ท", value: "รีสอร์ท" },
+        { label: "แคมป์ปิ้ง", value: "แคมป์ปิ้ง" },
+        { label: "โรงแรม", value: "โรงแรม" },
+        { label: "บังกะโล, บ้านพัก", value: "บังกะโล, บ้านพัก" },
+        { label: "โฮมสเตย์, เกสเฮาส์", value: "โฮมสเตย์, เกสเฮาส์" },
       ]);
     } else if (category == 4) {
       return res.status(200).json([
-        { label: "ของกิน", type: "ของกิน" },
-        { label: "ของใช้", type: "ของใช้" },
+        { label: "ของกิน", value: "ของกิน" },
+        { label: "ของใช้", value: "ของใช้" },
       ]);
     } else return null;
   } catch (err) {
