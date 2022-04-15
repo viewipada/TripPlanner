@@ -417,8 +417,8 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                                         .locationDetail.locationName,
                                     locationDetailViewModel
                                         .locationDetail.totalReview,
-                                    locationDetailViewModel
-                                        .locationDetail.averageRating,
+                                    double.parse(locationDetailViewModel
+                                        .locationDetail.averageRating),
                                   );
                                 },
                                 child: Container(
@@ -449,9 +449,8 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                           ),
                           RatingBarIndicator(
                             unratedColor: Palette.Outline,
-                            rating: locationDetailViewModel
-                                .locationDetail.averageRating
-                                .toDouble(),
+                            rating: double.parse(locationDetailViewModel
+                                .locationDetail.averageRating),
                             itemBuilder: (context, index) => Icon(
                               Icons.star_rounded,
                               color: Palette.CautionColor,

@@ -13,7 +13,7 @@ class LocationDetailResponse {
   final String contactNumber;
   final String website;
   final int duration;
-  final double averageRating;
+  final String averageRating;
   final int totalReview;
   final int totalCheckin;
   final List<ReviewResponse> reviews;
@@ -51,30 +51,10 @@ class LocationDetailResponse {
       contactNumber: json['contactNumber'] as String,
       website: json['website'] as String,
       duration: json['duration'] as int,
-      averageRating: (json['averageRating'] as num).toDouble(),
+      averageRating: json['averageRating'] as String,
       totalReview: json['totalReview'] as int,
       totalCheckin: json['totalCheckin'] as int,
       reviews: reviewList.map((i) => ReviewResponse.fromJson(i)).toList(),
     );
   }
-
-  // Map<String, dynamic> toJson() {
-  //   final Map<String, dynamic> data = new Map<String, dynamic>();
-  //   data['locationId] = this.locationId;
-  //   data['latitude'] = this.latitude;
-  //   data['longitude'] = this.longitude;
-  //   data['imageUrl'] = this.imageUrl;
-  //   data['category'] = this.category;
-  //   data['description'] = this.description;
-  //   data['openingHour'] = this.openingHour;
-  //   data['contactNumber'] = this.contactNumber;
-  //   data['website'] = this.website;
-  //   data['duration'] = this.duration;
-  //   data['averageRating'] = this.averageRating;
-  //   data['totalReview'] = this.totalReview;
-  //   data['totalCheckin'] = this.totalCheckin;
-  //   data['reviews'] = this.reviews.map((v) => v.toJson()).toList();
-
-  //   return data;
-  // }
 }

@@ -55,26 +55,6 @@ class LocationDetailResponse {
       locationStatus: json['locationStatus'] as String,
     );
   }
-
-  // Map<String, dynamic> toJson() {
-  //   final Map<String, dynamic> data = new Map<String, dynamic>();
-  //   data['locationId] = this.locationId;
-  //   data['latitude'] = this.latitude;
-  //   data['longitude'] = this.longitude;
-  //   data['imageUrl'] = this.imageUrl;
-  //   data['category'] = this.category;
-  //   data['description'] = this.description;
-  //   data['openingHour'] = this.openingHour;
-  //   data['contactNumber'] = this.contactNumber;
-  //   data['website'] = this.website;
-  //   data['duration'] = this.duration;
-  //   data['averageRating'] = this.averageRating;
-  //   data['totalReview'] = this.totalReview;
-  //   data['totalCheckin'] = this.totalCheckin;
-  //   data['reviews'] = this.reviews.map((v) => v.toJson()).toList();
-
-  //   return data;
-  // }
 }
 
 class OpeningHour {
