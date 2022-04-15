@@ -26,7 +26,7 @@ class LocationService {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
       final response = await http.get(Uri.parse(
-          'https://run.mocky.io/v3/5fe195d1-63a4-4a09-ba61-7a7efa1771b1'));
+          'https://run.mocky.io/v3/5fe195d1-63a4-4a09-ba61-7a7efa1771b1')); // มุก
 
       if (response.statusCode == 200) {
         List<LocationRecommendResponse> locationRecommendList;
@@ -42,8 +42,8 @@ class LocationService {
   }
 
   Future<List<ShopResponse>> getAllShop() async {
-    final response = await http.get(Uri.parse(
-        'https://run.mocky.io/v3/772fe852-5955-4cf4-9dd3-3901a3675adb'));
+    final response = await http
+        .get(Uri.parse('${baseUrl}/api/locations/search/rating?category=4'));
 
     if (response.statusCode == 200) {
       List<ShopResponse> shopList;

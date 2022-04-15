@@ -22,7 +22,7 @@ class ShopResponse {
       locationId: json['locationId'] as int,
       locationName: json['locationName'] as String,
       imageUrl: json['imageUrl'] as String,
-      rating: (json['rating'] as num).toDouble(),
+      rating: (json['averageRating'] as num).toDouble(),
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
       duration: json['duration'] as int,
