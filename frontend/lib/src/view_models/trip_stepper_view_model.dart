@@ -500,11 +500,46 @@ class TripStepperViewModel with ChangeNotifier {
 
   void goToLocationRecommendPage(BuildContext context, List<TripItem> tripItems,
       int index, Trip trip, String locationCategory) async {
+    double lat1 = 0;
+    double lng1 = 0;
+    double lat2 = 0;
+    double lng2 = 0;
+    print(index);
+    if (index == 0) {
+      if (_day == 1) {
+        lat1 = tripItems[index + 1].latitude;
+        lng1 = tripItems[index + 1].longitude;
+      } else {
+        var location = tripItems
+            .lastWhere((element) => element.day == _day - 1 && element.no >= 0);
+        lat2 = location.latitude;
+        lng2 = location.longitude;
+      }
+    } else if (index == tripItems.length ||
+        index ==
+            tripItems.lastIndexWhere(
+                    (element) => element.day == _day && element.no >= 0) +
+                1) {
+      lat2 = tripItems[index - 1].latitude;
+      lng2 = tripItems[index - 1].longitude;
+    } else {
+      lat1 = tripItems[index - 1].latitude;
+      lng1 = tripItems[index - 1].longitude;
+      lat2 = tripItems[index + 1].latitude;
+      lng2 = tripItems[index + 1].longitude;
+    }
+
     final LocationRecommendResponse? result = await Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => LocationRecommendPage(
-              locationCategory: locationCategory, tripItems: tripItems)),
+                locationCategory: locationCategory,
+                tripItems: tripItems,
+                lat1: lat1,
+                lng1: lng1,
+                lat2: lat2,
+                lng2: lng2,
+              )),
     );
 
     if (result != null && trip.tripId != null) {
@@ -512,7 +547,13 @@ class TripStepperViewModel with ChangeNotifier {
           day: _day,
           no: index,
           locationId: result.locationId,
-          locationCategory: result.category,
+          locationCategory: result.category == 1
+              ? "ที่เที่ยว"
+              : result.category == 2
+                  ? "ที่กิน"
+                  : result.category == 3
+                      ? "ที่พัก"
+                      : "ของฝาก",
           locationName: result.locationName,
           imageUrl: result.imageUrl,
           latitude: result.latitude,
@@ -713,8 +754,10 @@ class TripStepperViewModel with ChangeNotifier {
     return await BaggageService().getBaggageList();
   }
 
-  Future<List<LocationRecommendResponse>> getLocationRecommend() async {
-    _locationRecommend = await LocationService().getLocationRecommend();
+  Future<List<LocationRecommendResponse>> getLocationRecommend(
+      int category, double lat1, double lng1, double lat2, double lng2) async {
+    _locationRecommend = await LocationService()
+        .getLocationRecommend(category, lat1, lng1, lat2, lng2);
     return _locationRecommend;
   }
 

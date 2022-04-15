@@ -6,7 +6,7 @@ class LocationRecommendResponse {
   final double distance;
   final double latitude;
   final double longitude;
-  final String category;
+  final int category;
   final int duration;
 
   LocationRecommendResponse({
@@ -26,11 +26,11 @@ class LocationRecommendResponse {
       locationId: json['locationId'] as int,
       locationName: json['locationName'] as String,
       imageUrl: json['imageUrl'] as String,
-      rating: (json['rating'] as num).toDouble(),
+      rating: (json['averageRating'] as num).toDouble(),
       distance: (json['distance'] as num).toDouble(),
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
-      category: json['category'] as String,
+      category: json['category'] as int,
       duration: json['duration'] as int,
     );
   }

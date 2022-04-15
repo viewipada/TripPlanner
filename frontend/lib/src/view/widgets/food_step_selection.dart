@@ -227,7 +227,14 @@ class _FoodStepSelectionState extends State<FoodStepSelection> {
                 fontSize: 14),
           ),
           onTap: () => tripStepperViewModel.goToLocationRecommendPage(
-              context, tripItems, tripItems.length, trip, "ที่กิน"),
+              context,
+              tripItems,
+              tripItems.lastIndexWhere((element) =>
+                      element.day == tripStepperViewModel.day &&
+                      element.no >= 0) +
+                  1,
+              trip,
+              "ที่กิน"),
         ),
         ListTile(
           dense: true,

@@ -8,6 +8,7 @@ import 'package:trip_planner/src/repository/shared_pref.dart';
 
 class LocationService {
   final String baseUrl = 'http://10.0.2.2:8080';
+  final String recommendUrl = 'https://travel-planning-ceproject.herokuapp.com';
 
   Future<LocationDetailResponse> getLocationDetailById(int locationId) async {
     final response =
@@ -22,17 +23,20 @@ class LocationService {
     }
   }
 
-  Future<List<LocationRecommendResponse>> getLocationRecommend() async {
+  Future<List<LocationRecommendResponse>> getLocationRecommend(
+      int category, double lat1, double lng1, double lat2, double lng2) async {
     final userId = await SharedPref().getUserId();
+
     if (userId != null) {
       final response = await http.get(Uri.parse(
-          'https://run.mocky.io/v3/5fe195d1-63a4-4a09-ba61-7a7efa1771b1')); // มุก
+          '${recommendUrl}/nearly_location/${category},${lat1},${lng1},${lat2},${lng2}'));
 
       if (response.statusCode == 200) {
         List<LocationRecommendResponse> locationRecommendList;
-        locationRecommendList = (json.decode(response.body) as List)
-            .map((i) => LocationRecommendResponse.fromJson(i))
-            .toList();
+        locationRecommendList =
+            (json.decode(utf8.decode(response.body.codeUnits)) as List)
+                .map((i) => LocationRecommendResponse.fromJson(i))
+                .toList();
         return locationRecommendList;
       } else {
         throw Exception('Failed to load campaigns');
