@@ -19,7 +19,8 @@ class LocationNearbyService {
       catNum = 3;
 
     http.Response response = await http.get(
-        Uri.parse('${baseUrl}/api/locations/nearby/${catNum}'),
+        Uri.parse(
+            '${baseUrl}/api/locations/nearby/${catNum}/${userLocation.latitude}/${userLocation.longitude}'),
         headers: {"Accept": "application/json"});
 
     if (response.statusCode == 200) {

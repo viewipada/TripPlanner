@@ -408,7 +408,7 @@ Widget pinCard(LocationNearbyResponse location) {
             Padding(
               padding: EdgeInsets.only(top: getProportionateScreenHeight(5)),
               child: Text(
-                'ห่างออกไป ${location.ditanceFromeUser} km',
+                'ห่างออกไป ${location.ditanceFromeUser.toStringAsFixed(2)} km',
                 style: TextStyle(
                   color: Palette.SecondaryColor,
                   fontSize: 14,
@@ -554,7 +554,13 @@ Widget locationListView(BuildContext context, SearchViewModel searchViewModel) {
                                                   CrossAxisAlignment.end,
                                               children: [
                                                 TagCategory(
-                                                  category: item.category,
+                                                  category: item.category == 1
+                                                      ? "ที่เที่ยว"
+                                                      : item.category == 2
+                                                          ? "ที่กิน"
+                                                          : item.category == 3
+                                                              ? "ที่พัก"
+                                                              : "ของฝาก",
                                                 ),
                                                 // ElevatedButton.icon(
                                                 //   onPressed: () {},

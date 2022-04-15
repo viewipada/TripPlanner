@@ -13,7 +13,7 @@ LocationNearbyResponse _$LocationNearbyResponseFromJson(
       locationName: json['locationName'] as String,
       imageUrl: json['imageUrl'] as String,
       description: json['description'] as String,
-      category: json['category'] as String,
+      category: json['category'] as int,
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
       ditanceFromeUser: (json['ditanceFromeUser'] as num).toDouble(),

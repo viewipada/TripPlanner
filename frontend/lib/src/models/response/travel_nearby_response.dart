@@ -8,7 +8,7 @@ class LocationNearbyResponse {
   String locationName;
   String imageUrl;
   String description;
-  String category;
+  int category;
   double latitude;
   double longitude;
   double ditanceFromeUser;
