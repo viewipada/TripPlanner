@@ -498,7 +498,13 @@ exports.delete = async (req, res) => {
 
     const deleteData = await Location.destroy({ where: { locationId } });
 
-    return res.status(200).json("LocationId : " + locationId + ";" + deleteData);
+    const reviewDelete = await Review.destroy({ where: { locationId } });
+
+    return res
+      .status(200)
+      .send(
+        "LocationId : " + locationId + "result: " + deleteData + "resultReview: " + reviewDelete
+      );
   } catch (err) {
     return res.status(400).send(err);
   }

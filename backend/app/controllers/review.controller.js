@@ -245,10 +245,6 @@ exports.delete = async (req, res) => {
 
     const deleteData = await Review.destroy({ where: { userId, locationId } });
 
-    const loc = await Location.findOne({ where: locationId });
-    await loc.decrement("totalReview");
-    await loc.reload();
-
     console.log(deleteData);
 
     return res.status(200).json(deleteData);
