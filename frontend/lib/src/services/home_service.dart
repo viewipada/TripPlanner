@@ -31,7 +31,7 @@ class HomeService {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
       final response = await http.get(
-        Uri.parse("${recommendUrl}/rating/${userId}"),
+        Uri.parse("${recommendUrl}/recomendation_home/${userId}"),
       );
 
       if (response.statusCode == 200) {
