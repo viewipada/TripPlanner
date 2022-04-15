@@ -132,10 +132,10 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                       readOnly: true,
                       enabled: false,
                     ),
-                    location.locationType == 'ที่พัก'
+                    location.category == 3
                         ? subtitle('ช่วงราคา ', '*')
                         : const SizedBox(),
-                    location.locationType == 'ที่พัก'
+                    location.category == 3
                         ? Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [

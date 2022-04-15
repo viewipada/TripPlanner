@@ -370,6 +370,10 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                         style: FontAssets.subtitleText,
                       ),
                     ),
+                    locationDetailViewModel.locationDetail.category == 3
+                        ? detailLocation('ช่วงราคา',
+                            '${locationDetailViewModel.locationDetail.minPrice} - ${locationDetailViewModel.locationDetail.maxPrice} บาท')
+                        : SizedBox(),
                     openingHour(
                       'วันเวลาเปิด-ปิด',
                       locationDetailViewModel.locationDetail.openingHour,

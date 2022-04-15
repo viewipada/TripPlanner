@@ -49,8 +49,8 @@ class LocationDetailResponse {
       contactNumber: json['contactNumber'] as String,
       website: json['website'] as String,
       duration: json['duration'] as int,
-      minPrice: json['minPrice'],
-      maxPrice: json['maxPrice'],
+      minPrice: json['min_price'],
+      maxPrice: json['max_price'],
       province: json['province'] as String,
       locationStatus: json['locationStatus'] as String,
     );

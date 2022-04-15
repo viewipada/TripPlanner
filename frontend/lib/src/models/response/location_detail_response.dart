@@ -16,6 +16,8 @@ class LocationDetailResponse {
   final String averageRating;
   final int totalReview;
   final int totalCheckin;
+  final int? minPrice;
+  final int? maxPrice;
   final List<ReviewResponse> reviews;
 
   LocationDetailResponse({
@@ -34,6 +36,8 @@ class LocationDetailResponse {
     required this.totalReview,
     required this.totalCheckin,
     required this.reviews,
+    this.minPrice,
+    this.maxPrice,
   });
 
   factory LocationDetailResponse.fromJson(Map<String, dynamic> json) {
@@ -54,6 +58,8 @@ class LocationDetailResponse {
       averageRating: json['averageRating'] as String,
       totalReview: json['totalReview'] as int,
       totalCheckin: json['totalCheckin'] as int,
+      minPrice: json['min_price'],
+      maxPrice: json['max_price'],
       reviews: reviewList.map((i) => ReviewResponse.fromJson(i)).toList(),
     );
   }
