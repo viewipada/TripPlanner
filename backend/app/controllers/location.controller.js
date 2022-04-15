@@ -156,7 +156,7 @@ exports.findOne = async (req, res) => {
     console.log(totalReviews);
     console.log(avg);
 
-    const updateData = Location.update(
+    const updateData = await Location.update(
       {
         totalReview: totalReviews,
         averageRating: avg[0].average == null ? 0 : parseFloat(avg[0].average).toFixed(2),
