@@ -40,37 +40,10 @@ exports.create = async (req, res) => {
     return res.status(400).send("Someting wrong while crating Location");
   }
 };
-// // Validate request
-// if (!req.body.locationName) {
-//   res.status(400).send({
-//     message: "locationName can not be empty!",
-//   });
-//   return;
-// }
-
-// // Create a Location
-// const location = req.body;
-
-// // Save Location in the database
-// Location.create(location)
-//   .then((data) => {
-//     res.status(201).send(data);
-
-//     const openingDayHourData = {
-//       location: data.locationId,
-//       openingDayHour: req.body.openingDayHour,
-//     };
-//     OpeningDayHour.create(openingDayHourData);
-//   })
-//   .catch((err) => {
-//     res.status(500).send({
-//       message: err.message || "Some error occurred while creating the Location.",
-//     });
-//   });
 
 // Retrieve all objects in Locations Table
 exports.findAllCard = async (req, res) => {
-  let locationData = await Location.findAll();
+  let locationData = await Location.findAll({ where: { locationStatus: "Approved" } });
 
   const data = await Promise.all(
     locationData.map(async ({ locationId, locationName, imageUrl }) => {
@@ -83,7 +56,14 @@ exports.findAllCard = async (req, res) => {
 exports.findOne = async (req, res) => {
   const { locationId } = req.params;
 
-  let locationData = await Location.findOne({ where: { locationId }, raw: true });
+  let locationData = await Location.findOne({
+    where: { locationId, locationStatus: "Approved" },
+    raw: true,
+  });
+
+  if (locationData == null) {
+    return res.status(400).json({ msg: `No Approved location Id : ${locationId}` });
+  }
 
   if (locationData.category == 3) {
     let { min_price, max_price } = await Price.findOne({ where: { locationId }, raw: true });
@@ -179,6 +159,7 @@ exports.findOne = async (req, res) => {
   return res.status(200).json(locationData);
 };
 
+//search
 exports.findAllData = async (req, res, next) => {
   try {
     const filters = await req.query.category;
@@ -188,7 +169,7 @@ exports.findAllData = async (req, res, next) => {
     console.log("filters : " + filters);
 
     const data = await Location.findAll({
-      where: { category: filters },
+      where: { category: filters, locationStatus: "Approved" },
       order: [
         [sort == "rating" ? "averageRating" : "totalCheckin", "DESC"],
         ["locationName", "ASC"],
@@ -197,6 +178,7 @@ exports.findAllData = async (req, res, next) => {
 
     if (filters == 0) {
       const allData = await Location.findAll({
+        where: { locationStatus: "Approved" },
         order: [
           [sort == "rating" ? "averageRating" : "totalCheckin", "DESC"],
           ["locationName", "ASC"],
@@ -273,6 +255,47 @@ exports.searchAdmin = async (req, res, next) => {
     return res.status(200).json(result);
   } catch (err) {
     console.log(err);
+  }
+};
+
+exports.getLocationRequested = async (req, res) => {
+  try {
+    const { role } = req.params;
+
+    if (role != "admin") {
+      return res.status(400).json({
+        msg: "You are not allow to access this API",
+        error: "your role is not admin",
+      });
+    }
+
+    const requestedData = await Location.findAll({
+      where: { locationStatus: "In progress" },
+      raw: true,
+    });
+    console.log(requestedData);
+
+    const result = await Promise.all(
+      requestedData.map(
+        async ({ updatedAt, locationId, locationName, category, type, createBy }) => {
+          try {
+            let { username } = await User.findOne({ where: { id: createBy }, raw: true });
+            console.log("createBy : ", requestedData.createBy);
+            return { updatedAt, username, locationId, locationName, category, type };
+          } catch (err) {
+            console.log(err);
+            return res.status(400).send(err);
+          }
+        }
+      )
+    ).catch((err) => {
+      console.log(err);
+    });
+
+    return res.status(200).json(result);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send(err);
   }
 };
 

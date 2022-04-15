@@ -38,5 +38,8 @@ module.exports = (app) => {
   //checkIn location
   router.put("/checkIn/:locationId", locations.checkIn);
 
+  //Retrieve requested location from user by admin
+  router.get("/admin/requested/:role", locations.getLocationRequested);
+
   app.use("/api/locations", router);
 };
