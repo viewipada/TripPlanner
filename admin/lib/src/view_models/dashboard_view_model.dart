@@ -16,6 +16,8 @@ class DashBoardViewModel with ChangeNotifier {
   List<LocationCardResponse> _queryResult = [];
 
   Future<void> getLocationBy(int category) async {
+    _locations = [];
+    notifyListeners();
     _locations = await DashboardService().getLocationBy(category);
     notifyListeners();
   }
@@ -36,9 +38,14 @@ class DashBoardViewModel with ChangeNotifier {
     Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
   }
 
-  void goToLocationDetail(BuildContext context, int locationId) {
-    Navigator.of(context)
+  Future<void> goToLocationDetail(BuildContext context, int locationId) async {
+    final res = await Navigator.of(context)
         .pushNamed('/dashboard/location', arguments: locationId);
+    if (res != null) {
+      await getLocationRequest();
+      await getLocationBy(0);
+      isSearchMode();
+    }
   }
 
   Future<LocationDetailResponse> getLocationDetailById(int locationId) async {
@@ -70,8 +77,6 @@ class DashBoardViewModel with ChangeNotifier {
         await DashboardService().updateLocationStatus(locationId, status);
     if (statusCode == 200) {
       Navigator.pop(context, 'refresh');
-      await getLocationBy(0);
-      isSearchMode();
     }
     return statusCode;
   }
@@ -79,9 +84,7 @@ class DashBoardViewModel with ChangeNotifier {
   Future<int?> deleteLocation(BuildContext context, int locationId) async {
     final status = await DashboardService().deleteLocation(locationId);
     if (status == 200) {
-      Navigator.pop(context);
-      await getLocationBy(0);
-      isSearchMode();
+      Navigator.pop(context, 'refresh');
     }
     return status;
   }

@@ -325,7 +325,6 @@ Widget loadingRow() {
         ),
       ),
       Expanded(
-        flex: 2,
         child: Shimmer.fromColors(
           baseColor: Palette.darkGrey,
           highlightColor: Palette.tagGrey,
@@ -381,6 +380,7 @@ Widget loadingRow() {
         ),
       ),
       Expanded(
+        flex: 2,
         child: Shimmer.fromColors(
           baseColor: Palette.darkGrey,
           highlightColor: Palette.tagGrey,
@@ -422,21 +422,26 @@ Widget buildCard(BuildContext context, DashBoardViewModel dashBoardViewModel,
                 child: Text(
                   DateFormat('dd/MM/yyyy')
                       .format(DateTime.parse(location.updateDate)),
-                  style: FontAssets.bodyText,
+                  style: location.status == 'Deny'
+                      ? FontAssets.disableText
+                      : FontAssets.bodyText,
                 ),
               ),
               Expanded(
-                flex: 2,
                 child: Text(
-                  'location.username',
-                  style: FontAssets.bodyText,
+                  location.username,
+                  style: location.status == 'Deny'
+                      ? FontAssets.disableText
+                      : FontAssets.bodyText,
                 ),
               ),
               Expanded(
                 flex: 3,
                 child: Text(
                   location.locationName,
-                  style: FontAssets.bodyText,
+                  style: location.status == 'Deny'
+                      ? FontAssets.disableText
+                      : FontAssets.bodyText,
                 ),
               ),
               Expanded(
@@ -448,13 +453,18 @@ Widget buildCard(BuildContext context, DashBoardViewModel dashBoardViewModel,
                           : location.category == 3
                               ? "ที่พัก"
                               : "ของฝาก",
-                  style: FontAssets.bodyText,
+                  style: location.status == 'Deny'
+                      ? FontAssets.disableText
+                      : FontAssets.bodyText,
                 ),
               ),
               Expanded(
+                flex: 2,
                 child: Text(
                   location.locationType,
-                  style: FontAssets.bodyText,
+                  style: location.status == 'Deny'
+                      ? FontAssets.disableText
+                      : FontAssets.bodyText,
                 ),
               ),
             ],
@@ -477,7 +487,6 @@ Widget buildColumn() {
           ),
         ),
         Expanded(
-          flex: 2,
           child: Text(
             'ชื่อผู้ใช้',
             style: FontAssets.columnText,
@@ -497,6 +506,7 @@ Widget buildColumn() {
           ),
         ),
         Expanded(
+          flex: 2,
           child: Text(
             'ประเภท',
             style: FontAssets.columnText,

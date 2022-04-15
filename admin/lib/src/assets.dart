@@ -18,6 +18,8 @@ class FontAssets {
       color: Palette.webText, fontSize: 16, fontWeight: FontWeight.bold);
   static const TextStyle bodyText =
       TextStyle(color: Color(0xff374A59), fontSize: 14);
+  static const TextStyle disableText =
+      TextStyle(color: Palette.infoText, fontSize: 14);
   static const TextStyle hintText =
       TextStyle(color: Palette.additionText, fontSize: 12);
   static const TextStyle requiredField = TextStyle(

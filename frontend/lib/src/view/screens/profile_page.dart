@@ -993,7 +993,8 @@ Widget loadingProfileTab() {
                         'รูปภาพ',
                         style: FontAssets.titleText,
                       ),
-                    ),
+                    ),deactivated widget's ancestor is unsafe.
+At this point the state of the widget's element tree is no longer stable.
                     Padding(
                       padding: EdgeInsets.only(
                           left: getProportionateScreenWidth(15)),
@@ -1011,6 +1012,9 @@ Widget loadingProfileTab() {
               ),
               Column(
                 children: [
+                  SizedBox(
+                    height: getProportionateScreenHeight(15),
+                  ),
                   ShimmerTripCard(),
                   ShimmerTripCard(),
                   ShimmerTripCard(),

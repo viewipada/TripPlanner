@@ -11,8 +11,8 @@ class DashboardService {
     List<LocationCardResponse> baggageList = [];
     final userId = await SharedPref().getUserId();
     if (userId != null) {
-      final response = await http.get(
-          Uri.parse('$baseUrl/api/locations/search/rating?category=$category')); //ไม่ return username
+      final response = await http.get(Uri.parse(
+          '$baseUrl/api/locations/admin/search/rating?category=$category'));
 
       if (response.statusCode == 200) {
         var data = json.decode(response.body) as List<dynamic>;
@@ -32,8 +32,8 @@ class DashboardService {
     List<LocationCardResponse> baggageList = [];
     final userId = await SharedPref().getUserId();
     if (userId != null) {
-      final response = await http.get(Uri.parse(
-          '$baseUrl/api/locations/search/rating?category=3')); // mock api
+      final response = await http
+          .get(Uri.parse('$baseUrl/api/locations/admin/requested/admin'));
 
       if (response.statusCode == 200) {
         var data = json.decode(response.body) as List<dynamic>;
@@ -71,7 +71,7 @@ class DashboardService {
                 'Content-Type': 'application/json; charset=UTF-8',
               },
               body: jsonEncode(
-                <String, dynamic>{"locationStatus": status, "userId": userId},
+                <String, dynamic>{"locationStatus": status},
               ));
 
       if (response.statusCode == 200) {

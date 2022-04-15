@@ -436,8 +436,14 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                                   ),
                                 ],
                               )
-                            : SizedBox(
-                                height: getProportionateScreenHeight(25),
+                            : Container(
+                                alignment: Alignment.centerRight,
+                                padding: EdgeInsets.symmetric(
+                                    vertical: getProportionateScreenHeight(25)),
+                                child: Text(
+                                  'สถานที่นี้ถูกปฏิเสธ โดย $username',
+                                  style: FontAssets.disableText,
+                                ),
                               ),
                   ],
                 ),

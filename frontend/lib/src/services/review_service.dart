@@ -108,20 +108,4 @@ class ReviewService {
       print('null userId');
     return null;
   }
-
-  // Future<void> removeBaggageItem(int locationId) async {
-  //   final userId = await SharedPref().getUserId();
-  //   if (userId != null) {
-  //     final response = await http.delete(
-  //       Uri.parse('${baseUrl}/api/baggage/${userId}/${locationId}'),
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       await SharedPref().removeBaggageItem(locationId);
-  //       print(response.body);
-  //     } else {
-  //       throw Exception("can not remove baggageItem");
-  //     }
-  //   }
-  // }
 }
