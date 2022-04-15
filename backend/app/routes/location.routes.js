@@ -12,6 +12,8 @@ module.exports = (app) => {
   // Retrieve searched data
   router.get("/search/:sort", locations.findAllData);
 
+  router.get("/admin/search/:sort", locations.searchAdmin);
+
   // Retrieve one location by locationId
   router.get("/:locationId", locations.findOne);
 

@@ -212,6 +212,70 @@ exports.findAllData = async (req, res, next) => {
   }
 };
 
+exports.searchAdmin = async (req, res, next) => {
+  try {
+    const filters = await req.query.category;
+    const { sort } = await req.params;
+    //let filters = await req.query.filters;
+    console.log(sort == "rating" ? "averageRating" : "totalCheckin");
+    console.log("filters : " + filters);
+
+    const data = await Location.findAll({
+      where: { category: filters },
+      order: [
+        [sort == "rating" ? "averageRating" : "totalCheckin", "DESC"],
+        ["locationName", "ASC"],
+      ],
+    });
+
+    const result = await Promise.all(
+      data.map(async ({ updatedAt, locationId, locationName, category, type, createBy }) => {
+        try {
+          let { username } = await User.findOne({ where: { id: createBy }, raw: true });
+          console.log("createBy : ", data.createBy);
+          return { updatedAt, username, locationId, locationName, category, type };
+        } catch (err) {
+          console.log(err);
+          return res.status(400).send(err);
+        }
+      })
+    ).catch((err) => {
+      console.log(err);
+    });
+
+    if (filters == 0) {
+      const allData = await Location.findAll({
+        order: [
+          [sort == "rating" ? "averageRating" : "totalCheckin", "DESC"],
+          ["locationName", "ASC"],
+        ],
+      });
+
+      const resultData = await Promise.all(
+        allData.map(async ({ updatedAt, locationId, locationName, category, type, createBy }) => {
+          try {
+            let { username } = await User.findOne({ where: { id: createBy }, raw: true });
+            console.log("createBy : ", data.createBy);
+            return { updatedAt, username, locationId, locationName, category, type };
+          } catch (err) {
+            console.log(err);
+            return res.status(400).send(err);
+          }
+        })
+      ).catch((err) => {
+        console.log(err);
+      });
+
+      return res.status(200).json(resultData);
+    }
+
+    console.log(data);
+    return res.status(200).json(result);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 exports.findByUser = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -275,6 +339,8 @@ exports.getType = async (req, res) => {
     return res.status(400).send(err);
   }
 };
+
+exports.checkIn = async (req, res) => {};
 
 exports.updateLocationStatus = async (req, res) => {
   try {
