@@ -26,14 +26,12 @@ class CreateLocationService {
       int locationId) async {
     final response =
         await http.get(Uri.parse('${baseUrl}/api/locations/${locationId}'));
-    // print(response.body);
     if (response.statusCode == 200) {
       var data =
           LocationRequestDetailResponse.fromJson(json.decode(response.body));
-      // print(data);
       return data;
     } else {
-      throw Exception("can not fetch data hot location");
+      throw Exception("can not fetch LocationRequestDetailResponse");
     }
   }
 
@@ -87,7 +85,7 @@ class CreateLocationService {
               "description": description,
               "contactNumber": contactNumber == '' ? '-' : contactNumber,
               "website": website == '' ? '-' : website,
-              "duration": 1, //รอ api default duration
+              // "duration": 1, //รอ api default duration
               "type": locationType,
               "imageUrl": imageUrl,
               "latitude": locationPin.latitude,
@@ -167,7 +165,7 @@ class CreateLocationService {
                   "description": description,
                   "contactNumber": contactNumber == '' ? '-' : contactNumber,
                   "website": website == '' ? '-' : website,
-                  "duration": 1, //รอ api default duration
+                  // "duration": 1, //รอ api default duration
                   "type": locationType,
                   "imageUrl": imageUrl,
                   "latitude": locationPin.latitude,

@@ -74,7 +74,7 @@ class CreateLocationService {
               "description": description,
               "contactNumber": contactNumber == '' ? '-' : contactNumber,
               "website": website == '' ? '-' : website,
-              "duration": 1, //รอ api default duration
+              // "duration": 1, //รอ api default duration
               "type": locationType,
               "imageUrl": imageUrl,
               "latitude": latitude,
