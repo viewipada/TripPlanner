@@ -15,6 +15,43 @@ exports.create = async (req, res) => {
   try {
     const location = req.body;
 
+    const type = location.type;
+
+    if (
+      type == "สถานที่ผจญภัย" ||
+      type == "สถานบันเทิง, ผับ, บาร์" ||
+      type == "สวน" ||
+      type == "พิพิธภัณฑ์" ||
+      type == "วัด, โบราณสถาน" ||
+      type == "ตลาด, ชุมชน, สถานที่ถ่ายภาพ"
+    ) {
+      location.duration = 3;
+    } else if (type == "ภูเขา, ป่าไม้, ธรรมชาติ" || type == "ชายหาด, เกาะ") {
+      location.duration = 4;
+    } else if (
+      type == "อาหารเส้น" ||
+      type == "อาหารตามสั่ง, จานด่วน" ||
+      type == "สตรีทฟู้ด" ||
+      type == "ร้านอาหาร, ภัตราคาร" ||
+      type == "ปิ้งย่าง, บุฟเฟ่ต์"
+    ) {
+      location.duration = 2;
+    } else if (type == "คาเฟ่" || type == "ร้านกาแฟ") {
+      location.duration = 1;
+    } else if (
+      type == "รีสอร์ท" ||
+      type == "แคมป์ปิ้ง" ||
+      type == "โรงแรม" ||
+      type == "บังกะโล, บ้านพัก" ||
+      type == "โฮมสเตย์, เกสเฮาส์"
+    ) {
+      location.duration = 8;
+    } else if (type == "ของกิน" || type == "ของใช้") {
+      location.duration = 1;
+    }
+
+    console.log(location.duration);
+
     if (!(location.locationName && location.latitude && location.longitude)) {
       return res.status(400).send("locationName and lat-long can not be empty ! ! ");
     }
