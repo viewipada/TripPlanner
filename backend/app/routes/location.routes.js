@@ -35,5 +35,8 @@ module.exports = (app) => {
   //get type of location by categoty
   router.get("/category/type/:category", locations.getType);
 
+  //checkIn location
+  router.put("/checkIn/:locationId", locations.checkIn);
+
   app.use("/api/locations", router);
 };

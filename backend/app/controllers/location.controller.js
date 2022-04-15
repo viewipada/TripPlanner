@@ -340,7 +340,24 @@ exports.getType = async (req, res) => {
   }
 };
 
-exports.checkIn = async (req, res) => {};
+exports.checkIn = async (req, res) => {
+  try {
+    const { locationId } = req.params;
+    req.updatedAt = new Date();
+
+    const updateData = await Location.increment("totalCheckin", {
+      by: 1,
+      where: { locationId },
+      raw: true,
+      returning: true,
+    });
+
+    return res.status(200).send(updateData[0][0][0]);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send(err);
+  }
+};
 
 exports.updateLocationStatus = async (req, res) => {
   try {
