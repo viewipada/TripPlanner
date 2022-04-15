@@ -420,6 +420,38 @@ exports.findNearBy = async (req, res) => {
       return d;
     }
 
+    if (category == 0) {
+      const allLocationData = await Location.findAll({
+        attributes: [
+          "locationId",
+          "locationName",
+          "imageUrl",
+          "description",
+          "category",
+          "latitude",
+          "longitude",
+        ],
+        raw: true,
+      });
+
+      const dataAll = await allLocationData.map(
+        ({ locationId, locationName, imageUrl, description, category, latitude, longitude }) => {
+          return {
+            locationId,
+            locationName,
+            imageUrl,
+            description,
+            category,
+            latitude,
+            longitude,
+            ditanceFromeUser: distanceBetween(latitude, longitude),
+          };
+        }
+      );
+
+      return res.status(200).json(dataAll);
+    }
+
     const locationData = await Location.findAll({
       where: { category },
       attributes: [
