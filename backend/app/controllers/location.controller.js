@@ -94,13 +94,9 @@ exports.findOne = async (req, res) => {
   const { locationId } = req.params;
 
   let locationData = await Location.findOne({
-    where: { locationId, locationStatus: "Approved" },
+    where: { locationId },
     raw: true,
   });
-
-  if (locationData == null) {
-    return res.status(400).json({ msg: `No Approved location Id : ${locationId}` });
-  }
 
   if (locationData.category == 3) {
     let { min_price, max_price } = await Price.findOne({ where: { locationId }, raw: true });
