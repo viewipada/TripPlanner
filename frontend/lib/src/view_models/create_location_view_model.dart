@@ -118,11 +118,15 @@ class CreateLocationViewModel with ChangeNotifier {
       _locationTypeValue = await _locationRequest!.locationType;
       _provinceValue = await _locationRequest!.province;
       _openingEveryday = await !_openingHour.contains("ปิด");
+      _knowOpeningHour =
+          await !_openingHour.every((element) => element == "ปิด");
       _locationCategoryValue = await _locationRequest!.category == 1
           ? "ที่เที่ยว"
           : _locationRequest!.category == 2
               ? "ที่กิน"
               : "ที่พัก";
+      _minPrice = await _locationRequest!.minPrice;
+      _maxPrice = await _locationRequest!.maxPrice;
 
       for (int i = 0; i < _dayOfWeek.length; i++) {
         if (_openingHour[i] != "ปิด") {

@@ -50,8 +50,8 @@ class LocationRequestDetailResponse {
       website: json['website'] as String,
       // duration: json['duration'] as int,
       province: json['province'] as String,
-      minPrice: json['minPrice'],
-      maxPrice: json['maxPrice'],
+      minPrice: json['min_price'],
+      maxPrice: json['max_price'],
     );
   }
 
