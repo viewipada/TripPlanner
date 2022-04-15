@@ -203,7 +203,7 @@ exports.searchAdmin = async (req, res, next) => {
     console.log("filters : " + filters);
 
     const data = await Location.findAll({
-      where: { category: filters },
+      where: { category: filters, locationStatus: { [Op.or]: ["Approved", "Deny"] } },
       order: [
         [sort == "rating" ? "averageRating" : "totalCheckin", "DESC"],
         ["locationName", "ASC"],
@@ -211,22 +211,33 @@ exports.searchAdmin = async (req, res, next) => {
     });
 
     const result = await Promise.all(
-      data.map(async ({ updatedAt, locationId, locationName, category, type, createBy }) => {
-        try {
-          let { username } = await User.findOne({ where: { id: createBy }, raw: true });
-          console.log("createBy : ", data.createBy);
-          return { updatedAt, username, locationId, locationName, category, type };
-        } catch (err) {
-          console.log(err);
-          return res.status(400).send(err);
+      data.map(
+        async ({
+          updatedAt,
+          locationId,
+          locationName,
+          category,
+          type,
+          createBy,
+          locationStatus: status,
+        }) => {
+          try {
+            let { username } = await User.findOne({ where: { id: createBy }, raw: true });
+            console.log("createBy : ", data.createBy);
+            return { updatedAt, username, locationId, locationName, category, type, status };
+          } catch (err) {
+            console.log(err);
+            return res.status(400).send(err);
+          }
         }
-      })
+      )
     ).catch((err) => {
       console.log(err);
     });
 
     if (filters == 0) {
       const allData = await Location.findAll({
+        where: { locationStatus: { [Op.or]: ["Approved", "Deny"] } },
         order: [
           [sort == "rating" ? "averageRating" : "totalCheckin", "DESC"],
           ["locationName", "ASC"],
@@ -234,16 +245,26 @@ exports.searchAdmin = async (req, res, next) => {
       });
 
       const resultData = await Promise.all(
-        allData.map(async ({ updatedAt, locationId, locationName, category, type, createBy }) => {
-          try {
-            let { username } = await User.findOne({ where: { id: createBy }, raw: true });
-            console.log("createBy : ", data.createBy);
-            return { updatedAt, username, locationId, locationName, category, type };
-          } catch (err) {
-            console.log(err);
-            return res.status(400).send(err);
+        allData.map(
+          async ({
+            updatedAt,
+            locationId,
+            locationName,
+            category,
+            type,
+            createBy,
+            locationStatus: status,
+          }) => {
+            try {
+              let { username } = await User.findOne({ where: { id: createBy }, raw: true });
+              console.log("createBy : ", data.createBy);
+              return { updatedAt, username, locationId, locationName, category, type, status };
+            } catch (err) {
+              console.log(err);
+              return res.status(400).send(err);
+            }
           }
-        })
+        )
       ).catch((err) => {
         console.log(err);
       });
