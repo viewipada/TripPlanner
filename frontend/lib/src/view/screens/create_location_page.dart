@@ -1,5 +1,6 @@
 import 'package:cool_dropdown/cool_dropdown.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
@@ -635,6 +636,9 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                         horizontal: getProportionateScreenWidth(15),
                       ),
                       child: TextFormField(
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                        ],
                         keyboardType: TextInputType.number,
                         maxLines: 1,
                         maxLength: 10,

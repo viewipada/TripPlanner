@@ -5,6 +5,7 @@ import 'package:admin/src/size_config.dart';
 import 'package:admin/src/view_models/create_location_view_model.dart';
 import 'package:cool_dropdown/cool_dropdown.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -598,6 +599,10 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                       children: [
                         Expanded(
                           child: TextFormField(
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'^\d*\.?\d{0,14}')),
+                            ],
                             maxLines: 1,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -622,6 +627,10 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                         ),
                         Expanded(
                           child: TextFormField(
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'^\d*\.?\d{0,14}')),
+                            ],
                             maxLines: 1,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -656,6 +665,9 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                     subtitle('เบอร์ติดต่อ', ''),
                     TextFormField(
                       keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                      ],
                       maxLines: 1,
                       maxLength: 10,
                       onChanged: (value) => createLocationViewModel
