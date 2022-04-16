@@ -13,10 +13,10 @@ class LocationDetailPage extends StatefulWidget {
 
   const LocationDetailPage({
     Key? key,
-    // required this.locationId,
+    required this.locationId,
   }) : super(key: key);
 
-  // final int locationId;
+  final int locationId;
 
   @override
   _LocationDetailPageState createState() => _LocationDetailPageState();
@@ -25,6 +25,7 @@ class LocationDetailPage extends StatefulWidget {
 class _LocationDetailPageState extends State<LocationDetailPage> {
   String? username;
   bool isLoading = false;
+  LocationDetailResponse? location;
   @override
   void initState() {
     SharedPref().getUsername().then((value) {
@@ -32,12 +33,19 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
         username = value;
       });
     });
+    Provider.of<DashBoardViewModel>(context, listen: false)
+        .getLocationDetailById(widget.locationId)
+        .then((value) {
+      setState(() {
+        location = value;
+      });
+    });
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    var locationId = ModalRoute.of(context)!.settings.arguments as int;
     SizeConfig().init(context);
     final dashBoardViewModel = Provider.of<DashBoardViewModel>(context);
 
@@ -83,12 +91,9 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: FutureBuilder(
-        future: dashBoardViewModel.getLocationDetailById(locationId),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData) {
-            var location = snapshot.data as LocationDetailResponse;
-            return SingleChildScrollView(
+      body: location == null
+          ? loading()
+          : SingleChildScrollView(
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               child: Container(
                 margin: EdgeInsets.symmetric(
@@ -98,7 +103,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                   children: [
                     Card(
                       child: Image.network(
-                        location.imageUrl,
+                        location!.imageUrl,
                         height: getProportionateScreenHeight(350),
                         width: double.infinity,
                         fit: BoxFit.cover,
@@ -107,18 +112,18 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                     ),
                     subtitle('ชื่อสถานที่ ', '*'),
                     TextFormField(
-                      initialValue: location.locationName,
+                      initialValue: location!.locationName,
                       maxLines: 1,
                       readOnly: true,
                       enabled: false,
                     ),
                     subtitle('หมวดหมู่สถานที่ ', '*'),
                     TextFormField(
-                      initialValue: location.category == 1
+                      initialValue: location!.category == 1
                           ? "ที่เที่ยว"
-                          : location.category == 2
+                          : location!.category == 2
                               ? "ที่กิน"
-                              : location.category == 3
+                              : location!.category == 3
                                   ? "ที่พัก"
                                   : "ของฝาก",
                       maxLines: 1,
@@ -127,21 +132,21 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                     ),
                     subtitle('ประเภทสถานที่ ', '*'),
                     TextFormField(
-                      initialValue: location.locationType,
+                      initialValue: location!.locationType,
                       maxLines: 1,
                       readOnly: true,
                       enabled: false,
                     ),
-                    location.category == 3
+                    location!.category == 3
                         ? subtitle('ช่วงราคา ', '*')
                         : const SizedBox(),
-                    location.category == 3
+                    location!.category == 3
                         ? Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Expanded(
                                 child: TextFormField(
-                                  initialValue: location.minPrice.toString(),
+                                  initialValue: location!.minPrice.toString(),
                                   maxLines: 1,
                                   readOnly: true,
                                   enabled: false,
@@ -158,7 +163,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                               ),
                               Expanded(
                                 child: TextFormField(
-                                  initialValue: location.maxPrice.toString(),
+                                  initialValue: location!.maxPrice.toString(),
                                   maxLines: 1,
                                   readOnly: true,
                                   enabled: false,
@@ -169,7 +174,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                         : const SizedBox(),
                     subtitle('จังหวัด ', '*'),
                     TextFormField(
-                      initialValue: location.province,
+                      initialValue: location!.province,
                       maxLines: 1,
                       readOnly: true,
                       enabled: false,
@@ -180,7 +185,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                       children: [
                         Expanded(
                           child: TextFormField(
-                            initialValue: location.latitude.toString(),
+                            initialValue: location!.latitude.toString(),
                             maxLines: 1,
                             readOnly: true,
                             enabled: false,
@@ -197,7 +202,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                         ),
                         Expanded(
                           child: TextFormField(
-                            initialValue: location.longitude.toString(),
+                            initialValue: location!.longitude.toString(),
                             maxLines: 1,
                             readOnly: true,
                             enabled: false,
@@ -209,7 +214,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                     SizedBox(
                       height: getProportionateScreenHeight(150),
                       child: TextFormField(
-                        initialValue: location.description,
+                        initialValue: location!.description,
                         maxLines: 100,
                         maxLength: 300,
                         readOnly: true,
@@ -221,7 +226,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                     ),
                     subtitle('เบอร์ติดต่อ', ''),
                     TextFormField(
-                      initialValue: location.contactNumber,
+                      initialValue: location!.contactNumber,
                       maxLines: 1,
                       maxLength: 10,
                       readOnly: true,
@@ -232,7 +237,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                     ),
                     subtitle('เว็บไซต์, Facebook', ''),
                     TextFormField(
-                      initialValue: location.website,
+                      initialValue: location!.website,
                       maxLines: 1,
                       readOnly: true,
                       enabled: false,
@@ -249,14 +254,14 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                     SizedBox(
                       height: getProportionateScreenHeight(15),
                     ),
-                    buildOpeningHour("วันจันทร์", location.openingHour.mon),
-                    buildOpeningHour("วันอังคาร", location.openingHour.tue),
-                    buildOpeningHour("วันพุธ", location.openingHour.wed),
-                    buildOpeningHour("วันพฤหัสบดี", location.openingHour.thu),
-                    buildOpeningHour("วันศุกร์", location.openingHour.fri),
-                    buildOpeningHour("วันเสาร์", location.openingHour.sat),
-                    buildOpeningHour("วันอาทิตย์", location.openingHour.sun),
-                    location.locationStatus == "In progress"
+                    buildOpeningHour("วันจันทร์", location!.openingHour.mon),
+                    buildOpeningHour("วันอังคาร", location!.openingHour.tue),
+                    buildOpeningHour("วันพุธ", location!.openingHour.wed),
+                    buildOpeningHour("วันพฤหัสบดี", location!.openingHour.thu),
+                    buildOpeningHour("วันศุกร์", location!.openingHour.fri),
+                    buildOpeningHour("วันเสาร์", location!.openingHour.sat),
+                    buildOpeningHour("วันอาทิตย์", location!.openingHour.sun),
+                    location!.locationStatus == "In progress"
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -270,14 +275,14 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                                     });
                                     dashBoardViewModel
                                         .updateLocationStatus(context,
-                                            location.locationId, "Deny")
+                                            location!.locationId, "Deny")
                                         .then((value) {
                                       if (value == 200) {
                                         final snackBar = SnackBar(
                                           backgroundColor:
                                               Palette.secondaryColor,
                                           content: Text(
-                                            'ปฏิเสธคำขอสร้างสถานที่ ${location.locationName} แล้ว',
+                                            'ปฏิเสธคำขอสร้างสถานที่ ${location!.locationName} แล้ว',
                                             style: const TextStyle(
                                               fontFamily: 'Sukhumvit',
                                               fontSize: 14,
@@ -318,13 +323,13 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                                     });
                                     dashBoardViewModel
                                         .updateLocationStatus(context,
-                                            location.locationId, "Approved")
+                                            location!.locationId, "Approved")
                                         .then((value) {
                                       if (value == 200) {
                                         final snackBar = SnackBar(
                                           backgroundColor: Palette.primaryColor,
                                           content: Text(
-                                            'อนุมัติคำขอสร้างสถานที่ ${location.locationName} แล้ว',
+                                            'อนุมัติคำขอสร้างสถานที่ ${location!.locationName} แล้ว',
                                             style: const TextStyle(
                                               fontFamily: 'Sukhumvit',
                                               fontSize: 14,
@@ -358,7 +363,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                               ),
                             ],
                           )
-                        : location.locationStatus == "Approved"
+                        : location!.locationStatus == "Approved"
                             ? Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
@@ -375,7 +380,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                                         });
                                         dashBoardViewModel
                                             .deleteLocation(
-                                                context, location.locationId)
+                                                context, location!.locationId)
                                             .then((value) {
                                           if (value == 200) {
                                             const snackBar = SnackBar(
@@ -448,12 +453,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                   ],
                 ),
               ),
-            );
-          } else {
-            return loading();
-          }
-        },
-      ),
+            ),
     );
   }
 }

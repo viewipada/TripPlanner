@@ -62,12 +62,40 @@ class MyApp extends StatelessWidget {
           ),
         ),
         initialRoute: '/login',
-        routes: {
-          '/login': (context) => const LoginPage(),
-          '/dashboard': (context) => const DashboardPage(),
-          '/create': (context) => const CreateLocationPage(),
-          LocationDetailPage.route: (context) => const LocationDetailPage(),
-        },
+        onGenerateRoute: ((settings) {
+          String path = settings.name ?? "";
+
+          if (path == "/login") {
+            return MaterialPageRoute(
+              settings: const RouteSettings(name: "/login"),
+              builder: (_) => const LoginPage(),
+            );
+          } else if (path == "/dashboard") {
+            return MaterialPageRoute(
+              settings: const RouteSettings(name: "/dashboard"),
+              builder: (_) => const DashboardPage(),
+            );
+          } else if (path == "/create") {
+            return MaterialPageRoute(
+              settings: const RouteSettings(name: "/create"),
+              builder: (_) => const CreateLocationPage(),
+            );
+          }
+
+          Uri? uri = Uri.tryParse(path);
+          if (uri != null) {
+            if (uri.pathSegments.length == 2 &&
+                uri.pathSegments[0] == 'location') {
+              var id = uri.pathSegments[1];
+              return MaterialPageRoute(
+                  settings: RouteSettings(name: "/location/$id"),
+                  builder: (context) =>
+                      LocationDetailPage(locationId: int.parse(id)));
+            }
+          }
+
+          return MaterialPageRoute(builder: (_) => const LoginPage());
+        }),
       ),
     );
   }

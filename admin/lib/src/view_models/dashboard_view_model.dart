@@ -25,15 +25,20 @@ class DashBoardViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void clearLocationList() {
-    _locationsRequest = null;
+  Future<void> clearLocationsList() async {
     _locations = [];
+    notifyListeners();
+  }
+
+  Future<void> clearLocationssRequestList() async {
+    _locationsRequest = await null;
     notifyListeners();
   }
 
   Future<void> goToCreateLocation(BuildContext context) async {
     final res = await Navigator.pushNamed(context, '/create');
     if (res != null) {
+      await clearLocationsList();
       await getLocationBy(0);
     }
   }
@@ -43,13 +48,14 @@ class DashBoardViewModel with ChangeNotifier {
   }
 
   Future<void> goToLocationDetail(BuildContext context, int locationId) async {
-    final res = await Navigator.of(context)
-        .pushNamed('/dashboard/location', arguments: locationId);
+    final res = await Navigator.pushNamed(context, '/location/$locationId');
     if (res != null) {
-      if (res == 'update') clearLocationList();
-      await getLocationRequest();
+      if (res == 'update') {
+        await clearLocationssRequestList();
+        await getLocationRequest();
+      }
+      await clearLocationsList();
       await getLocationBy(0);
-      isSearchMode();
     }
   }
 
