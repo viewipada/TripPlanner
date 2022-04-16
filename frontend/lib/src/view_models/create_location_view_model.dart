@@ -235,7 +235,7 @@ class CreateLocationViewModel with ChangeNotifier {
       DateTime datetime =
           DateFormat.jm().parse(_initialTime.format(context).toString());
 
-      return DateFormat("HH:mm").format(datetime).toString();
+      return DateFormat("H:mm").format(datetime).toString();
     }
     return time;
   }
