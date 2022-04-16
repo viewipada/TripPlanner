@@ -26,7 +26,8 @@ class DashBoardViewModel with ChangeNotifier {
   }
 
   void clearLocationList() {
-    _locationsRequest = [];
+    _locationsRequest = null;
+    _locations = [];
     notifyListeners();
   }
 

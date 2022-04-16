@@ -468,8 +468,11 @@ class _EditLocationRequestPageState extends State<EditLocationRequestPage> {
                                     Expanded(
                                       child: TextFormField(
                                         initialValue: createLocationViewModel
-                                            .minPrice
-                                            .toString(),
+                                                    .minPrice ==
+                                                null
+                                            ? ''
+                                            : createLocationViewModel.minPrice
+                                                .toString(),
                                         enabled: createLocationViewModel
                                                 .locationCategoryValue ==
                                             "ที่พัก",
@@ -501,8 +504,11 @@ class _EditLocationRequestPageState extends State<EditLocationRequestPage> {
                                     Expanded(
                                       child: TextFormField(
                                         initialValue: createLocationViewModel
-                                            .maxPrice
-                                            .toString(),
+                                                    .maxPrice ==
+                                                null
+                                            ? ''
+                                            : createLocationViewModel.maxPrice
+                                                .toString(),
                                         enabled: createLocationViewModel
                                                 .locationCategoryValue ==
                                             "ที่พัก",
