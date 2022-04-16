@@ -504,7 +504,7 @@ class TripStepperViewModel with ChangeNotifier {
     double lng1 = 0;
     double lat2 = 0;
     double lng2 = 0;
-    print(index);
+
     if (index == 0) {
       if (_day == 1) {
         lat1 = tripItems[index + 1].latitude;
@@ -528,7 +528,6 @@ class TripStepperViewModel with ChangeNotifier {
       lat2 = tripItems[index + 1].latitude;
       lng2 = tripItems[index + 1].longitude;
     }
-
     final LocationRecommendResponse? result = await Navigator.push(
       context,
       MaterialPageRoute(

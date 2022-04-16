@@ -145,7 +145,8 @@ class _LocationRecommendPageState extends State<LocationRecommendPage> {
                             shrinkWrap: true,
                             padding: EdgeInsets.only(
                                 bottom: getProportionateScreenHeight(15)),
-                            children: locationList
+                            children: (locationList
+                                    as List<LocationRecommendResponse>)
                                 .map(
                                   (location) => InkWell(
                                     onTap: () =>
