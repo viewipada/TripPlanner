@@ -233,6 +233,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       fontFamily: 'Sukhumvit',
                     ),
                     onChange: (selectedItem) {
+                      dashboardViewModel.clearLocationList();
                       dashboardViewModel.getLocationBy(selectedItem['value']);
                     },
                   ),
