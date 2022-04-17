@@ -18,6 +18,7 @@ class ProfileService {
         body: {"username": username, "password": password, "role": "user"});
 
     if (response.statusCode == 201) {
+      await SharedPref().initialBaggageItem([]);
       var jwt = json.decode(ascii.decode(
           base64.decode(base64.normalize(response.body.split(".")[1]))));
       await SharedPref().saveUserId(jwt['user_id']);
