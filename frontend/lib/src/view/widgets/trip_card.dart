@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
+import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/trip_card_response.dart';
 import 'package:trip_planner/src/view_models/home_view_model.dart';
@@ -91,7 +92,10 @@ class TripCard extends StatelessWidget {
                                             trip.tripName,
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 1,
-                                            style: FontAssets.subtitleText,
+                                            style: TextStyle(
+                                                color: Palette.BodyText,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
                                           ),
                                         ),
                                         // IconButton(
@@ -118,12 +122,14 @@ class TripCard extends StatelessWidget {
                                     maxLines: 1,
                                     style: FontAssets.bodyText,
                                   ),
-                                  Text(
-                                    homeViewModel
-                                        .showTravelingDay(trip.travelingDay),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: FontAssets.bodyText,
+                                  Expanded(
+                                    child: Text(
+                                      homeViewModel
+                                          .showTravelingDay(trip.travelingDay),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: FontAssets.bodyText,
+                                    ),
                                   ),
                                 ],
                               ),
