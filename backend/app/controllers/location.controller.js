@@ -183,7 +183,8 @@ exports.findOne = async (req, res) => {
     );
 
     locationData.totalReview = totalReviews;
-    locationData.averageRating = avg[0].average == null ? 0 : parseFloat(avg[0].average).toFixed(2);
+    locationData.averageRating =
+      avg[0].average == null ? "0" : parseFloat(avg[0].average).toFixed(2);
     locationData.reviewers = data;
   }
 
@@ -439,10 +440,50 @@ exports.checkIn = async (req, res) => {
 exports.updateLocationStatus = async (req, res) => {
   try {
     const { locationId } = req.params;
-    const locationStatus = req.body;
+    const location = req.body;
     req.updatedAt = new Date();
 
-    const updateData = Location.update(locationStatus, {
+    if (
+      location.type == "สถานที่ผจญภัย" ||
+      location.type == "สถานบันเทิง, ผับ, บาร์" ||
+      location.type == "สวน" ||
+      location.type == "พิพิธภัณฑ์" ||
+      location.type == "วัด, โบราณสถาน" ||
+      location.type == "ตลาด, ชุมชน, สถานที่ถ่ายภาพ"
+    ) {
+      location.duration = 3;
+    } else if (location.type == "ภูเขา, ป่าไม้, ธรรมชาติ" || location.type == "ชายหาด, เกาะ") {
+      location.duration = 4;
+    } else if (
+      location.type == "อาหารเส้น" ||
+      location.type == "อาหารตามสั่ง, จานด่วน" ||
+      location.type == "สตรีทฟู้ด" ||
+      location.type == "ร้านอาหาร, ภัตราคาร" ||
+      location.type == "ปิ้งย่าง, บุฟเฟ่ต์"
+    ) {
+      location.duration = 2;
+    } else if (location.type == "คาเฟ่" || location.type == "ร้านกาแฟ") {
+      location.duration = 1;
+    } else if (
+      location.type == "รีสอร์ท" ||
+      location.type == "แคมป์ปิ้ง" ||
+      location.type == "โรงแรม" ||
+      location.type == "บังกะโล, บ้านพัก" ||
+      location.type == "โฮมสเตย์, เกสเฮาส์"
+    ) {
+      location.duration = 8;
+    } else if (location.type == "ของกิน" || location.type == "ของใช้") {
+      location.duration = 1;
+    }
+
+    if (location.category == 3) {
+      const updatePrice = Price.update(
+        { min_price: location.min_price, max_price: location.max_price },
+        { where: { locationId }, raw: true, plain: true, returning: true }
+      );
+    }
+
+    const updateData = Location.update(location, {
       where: { locationId },
       returning: true,
       plain: true,
@@ -452,6 +493,7 @@ exports.updateLocationStatus = async (req, res) => {
     console.log(updateData);
     return res.status(200).json(updateData[1]);
   } catch (err) {
+    console.log(err);
     return res.status(400).send(err);
   }
 };
@@ -459,6 +501,7 @@ exports.updateLocationStatus = async (req, res) => {
 exports.findPopular = async (req, res) => {
   try {
     const popularData = await Location.findAll({
+      where: { locationStatus: "Approved" },
       limit: 10,
       order: [["totalCheckin", "DESC"]],
       raw: true,
