@@ -477,6 +477,17 @@ exports.updateLocationStatus = async (req, res) => {
     }
 
     if (location.category == 3) {
+      const locationData = await Price.findOne({ where: { locationId }, raw: true });
+
+      console.log(locationData);
+      if (locationData == null) {
+        const priceSet = await Price.create({
+          locationId,
+          min_price: location.min_price,
+          max_price: location.max_price,
+        });
+      }
+
       const updatePrice = Price.update(
         { min_price: location.min_price, max_price: location.max_price },
         { where: { locationId }, raw: true, plain: true, returning: true }
