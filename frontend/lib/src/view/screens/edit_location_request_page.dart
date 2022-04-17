@@ -638,18 +638,9 @@ class _EditLocationRequestPageState extends State<EditLocationRequestPage> {
                                             : Colors.red),
                                   ),
                                 ),
-                                onPressed: () =>
-                                    createLocationViewModel.locationPin == null
-                                        ? createLocationViewModel
-                                            .goToLocationPickerPage(
-                                                context,
-                                                createLocationViewModel
-                                                    .provinceLatLng!)
-                                        : createLocationViewModel
-                                            .goToLocationPickerPage(
-                                                context,
-                                                createLocationViewModel
-                                                    .locationPin!),
+                                onPressed: () => createLocationViewModel
+                                    .goToLocationPickerPage(context,
+                                        createLocationViewModel.locationPin!),
                                 icon: Icon(
                                   createLocationViewModel.locationPin == null
                                       ? Icons.not_listed_location_outlined

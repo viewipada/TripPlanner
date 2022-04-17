@@ -93,10 +93,57 @@ class CreateLocationViewModel with ChangeNotifier {
   List<String> _openingHour = [];
 
   Future<void> getLocationRequestById(int locationId) async {
+    _images = null;
+    _dayOfWeek = [
+      {
+        'day': 'วันจันทร์',
+        'isOpening': false,
+        'openTime': '9:00',
+        'closedTime': '16:00'
+      },
+      {
+        'day': 'วันอังคาร',
+        'isOpening': false,
+        'openTime': '9:00',
+        'closedTime': '16:00'
+      },
+      {
+        'day': 'วันพุธ',
+        'isOpening': false,
+        'openTime': '9:00',
+        'closedTime': '16:00'
+      },
+      {
+        'day': 'วันพฤหัสบดี',
+        'isOpening': false,
+        'openTime': '9:00',
+        'closedTime': '16:00'
+      },
+      {
+        'day': 'วันศุกร์',
+        'isOpening': false,
+        'openTime': '9:00',
+        'closedTime': '16:00'
+      },
+      {
+        'day': 'วันเสาร์',
+        'isOpening': false,
+        'openTime': '9:00',
+        'closedTime': '16:00'
+      },
+      {
+        'day': 'วันอาทิตย์',
+        'isOpening': false,
+        'openTime': '9:00',
+        'closedTime': '16:00'
+      },
+    ];
+
     _locationRequest =
         await CreateLocationService().getLocationRequestById(locationId);
 
     if (_locationRequest != null) {
+      _openingHour = [];
       _openingHour.add(_locationRequest!.openingHour.mon);
       _openingHour.add(_locationRequest!.openingHour.tue);
       _openingHour.add(_locationRequest!.openingHour.wed);
@@ -340,13 +387,13 @@ class CreateLocationViewModel with ChangeNotifier {
 
   void goToLocationPickerPage(
       BuildContext context, LatLng initialLatLng) async {
-    LatLng result = await Navigator.push(
+    var result = await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) =>
               LocationPickerPage(initialLatLng: initialLatLng),
         ));
-    _locationPin = result;
+    if (result != null) _locationPin = result;
     notifyListeners();
   }
 
@@ -399,6 +446,8 @@ class CreateLocationViewModel with ChangeNotifier {
       _category = 3;
     else
       _category = 0;
+    _defaultCategotyValue = await _locationCategory
+        .firstWhere((element) => element['label'] == _locationCategoryValue);
 
     if (imageUrl != null) _images = await urlToFile(imageUrl!);
     final statusCode = await CreateLocationService().updateLocation(
