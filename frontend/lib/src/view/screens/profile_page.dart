@@ -733,16 +733,18 @@ Widget buildTripList(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
-                          child: Container(
-                            padding: EdgeInsets.only(
-                                bottom: getProportionateScreenHeight(5)),
-                            child: Text(
+                          child: 
+                          // Container(
+                          //   padding: EdgeInsets.only(
+                          //       bottom: getProportionateScreenHeight(5)),
+                          //   child: 
+                            Text(
                               trip.tripName,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                               style: FontAssets.subtitleText,
                             ),
-                          ),
+                          // ),
                         ),
                         Expanded(
                           child: Text(

@@ -295,10 +295,12 @@ Widget pinCard(TripItem location) {
             ),
             location.imageUrl == ""
                 ? SizedBox()
-                : Padding(
-                    padding: EdgeInsets.only(
-                        bottom: getProportionateScreenHeight(15)),
-                    child: TagCategory(category: location.locationCategory),
+                : Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          bottom: getProportionateScreenHeight(15)),
+                      child: TagCategory(category: location.locationCategory),
+                    ),
                   )
           ],
         ),

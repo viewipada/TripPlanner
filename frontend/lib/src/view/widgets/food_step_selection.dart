@@ -607,7 +607,7 @@ Widget buildTripItem(
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(
-                    getProportionateScreenWidth(10),
+                    getProportionateScreenWidth(5),
                     getProportionateScreenHeight(10),
                     0,
                     0,
@@ -635,7 +635,7 @@ Widget buildTripItem(
                               ? Padding(
                                   padding: EdgeInsets.symmetric(
                                       horizontal:
-                                          getProportionateScreenWidth(15)),
+                                          getProportionateScreenWidth(10)),
                                   child: tripItems
                                                   .where((element) =>
                                                       element.day ==
@@ -667,7 +667,7 @@ Widget buildTripItem(
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                            right: getProportionateScreenWidth(15)),
+                            right: getProportionateScreenWidth(10)),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

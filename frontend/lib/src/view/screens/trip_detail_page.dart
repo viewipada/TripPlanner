@@ -18,7 +18,7 @@ class TripDetailPage extends StatefulWidget {
 }
 
 class _TripDetailPageState extends State<TripDetailPage> {
-  final Trip trip;
+  Trip trip;
   _TripDetailPageState(this.trip);
 
   @override
@@ -200,7 +200,13 @@ class _TripDetailPageState extends State<TripDetailPage> {
                                   TextButton(
                                     onPressed: () => tripStepperViewModel
                                         .goToTripStepperPage(
-                                            context, trip.tripId!),
+                                            context, trip.tripId!)
+                                        .then((value) {
+                                      if (value != null)
+                                        setState(() {
+                                          trip = value;
+                                        });
+                                    }),
                                     child: Text(
                                       'แก้ไขข้อมูลทริป',
                                       style: TextStyle(

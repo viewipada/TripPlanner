@@ -764,12 +764,13 @@ class TripStepperViewModel with ChangeNotifier {
     return await LocationService().getAllShop();
   }
 
-  Future<void> goToTripStepperPage(BuildContext context, int tripId) async {
+  Future<Trip?> goToTripStepperPage(BuildContext context, int tripId) async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => TripStepperPage(tripId: tripId)),
     );
-    if (result != null) notifyListeners();
+    if (result != null) return _tripsOperations.getTripById(tripId);
+    return null;
   }
 
   void goToLocationDetail(BuildContext context, int locationId) {
@@ -990,8 +991,8 @@ class TripStepperViewModel with ChangeNotifier {
   void confirmTrip(Trip trip, BuildContext context) {
     _tripsOperations.updateTrip(trip);
 
-    Navigator.pop(context);
-    Navigator.pop(context);
+    Navigator.pop(context, 'refresh');
+    Navigator.pop(context, 'refresh');
     _index = 0;
     _day = 1;
     _shop = null;

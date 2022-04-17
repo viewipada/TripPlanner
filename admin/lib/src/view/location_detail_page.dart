@@ -9,7 +9,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class LocationDetailPage extends StatefulWidget {
-  static const route = '/dashboard/location';
+  // static const route = '/dashboard/location';
 
   const LocationDetailPage({
     Key? key,
