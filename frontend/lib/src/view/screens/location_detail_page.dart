@@ -32,11 +32,13 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
   _LocationDetailPageState(this._locationId);
   Completer<GoogleMapController> _controller = Completer();
   var isInBaggage;
+  int baggageCount = 0;
   @override
   void initState() {
     super.initState();
     SharedPref().getBaggageItems().then((value) {
       setState(() {
+        baggageCount = value.length;
         isInBaggage = value.contains('${_locationId}');
       });
     });
@@ -151,14 +153,19 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                                               });
                                           });
                                         } else {
-                                          locationDetailViewModel
-                                              .addBaggageItem(_locationId)
-                                              .then((value) {
-                                            if (value == 201)
-                                              setState(() {
-                                                isInBaggage = true;
-                                              });
-                                          });
+                                          if (baggageCount == 30) {
+                                            alertDialog(context,
+                                                'กระเป๋าเดินทางเต็มแล้ว!\nไม่สามารถเพิ่มได้มากกว่า 30 สถานที่');
+                                          } else {
+                                            locationDetailViewModel
+                                                .addBaggageItem(_locationId)
+                                                .then((value) {
+                                              if (value == 201)
+                                                setState(() {
+                                                  isInBaggage = true;
+                                                });
+                                            });
+                                          }
                                         }
                                       },
                                       icon: ImageIcon(
