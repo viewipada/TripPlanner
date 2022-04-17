@@ -273,15 +273,15 @@ class _BaggagePageState extends State<BaggagePage> {
                                                     item.description,
                                                     overflow:
                                                         TextOverflow.ellipsis,
-                                                    maxLines: 2,
+                                                    maxLines: 1,
                                                     style: FontAssets.bodyText,
                                                   ),
-                                                  Spacer(
-                                                    flex: 2,
+                                                  Spacer(),
+                                                  Expanded(
+                                                    child: TagCategory(
+                                                      category: item.category,
+                                                    ),
                                                   ),
-                                                  TagCategory(
-                                                    category: item.category,
-                                                  )
                                                 ],
                                               ),
                                             ),

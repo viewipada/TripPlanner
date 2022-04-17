@@ -732,35 +732,43 @@ Widget buildTripList(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          padding: EdgeInsets.only(
-                              bottom: getProportionateScreenHeight(5)),
-                          child: Text(
-                            trip.tripName,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: FontAssets.subtitleText,
+                        Expanded(
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                bottom: getProportionateScreenHeight(5)),
+                            child: Text(
+                              trip.tripName,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: FontAssets.subtitleText,
+                            ),
                           ),
                         ),
-                        Text(
-                          trip.totalTripItem > 1
-                              ? 'จาก ${trip.firstLocation} ไปยัง ${trip.lastLocation}'
-                              : 'เริ่มต้นที่ ${trip.firstLocation}',
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: FontAssets.bodyText,
+                        Expanded(
+                          child: Text(
+                            trip.totalTripItem > 1
+                                ? 'จาก ${trip.firstLocation} ไปยัง ${trip.lastLocation}'
+                                : 'เริ่มต้นที่ ${trip.firstLocation}',
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: FontAssets.bodyText,
+                          ),
                         ),
-                        Text(
-                          '${trip.totalTripItem} สถานที่',
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: FontAssets.bodyText,
+                        Expanded(
+                          child: Text(
+                            '${trip.totalTripItem} สถานที่',
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: FontAssets.bodyText,
+                          ),
                         ),
-                        Text(
-                          profileViewModel.showTravelingDay(trip.totalDay),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: FontAssets.bodyText,
+                        Expanded(
+                          child: Text(
+                            profileViewModel.showTravelingDay(trip.totalDay),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: FontAssets.bodyText,
+                          ),
                         ),
                       ],
                     ),

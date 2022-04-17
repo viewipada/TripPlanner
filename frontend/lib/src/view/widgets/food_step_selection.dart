@@ -835,7 +835,7 @@ Widget addMeal(BuildContext context, TripStepperViewModel tripStepperViewModel,
     child: Row(
       children: [
         Expanded(
-          flex: 2,
+          // flex: 2,
           child: ElevatedButton.icon(
             onPressed: () => tripStepperViewModel.goToLocationRecommendPage(
                 context, tripItems, index, trip, "ที่กิน"),
@@ -858,21 +858,19 @@ Widget addMeal(BuildContext context, TripStepperViewModel tripStepperViewModel,
         SizedBox(
           width: getProportionateScreenWidth(5),
         ),
-        Expanded(
-          child: TextButton.icon(
-            onPressed: () =>
-                tripStepperViewModel.deleteAddMealButton(index, tripItems),
-            icon: Icon(
-              Icons.cancel_outlined,
-              color: Palette.Outline,
-            ),
-            label: Text(
-              'ไม่ต้องการ',
-              style: FontAssets.bodyText,
-            ),
-            style: TextButton.styleFrom(
-              primary: Palette.BackgroundColor,
-            ),
+        TextButton.icon(
+          onPressed: () =>
+              tripStepperViewModel.deleteAddMealButton(index, tripItems),
+          icon: Icon(
+            Icons.cancel_outlined,
+            color: Palette.Outline,
+          ),
+          label: Text(
+            'ไม่ต้องการ',
+            style: FontAssets.bodyText,
+          ),
+          style: TextButton.styleFrom(
+            primary: Palette.BackgroundColor,
           ),
         ),
       ],

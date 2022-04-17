@@ -110,17 +110,22 @@ class TripCard extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  Text(
-                                    'จาก ${trip.startedPoint} ไปยัง ${trip.endedPoint}',
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: FontAssets.bodyText,
+                                  Expanded(
+                                    child: Text(
+                                      'จาก ${trip.startedPoint} ไปยัง ${trip.endedPoint}',
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: FontAssets.bodyText,
+                                    ),
                                   ),
-                                  Text(
-                                    trip.sumOfLocation.toString() + ' สถานที่',
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: FontAssets.bodyText,
+                                  Expanded(
+                                    child: Text(
+                                      trip.sumOfLocation.toString() +
+                                          ' สถานที่',
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: FontAssets.bodyText,
+                                    ),
                                   ),
                                   Expanded(
                                     child: Text(
