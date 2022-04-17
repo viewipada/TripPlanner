@@ -5,7 +5,7 @@ import 'package:admin/src/shared_pref.dart';
 import 'package:http/http.dart' as http;
 
 class DashboardService {
-  final String baseUrl = 'http://localhost:8080';
+  final String baseUrl = 'https://eztrip-backend.herokuapp.com';
 
   Future<List<LocationCardResponse>> getLocationBy(int category) async {
     List<LocationCardResponse> baggageList = [];

@@ -4,7 +4,7 @@ import 'package:admin/src/shared_pref.dart';
 import 'package:http/http.dart' as http;
 
 class CreateLocationService {
-  final String baseUrl = 'http://localhost:8080';
+  final String baseUrl = 'https://eztrip-backend.herokuapp.com';
 
   Future<List> getLocationTypeList(int category) async {
     final response = await http

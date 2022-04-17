@@ -6,7 +6,7 @@ import 'package:trip_planner/src/models/trip_item.dart';
 import 'package:trip_planner/src/repository/shared_pref.dart';
 
 class TripService {
-  final String baseUrl = 'http://10.0.2.2:8080';
+  final String baseUrl = 'https://eztrip-backend.herokuapp.com';
 
   Future<int?> endTrip(Trip trip, List<TripItem> tripItems) async {
     final userId = await SharedPref().getUserId();

@@ -10,7 +10,7 @@ import 'package:trip_planner/src/repository/shared_pref.dart';
 import 'package:trip_planner/src/services/baggage_service.dart';
 
 class ProfileService {
-  final String baseUrl = 'http://10.0.2.2:8080';
+  final String baseUrl = 'https://eztrip-backend.herokuapp.com';
 
   Future<int?> tryToRegister(String username, String password) async {
     final response = await http.post(

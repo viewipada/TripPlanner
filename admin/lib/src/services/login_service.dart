@@ -3,7 +3,7 @@ import 'package:admin/src/shared_pref.dart';
 import 'package:http/http.dart' as http;
 
 class LoginService {
-  final String baseUrl = 'http://localhost:8080';
+  final String baseUrl = 'https://eztrip-backend.herokuapp.com';
 
   Future<int?> tryToLogin(String username, String password) async {
     final response = await http.post(Uri.parse("$baseUrl/api/authen/login"),
