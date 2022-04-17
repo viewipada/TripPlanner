@@ -59,31 +59,35 @@ class StartPointCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      locationName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: description ==
-                              'เลือกตำแหน่งปัจจุบันเป็นจุดเริ่มต้นทริป'
-                          ? TextStyle(
-                              color: Palette.PrimaryColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold)
-                          : FontAssets.subtitleText,
+                    Expanded(
+                      child: Text(
+                        locationName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: description ==
+                                'เลือกตำแหน่งปัจจุบันเป็นจุดเริ่มต้นทริป'
+                            ? TextStyle(
+                                color: Palette.PrimaryColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold)
+                            : FontAssets.subtitleText,
+                      ),
                     ),
-                    Text(
-                      description,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                      style: FontAssets.bodyText,
+                    Expanded(
+                      child: Text(
+                        description,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        style: FontAssets.bodyText,
+                      ),
                     ),
-                    Spacer(
-                      flex: 2,
-                    ),
-                    Visibility(
-                      visible: category != '',
-                      child: TagCategory(
-                        category: category,
+                    Spacer(),
+                    Expanded(
+                      child: Visibility(
+                        visible: category != '',
+                        child: TagCategory(
+                          category: category,
+                        ),
                       ),
                     ),
                   ],
