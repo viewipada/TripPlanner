@@ -60,6 +60,7 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
             leading: IconButton(
               icon: Icon(Icons.arrow_back_rounded),
@@ -207,36 +208,38 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
                   ),
                 ],
               ),
-              Positioned(
-                height: getProportionateScreenHeight(48),
-                bottom: getProportionateScreenHeight(15),
-                left: getProportionateScreenWidth(15),
-                right: getProportionateScreenWidth(15),
-                child: ElevatedButton(
-                  onPressed: () {
-                    createLocationViewModel.selectedLocationPin(
-                        context,
-                        LatLng(cameraPosition.target.latitude,
-                            cameraPosition.target.longitude));
-                    // print(
-                    //     "Location ${cameraPosition.target.latitude} ${cameraPosition.target.longitude}");
-                    // print("Address: ${textController.text}");
-                  },
-                  child: Text(
-                    'ยืนยันตำแหน่ง',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    primary: Palette.SecondaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                ),
-              ),
+              searchStartPointViewModel.predictions.isEmpty
+                  ? Positioned(
+                      height: getProportionateScreenHeight(48),
+                      bottom: getProportionateScreenHeight(15),
+                      left: getProportionateScreenWidth(15),
+                      right: getProportionateScreenWidth(15),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          createLocationViewModel.selectedLocationPin(
+                              context,
+                              LatLng(cameraPosition.target.latitude,
+                                  cameraPosition.target.longitude));
+                          // print(
+                          //     "Location ${cameraPosition.target.latitude} ${cameraPosition.target.longitude}");
+                          // print("Address: ${textController.text}");
+                        },
+                        child: Text(
+                          'ยืนยันตำแหน่ง',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: Palette.SecondaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                      ),
+                    )
+                  : SizedBox(),
             ],
           ),
         ),

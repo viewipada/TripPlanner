@@ -273,14 +273,15 @@ class CreateLocationViewModel with ChangeNotifier {
     final TimeOfDay? newTime = await showTimePicker(
       context: context,
       initialTime: _initialTime,
-      // builder: (context, child) => MediaQuery(
-      //     data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-      //     child: child!),
+      builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+          child: child!),
     );
     if (newTime != null) {
       _initialTime = newTime;
-      DateTime datetime =
-          DateFormat.jm().parse(_initialTime.format(context).toString());
+      final now = DateTime.now();
+      DateTime datetime = DateTime(
+          now.year, now.month, now.day, _initialTime.hour, _initialTime.minute);
 
       return DateFormat("H:mm").format(datetime).toString();
     }
