@@ -95,6 +95,9 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                     ),
                   ],
                 ),
+                SizedBox(
+                  height: getProportionateScreenHeight(15),
+                ),
                 Row(
                   children: [
                     const Expanded(
