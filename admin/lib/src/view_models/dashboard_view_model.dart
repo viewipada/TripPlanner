@@ -82,10 +82,10 @@ class DashBoardViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<int?> updateLocationStatus(
-      BuildContext context, int locationId, String status) async {
-    final statusCode =
-        await DashboardService().updateLocationStatus(locationId, status);
+  Future<int?> updateLocationStatus(BuildContext context, int locationId,
+      String status, String remark) async {
+    final statusCode = await DashboardService()
+        .updateLocationStatus(locationId, status, remark);
     if (statusCode == 200) {
       Navigator.pop(context, 'update');
     }

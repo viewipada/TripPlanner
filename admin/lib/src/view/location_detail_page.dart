@@ -5,6 +5,7 @@ import 'package:admin/src/shared_pref.dart';
 import 'package:admin/src/size_config.dart';
 import 'package:admin/src/view_models/dashboard_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
@@ -26,6 +27,10 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
   String? username;
   bool isLoading = false;
   LocationDetailResponse? location;
+  String remark = '';
+  final textController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     SharedPref().getUsername().then((value) {
@@ -48,6 +53,101 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     final dashBoardViewModel = Provider.of<DashBoardViewModel>(context);
+
+    Future<void> _confirmRemark(BuildContext context) async {
+      return showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text(
+                'หมายเหตุ: ',
+                style: FontAssets.subtitleText,
+              ),
+              content: SizedBox(
+                width: SizeConfig.screenWidth / 3,
+                height: getProportionateScreenHeight(150),
+                child: Form(
+                  key: _formKey,
+                  child: Expanded(
+                    child: TextFormField(
+                      maxLines: 100,
+                      maxLength: 120,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'โปรดระบุ';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          remark = value;
+                        });
+                      },
+                      controller: textController,
+                      decoration: const InputDecoration(
+                          isDense: true,
+                          hintText:
+                              "โปรดระบุเหตุผลในการปฏิเสธคำขอสร้างสถานที่"),
+                    ),
+                  ),
+                ),
+              ),
+              actions: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(
+                      bottom: getProportionateScreenHeight(15),
+                      right: getProportionateScreenWidth(5)),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        dashBoardViewModel
+                            .updateLocationStatus(
+                                context, location!.locationId, "Deny", remark)
+                            .then((value) {
+                          if (value == 200) {
+                            final snackBar = SnackBar(
+                              backgroundColor: Palette.secondaryColor,
+                              content: Text(
+                                'ปฏิเสธคำขอสร้างสถานที่ ${location!.locationName} แล้ว',
+                                style: const TextStyle(
+                                  fontFamily: 'Sukhumvit',
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                            setState(() {
+                              isLoading = false;
+                            });
+                            Navigator.pop(context, 'update');
+                          }
+                        });
+                      }
+                    },
+                    child: const Text(
+                      "ยืนยัน",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary:
+                          isLoading ? Palette.infoText : Palette.primaryColor,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          });
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -270,35 +370,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                                     horizontal: getProportionateScreenWidth(5)),
                                 child: TextButton(
                                   onPressed: () {
-                                    setState(() {
-                                      isLoading = true;
-                                    });
-                                    dashBoardViewModel
-                                        .updateLocationStatus(context,
-                                            location!.locationId, "Deny")
-                                        .then((value) {
-                                      if (value == 200) {
-                                        final snackBar = SnackBar(
-                                          backgroundColor:
-                                              Palette.secondaryColor,
-                                          content: Text(
-                                            'ปฏิเสธคำขอสร้างสถานที่ ${location!.locationName} แล้ว',
-                                            style: const TextStyle(
-                                              fontFamily: 'Sukhumvit',
-                                              fontSize: 14,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        );
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(snackBar);
-                                        setState(() {
-                                          isLoading = false;
-                                        });
-                                      }
-                                    });
+                                    _confirmRemark(context);
                                   },
                                   child: Text(
                                     "ปฏิเสธ",
@@ -322,8 +394,11 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                                       isLoading = true;
                                     });
                                     dashBoardViewModel
-                                        .updateLocationStatus(context,
-                                            location!.locationId, "Approved")
+                                        .updateLocationStatus(
+                                            context,
+                                            location!.locationId,
+                                            "Approved",
+                                            remark)
                                         .then((value) {
                                       if (value == 200) {
                                         final snackBar = SnackBar(
