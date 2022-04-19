@@ -1020,6 +1020,19 @@ class _EditLocationRequestPageState extends State<EditLocationRequestPage> {
                                     ),
                                   ),
                                 ),
+                          createLocationViewModel.remark == null
+                              ? SizedBox()
+                              : Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: getProportionateScreenWidth(15),
+                                  ),
+                                  margin: EdgeInsets.only(
+                                      top: getProportionateScreenHeight(15)),
+                                  child: Text(
+                                    'หมายเหตุ: ${createLocationViewModel.remark}',
+                                    style: FontAssets.hintText,
+                                  ),
+                                ),
                           Container(
                             margin: EdgeInsets.symmetric(
                               horizontal: getProportionateScreenWidth(15),

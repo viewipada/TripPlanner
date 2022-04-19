@@ -91,6 +91,7 @@ class CreateLocationViewModel with ChangeNotifier {
   int? _minPrice;
   int? _maxPrice;
   List<String> _openingHour = [];
+  String? _remark;
 
   Future<void> getLocationRequestById(int locationId) async {
     _images = null;
@@ -143,6 +144,8 @@ class CreateLocationViewModel with ChangeNotifier {
         await CreateLocationService().getLocationRequestById(locationId);
 
     if (_locationRequest != null) {
+      _remark = null;
+      _remark = await _locationRequest!.remark;
       _openingHour = [];
       _openingHour.add(_locationRequest!.openingHour.mon);
       _openingHour.add(_locationRequest!.openingHour.tue);
@@ -577,4 +580,5 @@ class CreateLocationViewModel with ChangeNotifier {
   dynamic get defaultLocationTypeValue => _defaultLocationTypeValue;
   int? get minPrice => _minPrice;
   int? get maxPrice => _maxPrice;
+  String? get remark => _remark;
 }

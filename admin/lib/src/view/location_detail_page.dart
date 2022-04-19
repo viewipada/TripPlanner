@@ -5,7 +5,6 @@ import 'package:admin/src/shared_pref.dart';
 import 'package:admin/src/size_config.dart';
 import 'package:admin/src/view_models/dashboard_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
@@ -361,6 +360,17 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                     buildOpeningHour("วันศุกร์", location!.openingHour.fri),
                     buildOpeningHour("วันเสาร์", location!.openingHour.sat),
                     buildOpeningHour("วันอาทิตย์", location!.openingHour.sun),
+                    location!.remark == null
+                        ? const SizedBox()
+                        : subtitle('หมายเหตุ', ''),
+                    location!.remark == null
+                        ? const SizedBox()
+                        : TextFormField(
+                            initialValue: location!.remark,
+                            maxLines: 1,
+                            readOnly: true,
+                            enabled: false,
+                          ),
                     location!.locationStatus == "In progress"
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.end,

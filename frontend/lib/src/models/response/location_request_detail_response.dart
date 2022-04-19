@@ -16,6 +16,7 @@ class LocationRequestDetailResponse {
   final String province;
   final int? minPrice;
   final int? maxPrice;
+  final String? remark;
 
   LocationRequestDetailResponse({
     required this.locationId,
@@ -33,6 +34,7 @@ class LocationRequestDetailResponse {
     required this.province,
     this.maxPrice,
     this.minPrice,
+    this.remark,
   });
 
   factory LocationRequestDetailResponse.fromJson(Map<String, dynamic> json) {
@@ -52,6 +54,7 @@ class LocationRequestDetailResponse {
       province: json['province'] as String,
       minPrice: json['min_price'],
       maxPrice: json['max_price'],
+      remark: json['remark'],
     );
   }
 

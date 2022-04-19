@@ -55,7 +55,6 @@ class DashboardService {
     // print(response.body);
     if (response.statusCode == 200) {
       var data = LocationDetailResponse.fromJson(json.decode(response.body));
-      // print(data);
       return data;
     } else {
       throw Exception("can not fetch data hot location");
@@ -66,7 +65,6 @@ class DashboardService {
       int locationId, String status, String remark) async {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
-      print(remark);
       final response =
           await http.put(Uri.parse("$baseUrl/api/locations/$locationId"),
               headers: <String, String>{
