@@ -582,7 +582,7 @@ Widget buildTripItem(TripItem item, TripStepperViewModel tripStepperViewModel) {
                             ),
                             label: Text(
                               item.startTime == null
-                                  ? 'ยังไม่ได้ตั้ง'
+                                  ? 'ไม่ระบุ'
                                   : DateFormat("HH:mm")
                                       .format(DateTime.parse(item.startTime!))
                                       .toString(),
