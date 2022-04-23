@@ -231,15 +231,14 @@ exports.findAllData = async (req, res, next) => {
 exports.searchAdmin = async (req, res, next) => {
   try {
     const filters = await req.query.category;
-    const { sort } = await req.params;
     //let filters = await req.query.filters;
-    console.log(sort == "rating" ? "averageRating" : "totalCheckin");
+
     console.log("filters : " + filters);
 
     const data = await Location.findAll({
       where: { category: filters, locationStatus: { [Op.or]: ["Approved", "Deny"] } },
       order: [
-        [sort == "rating" ? "averageRating" : "totalCheckin", "DESC"],
+        ["updatedAt", "DESC"],
         ["locationName", "ASC"],
       ],
     });

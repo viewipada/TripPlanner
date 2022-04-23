@@ -58,6 +58,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING(15),
       defaultValue: "In progress",
     },
+    remark: {
+      type : Sequelize.STRING(500),
+      defaultValue: "-"
+    }
   });
 
   return Location;
