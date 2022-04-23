@@ -360,10 +360,10 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                     buildOpeningHour("วันศุกร์", location!.openingHour.fri),
                     buildOpeningHour("วันเสาร์", location!.openingHour.sat),
                     buildOpeningHour("วันอาทิตย์", location!.openingHour.sun),
-                    location!.remark == null
+                    location!.remark == '-'
                         ? const SizedBox()
                         : subtitle('หมายเหตุ', ''),
-                    location!.remark == null
+                    location!.remark == '-'
                         ? const SizedBox()
                         : TextFormField(
                             initialValue: location!.remark,

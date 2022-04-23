@@ -651,7 +651,7 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                     ),
                     subtitle('เขียนแนะนำสถานที่เบื้องต้น ', '*'),
                     SizedBox(
-                      height: getProportionateScreenHeight(150),
+                      height: getProportionateScreenHeight(300),
                       child: TextFormField(
                         maxLines: 100,
                         maxLength: 300,
@@ -944,33 +944,330 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                                     alertDialog(
                                         context, 'กรุณาเพิ่มรูปภาพสถานที่');
                                   } else {
-                                    setState(() {
-                                      isLoading = true;
-                                    });
-                                    createLocationViewModel
-                                        .createLocation(context)
-                                        .then((value) {
-                                      if (value == 201) {
-                                        setState(() {
-                                          isLoading = false;
-                                        });
-                                        const snackBar = SnackBar(
-                                          backgroundColor: Palette.primaryColor,
-                                          content: Text(
-                                            'สร้างสถานที่สำเร็จ',
-                                            style: TextStyle(
-                                              fontFamily: 'Sukhumvit',
-                                              fontSize: 14,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
+                                    showDialog<String>(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                        ),
+                                        content: SizedBox(
+                                          width: SizeConfig.screenWidth / 2,
+                                          height: SizeConfig.screenHeight -
+                                              SizeConfig.screenHeight / 3,
+                                          child: SingleChildScrollView(
+                                            child: Column(
+                                              children: [
+                                                Card(
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius.circular(
+                                                                      10.0))),
+                                                  child: Image.memory(
+                                                    createLocationViewModel
+                                                        .fileBytes!,
+                                                    height:
+                                                        getProportionateScreenHeight(
+                                                            350),
+                                                    width: double.infinity,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                  clipBehavior: Clip.antiAlias,
+                                                ),
+                                                SizedBox(
+                                                  height:
+                                                      getProportionateScreenHeight(
+                                                          25),
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    const Expanded(
+                                                      child: Text(
+                                                        'ชื่อสถานที่',
+                                                        style: FontAssets
+                                                            .columnText,
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Text(
+                                                        createLocationViewModel
+                                                            .locationName,
+                                                        style:
+                                                            FontAssets.bodyText,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    const Expanded(
+                                                      child: Text(
+                                                        'หมวดหมู่สถานที่',
+                                                        style: FontAssets
+                                                            .columnText,
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Text(
+                                                        createLocationViewModel
+                                                            .locationCategoryValue!,
+                                                        style:
+                                                            FontAssets.bodyText,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    const Expanded(
+                                                      child: Text(
+                                                        'ประเภทสถานที่',
+                                                        style: FontAssets
+                                                            .columnText,
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Text(
+                                                        createLocationViewModel
+                                                            .locationTypeValue!,
+                                                        style:
+                                                            FontAssets.bodyText,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    const Expanded(
+                                                      child: Text(
+                                                        'จังหวัด',
+                                                        style: FontAssets
+                                                            .columnText,
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Text(
+                                                        createLocationViewModel
+                                                            .provinceValue!,
+                                                        style:
+                                                            FontAssets.bodyText,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    const Expanded(
+                                                      child: Text(
+                                                        'ตำแหน่งบนแผนที่',
+                                                        style: FontAssets
+                                                            .columnText,
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Text(
+                                                        '${createLocationViewModel.latitude}, ${createLocationViewModel.longitude}',
+                                                        style:
+                                                            FontAssets.bodyText,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    const Expanded(
+                                                      child: Text(
+                                                        'เขียนแนะนำสถานที่เบื้องต้น',
+                                                        style: FontAssets
+                                                            .columnText,
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Text(
+                                                        createLocationViewModel
+                                                            .description,
+                                                        style:
+                                                            FontAssets.bodyText,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    const Expanded(
+                                                      child: Text(
+                                                        'เบอร์ติดต่อ',
+                                                        style: FontAssets
+                                                            .columnText,
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Text(
+                                                        createLocationViewModel
+                                                                    .contactNumber ==
+                                                                ''
+                                                            ? '-'
+                                                            : createLocationViewModel
+                                                                .contactNumber,
+                                                        style:
+                                                            FontAssets.bodyText,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    const Expanded(
+                                                      child: Text(
+                                                        'เว็บไซต์, Facebook',
+                                                        style: FontAssets
+                                                            .columnText,
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Text(
+                                                        createLocationViewModel
+                                                                    .website ==
+                                                                ''
+                                                            ? '-'
+                                                            : createLocationViewModel
+                                                                .website,
+                                                        style:
+                                                            FontAssets.bodyText,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    const Expanded(
+                                                      child: Text(
+                                                        'วันเวลาทำการ',
+                                                        style: FontAssets
+                                                            .columnText,
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Column(
+                                                        children:
+                                                            createLocationViewModel
+                                                                .dayOfWeek
+                                                                .map(
+                                                                    (day) =>
+                                                                        Row(
+                                                                          children: [
+                                                                            Expanded(
+                                                                              child: Text(
+                                                                                day['day'],
+                                                                                style: FontAssets.bodyText,
+                                                                              ),
+                                                                            ),
+                                                                            Expanded(
+                                                                              child: Text(
+                                                                                day['isOpening'] ? '${day['openTime']} - ${day['closedTime']}' : 'ปิด',
+                                                                                style: FontAssets.bodyText,
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ))
+                                                                .toList(),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ],
                                             ),
-                                            textAlign: TextAlign.center,
                                           ),
-                                        );
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(snackBar);
-                                      }
-                                    });
+                                        ),
+                                        actions: <Widget>[
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              bottom:
+                                                  getProportionateScreenHeight(
+                                                      15),
+                                            ),
+                                            child: TextButton(
+                                              onPressed: () => isLoading
+                                                  ? null
+                                                  : Navigator.pop(
+                                                      context, 'ยกเลิก'),
+                                              child: const Text(
+                                                'ยกเลิก',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                bottom:
+                                                    getProportionateScreenHeight(
+                                                        15),
+                                                right:
+                                                    getProportionateScreenWidth(
+                                                        5)),
+                                            child: TextButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  isLoading = true;
+                                                });
+                                                createLocationViewModel
+                                                    .createLocation(context)
+                                                    .then((value) {
+                                                  if (value == 201) {
+                                                    setState(() {
+                                                      isLoading = false;
+                                                    });
+                                                    const snackBar = SnackBar(
+                                                      backgroundColor:
+                                                          Palette.primaryColor,
+                                                      content: Text(
+                                                        'สร้างสถานที่สำเร็จ',
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'Sukhumvit',
+                                                          fontSize: 14,
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                    );
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(snackBar);
+                                                  }
+                                                  Navigator.pop(
+                                                      context, 'ยืนยัน');
+                                                });
+                                              },
+                                              child: const Text(
+                                                'ยืนยัน',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              style: TextButton.styleFrom(
+                                                backgroundColor: isLoading
+                                                    ? Palette.infoText
+                                                    : Palette.primaryColor,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
                                   }
                                 } else {
                                   alertDialog(context,

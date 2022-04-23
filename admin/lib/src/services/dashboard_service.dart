@@ -12,7 +12,7 @@ class DashboardService {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
       final response = await http.get(Uri.parse(
-          '$baseUrl/api/locations/admin/search/rating?category=$category'));
+          '$baseUrl/api/locations/admin/search/updatedAt?category=$category'));
 
       if (response.statusCode == 200) {
         var data = json.decode(response.body) as List<dynamic>;
