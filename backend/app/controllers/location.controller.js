@@ -272,7 +272,7 @@ exports.searchAdmin = async (req, res, next) => {
       const allData = await Location.findAll({
         where: { locationStatus: { [Op.or]: ["Approved", "Deny"] } },
         order: [
-          [sort == "rating" ? "averageRating" : "totalCheckin", "DESC"],
+          ["updatedAt", "DESC"],
           ["locationName", "ASC"],
         ],
       });
