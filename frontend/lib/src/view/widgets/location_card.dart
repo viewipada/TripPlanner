@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
+import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
 import 'package:trip_planner/src/models/response/location_card_response.dart';
 import 'package:trip_planner/src/view_models/home_view_model.dart';
@@ -98,12 +99,17 @@ class LocationCard extends StatelessWidget {
                         ),
                         Expanded(
                           child: Container(
+                            padding: EdgeInsets.only(
+                                left: getProportionateScreenWidth(6)),
                             width: 100,
                             child: Text(
                               location.locationName,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
-                              style: FontAssets.subtitleText,
+                              style: TextStyle(
+                                  color: Palette.BodyText,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
