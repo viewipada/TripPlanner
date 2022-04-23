@@ -54,11 +54,12 @@ class HomeService {
     final userId = await SharedPref().getUserId();
     if (userId != null) {
       List<TripCardResponse> tripRecommendedList = [];
-      final response = await http.get(Uri.parse(
-          "https://run.mocky.io/v3/049d150b-e9ca-474d-a94e-a0825ac3d495"));
+      final response = await http
+          .get(Uri.parse("${recommendUrl}/Trip_recommendation/${userId}"));
 
       if (response.statusCode == 200) {
-        var data = json.decode(response.body) as List<dynamic>;
+        var data =
+            json.decode(utf8.decode(response.body.codeUnits)) as List<dynamic>;
         data
             .map((item) =>
                 tripRecommendedList.add(TripCardResponse.fromJson(item)))
