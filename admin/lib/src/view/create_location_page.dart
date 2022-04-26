@@ -1155,30 +1155,40 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                                                       ),
                                                     ),
                                                     Expanded(
-                                                      child: Column(
-                                                        children:
-                                                            createLocationViewModel
-                                                                .dayOfWeek
-                                                                .map(
-                                                                    (day) =>
-                                                                        Row(
-                                                                          children: [
-                                                                            Expanded(
-                                                                              child: Text(
-                                                                                day['day'],
-                                                                                style: FontAssets.bodyText,
+                                                      child: createLocationViewModel
+                                                              .dayOfWeek
+                                                              .every((element) =>
+                                                                  element[
+                                                                      'isOpening'] ==
+                                                                  false)
+                                                          ? const Text(
+                                                              '-',
+                                                              style: FontAssets
+                                                                  .bodyText,
+                                                            )
+                                                          : Column(
+                                                              children:
+                                                                  createLocationViewModel
+                                                                      .dayOfWeek
+                                                                      .map((day) =>
+                                                                          Row(
+                                                                            children: [
+                                                                              Expanded(
+                                                                                child: Text(
+                                                                                  day['day'],
+                                                                                  style: FontAssets.bodyText,
+                                                                                ),
                                                                               ),
-                                                                            ),
-                                                                            Expanded(
-                                                                              child: Text(
-                                                                                day['isOpening'] ? '${day['openTime']} - ${day['closedTime']}' : 'ปิด',
-                                                                                style: FontAssets.bodyText,
+                                                                              Expanded(
+                                                                                child: Text(
+                                                                                  day['isOpening'] ? '${day['openTime']} - ${day['closedTime']}' : 'ปิด',
+                                                                                  style: FontAssets.bodyText,
+                                                                                ),
                                                                               ),
-                                                                            ),
-                                                                          ],
-                                                                        ))
-                                                                .toList(),
-                                                      ),
+                                                                            ],
+                                                                          ))
+                                                                      .toList(),
+                                                            ),
                                                     )
                                                   ],
                                                 ),

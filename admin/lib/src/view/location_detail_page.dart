@@ -353,13 +353,38 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                     SizedBox(
                       height: getProportionateScreenHeight(15),
                     ),
-                    buildOpeningHour("วันจันทร์", location!.openingHour.mon),
-                    buildOpeningHour("วันอังคาร", location!.openingHour.tue),
-                    buildOpeningHour("วันพุธ", location!.openingHour.wed),
-                    buildOpeningHour("วันพฤหัสบดี", location!.openingHour.thu),
-                    buildOpeningHour("วันศุกร์", location!.openingHour.fri),
-                    buildOpeningHour("วันเสาร์", location!.openingHour.sat),
-                    buildOpeningHour("วันอาทิตย์", location!.openingHour.sun),
+                    location!.openingHour.mon == "ปิด" &&
+                            location!.openingHour.tue == "ปิด" &&
+                            location!.openingHour.wed == "ปิด" &&
+                            location!.openingHour.thu == "ปิด" &&
+                            location!.openingHour.fri == "ปิด" &&
+                            location!.openingHour.sat == "ปิด" &&
+                            location!.openingHour.sun == "ปิด"
+                        ? TextFormField(
+                            initialValue: '-',
+                            maxLines: 1,
+                            readOnly: true,
+                            enabled: false,
+                          )
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              buildOpeningHour(
+                                  "วันจันทร์", location!.openingHour.mon),
+                              buildOpeningHour(
+                                  "วันอังคาร", location!.openingHour.tue),
+                              buildOpeningHour(
+                                  "วันพุธ", location!.openingHour.wed),
+                              buildOpeningHour(
+                                  "วันพฤหัสบดี", location!.openingHour.thu),
+                              buildOpeningHour(
+                                  "วันศุกร์", location!.openingHour.fri),
+                              buildOpeningHour(
+                                  "วันเสาร์", location!.openingHour.sat),
+                              buildOpeningHour(
+                                  "วันอาทิตย์", location!.openingHour.sun),
+                            ],
+                          ),
                     location!.remark == '-'
                         ? const SizedBox()
                         : subtitle('หมายเหตุ', ''),

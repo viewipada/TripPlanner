@@ -586,123 +586,134 @@ Widget openingHour(String title, OpeningHour openingHour) {
         ),
         Expanded(
           flex: 2,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      "วันจันทร์",
-                      style: FontAssets.bodyText,
+          child: openingHour.mon == "ปิด" &&
+                  openingHour.tue == "ปิด" &&
+                  openingHour.wed == "ปิด" &&
+                  openingHour.thu == "ปิด" &&
+                  openingHour.fri == "ปิด" &&
+                  openingHour.sat == "ปิด" &&
+                  openingHour.sun == "ปิด"
+              ? Text(
+                  "-",
+                  style: FontAssets.bodyText,
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "วันจันทร์",
+                            style: FontAssets.bodyText,
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            "${openingHour.mon}",
+                            style: FontAssets.bodyText,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      "${openingHour.mon}",
-                      style: FontAssets.bodyText,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "วันอังคาร",
+                            style: FontAssets.bodyText,
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            "${openingHour.tue}",
+                            style: FontAssets.bodyText,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      "วันอังคาร",
-                      style: FontAssets.bodyText,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "วันพุธ",
+                            style: FontAssets.bodyText,
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            "${openingHour.wed}",
+                            style: FontAssets.bodyText,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      "${openingHour.tue}",
-                      style: FontAssets.bodyText,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "วันพฤหัสบดี",
+                            style: FontAssets.bodyText,
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            "${openingHour.thu}",
+                            style: FontAssets.bodyText,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      "วันพุธ",
-                      style: FontAssets.bodyText,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "วันศุกร์",
+                            style: FontAssets.bodyText,
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            "${openingHour.fri}",
+                            style: FontAssets.bodyText,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      "${openingHour.wed}",
-                      style: FontAssets.bodyText,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "วันเสาร์",
+                            style: FontAssets.bodyText,
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            "${openingHour.sat}",
+                            style: FontAssets.bodyText,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      "วันพฤหัสบดี",
-                      style: FontAssets.bodyText,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "วันอาทิตย์",
+                            style: FontAssets.bodyText,
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            "${openingHour.sun}",
+                            style: FontAssets.bodyText,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      "${openingHour.thu}",
-                      style: FontAssets.bodyText,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      "วันศุกร์",
-                      style: FontAssets.bodyText,
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      "${openingHour.fri}",
-                      style: FontAssets.bodyText,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      "วันเสาร์",
-                      style: FontAssets.bodyText,
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      "${openingHour.sat}",
-                      style: FontAssets.bodyText,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      "วันอาทิตย์",
-                      style: FontAssets.bodyText,
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      "${openingHour.sun}",
-                      style: FontAssets.bodyText,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                  ],
+                ),
         ),
       ],
     ),
