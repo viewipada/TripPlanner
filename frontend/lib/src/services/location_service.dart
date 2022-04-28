@@ -26,10 +26,9 @@ class LocationService {
   Future<List<LocationRecommendResponse>> getLocationRecommend(
       int category, double lat1, double lng1, double lat2, double lng2) async {
     final userId = await SharedPref().getUserId();
-
     if (userId != null) {
       final response = await http.get(Uri.parse(
-          '${recommendUrl}/nearly_location/${category},${lat1},${lng1},${lat2},${lng2}'));
+          '${recommendUrl}/recommendation_nearly_user/${userId},${category},${lat1},${lng1},${lat2},${lng2}'));
 
       if (response.statusCode == 200) {
         List<LocationRecommendResponse> locationRecommendList;
