@@ -65,8 +65,8 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
               content: Form(
                 key: _formKey,
                 child: SizedBox(
-                  width: SizeConfig.screenWidth / 3,
-                  height: getProportionateScreenHeight(150),
+                  width: SizeConfig.screenWidth / 2,
+                  height: getProportionateScreenHeight(200),
                   child: TextFormField(
                     maxLines: 100,
                     maxLength: 120,
