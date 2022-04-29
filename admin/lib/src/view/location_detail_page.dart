@@ -62,35 +62,33 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                 'หมายเหตุ: ',
                 style: FontAssets.subtitleText,
               ),
-              content: SizedBox(
-                width: SizeConfig.screenWidth / 3,
-                height: getProportionateScreenHeight(150),
-                child: Form(
-                  key: _formKey,
-                  child: Expanded(
-                    child: TextFormField(
-                      maxLines: 100,
-                      maxLength: 120,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'โปรดระบุ';
-                        }
-                        return null;
-                      },
-                      onChanged: (value) {
-                        setState(() {
-                          remark = value;
-                        });
-                      },
-                      controller: textController,
-                      decoration: const InputDecoration(
-                          isDense: true,
-                          hintText:
-                              "โปรดระบุเหตุผลในการปฏิเสธคำขอสร้างสถานที่"),
-                    ),
+              content: Form(
+                key: _formKey,
+                child: SizedBox(
+                  width: SizeConfig.screenWidth / 3,
+                  height: getProportionateScreenHeight(150),
+                  child: TextFormField(
+                    maxLines: 100,
+                    maxLength: 120,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'โปรดระบุ';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      setState(() {
+                        remark = value;
+                      });
+                    },
+                    controller: textController,
+                    decoration: const InputDecoration(
+                        isDense: true,
+                        hintText: "โปรดระบุเหตุผลในการปฏิเสธคำขอสร้างสถานที่"),
                   ),
                 ),
               ),
+              // ),
               actions: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(
