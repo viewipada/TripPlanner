@@ -1144,11 +1144,13 @@ class TripStepperViewModel with ChangeNotifier {
             ),
             icon: await BitmapDescriptor.fromBytes(
               await getBytesFromAsset(
-                location.category == 'ที่เที่ยว'
+                location.category == 1
                     ? IconAssets.travelMarker
-                    : location.category == 'ที่กิน'
+                    : location.category == 2
                         ? IconAssets.foodMarker
-                        : IconAssets.hotelMarker,
+                        : location.category == 3
+                            ? IconAssets.hotelMarker
+                            : IconAssets.shopMarker,
                 100,
               ),
             ),
