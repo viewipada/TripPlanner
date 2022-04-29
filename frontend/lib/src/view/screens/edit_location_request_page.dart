@@ -1020,7 +1020,7 @@ class _EditLocationRequestPageState extends State<EditLocationRequestPage> {
                                     ),
                                   ),
                                 ),
-                          createLocationViewModel.remark == null
+                          createLocationViewModel.remark == '-'
                               ? SizedBox()
                               : Container(
                                   padding: EdgeInsets.symmetric(
