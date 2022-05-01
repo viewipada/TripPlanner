@@ -134,7 +134,8 @@ class _ConfirmTripPageState extends State<ConfirmTripPage> {
                     buildTrumbnailSelection(tripStepperViewModel, trip),
                     Center(
                       child: OutlinedButton(
-                        onPressed: () {},
+                        onPressed: () => tripStepperViewModel
+                            .goToRouteOnMapPage(context, trip.tripId!, days),
                         child: Padding(
                           padding: EdgeInsets.symmetric(
                               vertical: getProportionateScreenHeight(10)),

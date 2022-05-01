@@ -91,6 +91,7 @@ class TripFormViewModel with ChangeNotifier {
 
     if (userId != null) {
       final trip = Trip(
+        startDate: _startDate,
         tripName: _tripName,
         firstLocation: startPointList[0].locationName,
         lastLocation: startPointList[startPointList.length - 1].locationName,

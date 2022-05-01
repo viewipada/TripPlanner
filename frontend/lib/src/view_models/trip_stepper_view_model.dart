@@ -510,8 +510,9 @@ class TripStepperViewModel with ChangeNotifier {
         lat1 = tripItems[index + 1].latitude;
         lng1 = tripItems[index + 1].longitude;
       } else {
-        var location = tripItems
-            .lastWhere((element) => element.day == _day - 1 && element.no >= 0);
+        List<TripItem> items = await _tripItemOperations
+            .getAllTripItemsByTripIdAndDay(trip.tripId!, _day - 1);
+        var location = items.last;
         lat2 = location.latitude;
         lng2 = location.longitude;
       }
@@ -528,6 +529,7 @@ class TripStepperViewModel with ChangeNotifier {
       lat2 = tripItems[index + 1].latitude;
       lng2 = tripItems[index + 1].longitude;
     }
+
     final LocationRecommendResponse? result = await Navigator.push(
       context,
       MaterialPageRoute(

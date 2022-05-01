@@ -121,6 +121,10 @@ class LoginViewModel with ChangeNotifier {
         builder: (context) => OnBoardingPage(),
       ),
     );
+    _agree = false;
+    _gender = null;
+    _date = null;
+    _startDate = ' วว/ดด/ปป';
   }
 
   String get userName => _userName;

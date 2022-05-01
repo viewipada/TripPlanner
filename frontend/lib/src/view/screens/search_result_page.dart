@@ -36,188 +36,195 @@ class _SearchResultPageState extends State<SearchResultPage> {
     SizeConfig().init(context);
     final searchViewModel = Provider.of<SearchViewModel>(context);
 
-    return GestureDetector(
-      onTap: () {
-        FocusScopeNode currentFocus = FocusScope.of(context);
-        if (!currentFocus.hasPrimaryFocus) {
-          currentFocus.unfocus();
-        }
-      },
-      child: DefaultTabController(
-        initialIndex: 0,
-        length: searchViewModel.tabs.length,
-        child: Builder(builder: (context) {
-          final tabController = DefaultTabController.of(context)!;
-          tabController.addListener(() => searchViewModel.getSearchResultBy(
-              searchViewModel.tabs[tabController.index]['value'],
-              searchViewModel.dropdownItemList[0]['value']));
+    return WillPopScope(
+      child: GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: DefaultTabController(
+          initialIndex: 0,
+          length: searchViewModel.tabs.length,
+          child: Builder(builder: (context) {
+            final tabController = DefaultTabController.of(context)!;
+            tabController.addListener(() => searchViewModel.getSearchResultBy(
+                searchViewModel.tabs[tabController.index]['value'],
+                searchViewModel.dropdownItemList[0]['value']));
 
-          return Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back_rounded),
-                color: Palette.BackIconColor,
-                onPressed: () {
-                  searchViewModel.goBack(context);
-                },
+            return Scaffold(
+              appBar: AppBar(
+                leading: IconButton(
+                  icon: Icon(Icons.arrow_back_rounded),
+                  color: Palette.BackIconColor,
+                  onPressed: () {
+                    searchViewModel.goBack(context);
+                  },
+                ),
+                title: Text(
+                  "ค้นหา",
+                  style: FontAssets.headingText,
+                ),
+                centerTitle: true,
+                actions: [
+                  BaggageCart(),
+                ],
+                backgroundColor: Colors.white,
+                elevation: 0,
               ),
-              title: Text(
-                "ค้นหา",
-                style: FontAssets.headingText,
-              ),
-              centerTitle: true,
-              actions: [
-                BaggageCart(),
-              ],
-              backgroundColor: Colors.white,
-              elevation: 0,
-            ),
-            body: SafeArea(
-              child: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      color: Colors.white,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: getProportionateScreenWidth(15),
-                        vertical: getProportionateScreenHeight(10),
-                      ),
-                      child: TextField(
-                        controller: textController,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.search_rounded,
-                            size: 30,
-                          ),
-                          suffixIcon: IconButton(
-                            icon: Icon(Icons.cancel_rounded,
-                                color: Palette.Outline),
-                            onPressed: () {
-                              textController.clear();
-                              searchViewModel.isSearchMode();
-                            },
-                          ),
-                          hintText: 'ค้นหาที่เที่ยวเลย',
+              body: SafeArea(
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        color: Colors.white,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: getProportionateScreenWidth(15),
+                          vertical: getProportionateScreenHeight(10),
                         ),
-                        onChanged: (value) {
-                          if (value == "") {
-                            searchViewModel.isSearchMode();
-                          } else {
-                            searchViewModel.isQueryMode();
-                            searchViewModel.query(allLocationList, value);
-                          }
-                        },
+                        child: TextField(
+                          controller: textController,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.search_rounded,
+                              size: 30,
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.cancel_rounded,
+                                  color: Palette.Outline),
+                              onPressed: () {
+                                textController.clear();
+                                searchViewModel.isSearchMode();
+                              },
+                            ),
+                            hintText: 'ค้นหาที่เที่ยวเลย',
+                          ),
+                          onChanged: (value) {
+                            if (value == "") {
+                              searchViewModel.isSearchMode();
+                            } else {
+                              searchViewModel.isQueryMode();
+                              searchViewModel.query(allLocationList, value);
+                            }
+                          },
+                        ),
                       ),
-                    ),
-                    Visibility(
-                      visible: !searchViewModel.isQuery,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border(
-                            bottom: BorderSide(
-                              color: Colors.black54,
+                      Visibility(
+                        visible: !searchViewModel.isQuery,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Colors.black54,
+                              ),
                             ),
                           ),
-                        ),
-                        child: TabBar(
-                          labelColor: Palette.BodyText,
-                          labelStyle: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Sukhumvit',
-                          ),
-                          unselectedLabelStyle: TextStyle(
-                            fontSize: 16,
-                            color: Palette.AdditionText,
-                            fontFamily: 'Sukhumvit',
-                          ),
-                          tabs: searchViewModel.tabs
-                              .map(
-                                (item) => Tab(
-                                  text: item['label'],
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      ),
-                    ),
-                    Visibility(
-                      visible: !searchViewModel.isQuery,
-                      child: Expanded(
-                        child: TabBarView(
-                          children: <Widget>[
-                            buildTabBarView(context, searchViewModel, 0),
-                            buildTabBarView(context, searchViewModel, 1),
-                            buildTabBarView(context, searchViewModel, 2),
-                            buildTabBarView(context, searchViewModel, 3),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Visibility(
-                      visible: searchViewModel.isQuery,
-                      child: Expanded(
-                        child: searchViewModel.queryResult.isEmpty
-                            ? Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        bottom:
-                                            getProportionateScreenHeight(10)),
-                                    child: Text(
-                                      'ไม่พบผลลัพธ์\nมาช่วยเพิ่มสถานที่กันเถอะ',
-                                      style: FontAssets.bodyText,
-                                      textAlign: TextAlign.center,
-                                    ),
+                          child: TabBar(
+                            labelColor: Palette.BodyText,
+                            labelStyle: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Sukhumvit',
+                            ),
+                            unselectedLabelStyle: TextStyle(
+                              fontSize: 16,
+                              color: Palette.AdditionText,
+                              fontFamily: 'Sukhumvit',
+                            ),
+                            tabs: searchViewModel.tabs
+                                .map(
+                                  (item) => Tab(
+                                    text: item['label'],
                                   ),
-                                  ElevatedButton.icon(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.add,
-                                      color: Colors.white,
-                                      size: 20,
+                                )
+                                .toList(),
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: !searchViewModel.isQuery,
+                        child: Expanded(
+                          child: TabBarView(
+                            children: <Widget>[
+                              buildTabBarView(context, searchViewModel, 0),
+                              buildTabBarView(context, searchViewModel, 1),
+                              buildTabBarView(context, searchViewModel, 2),
+                              buildTabBarView(context, searchViewModel, 3),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: searchViewModel.isQuery,
+                        child: Expanded(
+                          child: searchViewModel.queryResult.isEmpty
+                              ? Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          bottom:
+                                              getProportionateScreenHeight(10)),
+                                      child: Text(
+                                        'ไม่พบผลลัพธ์\nมาช่วยเพิ่มสถานที่กันเถอะ',
+                                        style: FontAssets.bodyText,
+                                        textAlign: TextAlign.center,
+                                      ),
                                     ),
-                                    label: Text(
-                                      'สร้างสถานที่',
-                                      style: TextStyle(
+                                    ElevatedButton.icon(
+                                      onPressed: () {},
+                                      icon: Icon(
+                                        Icons.add,
                                         color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
+                                        size: 20,
+                                      ),
+                                      label: Text(
+                                        'สร้างสถานที่',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Palette.SecondaryColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                        ),
                                       ),
                                     ),
-                                    style: ElevatedButton.styleFrom(
-                                      primary: Palette.SecondaryColor,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : ListView.builder(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: getProportionateScreenHeight(10)),
-                                itemCount: searchViewModel.queryResult.length,
-                                itemBuilder: (context, index) =>
-                                    buildSearchResultCard(
-                                        context,
-                                        searchViewModel,
-                                        searchViewModel.queryResult[index]),
-                              ),
+                                  ],
+                                )
+                              : ListView.builder(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical:
+                                          getProportionateScreenHeight(10)),
+                                  itemCount: searchViewModel.queryResult.length,
+                                  itemBuilder: (context, index) =>
+                                      buildSearchResultCard(
+                                          context,
+                                          searchViewModel,
+                                          searchViewModel.queryResult[index]),
+                                ),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        }),
+            );
+          }),
+        ),
       ),
+      onWillPop: () async {
+        searchViewModel.goBack(context);
+        return false;
+      },
     );
   }
 }
