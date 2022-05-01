@@ -729,11 +729,12 @@ class TripStepperViewModel with ChangeNotifier {
   Future pickDate(BuildContext context, Trip trip) async {
     final newDate = await showDatePicker(
       context: context,
-      initialDate: trip.startDate == null
+      initialDate: trip.startDate == null || trip.startDate == "วันเริ่มต้นทริป"
           ? DateTime.now()
           : DateTime.parse(DateFormat('yyyy-MM-dd')
               .format(DateFormat('dd/MM/yyyy').parse(trip.startDate!))),
       firstDate: trip.startDate != null &&
+              trip.startDate != "วันเริ่มต้นทริป" &&
               DateTime.parse(DateFormat('yyyy-MM-dd')
                       .format(DateFormat('dd/MM/yyyy').parse(trip.startDate!)))
                   .isBefore(DateTime.now())
@@ -748,6 +749,7 @@ class TripStepperViewModel with ChangeNotifier {
       return;
     }
     trip.startDate = '${newDate.day}/${newDate.month}/${newDate.year}';
+    _tripsOperations.updateTrip(trip);
     notifyListeners();
   }
 
