@@ -21,26 +21,26 @@ class SurveyViewModel with ChangeNotifier {
       "label": "ปีนเขา",
       "value": "ปีนเขา",
     },
-    {
-      "imageUrl": ImageAssets.Act4,
-      "label": "พายเรือล่องแก่ง",
-      "value": "พายเรือล่องแก่ง",
-    },
-    {
-      "imageUrl": ImageAssets.Act5,
-      "label": "ดูพระอาทิตย์ขึ้น-ตก",
-      "value": "ดูพระอาทิตย์ขึ้น-ตก",
-    },
-    {
-      "imageUrl": ImageAssets.Act6,
-      "label": "ดูทะเลหมอก",
-      "value": "ดูทะเลหมอก",
-    },
-    {
-      "imageUrl": ImageAssets.Act7,
-      "label": "ล่องเรือ",
-      "value": "ล่องเรือ",
-    },
+    // {
+    //   "imageUrl": ImageAssets.Act4,
+    //   "label": "พายเรือล่องแก่ง",
+    //   "value": "พายเรือล่องแก่ง",
+    // },
+    // {
+    //   "imageUrl": ImageAssets.Act5,
+    //   "label": "ดูพระอาทิตย์ขึ้น-ตก",
+    //   "value": "ดูพระอาทิตย์ขึ้น-ตก",
+    // },
+    // {
+    //   "imageUrl": ImageAssets.Act6,
+    //   "label": "ดูทะเลหมอก",
+    //   "value": "ดูทะเลหมอก",
+    // },
+    // {
+    //   "imageUrl": ImageAssets.Act7,
+    //   "label": "ล่องเรือ",
+    //   "value": "ล่องเรือ",
+    // },
     {
       "imageUrl": ImageAssets.Act8,
       "label": "ถ่ายภาพสถานที่",
