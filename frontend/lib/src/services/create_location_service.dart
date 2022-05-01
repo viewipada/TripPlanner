@@ -178,7 +178,8 @@ class CreateLocationService {
                   "locationStatus": "In progress",
                   "openingHour": openingHour,
                   "min_price": minPrice,
-                  "max_price": maxPrice
+                  "max_price": maxPrice,
+                  "remark": "-"
                 },
               ));
 

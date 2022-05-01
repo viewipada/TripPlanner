@@ -841,20 +841,22 @@ class _EditLocationRequestPageState extends State<EditLocationRequestPage> {
                                                               style: FontAssets
                                                                   .bodyText,
                                                             ),
-                                                            IconButton(
-                                                              icon: Icon(
-                                                                Icons
-                                                                    .mode_edit_outline_outlined,
-                                                                color: Palette
-                                                                    .PrimaryColor,
+                                                            Expanded(
+                                                              child: IconButton(
+                                                                icon: Icon(
+                                                                  Icons
+                                                                      .mode_edit_outline_outlined,
+                                                                  color: Palette
+                                                                      .PrimaryColor,
+                                                                ),
+                                                                onPressed: () {
+                                                                  _showTimeSetting(
+                                                                    context,
+                                                                    createLocationViewModel,
+                                                                    day,
+                                                                  );
+                                                                },
                                                               ),
-                                                              onPressed: () {
-                                                                _showTimeSetting(
-                                                                  context,
-                                                                  createLocationViewModel,
-                                                                  day,
-                                                                );
-                                                              },
                                                             ),
                                                           ],
                                                         )
@@ -1087,6 +1089,9 @@ class _EditLocationRequestPageState extends State<EditLocationRequestPage> {
                                           alertDialog(
                                               context, 'กรุณาระบุวันเวลาทำการ');
                                         } else {
+                                          setState(() {
+                                            isLoading = true;
+                                          });
                                           createLocationViewModel
                                               .updateLocation(
                                                   context, locationId)

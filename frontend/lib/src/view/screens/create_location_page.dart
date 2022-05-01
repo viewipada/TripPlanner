@@ -780,20 +780,22 @@ class _CreateLocationPageState extends State<CreateLocationPage> {
                                                         style:
                                                             FontAssets.bodyText,
                                                       ),
-                                                      IconButton(
-                                                        icon: Icon(
-                                                          Icons
-                                                              .mode_edit_outline_outlined,
-                                                          color: Palette
-                                                              .PrimaryColor,
+                                                      Expanded(
+                                                        child: IconButton(
+                                                          icon: Icon(
+                                                            Icons
+                                                                .mode_edit_outline_outlined,
+                                                            color: Palette
+                                                                .PrimaryColor,
+                                                          ),
+                                                          onPressed: () {
+                                                            _showTimeSetting(
+                                                              context,
+                                                              createLocationViewModel,
+                                                              day,
+                                                            );
+                                                          },
                                                         ),
-                                                        onPressed: () {
-                                                          _showTimeSetting(
-                                                            context,
-                                                            createLocationViewModel,
-                                                            day,
-                                                          );
-                                                        },
                                                       ),
                                                     ],
                                                   )
