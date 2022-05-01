@@ -308,20 +308,20 @@ class _TripDetailPageState extends State<TripDetailPage> {
                       ),
                       child: ElevatedButton(
                         onPressed: () {
-                          if (trip.startDate != null &&
-                              DateTime.now().isAfter(DateTime.parse(
-                                      DateFormat('yyyy-MM-dd').format(
-                                          DateFormat('dd/MM/yyyy')
-                                              .parse(trip.startDate!)))
-                                  .add(Duration(days: trip.totalDay)))) {
-                            tripStepperViewModel.endTrip(trip);
-                          } else {
-                            alertDialog(
-                                context,
-                                trip.startDate == null
-                                    ? 'คุณยังไม่ได้กำหนดวันเริ่มต้นเดินทาง'
-                                    : 'คุณไม่สามารถจบทริปได้ กรุณาลองใหม่อีกครั้งหลังจากวันที่ ${DateFormat('dd/MM/yyyy').format(DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(trip.startDate!))).add(Duration(days: trip.totalDay - 1)))}');
-                          }
+                          // if (trip.startDate != null &&
+                          //     DateTime.now().isAfter(DateTime.parse(
+                          //             DateFormat('yyyy-MM-dd').format(
+                          //                 DateFormat('dd/MM/yyyy')
+                          //                     .parse(trip.startDate!)))
+                          //         .add(Duration(days: trip.totalDay)))) {
+                          tripStepperViewModel.endTrip(trip);
+                          // } else {
+                          //   alertDialog(
+                          //       context,
+                          //       trip.startDate == null
+                          //           ? 'คุณยังไม่ได้กำหนดวันเริ่มต้นเดินทาง'
+                          //           : 'คุณไม่สามารถจบทริปได้ กรุณาลองใหม่อีกครั้งหลังจากวันที่ ${DateFormat('dd/MM/yyyy').format(DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(trip.startDate!))).add(Duration(days: trip.totalDay - 1)))}');
+                          // }
                         },
                         child: Text(
                           'จบทริป',

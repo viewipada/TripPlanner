@@ -169,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                                 if (regex.hasMatch(value)) {
                                   return null;
                                 } else {
-                                  return 'กรุณาระบุตามรูปแบบที่กำหนด';
+                                  return 'ต้องมีตัวอักษรพิมพ์ใหญ่, พิมพ์เล็ก และตัวเลขอย่างน้อย 1 ตัว';
                                 }
                               }
                             },

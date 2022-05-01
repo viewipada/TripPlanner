@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:trip_planner/src/models/trip.dart';
 import 'package:trip_planner/src/models/trip_item.dart';
 import 'package:trip_planner/src/repository/shared_pref.dart';
+import 'dart:math' show cos, sqrt, asin;
 
 class TripService {
   final String baseUrl = 'https://eztrip-backend.herokuapp.com';
@@ -37,7 +38,9 @@ class TripService {
                       ? 1
                       : item.locationCategory == "ที่กิน"
                           ? 2
-                          : 3,
+                          : item.locationCategory == "ของฝาก"
+                              ? 3
+                              : 4,
                   "startTime": DateTime.parse(item.startTime!).toString(),
                   "distance": item.distance,
                   "duration": item.duration,
