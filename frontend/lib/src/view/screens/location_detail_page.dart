@@ -93,10 +93,14 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            locationDetailViewModel.locationDetail.locationName,
-                            style: FontAssets.titleText,
+                          Expanded(
+                            child: Text(
+                              locationDetailViewModel
+                                  .locationDetail.locationName,
+                              style: FontAssets.titleText,
+                            ),
                           ),
                           Row(
                             children: [

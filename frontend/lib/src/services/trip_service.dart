@@ -38,7 +38,7 @@ class TripService {
                       ? 1
                       : item.locationCategory == "ที่กิน"
                           ? 2
-                          : item.locationCategory == "ของฝาก"
+                          : item.locationCategory == "ที่พัก"
                               ? 3
                               : 4,
                   "startTime": DateTime.parse(item.startTime!).toString(),
