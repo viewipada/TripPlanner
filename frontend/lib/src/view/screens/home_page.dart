@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:trip_planner/assets.dart';
 import 'package:trip_planner/palette.dart';
 import 'package:trip_planner/size_config.dart';
+import 'package:trip_planner/src/models/response/location_card_response.dart';
+import 'package:trip_planner/src/models/response/trip_card_response.dart';
 import 'package:trip_planner/src/view/widgets/baggage_cart.dart';
 import 'package:trip_planner/src/view/widgets/loading.dart';
 import 'package:trip_planner/src/view/widgets/location_card.dart';
@@ -15,6 +17,35 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<LocationCardResponse>? hotLocations;
+  List<LocationCardResponse>? recommendLocations;
+  List<TripCardResponse>? trips;
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<HomeViewModel>(context, listen: false)
+        .getHotLocationList()
+        .then((value) {
+      setState(() {
+        hotLocations = value;
+      });
+    });
+    Provider.of<HomeViewModel>(context, listen: false)
+        .getLocationRecommendedList()
+        .then((value) {
+      setState(() {
+        recommendLocations = value;
+      });
+    });
+    Provider.of<HomeViewModel>(context, listen: false)
+        .getTripRecommendedList()
+        .then((value) {
+      setState(() {
+        trips = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -95,50 +126,26 @@ class _HomePageState extends State<HomePage> {
                 height: getProportionateScreenHeight(15),
               ),
               Divider(),
-              FutureBuilder(
-                future: Provider.of<HomeViewModel>(context, listen: false)
-                    .getHotLocationList(),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.hasData) {
-                    return LocationCard(
+              hotLocations == null
+                  ? loadingLocationCard(" สถานที่ยอดฮิต")
+                  : LocationCard(
                       header: " สถานที่ยอดฮิต",
                       locationList: homeViewModel.hotLocationList,
-                    );
-                  } else {
-                    return loadingLocationCard(" สถานที่ยอดฮิต");
-                  }
-                },
-              ),
+                    ),
               Divider(),
-              FutureBuilder(
-                future: Provider.of<HomeViewModel>(context, listen: false)
-                    .getLocationRecommendedList(),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.hasData) {
-                    return LocationCard(
+              recommendLocations == null
+                  ? loadingLocationCard(" แนะนำสำหรับคุณ")
+                  : LocationCard(
                       header: " แนะนำสำหรับคุณ",
                       locationList: homeViewModel.locationRecommendedList,
-                    );
-                  } else {
-                    return loadingLocationCard(" แนะนำสำหรับคุณ");
-                  }
-                },
-              ),
+                    ),
               Divider(),
-              FutureBuilder(
-                future: Provider.of<HomeViewModel>(context, listen: false)
-                    .getTripRecommendedList(),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.hasData) {
-                    return TripCard(
+              trips == null
+                  ? loadingTripCard(" ทริปที่คุณอาจถูกใจ")
+                  : TripCard(
                       header: " ทริปที่คุณอาจถูกใจ",
                       tripList: homeViewModel.tripRecommendedList,
-                    );
-                  } else {
-                    return loadingTripCard(" ทริปที่คุณอาจถูกใจ");
-                  }
-                },
-              ),
+                    )
             ],
           ),
         ),
