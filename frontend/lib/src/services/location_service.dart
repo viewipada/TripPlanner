@@ -7,7 +7,7 @@ import 'package:trip_planner/src/models/response/shop_response.dart';
 import 'package:trip_planner/src/repository/shared_pref.dart';
 
 class LocationService {
-  final String baseUrl = 'https://eztrip-backend.herokuapp.com';
+  final String baseUrl = 'http://10.0.2.2:8080';
   final String recommendUrl = 'https://travel-planning-ceproject.herokuapp.com';
 
   Future<LocationDetailResponse> getLocationDetailById(int locationId) async {

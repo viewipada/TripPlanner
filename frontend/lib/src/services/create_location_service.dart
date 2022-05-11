@@ -7,7 +7,7 @@ import 'package:trip_planner/src/models/response/location_request_detail_respons
 import 'package:trip_planner/src/repository/shared_pref.dart';
 
 class CreateLocationService {
-  final String baseUrl = 'https://eztrip-backend.herokuapp.com';
+  final String baseUrl = 'http://10.0.2.2:8080';
 
   Future<List> getLocationTypeList(int category) async {
     final response = await http

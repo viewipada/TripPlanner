@@ -7,7 +7,7 @@ import 'package:trip_planner/src/repository/shared_pref.dart';
 import 'dart:math' show cos, sqrt, asin;
 
 class TripService {
-  final String baseUrl = 'https://eztrip-backend.herokuapp.com';
+  final String baseUrl = 'http://10.0.2.2:8080';
 
   Future<int?> endTrip(Trip trip, List<TripItem> tripItems) async {
     final userId = await SharedPref().getUserId();

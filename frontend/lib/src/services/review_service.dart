@@ -6,7 +6,7 @@ import 'package:trip_planner/src/models/response/review_response.dart';
 import 'package:trip_planner/src/repository/shared_pref.dart';
 
 class ReviewService {
-  final String baseUrl = 'https://eztrip-backend.herokuapp.com';
+  final String baseUrl = 'http://10.0.2.2:8080';
 
   Future<ReviewResponse?> getReviewByUserIdAndLocationId(int locationId) async {
     final userId = await SharedPref().getUserId();
