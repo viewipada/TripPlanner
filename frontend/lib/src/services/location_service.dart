@@ -8,7 +8,7 @@ import 'package:trip_planner/src/repository/shared_pref.dart';
 
 class LocationService {
   final String baseUrl = 'http://10.0.2.2:8080';
-  final String recommendUrl = 'https://travel-planning-ceproject.herokuapp.com';
+  final String recommendUrl = 'http://10.0.2.2:8000';
 
   Future<LocationDetailResponse> getLocationDetailById(int locationId) async {
     final response =
