@@ -1,9 +1,5 @@
 from datetime import date, datetime
-# from tkinter import DoubleVar
 from tokenize import Triple
-# from sqlite3 import Date
-# from h11 import Data
-import pandas as pd
 import numpy as np
 from joblib import PrintTime, dump, load
 from random import randint
@@ -14,11 +10,11 @@ from sklearn.model_selection import train_test_split
 from fastapi import FastAPI, status, HTTPException, Request
 
 import sqlalchemy
-import uvicorn
-import joblib
-import re
-import json
-import asyncpg
+# import uvicorn
+# import joblib
+# import re
+# import json
+# import asyncpg
 
 import databases
 import sqlalchemy
@@ -33,10 +29,32 @@ import googlemaps
 import google_api
 from pyrecord import Record
 
-# import csv
-# import sys
-# import postgres_copy
-# import from folderName import filename
+# สำหรับการทำ model
+# pip install pandas 
+# pip install numpy
+# pip install scikit-learn 
+# pip install matplotlib
+
+# สำหรับการทำ API
+# pip install fastapi
+# pip install sqlalchemy
+# pip install databases
+# pip install pydantic
+# pip install typing
+# pip install uvicorn
+# pip install psycopg2
+# pip install gunicorn
+# pip install asyncpg
+
+# สำหรับการแปลงข้อมูล
+# pip install joblib 
+# pip install random
+# pip install datetime
+
+# สำหรับการนำ Google map มาใช้
+# pip install haversine
+# pip install google_api
+# pip install pyrecord
 
 # database
 SQLALCHEMY_DATABASE_URL = "postgresql://zfmsgbtyaipvev:0701919781293d9d17ff3aa96c31a3e91d70f6ea43e241179ffe6076e9d6e938@ec2-3-215-83-124.compute-1.amazonaws.com:5432/d3ngpebd1au102"

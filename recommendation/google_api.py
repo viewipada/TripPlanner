@@ -1,9 +1,9 @@
 
-from datetime import datetime
-from datetime import timedelta
-import time
+# from datetime import datetime
+# from datetime import timedelta
+# import time
 
-import responses
+# import responses
 import googlemaps
 
 import requests
@@ -337,3 +337,8 @@ def distance_between_location(lat1,long1,lat2,long2):
 # long2 = 100.45974649718559
 # dis = distance_between_location(lat1,long1,lat2,long2)
 # print("dis = ",type(dis),dis)
+
+# cd recommendation
+# .env\Scripts\activate
+# uvicorn main:app --reload
+# pip install aiohttp
