@@ -1,6 +1,7 @@
 from datetime import date, datetime
 from tokenize import Triple
 import numpy as np
+import pandas as pd
 from joblib import PrintTime, dump, load
 from random import randint
 
@@ -300,27 +301,25 @@ async def get_an_item(location_id: int):
     return await data
 
 
-# @app.get('/all_location/', response_model=List[Location], status_code=status.HTTP_200_OK)
-# async def all_location():
-#     query = locations.select()
-#     final = await database.fetch_all(query)
-#     data = []
-#     for i in range(0, len(final)):
-#         result = dict(final[i].items())
-#         if final[i]["locationStatus"] == "Approved":
-#             data.append(final[i])
+@app.get('/all_location/', response_model=List[Location], status_code=status.HTTP_200_OK)
+async def all_location():
+    query = locations.select()
+    final = await database.fetch_all(query)
+    data = []
+    for i in range(0, len(final)):
+        result = dict(final[i].items())
+        if final[i]["locationStatus"] == "Approved":
+            data.append(final[i])
 
-#     # print("len all location", len(query))
-#     return data
+    # print("len all location", len(query))
+    return data
 
-
-# @app.get('/location_type/{location_type}', response_model=List[Location], status_code=status.HTTP_200_OK)
-# async def get_location_type(location_type: str):
-#     location = locations.select().where(locations.c.type == str(location_type))
-#     data = database.fetch_all(location)
-#     # print("data type = ",type(data))
-#     return await data
-
+@app.get('/location_type/{location_type}', response_model=List[Location], status_code=status.HTTP_200_OK)
+async def get_location_type(location_type: str):
+    location = locations.select().where(locations.c.type == str(location_type))
+    data = database.fetch_all(location)
+    # print("data type = ",type(data))
+    return await data
 
 @app.get('/location_category/{category}', response_model=List[Location], status_code=status.HTTP_200_OK)
 async def get_location_category(category: int):
@@ -354,7 +353,6 @@ async def all_location_order(category: int):
 
     return data
 
-
 # ============================================ user api ==============================================
 @app.get('/user/{user_id}', response_model=User, status_code=status.HTTP_200_OK)
 async def get_user(user_id: int):
@@ -362,20 +360,11 @@ async def get_user(user_id: int):
     data = database.fetch_one(user)
     return await data
 
-
-# @app.get('/all_of_user/', response_model=[User], status_code=status.HTTP_200_OK)
-# async def all_of_user():
-#     user = users.select()
-#     data = database.fetch_all(user)
-#     return await data
-
-
 @app.get('/user_interested/{user_id}', response_model=User_interested, status_code=status.HTTP_200_OK)
 async def get_an_user(user_id: int):
     user = user_interested.select().where(user_interested.c.userId == user_id)
     data = database.fetch_one(user)
     return await data
-
 
 @app.get('/user_interested', response_model=List[User_interested], status_code=status.HTTP_200_OK)
 async def get_all_user():
@@ -396,7 +385,6 @@ async def hybrid_trip(user_id: int):
     else:
         hybrid = 0
     return hybrid
-
 
 @app.get("/recomendation_home/{user_id}")
 async def hybrid_home(user_id: int):
@@ -422,7 +410,6 @@ async def hybrid_home(user_id: int):
 
 
 # ============================================ nearly api ==============================================
-
 @app.get('/recommendation_nearly_user/{user_id},{category},{lat1},{long1},{lat2},{long2}')
 async def recommendation_nearly_user(user_id: int, category: int, lat1: float, long1: float, lat2: float, long2: float):
 
@@ -1126,133 +1113,6 @@ async def user_Trip(user_id: int):
 
 # **********************************************************
 
-
-# @app.get("/Trip_recommendation/{user_id}")
-# async def Trip_recommendation(user_id: int):
-
-#     # data = await get_user(user_id)
-#     data_user_interest = await get_all_user()
-#     # review = reviews.select()
-#     # all_data = await database.fetch_all(review)
-#     data_rating = rating_trip(user_id)
-
-#     Dict_activity = {'บันจี้จัมป์': 1, 'ปีนเขา': 1, 'ปาร์ตี้': 2, 'ดูพระอาทิตย์ขึ้น-ตก': 3,
-#                      'ดูทะเลหมอก': 3, 'พายเรือล่องแก่ง': 4, 'ล่องเรือ': 4, 'ดูสวนดอกไม้': 5, 'ดูงานศิลปะ': 6,
-#                      'สำรวจประวัติศาสตร์': 7, 'ชุมชน/เมืองจำลอง': 8, 'ถ่ายภาพสถานที่': 8}
-
-#     data_code = []
-#     for i in range(len(data_user_interest)):
-#         act1 = Dict_activity[data_user_interest[i]["first_activity"]]
-#         act2 = Dict_activity[data_user_interest[i]["second_activity"]]
-#         act3 = Dict_activity[data_user_interest[i]["third_activity"]]
-
-#         d = dict(data_user_interest[i].items())
-#         d["first_activity"] = act1
-#         d["second_activity"] = act2
-#         d["third_activity"] = act3
-#         data_code.append(d)
-
-#     df = pd.DataFrame.from_records(data_code)
-#     df.to_csv(index=False)
-#     # print("df = ",df.head(10))
-
-#     df = df.drop(df.columns[4:], axis=1)
-#     # print("df delete = ",df.head(10))
-
-#     df_melt = df.melt(id_vars="userId", var_name="activity")
-#     # print("df_melt = ",df_melt.head(10))
-#     x_train, x_test = train_test_split(
-#         df_melt, test_size=0.30, random_state=42)
-
-#     user_data = x_train.pivot(
-#         index='userId', columns='activity', values='value').fillna(0)
-#     dummy_train = x_train.pivot(
-#         index='userId', columns='activity', values='value').fillna(0)
-#     # print("user_data = ",user_data.head(10))
-
-#     dummy_test = x_test.pivot(
-#         index='userId', columns='activity', values='value').fillna(1)
-
-#     cosine = cosine_similarity(dummy_train)
-#     np.fill_diagonal(cosine, 0)
-#     similarity_with_user = pd.DataFrame(cosine, index=dummy_train.index)
-#     similarity_with_user.columns = dummy_train.index
-#     similarity_with_user.head(10)
-
-#     def find_n_neighbours(df, n):
-#         order = np.argsort(df.values, axis=1)[:, :n]
-#         df = df.apply(lambda x: pd.Series(x.sort_values(ascending=False)
-#                                           .iloc[:n].index,
-#                                           index=['top{}'.format(i) for i in range(1, n+1)]), axis=1)
-#         return df
-
-#     sum_i = 5
-#     status = 0
-#     g = 1
-#     final_list = []
-
-#     sim_user = find_n_neighbours(similarity_with_user, len(data_user_interest))
-#     # print("data_user_interest = ",len(data_user_interest),len(sim_user))#++ptint importan
-#     all_sim = sim_user.iloc[user_id][:].to_list()
-#     # for i in range(5):
-#     #     sim_user.append(72)
-
-#     # print("sim_user = ", len(all_sim))#++ptint importan
-
-#     while len(final_list) < 10 and sum_i < len(all_sim):
-#         # print("sum_i = ",sum_i)#++ptint importan
-#         user_id = user_id - 1
-#         if len(final_list) < 10 and status == 1:
-#             user = sim_user.iloc[user_id][sum_i-1:sum_i].to_list()
-#             # print("go",user)#++ptint importan
-#         else:
-#             user = sim_user.iloc[user_id][:sum_i].to_list()
-#             status = 1
-#             # for i in range(5): #good
-#             #     user.append(72) #good
-#             # print("not go",user)#++ptint importan
-#         # print("sim_user_10_m = ", type(sim_user_10_m[0]), sim_user_10_m)
-#         # !!!!!!!!!!!!!!!!!!!!!!!!เอา 72 ออก
-#         for i in user:
-#             # print("sim_user_forrrrr = ",i)#++ptint importan
-#             list_trip = await user_Trip(i)
-#             if len(list_trip) > 0:
-#                 c = dict(list_trip[0].items())
-#                 for j in range(len(list_trip)):
-#                     list_item = await an_Trip_item(int(list_trip[j]['id']))
-#                     d = dict(list_trip[j].items())
-#                     d["sumOfLocation"] = len(list_item)  # !!!! right
-#                     # d["sumOfLocation"] = g #good
-#                     if d not in final_list:
-#                         final_list.append(d)
-#                         # print("len final_list = ",len(final_list),g)#++ptint importan
-#                         # g+=1 #good
-#                         # for i in range(9):
-#                         #     final_list.append(d)
-#                         # print("now add")
-#                     # print("final_list",final_list)
-#         if len(final_list) < 10:
-#             sum_i = sum_i+1
-#         # print("sum =",sum_i,len(final_list))#++ptint importan
-
-#     # for i in range(15):
-#     #     final_list.append(i)
-#     v = 1
-#     trip_recommen = []
-#     while v <= len(final_list):
-#         r = randint(0, len(final_list)-1)
-#         location_check = final_list[r]
-#         if location_check not in trip_recommen:
-#             trip_recommen.append(final_list[r])
-#             v = v + 1
-
-#     if len(trip_recommen) > 10:
-#         trip_recommen = trip_recommen[:10]
-#     return trip_recommen
-
-
-# @app.get("/Trip_recommendation_hybrid/{user_id}")
-# async def Trip_recommendation_hybrid(user_id: int):
 @app.get("/Trip_recommendation/{user_id}")
 async def Trip_recommendation(user_id: int):
 
@@ -1307,10 +1167,6 @@ async def Trip_recommendation(user_id: int):
                                           .iloc[:n].index,
                                           index=['top{}'.format(i) for i in range(1, n+1)]), axis=1)
         return df
-
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    # !!!!!!!!!!!!!!ต้องเปลี่ยน Sum_i เป็น 10
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     sum_i = 10
     status = 0
@@ -1453,32 +1309,9 @@ def haversine2(lon1, lat1, lon2, lat2):
     c = 2 * asin(sqrt(a)) 
     r = 6371 # Radius of earth in kilometers. Use 3956 for miles. Determines return value units.
     return c * r
-# retern distance สานที่ว่าห่างจากที่ได้มาเท่าไร
+
+
+
 # cd recommendation
 # .env\Scripts\activate
 # uvicorn main:app --reload
-# pip install aiohttp
-
-# URL = "http://127.0.0.1:8000"
-
-# import asyncio
-# import sys
-# # asyncio.set_event_loop(asyncio.new_event_loop())
-
-# if sys.platform:
-#     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-
-# try:
-#     assert isinstance(loop := asyncio.new_event_loop(), asyncio.ProactorEventLoop)
-#     # No ProactorEventLoop is in asyncio on other OS, will raise AttributeError in that case.
-
-# except (AssertionError, AttributeError):
-#     asyncio.run(hybrid_home())
-    
-# else:
-#     async def proactor_wrap(loop_: asyncio.ProactorEventLoop, fut: asyncio.coroutines):
-#         await fut
-#         loop_.stop()
-
-#     loop.create_task(proactor_wrap(loop, hybrid_home()))
-#     loop.run_forever()

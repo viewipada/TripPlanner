@@ -1,21 +1,11 @@
-
-# from datetime import datetime
-# from datetime import timedelta
-# import time
-
-# import responses
 import googlemaps
-
 import requests
 from haversine import haversine, Unit
-# from googlemaps import convert
-# from pprint import pprint
 
 API_KEY = 'AIzaSyC3IbO2CjNOMP1g1F_Y7jamCp0aEu4asKE'
 
 map_client = googlemaps.Client(API_KEY)
 
-# l = [(14.5931616442162, 100.38006288184202), (14.593349574908624, 100.45974649718559)]
 
 def _has_method(arg, method):
     return hasattr(arg, method) and callable(getattr(arg, method))
