@@ -9,7 +9,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER,
     },
     name: {
-      type: Sequelize.STRING(30),
+      type: Sequelize.STRING(100),
     },
     totalPeople: {
       type: Sequelize.INTEGER,
@@ -28,7 +28,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
     },
     thumnail: {
-      type: Sequelize.STRING,
+      type: Sequelize.STRING(500),
     },
     status: {
       type: Sequelize.STRING(15),

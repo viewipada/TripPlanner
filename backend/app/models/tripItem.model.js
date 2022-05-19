@@ -16,7 +16,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
     },
     imageUrl: {
-      type: Sequelize.STRING,
+      type: Sequelize.STRING(500),
     },
     lat: {
       type: Sequelize.DOUBLE,
